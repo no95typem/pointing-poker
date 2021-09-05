@@ -2,12 +2,11 @@
     "name": "pointing-poker",
     "version": "0.0.1",
     "description": "pointing-poker",
-    "main": "src/index.js",
     "author": "kaesid no95typem vimbi",
     "scripts": {
-        "lint": "eslint ./**/src/",
-        "lint:write": "eslint --debug ./**/src/ --fix",
-        "prettier:write": "prettier --write ./**/src/",
+        "lint": "eslint **/src/** shared --no-error-on-unmatched-pattern",
+        "lint:write": "eslint **/src/** shared --fix --no-error-on-unmatched-pattern",
+        "prettier:write": "prettier --write **/src/** shared --no-error-on-unmatched-pattern --ignore-unknown",
         "precommit": "lint-staged",
         "prepare": "husky install"
     },
@@ -31,6 +30,7 @@
         "eslint-plugin-react-hooks": "^4.2.0",
         "husky": "^7.0.2",
         "lint-staged": "^11.1.2",
-        "prettier": "^2.3.2"
+        "prettier": "^2.3.2",
+        "typescript": "^3.9.10"
     }
 }
