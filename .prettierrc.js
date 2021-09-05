@@ -13,5 +13,11 @@ module.exports = {
         parser: 'html',
       },
     },
+    {
+      files: ['*.json'],
+      options: {
+        parser: 'json',
+      },
+    },
   ],
 };

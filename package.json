@@ -11,8 +11,8 @@
         "prepare": "husky install"
     },
     "lint-staged": {
-        "*.(js|jsx|ts|tsx|scss|css)": [
-            "npm run lint --max-warnings=0"
+        "*.(js|jsx|ts|tsx|scss|css|svg|html)": [
+            "npx eslint --max-warnings=0 --ignore-pattern=!.prettierrc.js"
         ]
     },
     "devDependencies": {

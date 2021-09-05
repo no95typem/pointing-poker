@@ -4,5 +4,5 @@ module.exports = {
   rules: {
     'prettier/prettier': 'warn',
   },
-  ignorePatterns: ['node_modules'],
+  ignorePatterns: ['node_modules', 'build'],
 };
