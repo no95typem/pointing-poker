@@ -9,6 +9,8 @@ module.exports = {
       { blankLine: 'always', prev: '*', next: 'if' },
       { blankLine: 'always', prev: '*', next: 'return' },
     ],
+    'max-len': ['warn', { code: 120, ignorePattern: 'import*' }],
+    'no-case-declarations': 'off',
   },
   ignorePatterns: ['node_modules', 'build'],
 };
