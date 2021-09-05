@@ -10,6 +10,7 @@ class ObjProcessor {
           this.deepFreeze(record[prop]);
         }
       });
+
       return Object.freeze(obj);
     }
     throw new Error('not object');
@@ -21,12 +22,14 @@ class ObjProcessor {
       (target as unknown[]).forEach(v => {
         clone.push(v);
       });
+
       return clone.map((n: unknown) => this.deepClone(n)) as unknown as T;
     }
 
     if (typeof target === 'object' && target !== null) {
       if (target instanceof HTMLElement)
         return target.cloneNode(true) as unknown as T;
+
       if (target instanceof Blob) return target.slice() as unknown as T;
       const clone = {
         ...(target as unknown as { [key: string]: unknown }),
@@ -37,8 +40,10 @@ class ObjProcessor {
         clone[k] = this.deepClone(clone[k]);
       });
       Object.setPrototypeOf(clone, Object.getPrototypeOf(target));
+
       return clone as unknown as T;
     }
+
     return target;
   };
 
@@ -48,6 +53,7 @@ class ObjProcessor {
       (target as unknown[]).forEach(v => {
         clone.push(v);
       });
+
       return clone.map((n: unknown) =>
         this.deepCloneForWebworker(n),
       ) as unknown as T;
@@ -63,8 +69,10 @@ class ObjProcessor {
         clone[k] = this.deepCloneForWebworker(clone[k]);
       });
       Object.setPrototypeOf(clone, Object.getPrototypeOf(target));
+
       return clone as unknown as T;
     }
+
     return target;
   };
 }
