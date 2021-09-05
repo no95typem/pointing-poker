@@ -6,4 +6,12 @@ module.exports = {
   tabWidth: 2,
   arrowParens: 'avoid',
   useTabs: false,
+  overrides: [
+    {
+      files: ['*.svg', '*.html'],
+      options: {
+        parser: 'html',
+      },
+    },
+  ],
 };
