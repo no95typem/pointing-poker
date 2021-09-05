@@ -3,6 +3,7 @@ module.exports = {
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'warn',
+    'max-params': ['warn', 2],
   },
   ignorePatterns: ['node_modules', 'build'],
 };
