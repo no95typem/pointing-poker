@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import {
   Button,
@@ -8,18 +8,18 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  useDisclosure,
 } from '@chakra-ui/react';
+import { LocaleText } from '../../../locale';
 
 const ChakraAlertDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const onClose = () => setIsOpen(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const cancelRef = useRef(null);
 
   return (
     <>
-      <Button colorScheme="red" onClick={() => setIsOpen(true)}>
+      <Button colorScheme="red" onClick={onOpen}>
         Kick Player
       </Button>
 
@@ -34,9 +34,7 @@ const ChakraAlertDialog = () => {
               Kick Player?
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              Are you really want to remove player?
-            </AlertDialogBody>
+            <AlertDialogBody>{LocaleText.REMOVE_PLAYER}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
