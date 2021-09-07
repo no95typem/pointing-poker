@@ -12,5 +12,5 @@ module.exports = {
     'max-len': ['warn', { code: 120, ignorePattern: 'import*' }],
     'no-case-declarations': 'off',
   },
-  ignorePatterns: ['node_modules', 'build'],
+  ignorePatterns: ['node_modules', 'build', '*.svg'],
 };
