@@ -9,8 +9,8 @@ const UserCardExample = (): JSX.Element => {
   const userCard: UserInfo = {
     name: 'Dan',
     surname: 'Smith',
-    avatarBg: 'rgb(0,200,100)',
-    position: 'Senior developer',
+    AvatarBgColor: 'rgb(0,200,100)',
+    jobPosition: 'Senior developer',
   };
 
   return (

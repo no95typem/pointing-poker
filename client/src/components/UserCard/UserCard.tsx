@@ -26,7 +26,7 @@ import { IUserCardData } from '../../../../shared/types/user/user-info';
 const UserCard = (props: IUserCardData): JSX.Element => {
   const { card } = props;
 
-  const { name, surname, avatarSrc, avatarBg, position } = card;
+  const { name, surname, avatarBase64, AvatarBgColor, jobPosition } = card;
 
   const fullName = surname ? `${name} ${surname}` : name;
 
@@ -40,7 +40,12 @@ const UserCard = (props: IUserCardData): JSX.Element => {
       p="10px 10px"
       boxShadow="lg"
     >
-      <Avatar color="white" bg={avatarBg} name={fullName} src={avatarSrc}>
+      <Avatar
+        color="white"
+        bg={AvatarBgColor}
+        name={fullName}
+        src={avatarBase64}
+      >
         {isItYou && (
           <AvatarBadge borderColor="papayawhip" bg="green.400" boxSize="1em" />
         )}
@@ -48,7 +53,7 @@ const UserCard = (props: IUserCardData): JSX.Element => {
 
       <Stat>
         <StatNumber>{fullName}</StatNumber>
-        <StatHelpText mb="0">{position}</StatHelpText>
+        <StatHelpText mb="0">{jobPosition}</StatHelpText>
       </Stat>
 
       <IconButton

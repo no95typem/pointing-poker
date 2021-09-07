@@ -1,9 +1,9 @@
 export interface UserInfo {
   name: string;
-  surname: string;
-  position: string;
-  avatarSrc?: string;
-  avatarBg?: string;
+  surname?: string;
+  jobPosition?: string;
+  avatarBase64?: string;
+  AvatarBgColor?: string;
 }
 
 export interface IUserCardData {
