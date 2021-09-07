@@ -3,7 +3,7 @@ export interface UserInfo {
   surname?: string;
   jobPosition?: string;
   avatarBase64?: string;
-  AvatarBgColor?: string;
+  avatarBgColor?: string;
 }
 
 export interface IUserCardData {

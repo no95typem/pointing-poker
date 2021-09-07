@@ -26,7 +26,7 @@ import { IUserCardData } from '../../../../shared/types/user/user-info';
 const UserCard = (props: IUserCardData): JSX.Element => {
   const { card } = props;
 
-  const { name, surname, avatarBase64, AvatarBgColor, jobPosition } = card;
+  const { name, surname, avatarBase64, avatarBgColor, jobPosition } = card;
 
   const fullName = surname ? `${name} ${surname}` : name;
 
@@ -42,7 +42,7 @@ const UserCard = (props: IUserCardData): JSX.Element => {
     >
       <Avatar
         color="white"
-        bg={AvatarBgColor}
+        bg={avatarBgColor}
         name={fullName}
         src={avatarBase64}
       >
