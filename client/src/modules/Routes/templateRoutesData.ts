@@ -10,6 +10,8 @@ import ChakraModal from '../../components/templates/Modal/ChakraModal';
 import ChakraAvatar from '../../components/templates/Avatar/ChakraAvatar';
 import ChakraLoader from '../../components/templates/Loader/ChakraLoader';
 import ChakraEditableText from '../../components/templates/EditableText/ChakraEditableText';
+import ActionButtonExample from '../../containers/ComponentsExamples/Buttons/ButtonsExample';
+import UserCardExample from '../../containers/ComponentsExamples/UserCard/UserCardExample';
 
 export enum TemplateRoutesPath {
   ROOT = '/',
@@ -21,6 +23,8 @@ export enum TemplateRoutesPath {
   AVATAR = '/avatar/',
   LOADER = '/loader/',
   EDITABLE = '/editable/',
+  BUTTONS_EXAMPLE = '/buttons-example',
+  USER_CARD = '/user-card',
 }
 
 const templatesRoutes: IRoute[] = [
@@ -71,6 +75,18 @@ const templatesRoutes: IRoute[] = [
     path: TemplateRoutesPath.EDITABLE,
     isExact: true,
     Component: ChakraEditableText,
+  },
+  {
+    key: 'buttonsExample',
+    path: TemplateRoutesPath.BUTTONS_EXAMPLE,
+    isExact: true,
+    Component: ActionButtonExample,
+  },
+  {
+    key: 'userPanel',
+    path: TemplateRoutesPath.USER_CARD,
+    isExact: true,
+    Component: UserCardExample,
   },
 ];
 

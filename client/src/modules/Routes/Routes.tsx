@@ -37,10 +37,7 @@ export const Routes = (): JSX.Element => {
             }}
           >
             <Switch location={location}>
-              {/* Kaesid start --------------------------------  Предлагаю роуты организовать таким образом,
-               такая запись компактнее, и лучше масштабируется */}
-
-              {/* Шаблоны в качестве примера, как с компонентами определеимся - удалим*/}
+              {/* Kaesid start --------------------------------  */}
 
               {templatesRoutes.map(route => {
                 const { key, path, isExact, Component } = route;
