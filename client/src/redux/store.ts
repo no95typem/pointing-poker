@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { connectSlice } from './slices/connect';
+import { errorsSlice } from './slices/errors';
+import { loadsSlice } from './slices/loads';
 import { sessionSlice } from './slices/session';
-import test from './slices/test';
 
 export const store = configureStore({
   reducer: {
-    counter: test,
+    errors: errorsSlice.reducer,
+    loads: loadsSlice.reducer,
     connect: connectSlice.reducer,
     session: sessionSlice.reducer,
   },

@@ -26,6 +26,7 @@ module.exports = {
 
       const definePlugin = new webpack.DefinePlugin({
         TARGET_PLATFORM: JSON.stringify('web'),
+        FE_ALONE: process.env.FE_ALONE,
       });
 
       webpackConfig.plugins.push(definePlugin);

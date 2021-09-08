@@ -37,7 +37,8 @@
     "react-transition-group": "^4.4.2"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "cross-env FE_ALONE=true craco start",
+    "start-with-server": "cross-env FE_ALONE=false craco start", 
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"

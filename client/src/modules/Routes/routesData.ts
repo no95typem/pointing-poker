@@ -13,7 +13,9 @@ export enum RoutesPath {
   LOBBY = '/session/:id/lobby',
   GAME = '/session/:id/game',
   STATS = '/session/:id/stats',
-  ROUTE_404 = '*',
+  ROUTE_404 = '*', // а нужен ли он нам?, может просто редирект на ROOT ?
+  ERROR = '/error',
+  LOADING = '/loading',
 }
 
 const routes: IRoute[] = [

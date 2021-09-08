@@ -1,8 +1,11 @@
 import { CSMsg } from '../../../../shared/types/cs-msgs/cs-msg';
 import { SCMsgSessionCreated } from '../../../../shared/types/sc-msgs/msgs/session-created';
 import { SCMsg } from '../../../../shared/types/sc-msgs/sc-msg';
-import { setConnectionStatus, setWSStatus } from '../../redux/slices/connect';
-import { AppError, setError } from '../../redux/slices/errors';
+import { KNOWN_ERRORS_KEYS } from '../../knownErrors';
+import { KNOWN_LOADS_KEYS } from '../../knownLoads';
+import { removeError, setErrorByKey } from '../../redux/slices/errors';
+import { removeLoad, setLoadByKey } from '../../redux/slices/loads';
+
 import { setSessionId, setSessionStatus } from '../../redux/slices/session';
 import { store } from '../../redux/store';
 
@@ -33,13 +36,16 @@ class ServerAdapter {
   };
 
   private handleSessionCreated(msg: SCMsgSessionCreated) {
-    store.dispatch(setConnectionStatus('connected'));
     store.dispatch(setSessionId(msg.sessionId));
     store.dispatch(setSessionStatus('LOBBY'));
+    store.dispatch(removeLoad('CONNECTING_TO_SERVER'));
   }
 
   connect(): Promise<boolean> {
-    return new Promise(res => {
+    store.dispatch(setLoadByKey(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
+    store.dispatch(removeError(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
+
+    return new Promise<boolean>(res => {
       if (this.ws) {
         // ? TODO (no95typem)
         // ? disconnect from a previous server
@@ -48,7 +54,7 @@ class ServerAdapter {
 
         return;
       }
-      store.dispatch(setWSStatus('connecting'));
+
       setTimeout(() => {
         try {
           this.ws = new WebSocket(this.apiUrl);
@@ -57,28 +63,35 @@ class ServerAdapter {
               'message',
               this.obeyTheServer,
             );
-            store.dispatch(setWSStatus('alive'));
             res(true);
           });
           this.ws.addEventListener('error', e => {
             console.log(e);
-            store.dispatch(setWSStatus('dead'));
+            store.dispatch(
+              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+            );
             this.ws = undefined;
             res(false);
           });
           this.ws.addEventListener('close', e => {
             console.log(e);
-            store.dispatch(setWSStatus('dead'));
+            store.dispatch(
+              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+            );
             this.ws = undefined;
             res(false);
           });
         } catch (err) {
           res(false);
           console.log(err);
-          store.dispatch(setWSStatus('dead'));
+          store.dispatch(
+            setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+          );
           this.ws = undefined;
         }
       }, 2000);
+    }).finally(() => {
+      store.dispatch(removeLoad(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
     });
   }
 
@@ -87,12 +100,9 @@ class ServerAdapter {
       (this.ws as WebSocket).send(JSON.stringify(msg));
       console.log('msg sent');
     } catch (err) {
-      const appError: AppError = {
-        type: 'communication',
-        reason: 'failed to send msg through ws',
-        more: String(err),
-      };
-      store.dispatch(setError(appError));
+      store.dispatch(
+        setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),
+      );
     }
   }
 }

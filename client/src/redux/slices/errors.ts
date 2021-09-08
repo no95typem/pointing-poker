@@ -1,25 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { KnownErrorsKey } from '../../knownErrors';
 
-export interface AppError {
-  type: 'unknown' | 'communication';
-  reason: string;
-  more: string;
-}
-
-interface ErrorsState {
-  errors: Record<string, AppError>;
-}
-
-const initialState = { errors: {} } as ErrorsState;
+const initialState: Partial<Record<KnownErrorsKey, unknown>> = {};
 
 export const errorsSlice = createSlice({
   name: 'errors',
   initialState,
   reducers: {
-    setError(state, action: PayloadAction<AppError>) {
-      state.errors[action.payload.reason] = action.payload;
+    setErrorByKey(state, action: PayloadAction<KnownErrorsKey>) {
+      state[action.payload] = action.payload;
+    },
+    removeError(state, action: PayloadAction<KnownErrorsKey>) {
+      delete state[action.payload];
     },
   },
 });
 
-export const { setError } = errorsSlice.actions;
+export const { setErrorByKey, removeError } = errorsSlice.actions;

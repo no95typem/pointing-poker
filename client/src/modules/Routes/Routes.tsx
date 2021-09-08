@@ -2,6 +2,9 @@ import { ClassNames } from '@emotion/react';
 import React, { useRef } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import { ErrorsPrism } from '../../containers/ErrorsPrism/ErrorsPrism';
+import { LoadsPrism } from '../../containers/LoadsPrism/LoadsPrism';
+import { useTypedSelector } from '../../redux/store';
 
 import routes from './routesData';
 import templatesRoutes from './templateRoutesData';
@@ -12,8 +15,10 @@ const TRANSITION = `opacity ${TRANSITION_TIME}ms ease-in`;
 
 export const Routes = (): JSX.Element => {
   const location = useLocation();
-
   const nodeRef = useRef<any>(null);
+  const errors = useTypedSelector(state => state.errors);
+  const loads = useTypedSelector(state => state.loads);
+  console.log(`LOADS ${Object.keys(loads).length}`);
 
   return (
     <ClassNames>
@@ -37,6 +42,22 @@ export const Routes = (): JSX.Element => {
             }}
           >
             <Switch location={location}>
+              {Object.keys(errors).length > 0 && (
+                <Route key="ErrorsPrism" path="*">
+                  <div ref={nodeRef}>
+                    <ErrorsPrism />
+                  </div>
+                </Route>
+              )}
+
+              {Object.keys(loads).length > 0 && (
+                <Route key="ErrorsPrism" path="*">
+                  <div ref={nodeRef}>
+                    <LoadsPrism />
+                  </div>
+                </Route>
+              )}
+
               {templatesRoutes.map(route => {
                 const { key, path, isExact, Component } = route;
 

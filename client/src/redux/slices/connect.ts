@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/cs-create-session';
+import { KNOWN_LOADS_KEYS } from '../../knownLoads';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+import { setLoadByKey } from './loads';
 
 export type WSConnectionStatus = 'connecting' | 'alive' | 'dead';
 export type SessionConnectionStatus = 'connecting' | 'connected';
@@ -29,7 +31,7 @@ export const createSession = createAsyncThunk(
     const id = genUniqId();
     const msg = new CSMsgCreateSession(id);
     SERVER_ADAPTER.send(msg);
-    thunkAPI.dispatch(setConnectionStatus('connecting'));
+    thunkAPI.dispatch(setLoadByKey(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
   },
 );
 
