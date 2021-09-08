@@ -14,7 +14,6 @@ export const Routes = (): JSX.Element => {
   const location = useLocation();
 
   const nodeRef = useRef<any>(null);
-  const dispatch = useAppDispatch();
 
   return (
     <ClassNames>

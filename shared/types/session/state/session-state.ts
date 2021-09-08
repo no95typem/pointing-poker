@@ -1,4 +1,4 @@
-import { Settings } from 'http2';
+import { Settings } from '../../settings';
 import { Card } from '../card';
 import { ChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
@@ -15,7 +15,7 @@ export interface SessionState<M extends Member> {
 
   name?: { value: string; isSynced: boolean };
 
-  state: SessionStage;
+  stage: SessionStage;
 
   chat: {
     isVisible: boolean;

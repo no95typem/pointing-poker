@@ -1,4 +1,5 @@
 import ChakraButtons from '../../components/templates/ChakraButtons/ChakraButtons';
+import { Root } from '../Root/root';
 
 export interface IRoute {
   key: string;
@@ -20,7 +21,7 @@ const routes: IRoute[] = [
     key: 'routeRoot',
     path: RoutesPath.ROOT,
     isExact: true,
-    Component: ChakraButtons, //Заглушка, заменяем своими компонентами по мере готовности
+    Component: Root, //Заглушка, заменяем своими компонентами по мере готовности
   },
   {
     key: 'routeLobby',

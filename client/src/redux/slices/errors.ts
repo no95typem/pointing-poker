@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface AppError {
+  type: 'unknown' | 'communication';
   reason: string;
+  more: string;
 }
 
 interface ErrorsState {

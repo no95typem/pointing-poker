@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { connectSlice } from './slices/connect';
+import { sessionSlice } from './slices/session';
 import test from './slices/test';
 
 export const store = configureStore({
   reducer: {
     counter: test,
     connect: connectSlice.reducer,
+    session: sessionSlice.reducer,
   },
   devTools: process.env.NODE_ENV === 'development',
 });
