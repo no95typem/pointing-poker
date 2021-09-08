@@ -13,7 +13,7 @@ export class PointingPokerServer {
     this.wss.on('connection', this.handleNewConnection);
     // eslint-disable-next-line max-params
     this.server.on('upgrade', (request, socket, head) => {
-      console.log(socket);
+      console.log(socket instanceof Socket);
 
       if (!(socket instanceof Socket)) throw new Error();
       // ! TODO: REJECT CONNECTIONS FROM OTHER THEN MY FE !!!
@@ -35,7 +35,7 @@ export class PointingPokerServer {
   }
 
   private handleNewConnection = (ws: WebSocket) => {
-    console.log(ws);
+    // console.log(ws);
     // this.connections.add(ws);
     // this.wsGamesMsgsMap.set(ws, []);
     ws.addEventListener('message', e => {

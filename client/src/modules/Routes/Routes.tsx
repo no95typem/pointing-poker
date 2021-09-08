@@ -2,6 +2,8 @@ import { ClassNames } from '@emotion/react';
 import React, { useRef } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import { connectToLobby } from '../../redux/slices/connect';
+import { useAppDispatch } from '../../redux/store';
 import { ChakraDemo } from '../ChakraDemo/ChakraDemo';
 
 const TRANSITION_TIME = 500;
@@ -10,6 +12,7 @@ const TRANSITION = `opacity ${TRANSITION_TIME}ms ease-in`;
 export const Routes = (): JSX.Element => {
   const location = useLocation();
   const nodeRef = useRef<any>(null);
+  const dispatch = useAppDispatch();
 
   return (
     <ClassNames>
@@ -34,7 +37,12 @@ export const Routes = (): JSX.Element => {
           >
             <Switch location={location}>
               <Route exact strict path="/">
-                <div ref={nodeRef}>root</div>
+                <div
+                  ref={nodeRef}
+                  onClick={() => dispatch(connectToLobby('vasta'))}
+                >
+                  root
+                </div>
               </Route>
               <Route exact path="/session/:id/lobby">
                 <div ref={nodeRef}>lobby</div>
