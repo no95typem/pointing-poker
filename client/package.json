@@ -32,12 +32,14 @@
   },
   "devDependencies": {
     "@types/react-transition-group": "^4.4.2",
+    "craco": "^0.0.3",
+    "craco-babel-loader": "^0.1.4",
     "react-transition-group": "^4.4.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "browserslist": {
