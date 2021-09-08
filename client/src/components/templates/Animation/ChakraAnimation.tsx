@@ -1,9 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 
 import { Code, Link, Text, VStack } from '@chakra-ui/react';
-import { Logo } from '../../components/Logo/Logo';
 
-export const ChakraDemo = (): JSX.Element => {
+import { Logo } from '../../Logo/Logo';
+
+const ChakraAnimation = (): JSX.Element => {
   return (
     <VStack spacing={8}>
       <Logo h="40vmin" pointerEvents="none" />
@@ -22,3 +23,5 @@ export const ChakraDemo = (): JSX.Element => {
     </VStack>
   );
 };
+
+export default ChakraAnimation;

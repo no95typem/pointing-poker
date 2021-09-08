@@ -2,15 +2,17 @@ import { ClassNames } from '@emotion/react';
 import React, { useRef } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
-import { connectToLobby } from '../../redux/slices/connect';
-import { useAppDispatch } from '../../redux/store';
-import { ChakraDemo } from '../ChakraDemo/ChakraDemo';
+
+import routes from './routesData';
+import templatesRoutes from './templateRoutesData';
 
 const TRANSITION_TIME = 500;
+
 const TRANSITION = `opacity ${TRANSITION_TIME}ms ease-in`;
 
 export const Routes = (): JSX.Element => {
   const location = useLocation();
+
   const nodeRef = useRef<any>(null);
   const dispatch = useAppDispatch();
 
@@ -36,28 +38,29 @@ export const Routes = (): JSX.Element => {
             }}
           >
             <Switch location={location}>
-              <Route exact strict path="/">
-                <div
-                  ref={nodeRef}
-                  onClick={() => dispatch(connectToLobby('vasta'))}
-                >
-                  root
-                </div>
-              </Route>
-              <Route exact path="/session/:id/lobby">
-                <div ref={nodeRef}>lobby</div>
-              </Route>
-              <Route exact path="/session/:id/game">
-                <div ref={nodeRef}>game</div>
-              </Route>
-              <Route exact path="/session/:id/stats">
-                <div ref={nodeRef}>stats</div>
-              </Route>
-              <Route path="*">
-                <div ref={nodeRef}>
-                  <ChakraDemo />
-                </div>
-              </Route>
+              {templatesRoutes.map(route => {
+                const { key, path, isExact, Component } = route;
+
+                return (
+                  <Route key={key} path={path} exact={isExact}>
+                    <div ref={nodeRef} key={`${key}-div`}>
+                      <Component />
+                    </div>
+                  </Route>
+                );
+              })}
+
+              {routes.map(route => {
+                const { key, path, isExact, Component } = route;
+
+                return (
+                  <Route key={key} path={path} exact={isExact}>
+                    <div ref={nodeRef} key={`${key}-div`}>
+                      <Component />
+                    </div>
+                  </Route>
+                );
+              })}
             </Switch>
           </CSSTransition>
         </SwitchTransition>
