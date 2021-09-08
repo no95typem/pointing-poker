@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -8,8 +8,16 @@ import {
 } from '@chakra-ui/react';
 import { Header } from '../Header/Header';
 import { Routes } from '../Routes/Routes';
+import { SERVER_ADAPTER } from '../ServerAdapter/ServerAdapter';
+import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
 export const App = () => {
+  useEffect(() => {
+    SERVER_ADAPTER.connect()
+      .then(result => {})
+      .catch(reason => {});
+  }, []);
+
   return (
     <>
       <ColorModeScript />
@@ -17,7 +25,9 @@ export const App = () => {
         <Box textAlign="center" fontSize="xl">
           <Grid minH="100vh" p={3}>
             <Header />
-            <Routes />
+            <ServerBoundary>
+              <Routes />
+            </ServerBoundary>
           </Grid>
         </Box>
       </ChakraProvider>

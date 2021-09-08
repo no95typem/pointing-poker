@@ -14,6 +14,7 @@ export const Routes = (): JSX.Element => {
   const location = useLocation();
 
   const nodeRef = useRef<any>(null);
+  const dispatch = useAppDispatch();
 
   return (
     <ClassNames>
@@ -37,8 +38,6 @@ export const Routes = (): JSX.Element => {
             }}
           >
             <Switch location={location}>
-              {/* Kaesid start --------------------------------  */}
-
               {templatesRoutes.map(route => {
                 const { key, path, isExact, Component } = route;
 
@@ -62,8 +61,6 @@ export const Routes = (): JSX.Element => {
                   </Route>
                 );
               })}
-
-              {/* Kaesid finish -------------------------------- */}
             </Switch>
           </CSSTransition>
         </SwitchTransition>
