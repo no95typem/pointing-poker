@@ -42,6 +42,14 @@ const templatesLinks: ILink[] = [
     text: 'Editable Text',
     link: TemplateRoutesPath.EDITABLE,
   },
+  {
+    text: 'Buttons Example',
+    link: TemplateRoutesPath.BUTTONS_EXAMPLE,
+  },
+  {
+    text: 'User Card',
+    link: TemplateRoutesPath.USER_CARD,
+  },
 ];
 
 export default templatesLinks;
