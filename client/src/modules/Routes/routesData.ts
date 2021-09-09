@@ -1,4 +1,5 @@
 import ChakraButtons from '../../components/templates/ChakraButtons/ChakraButtons';
+import { Root } from '../Root/root';
 
 export interface IRoute {
   key: string;
@@ -12,7 +13,9 @@ export enum RoutesPath {
   LOBBY = '/session/:id/lobby',
   GAME = '/session/:id/game',
   STATS = '/session/:id/stats',
-  ROUTE_404 = '*',
+  ROUTE_404 = '*', // а нужен ли он нам?, может просто редирект на ROOT ?
+  ERROR = '/error',
+  LOADING = '/loading',
 }
 
 const routes: IRoute[] = [
@@ -20,7 +23,7 @@ const routes: IRoute[] = [
     key: 'routeRoot',
     path: RoutesPath.ROOT,
     isExact: true,
-    Component: ChakraButtons, //Заглушка, заменяем своими компонентами по мере готовности
+    Component: Root, //Заглушка, заменяем своими компонентами по мере готовности
   },
   {
     key: 'routeLobby',

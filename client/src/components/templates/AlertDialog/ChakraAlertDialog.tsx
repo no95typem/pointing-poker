@@ -10,12 +10,14 @@ import {
   AlertDialogFooter,
   useDisclosure,
 } from '@chakra-ui/react';
-import { LocaleText } from '../../../locale';
+import { useLocale } from '../../../hooks/useLocale';
 
 const ChakraAlertDialog = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const cancelRef = useRef(null);
+
+  const locale = useLocale();
 
   return (
     <>
@@ -34,7 +36,9 @@ const ChakraAlertDialog = () => {
               Kick Player?
             </AlertDialogHeader>
 
-            <AlertDialogBody>{LocaleText.REMOVE_PLAYER}</AlertDialogBody>
+            <AlertDialogBody>
+              {locale.SESSION_DEALER_KICK_CONFIRMATION_POPUP_BODY}
+            </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>

@@ -3,6 +3,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -30,6 +31,9 @@ module.exports = {
   },
   plugins: [
     new ESLintPlugin(),
+    new webpack.DefinePlugin({
+      TARGET_PLATFORM: JSON.stringify('node'),
+    }),
     !isDev &&
       new CopyPlugin({
         patterns: [{ from: './src/package.json' }],

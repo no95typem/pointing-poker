@@ -1,6 +1,8 @@
-import { OBJ_PROCESSOR } from '../../../client/lib/processors/obj-processor';
+import { OBJ_PROCESSOR } from '../../helpers/processors/obj-processor';
 
 class CSMsgCiphers {
+  readonly CREATE_SESSION = 'CREATE_SESSION';
+
   readonly SET_DEALER = 'SET_DEALER';
 
   readonly SET_ISSUES = 'SET_ISSUES';

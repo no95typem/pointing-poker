@@ -1,6 +1,8 @@
 import * as http from 'http';
 import * as WebSocket from 'ws';
 import { Socket } from 'net';
+import internal from 'stream';
+import { ClientManager } from './ClientManager';
 
 export class PointingPokerServer {
   static readonly DEFAULT_PORT = 9000;
@@ -9,56 +11,105 @@ export class PointingPokerServer {
 
   private wss = new WebSocket.Server({ noServer: true });
 
+  private connections: Set<WebSocket> = new Set();
+
+  private aliveMap: Map<WebSocket, boolean> = new Map();
+
+  private clientManager = new ClientManager();
+
   constructor() {
     this.wss.on('connection', this.handleNewConnection);
-    // eslint-disable-next-line max-params
-    this.server.on('upgrade', (request, socket, head) => {
-      console.log(socket instanceof Socket);
 
-      if (!(socket instanceof Socket)) throw new Error();
-      // ! TODO: REJECT CONNECTIONS FROM OTHER THEN MY FE !!!
-      try {
-        // eslint-disable-next-line max-params
-        this.wss.handleUpgrade(request, socket, head, ws => {
-          this.wss.emit('connection', ws, request);
-        });
-      } catch {
-        //
-      }
-    });
+    this.server.on('upgrade', this.handleHttpUpgrade);
+
     this.server.listen(
       process.env.PORT || PointingPokerServer.DEFAULT_PORT,
       this.logStart,
     );
-    // this.watchdog();
-    // this.watchdogSec();
+
+    this.watchdog();
   }
 
-  private handleNewConnection = (ws: WebSocket) => {
-    // console.log(ws);
-    // this.connections.add(ws);
-    // this.wsGamesMsgsMap.set(ws, []);
-    ws.addEventListener('message', e => {
-      try {
-        const parsed = JSON.parse(e.data as string); // ! change to safe json parse?
+  /* eslint-disable max-params */
+  private handleHttpUpgrade = (
+    request: http.IncomingMessage,
+    socket: internal.Duplex,
+    head: Buffer,
+  ) => {
+    try {
+      // TODO (no95typem): FILTER BY ORIGIN
+      if (!(socket instanceof Socket)) throw new Error();
 
-        if ('cipher' in parsed) {
-          switch (parsed.cipher) {
-            default:
-              // eslint-disable-next-line no-useless-return
-              return;
-          }
-        }
+      this.wss.handleUpgrade(request, socket, head, ws => {
+        this.wss.emit('connection', ws, request);
+      });
+    } catch {
+      try {
+        socket.destroy();
+        request.destroy();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+  /* eslint-enable max-params */
+
+  private handleNewConnection = (ws: WebSocket) => {
+    this.connections.add(ws);
+    ws.on('pong', () => this.aliveMap.set(ws, true));
+    ws.on('ping', () => {
+      try {
+        ws.pong();
       } catch {
         //
       }
     });
-
-    // ws.on('pong', () => this.aliveMap.set(ws, true));
-
-    // ws.onclose = () => this.closeConnection(ws);
-    // ws.onerror = () => this.closeConnection(ws);
+    ws.onclose = () => this.closeConnection(ws);
+    ws.onerror = () => this.closeConnection(ws);
+    this.clientManager.addClient(ws);
   };
+
+  private closeConnection(ws: WebSocket) {
+    try {
+      this.clientManager.removeClient(ws);
+      ws.removeAllListeners();
+      ws.close(1001);
+      this.connections.delete(ws);
+      this.aliveMap.delete(ws);
+    } catch {
+      // TODO (no95typem)
+    }
+  }
+
+  private async watchdog() {
+    const checks = [...this.connections].map(ws => this.checkConnection(ws)); // this.connections.add(ws);
+
+    // console.log(`watchdog with ${checks.length}`);
+    if (checks.length === 0) {
+      setTimeout(() => this.watchdog(), 10_000);
+
+      return;
+    }
+    Promise.all(checks).finally(() => this.watchdog());
+  }
+
+  private async checkConnection(ws: WebSocket) {
+    this.aliveMap.set(ws, false);
+
+    try {
+      ws.ping();
+
+      await new Promise(res => setTimeout(res, 10_000));
+
+      if (this.aliveMap.get(ws) === false) throw new Error();
+
+      return true;
+    } catch {
+      this.closeConnection(ws);
+
+      return false;
+    }
+  }
 
   private logStart = () => {
     // eslint-disable-next-line no-console
