@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { ChatIcon } from '@chakra-ui/icons';
 
+import logo from '../../assets/images/shared/logo.svg';
+
 import {
   VisuallyHidden,
   Flex,
@@ -9,6 +11,7 @@ import {
   IconButton,
   Spacer,
   HStack,
+  Image,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
 import { HeaderDevDrawer } from './drawer';
@@ -21,12 +24,16 @@ export const Header = (): JSX.Element => {
       bg="gray.300"
       height="100%"
       alignItems="center"
-      justifyContent="end"
+      justifyContent="space-between"
       px="2"
     >
-      <VisuallyHidden>
-        <h1>Pointing-poker by no95typem, kaesid, vimbi</h1>
-      </VisuallyHidden>
+      <HStack h="100%">
+        <Image src={logo} maxH="95%" />
+        <h1>
+          Pointing Poker
+          <VisuallyHidden>by no95typem, kaesid, vimbi</VisuallyHidden>
+        </h1>
+      </HStack>
 
       <HStack justifySelf="end">
         <Button onClick={onOpen}>DEV_DRAWER</Button>
