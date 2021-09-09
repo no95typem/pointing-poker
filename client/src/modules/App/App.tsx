@@ -1,9 +1,13 @@
 import React from 'react';
-import { ChakraProvider, Grid, theme, ColorModeScript } from '@chakra-ui/react';
+
+import '@fontsource/architects-daughter';
+
+import { ChakraProvider, Grid, ColorModeScript } from '@chakra-ui/react';
 import { Header } from '../Header/Header';
 import { Routes } from '../Routes/Routes';
 import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 import { Footer } from '../Footer/Footer';
+import { theme } from '../../theme';
 
 export const App = () => {
   return (
