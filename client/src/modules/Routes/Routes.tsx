@@ -2,8 +2,8 @@ import { ClassNames } from '@emotion/react';
 import React, { useRef } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
-import { ErrorsPrism } from '../../containers/ErrorsPrism/ErrorsPrism';
-import { LoadsPrism } from '../../containers/LoadsPrism/LoadsPrism';
+import { ErrorsMUX } from '../../containers/ErrorsMUX/ErrorsMUX';
+import { LoadsMUX } from '../../containers/LoadsMUX/LoadsMUX';
 import { useTypedSelector } from '../../redux/store';
 
 import routes from './routesData';
@@ -43,17 +43,17 @@ export const Routes = (): JSX.Element => {
           >
             <Switch location={location}>
               {Object.keys(errors).length > 0 && (
-                <Route key="ErrorsPrism" path="*">
+                <Route key="ErrorsMUX" path="*">
                   <div ref={nodeRef}>
-                    <ErrorsPrism />
+                    <ErrorsMUX />
                   </div>
                 </Route>
               )}
 
               {Object.keys(loads).length > 0 && (
-                <Route key="ErrorsPrism" path="*">
+                <Route key="LoadsMUX" path="*">
                   <div ref={nodeRef}>
-                    <LoadsPrism />
+                    <LoadsMUX />
                   </div>
                 </Route>
               )}

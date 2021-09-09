@@ -4,7 +4,7 @@ import { KnownLoadKey, KNOWN_LOADS } from '../../knownLoads';
 import { useTypedSelector } from '../../redux/store';
 import { GenericLoadPage } from './LoadsPages/GenericLoadPage/GenericLoadPage';
 
-export const LoadsPrism = (): JSX.Element => {
+export const LoadsMUX = (): JSX.Element => {
   const loads = useTypedSelector(state => state.loads);
   const loadsKeys = Object.keys(loads) as KnownLoadKey[];
 

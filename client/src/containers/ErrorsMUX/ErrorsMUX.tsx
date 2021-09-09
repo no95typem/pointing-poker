@@ -3,7 +3,7 @@ import { KnownErrorsKey, KNOWN_ERRORS } from '../../knownErrors';
 import { useTypedSelector } from '../../redux/store';
 import { GenericErrorPage } from './ErrorsPages/GenericErrorPage/GenericErrorPage';
 
-export const ErrorsPrism = (): JSX.Element => {
+export const ErrorsMUX = (): JSX.Element => {
   const errors = useTypedSelector(state => state.errors);
   const errorKeys = Object.keys(errors) as KnownErrorsKey[];
 

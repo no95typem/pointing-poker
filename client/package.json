@@ -34,12 +34,13 @@
     "@types/react-transition-group": "^4.4.2",
     "craco": "^0.0.3",
     "craco-babel-loader": "^0.1.4",
+    "cross-env": "^7.0.3",
     "react-transition-group": "^4.4.2"
   },
   "scripts": {
-    "start": "cross-env FE_ALONE=true craco start",
-    "start-with-server": "cross-env FE_ALONE=false craco start", 
-    "build": "craco build",
+    "start:fe": "cross-env FE_ALONE=true craco start",
+    "start:full": "cross-env FE_ALONE=false craco start",
+    "build": "cross-env FE_ALONE=false craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

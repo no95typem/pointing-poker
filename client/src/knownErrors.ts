@@ -1,5 +1,5 @@
 import { OBJ_PROCESSOR } from '../../shared/helpers/processors/obj-processor';
-import { NoConnectionToServerPage } from './containers/ErrorsPrism/ErrorsPages/NoConnectionToServerPage/NoConnectionToServerPage';
+import { NoConnectionToServerPage } from './containers/ErrorsMUX/ErrorsPages/NoConnectionToServerPage/NoConnectionToServerPage';
 
 export interface AppError {
   type: 'unknown' | 'communication';

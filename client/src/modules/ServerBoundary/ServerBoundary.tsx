@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useConnectionStatusToast } from '../../hooks/useConnectionStatusToast';
 import { useRouterController } from '../../hooks/useRouterController';
+import { SERVER_ADAPTER } from '../ServerAdapter/ServerAdapter';
 
 export interface ServerBoundaryProps {
   children: React.ReactNode;
@@ -9,18 +10,10 @@ export interface ServerBoundaryProps {
 export const ServerBoundary = (props: ServerBoundaryProps) => {
   useConnectionStatusToast();
   useRouterController();
-  // if (
-  //   !connectState.wsConnectionStatus ||
-  //   connectState.wsConnectionStatus === 'connecting'
-  // ) history.push
 
-  // if (connectState.sessionConnectionStatus === 'connecting')
-  //   return (
-  //     <VStack>
-  //       <Text>Connecting, please stand by...</Text>
-  //       <CircularProgress isIndeterminate color="blue.400" />
-  //     </VStack>
-  //   );
+  useEffect(() => {
+    !FE_ALONE && SERVER_ADAPTER.connect();
+  }, []);
 
   return <>{props.children}</>;
 };

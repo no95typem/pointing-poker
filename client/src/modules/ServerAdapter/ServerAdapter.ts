@@ -67,26 +67,29 @@ class ServerAdapter {
           });
           this.ws.addEventListener('error', e => {
             console.log(e);
-            store.dispatch(
-              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-            );
+            !FE_ALONE &&
+              store.dispatch(
+                setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+              );
             this.ws = undefined;
             res(false);
           });
           this.ws.addEventListener('close', e => {
             console.log(e);
-            store.dispatch(
-              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-            );
+            !FE_ALONE &&
+              store.dispatch(
+                setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+              );
             this.ws = undefined;
             res(false);
           });
         } catch (err) {
           res(false);
           console.log(err);
-          store.dispatch(
-            setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-          );
+          !FE_ALONE &&
+            store.dispatch(
+              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+            );
           this.ws = undefined;
         }
       }, 2000);
