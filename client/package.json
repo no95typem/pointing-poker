@@ -40,7 +40,7 @@
   },
   "scripts": {
     "dev": "cross-env FE_ALONE=true craco start",
-    "dev-fullstack": "cross-env FE_ALONE=false craco start",
+    "dev:fullstack": "cross-env FE_ALONE=false craco start",
     "build": "cross-env FE_ALONE=false craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
