@@ -10,3 +10,12 @@ export interface Settings {
   cards: Record<string, Card>; // key - id
   cardBackType: ''; // TODO (no95typem)
 }
+
+export interface ISettingsComponent {
+  name: string;
+  label: string;
+}
+
+export interface ISettingsComponentData {
+  data: ISettingsComponent;
+}

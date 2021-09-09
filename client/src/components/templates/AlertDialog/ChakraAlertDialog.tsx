@@ -34,7 +34,9 @@ const ChakraAlertDialog = () => {
               Kick Player?
             </AlertDialogHeader>
 
-            <AlertDialogBody>{LocaleText.REMOVE_PLAYER}</AlertDialogBody>
+            <AlertDialogBody>
+              {LocaleText.KICK_PLAYER_MODAL_TEXT_START}
+            </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>

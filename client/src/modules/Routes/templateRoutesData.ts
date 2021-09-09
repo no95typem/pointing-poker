@@ -12,6 +12,7 @@ import ChakraLoader from '../../components/templates/Loader/ChakraLoader';
 import ChakraEditableText from '../../components/templates/EditableText/ChakraEditableText';
 import ActionButtonExample from '../../containers/ComponentsExamples/Buttons/ButtonsExample';
 import UserCardExample from '../../containers/ComponentsExamples/UserCard/UserCardExample';
+import Settings from '../../containers/Settings/Settings';
 
 export enum TemplateRoutesPath {
   ROOT = '/',
@@ -24,7 +25,8 @@ export enum TemplateRoutesPath {
   LOADER = '/loader/',
   EDITABLE = '/editable/',
   BUTTONS_EXAMPLE = '/buttons-example',
-  USER_CARD = '/user-card',
+  USER_CARD = '/user-cards',
+  SETTINGS = '/settings',
 }
 
 const templatesRoutes: IRoute[] = [
@@ -87,6 +89,12 @@ const templatesRoutes: IRoute[] = [
     path: TemplateRoutesPath.USER_CARD,
     isExact: true,
     Component: UserCardExample,
+  },
+  {
+    key: 'settings',
+    path: TemplateRoutesPath.SETTINGS,
+    isExact: true,
+    Component: Settings,
   },
 ];
 

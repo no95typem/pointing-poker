@@ -47,8 +47,12 @@ const templatesLinks: ILink[] = [
     link: TemplateRoutesPath.BUTTONS_EXAMPLE,
   },
   {
-    text: 'User Card',
+    text: 'User Cards',
     link: TemplateRoutesPath.USER_CARD,
+  },
+  {
+    text: 'Settings',
+    link: TemplateRoutesPath.SETTINGS,
   },
 ];
 
