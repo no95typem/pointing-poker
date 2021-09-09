@@ -1,28 +1,22 @@
 import React from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Grid,
-  theme,
-  ColorModeScript,
-} from '@chakra-ui/react';
+import { ChakraProvider, Grid, theme, ColorModeScript } from '@chakra-ui/react';
 import { Header } from '../Header/Header';
 import { Routes } from '../Routes/Routes';
 import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
+import { Footer } from '../Footer/Footer';
 
 export const App = () => {
   return (
     <>
       <ColorModeScript />
       <ChakraProvider theme={theme}>
-        <Box textAlign="center" fontSize="xl">
-          <Grid minH="100vh" p={3}>
+        <Grid minH="100vh" templateRows="50px 1fr 50px" alignItems="center">
+          <ServerBoundary>
             <Header />
-            <ServerBoundary>
-              <Routes />
-            </ServerBoundary>
-          </Grid>
-        </Box>
+            <Routes />
+            <Footer />
+          </ServerBoundary>
+        </Grid>
       </ChakraProvider>
     </>
   );
