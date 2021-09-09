@@ -1,22 +1,24 @@
 import { useToast } from '@chakra-ui/toast';
 import { useEffect } from 'react';
 import { useTypedSelector } from '../redux/store';
+import { useLocale } from './useLocale';
 
 export const useConnectionStatusToast = () => {
   const connectState = useTypedSelector(state => state.connect);
   const toast = useToast();
+  const locale = useLocale();
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    if (connectState.wsConnectionStatus === 'alive') {
+    if (connectState.serverConnectionStatus === 'connected') {
       toast({
-        title: 'Connection status',
-        description: 'Succesfully connect to a server',
+        title: locale.APP_SERVER_CONNECTION_STATUS_TOAST_TITLE,
+        description: locale.APP_SERVER_CONNECTION_STATUS_TOAST_DESC,
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
     }
-  }, [connectState.wsConnectionStatus]);
+  }, [connectState.serverConnectionStatus]);
   /* eslint-enable react-hooks/exhaustive-deps */
 };

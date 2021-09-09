@@ -5,15 +5,15 @@ import { KNOWN_LOADS_KEYS } from '../../knownLoads';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
 import { setLoadByKey } from './loads';
 
-export type WSConnectionStatus = 'connecting' | 'alive' | 'dead';
+export type WSConnectionStatus = 'connecting' | 'connected' | 'failed';
 export type SessionConnectionStatus = 'connecting' | 'connected';
 
 interface ConnectState {
-  wsConnectionStatus?: WSConnectionStatus;
+  serverConnectionStatus?: WSConnectionStatus;
   sessionConnectionStatus?: SessionConnectionStatus;
 }
 
-const initialState = { wsConnectionStatus: undefined } as ConnectState;
+const initialState = { serverConnectionStatus: undefined } as ConnectState;
 
 export const connectToLobby = createAsyncThunk(
   'connection/connectToSession',
@@ -39,10 +39,16 @@ export const connectSlice = createSlice({
   name: 'connection',
   initialState,
   reducers: {
-    setWSStatus(state, action: PayloadAction<WSConnectionStatus>) {
-      state.wsConnectionStatus = action.payload;
+    setServerConnectionStatus(
+      state,
+      action: PayloadAction<WSConnectionStatus>,
+    ) {
+      state.serverConnectionStatus = action.payload;
     },
-    setConnectionStatus(state, action: PayloadAction<SessionConnectionStatus>) {
+    setSessionConnectionStatus(
+      state,
+      action: PayloadAction<SessionConnectionStatus>,
+    ) {
       state.sessionConnectionStatus = action.payload;
     },
   },
@@ -53,4 +59,5 @@ export const connectSlice = createSlice({
   },
 });
 
-export const { setWSStatus, setConnectionStatus } = connectSlice.actions;
+export const { setServerConnectionStatus, setSessionConnectionStatus } =
+  connectSlice.actions;

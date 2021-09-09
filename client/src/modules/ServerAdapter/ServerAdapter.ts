@@ -3,10 +3,11 @@ import { SCMsgSessionCreated } from '../../../../shared/types/sc-msgs/msgs/sessi
 import { SCMsg } from '../../../../shared/types/sc-msgs/sc-msg';
 import { KNOWN_ERRORS_KEYS } from '../../knownErrors';
 import { KNOWN_LOADS_KEYS } from '../../knownLoads';
+import { setServerConnectionStatus } from '../../redux/slices/connect';
 import { removeError, setErrorByKey } from '../../redux/slices/errors';
 import { removeLoad, setLoadByKey } from '../../redux/slices/loads';
 
-import { setSessionId, setSessionStatus } from '../../redux/slices/session';
+import { setSessionId } from '../../redux/slices/session';
 import { store } from '../../redux/store';
 
 class ServerAdapter {
@@ -64,32 +65,27 @@ class ServerAdapter {
               this.obeyTheServer,
             );
             res(true);
+            store.dispatch(setServerConnectionStatus('connected'));
           });
           this.ws.addEventListener('error', e => {
-            console.log(e);
-            !FE_ALONE &&
-              store.dispatch(
-                setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-              );
+            store.dispatch(
+              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+            );
             this.ws = undefined;
             res(false);
           });
           this.ws.addEventListener('close', e => {
-            console.log(e);
-            !FE_ALONE &&
-              store.dispatch(
-                setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-              );
+            store.dispatch(
+              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+            );
             this.ws = undefined;
             res(false);
           });
         } catch (err) {
           res(false);
-          console.log(err);
-          !FE_ALONE &&
-            store.dispatch(
-              setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-            );
+          store.dispatch(
+            setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
+          );
           this.ws = undefined;
         }
       }, 2000);
@@ -103,9 +99,10 @@ class ServerAdapter {
       (this.ws as WebSocket).send(JSON.stringify(msg));
       console.log('msg sent');
     } catch (err) {
-      store.dispatch(
-        setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),
-      );
+      !FE_ALONE &&
+        store.dispatch(
+          setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),
+        );
     }
   }
 }
