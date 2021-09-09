@@ -1,44 +1,48 @@
 import * as React from 'react';
+import { ChatIcon } from '@chakra-ui/icons';
 
-import { Box, VisuallyHidden, Grid } from '@chakra-ui/react';
+import logo from '../../assets/images/shared/logo.svg';
+
+import {
+  VisuallyHidden,
+  Flex,
+  useDisclosure,
+  Button,
+  IconButton,
+  Spacer,
+  HStack,
+  Image,
+} from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
-import { NavLink } from 'react-router-dom';
-import templatesLinks from './templatesLinks';
+import { HeaderDevDrawer } from './drawer';
 
 export const Header = (): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <Box>
-      <VisuallyHidden>
-        <h1> Pointing-poker </h1>
-      </VisuallyHidden>
+    <Flex
+      bg="gray.300"
+      height="100%"
+      alignItems="center"
+      justifyContent="space-between"
+      px="2"
+    >
+      <HStack h="100%">
+        <Image src={logo} maxH="95%" />
+        <h1>
+          Pointing Poker
+          <VisuallyHidden>by no95typem, kaesid, vimbi</VisuallyHidden>
+        </h1>
+      </HStack>
 
-      <nav>
-        <ul className="nav nav-pills">
-          {/* Kaesid start --------------------------------  Линков в хедере у нас не будет,
-          так что  этот код тоже на уделение, как с компонентами из чакры определимся */}
-          <Grid templateColumns="repeat(5, 1fr)" gap={2}>
-            {templatesLinks.map(linkData => {
-              const { link, text } = linkData;
-
-              return (
-                <li className="nav-item" key={`${link}-li`}>
-                  <NavLink
-                    exact
-                    strict
-                    className="nav-link"
-                    to={link}
-                    key={`${link}-nav`}
-                  >
-                    {text}
-                  </NavLink>
-                </li>
-              );
-            })}
-            {/* Kaesid finish -------------------------------- */}
-          </Grid>
-        </ul>
-      </nav>
-      <ColorModeSwitcher justifySelf="flex-end" />
-    </Box>
+      <HStack justifySelf="end">
+        <Button onClick={onOpen}>DEV_DRAWER</Button>
+        <HeaderDevDrawer isOpen={isOpen} onClose={onClose} />
+        <Spacer />
+        <ColorModeSwitcher justifySelf="flex-end" />
+        <Spacer />
+        <IconButton aria-label="chat" icon={<ChatIcon />} />
+      </HStack>
+    </Flex>
   );
 };

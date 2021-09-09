@@ -31,6 +31,7 @@
     "web-vitals": "^0.2.2"
   },
   "devDependencies": {
+    "@chakra-ui/icons": "^1.0.15",
     "@types/react-transition-group": "^4.4.2",
     "craco": "^0.0.3",
     "craco-babel-loader": "^0.1.4",
