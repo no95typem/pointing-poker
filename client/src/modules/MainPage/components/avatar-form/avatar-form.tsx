@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Flex, Box, FormLabel, Avatar } from '@chakra-ui/react';
 import { useImgConvertor } from '../../../../hooks/useImgConvertor';
 import { useLoadImg } from '../../../../hooks/useImgLoader';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../../redux/store';
+import { userInfoSlice } from '../../../../redux/slices/userInfo';
 
-interface Props {
-  user: {
-    firstName: string;
-    lastName: string;
-    jobPosition: string;
-  };
-}
-
-const AvatarForm = ({ user }: Props) => {
-  const { firstName, lastName } = user;
-  const [color, setColor] = useState<string>('#385898');
-  const [imgSrc, setImgSrc] = useState<string>();
+const AvatarForm = () => {
+  const dispatch = useDispatch();
+  const { name, surname, avatarBase64, avatarBgColor } = useSelector(
+    (state: RootState) => state.userInfo,
+  );
+  const { changeAvatarBase64, changeAvatarBgColor } = userInfoSlice.actions;
 
   const convert = useImgConvertor();
   const loadImg = useLoadImg();
@@ -24,7 +21,7 @@ const AvatarForm = ({ user }: Props) => {
       .then(src => {
         convert({ src, w: 200, h: 200 })
           .then(base64 => {
-            setImgSrc(base64);
+            dispatch(changeAvatarBase64(base64));
           })
           .catch(() => {}); // user's file is invalid, show some error
       })
@@ -32,21 +29,21 @@ const AvatarForm = ({ user }: Props) => {
   };
 
   const deleteAvatar = (): void => {
-    setImgSrc(undefined);
+    dispatch(changeAvatarBase64(''));
   };
 
   return (
     <Flex direction="column" justify="space-between" alignItems="center">
       <Avatar
-        name={firstName + ' ' + lastName}
-        bg={color}
+        name={name + ' ' + surname}
+        bg={avatarBgColor}
         size="2xl"
-        src={imgSrc}
+        src={avatarBase64}
       />
       <input
         type="color"
-        value={color}
-        onChange={e => setColor(e.target.value)}
+        value={avatarBgColor}
+        onChange={e => dispatch(changeAvatarBgColor(e.target.value))}
       />
       <Box>
         <FormLabel mb="1rem">Image:</FormLabel>

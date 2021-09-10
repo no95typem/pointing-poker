@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Modal,
   ModalOverlay,
@@ -12,6 +13,7 @@ import {
 import RadioButtons from '../radio-buttons/radio-buttons';
 import InputsStack from '../inputs-stack/inputs-stack';
 import AvatarForm from '../avatar-form/avatar-form';
+import { userInfoSlice } from '../../../../redux/slices/userInfo';
 
 interface Props {
   isOpen: boolean;
@@ -19,22 +21,21 @@ interface Props {
 }
 
 const Popup = ({ isOpen, close }: Props): JSX.Element => {
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    jobPosition: '',
-  });
-
-  const userChange = (name: string, value: string): void => {
-    setUser({ ...user, [name]: value });
-  };
+  const dispatch = useDispatch();
+  const {
+    changeName,
+    changeSurname,
+    changeJobPosition,
+    changeAvatarBase64,
+    changeAvatarBgColor,
+  } = userInfoSlice.actions;
 
   const clearForm = (): void => {
-    setUser({
-      firstName: '',
-      lastName: '',
-      jobPosition: '',
-    });
+    dispatch(changeName(''));
+    dispatch(changeSurname(''));
+    dispatch(changeJobPosition(''));
+    dispatch(changeAvatarBase64(''));
+    dispatch(changeAvatarBgColor('#385898'));
   };
 
   const clickButtonClose = () => {
@@ -56,8 +57,8 @@ const Popup = ({ isOpen, close }: Props): JSX.Element => {
         <ModalBody>
           <Flex direction="column" alignItems="center" gridGap="5rem">
             <Flex w="100%" justify="space-between">
-              <InputsStack user={user} userChange={userChange} />
-              <AvatarForm user={user} />
+              <InputsStack />
+              <AvatarForm />
             </Flex>
             <RadioButtons />
           </Flex>

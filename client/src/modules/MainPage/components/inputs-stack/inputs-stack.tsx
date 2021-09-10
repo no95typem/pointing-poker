@@ -1,4 +1,5 @@
 import React, { ChangeEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Stack,
   Input,
@@ -6,22 +7,30 @@ import {
   FormLabel,
   FormErrorMessage,
 } from '@chakra-ui/react';
+import { RootState } from '../../../../redux/store';
+import { userInfoSlice } from '../../../../redux/slices/userInfo';
 
-interface Props {
-  user: {
-    firstName: string;
-    lastName: string;
-    jobPosition: string;
-  };
-  userChange: (name: string, value: string) => void;
-}
+const InputsStack = () => {
+  const dispatch = useDispatch();
+  const { name, surname, jobPosition } = useSelector(
+    (state: RootState) => state.userInfo,
+  );
 
-const InputsStack = ({ user, userChange }: Props) => {
-  const { firstName, lastName, jobPosition } = user;
+  const { changeName, changeSurname, changeJobPosition } =
+    userInfoSlice.actions;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    userChange(name, value);
+    switch (name) {
+      case 'name':
+        return dispatch(changeName(value));
+      case 'surname':
+        return dispatch(changeSurname(value));
+      case 'jobPosition':
+        return dispatch(changeJobPosition(value));
+      default:
+        return;
+    }
   };
 
   return (
@@ -29,8 +38,8 @@ const InputsStack = ({ user, userChange }: Props) => {
       <FormControl>
         <FormLabel>Your first name:</FormLabel>
         <Input
-          name="firstName"
-          value={firstName}
+          name="name"
+          value={name}
           onChange={handleChange}
           size="md"
           isRequired
@@ -40,8 +49,8 @@ const InputsStack = ({ user, userChange }: Props) => {
       <FormControl>
         <FormLabel>Your last name:</FormLabel>
         <Input
-          name="lastName"
-          value={lastName}
+          name="surname"
+          value={surname}
           onChange={handleChange}
           size="md"
         />
