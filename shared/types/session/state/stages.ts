@@ -3,6 +3,8 @@ import { OBJ_PROCESSOR } from '../../../helpers/processors/obj-processor';
 class SessionStages {
   readonly LOBBY = 'LOBBY';
 
+  readonly EMPTY = 'EMPTY';
+
   readonly GAME = 'GAME';
 
   readonly STATS = 'STATS';

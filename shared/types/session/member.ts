@@ -9,3 +9,14 @@ export interface Member extends Synchronized {
   userRole: UserRole;
   userState: UserState;
 }
+
+export interface IMemberData {
+  member: Member;
+  isRoundStarted: boolean;
+  isItYou: boolean;
+  kickPlayer: (id: number, name: string) => void;
+}
+
+export interface IMemberDataBundle {
+  data: IMemberData;
+}

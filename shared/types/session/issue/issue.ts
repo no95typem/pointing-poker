@@ -13,3 +13,23 @@ export interface Issue extends Synchronized {
   closed: boolean;
   stat?: RoundStat;
 }
+
+export interface IIssueData {
+  issue?: Issue;
+  onClick: (id?: string) => void;
+}
+
+export interface IIssueModal {
+  onClick: (id?: string) => void;
+  onClose: () => void;
+  isOpen: boolean;
+}
+
+export interface IIssues {
+  issues: Issue[];
+  modal: IIssueModal;
+}
+
+export interface IIssueModalData {
+  issue: IIssueModal;
+}
