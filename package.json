@@ -32,5 +32,9 @@
     "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
     "typescript": "^3.9.10"
+  },
+  "dependencies": {
+    "@types/dompurify": "^2.2.3",
+    "dompurify": "^2.3.1"
   }
 }
