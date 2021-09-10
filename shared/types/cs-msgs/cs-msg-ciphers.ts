@@ -1,21 +1,11 @@
 import { OBJ_PROCESSOR } from '../../helpers/processors/obj-processor';
 
 class CSMsgCiphers {
-  readonly CREATE_SESSION = 'CREATE_SESSION';
+  readonly CREATE_SESS = 'CREATE_SESS';
 
-  readonly SET_DEALER = 'SET_DEALER';
+  readonly CONN_TO_SESS = 'CONN_TO_SESS';
 
-  readonly SET_ISSUES = 'SET_ISSUES';
-
-  readonly SET_SETTINGS = 'SET_SETTINGS';
-
-  readonly SET_SESSION_STATE = 'SET_SESSION_STATE';
-
-  readonly VOTEKICK = 'VOTEKICK';
-
-  readonly UPDATE_MEMBERS = 'UPDATE_MEMBERS';
-
-  readonly USER_INFO = 'USER_INFO';
+  readonly DISCONN_FROM_SESS = 'DISCONN_FROM_SESS';
 }
 
 export const CSMSG_CIPHERS = OBJ_PROCESSOR.deepFreeze(new CSMsgCiphers());

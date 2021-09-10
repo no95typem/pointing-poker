@@ -1,7 +1,7 @@
 import { OBJ_PROCESSOR } from '../../helpers/processors/obj-processor';
 
 class UserStates {
-  readonly CONECTED = 'CONECTED';
+  readonly CONNECTED = 'CONNECTED';
 
   readonly DISCONNECTED = 'DISCONNECTED';
 

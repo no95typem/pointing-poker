@@ -8,6 +8,6 @@ class UserRoles {
   readonly SPECTACLE = 'SPECTACLE';
 }
 
-export const CSMSG_CIPHERS = OBJ_PROCESSOR.deepFreeze(new UserRoles());
+export const USER_ROLES = OBJ_PROCESSOR.deepFreeze(new UserRoles());
 
 export type UserRole = keyof UserRoles;

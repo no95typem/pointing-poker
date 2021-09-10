@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { KnownErrorsKey } from '../../knownErrors';
+import { KnownErrorsKey } from '../../../../shared/knownErrorsKeys';
 
 const initialState: Partial<Record<KnownErrorsKey, unknown>> = {};
 
