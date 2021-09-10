@@ -7,7 +7,20 @@ import { ClientManager } from './ClientManager';
 export class PointingPokerServer {
   static readonly DEFAULT_PORT = 9000;
 
-  private server = http.createServer();
+  private httpRequestsListener: http.RequestListener = (
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+  ) => {
+    console.warn(
+      `API schema violation 
+      from ip: ${req.socket.remoteAddress}, 
+      forwarder for: ${req.headers['x-forwarded-for']}`,
+    );
+    res.statusCode = 400;
+    res.end('API schema violation');
+  };
+
+  private server = http.createServer(this.httpRequestsListener);
 
   private wss = new WebSocket.Server({ noServer: true });
 
