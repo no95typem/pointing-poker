@@ -5,7 +5,7 @@ class UserRoles {
 
   readonly PLAYER = 'PLAYER';
 
-  readonly SPECTACLE = 'SPECTACLE';
+  readonly SPECTATOR = 'SPECTATOR';
 }
 
 export const USER_ROLES = OBJ_PROCESSOR.deepFreeze(new UserRoles());

@@ -4,6 +4,8 @@ class SCMsgCiphers {
   readonly FATAL_ERROR = 'FATAL_ERROR';
 
   readonly CONN_TO_SESS_STATUS = 'CONN_TO_SESS_STATUS';
+
+  readonly CHAT_MSG = 'CHAT_MSG';
 }
 
 export const SCMSG_CIPHERS = OBJ_PROCESSOR.deepFreeze(new SCMsgCiphers());
