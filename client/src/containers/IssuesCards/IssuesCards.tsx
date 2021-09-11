@@ -14,8 +14,8 @@ const IssuesCards = (): JSX.Element => {
 
   const issue1: Issue = {
     id: '1',
-    title: 'a',
-    link: 'www.a.com',
+    title: 'isssue 123',
+    link: 'www.a.com/123',
     priority: 'MEDIUM',
     pos: 1,
     isSynced: true,
@@ -25,26 +25,17 @@ const IssuesCards = (): JSX.Element => {
   const issue2: Issue = {
     ...issue1,
     id: '2',
-    title: 'b',
-    pos: 2,
+    title: 'issue 45',
+    link: 'www.a.com/45',
     priority: 'HIGH',
   };
 
-  const [issue, setIssue] = useState<Issue>();
+  const [editIssue, setEditIssue] = useState<Issue>();
 
-  //! временные хуки, для визуализации. В будущем будет реализовано через стор.
   const issues = [issue1, issue2];
 
-  //!
-
-  const createIssue = (issueId?: string): void => {
-    if (issueId) {
-      console.log("load issues's data= ", issueId);
-
-      setIssue(issues.find(issue => issue.id === issueId));
-    } else {
-      setIssue(undefined);
-    }
+  const openModal = (issueId?: string): void => {
+    setEditIssue(issues.find(issue => issue.id === issueId));
 
     onOpen();
   };
@@ -52,10 +43,11 @@ const IssuesCards = (): JSX.Element => {
   const modalData: IIssueModal = {
     onClose: onClose,
     isOpen: isOpen,
-    onClick: createIssue,
+    onClick: openModal,
+    editIssue: editIssue,
   };
 
-  return <IssueCardView issues={issues} modal={modalData} editIssue={issue} />;
+  return <IssueCardView issues={issues} modal={modalData} />;
 };
 
 export default IssuesCards;

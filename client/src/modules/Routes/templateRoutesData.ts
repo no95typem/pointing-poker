@@ -14,6 +14,7 @@ import ActionButtonExample from '../../containers/ComponentsExamples/Buttons/But
 import UserCards from '../../containers/UserCards/UserCards';
 import Settings from '../../containers/Settings/Settings';
 import IssuesCards from '../../containers/IssuesCards/IssuesCards';
+import GameCards from '../../containers/GameCards/GameCards';
 
 export enum TemplateRoutesPath {
   ROOT = '/',
@@ -29,6 +30,7 @@ export enum TemplateRoutesPath {
   USER_CARDS = '/user-cards',
   SETTINGS = '/settings',
   ISSUES = '/issues',
+  CARDS = '/cards',
 }
 
 const templatesRoutes: IRoute[] = [
@@ -103,6 +105,12 @@ const templatesRoutes: IRoute[] = [
     path: TemplateRoutesPath.ISSUES,
     isExact: true,
     Component: IssuesCards,
+  },
+  {
+    key: 'cards',
+    path: TemplateRoutesPath.CARDS,
+    isExact: true,
+    Component: GameCards,
   },
 ];
 

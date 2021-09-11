@@ -23,15 +23,14 @@ export interface IIssueModal {
   onClick: (id?: string) => void;
   onClose: () => void;
   isOpen: boolean;
+  editIssue: Issue | undefined;
 }
 
 export interface IIssues {
   issues: Issue[];
   modal: IIssueModal;
-  editIssue: Issue | undefined;
 }
 
 export interface IIssueModalData {
   issue: IIssueModal;
-  editIssue: Issue | undefined;
 }

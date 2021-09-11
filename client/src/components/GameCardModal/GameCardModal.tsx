@@ -9,19 +9,18 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  Select,
   Stack,
   Input,
   FormControl,
   FormLabel,
 } from '@chakra-ui/react';
 
-import { IIssueModalData } from '../../../../shared/types/session/issue/issue';
+import { ICardModalData } from '../../../../shared/types/session/card';
 
-const IssueModal = (props: IIssueModalData): JSX.Element => {
-  const { issue } = props;
+const GameCardModal = (props: ICardModalData): JSX.Element => {
+  const { card } = props;
 
-  const { isOpen, onClose, editIssue } = issue;
+  const { isOpen, onClose, editCard } = card;
 
   return (
     <>
@@ -34,31 +33,16 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
             <Stack d="flex" justify="space-around" align="stretch">
               <FormControl id="title" isRequired>
                 <Stack spacing={2} direction="row" align="center">
-                  <FormLabel>Title:</FormLabel>
-                  <Input
-                    placeholder="Issue name"
-                    defaultValue={editIssue ? editIssue.title : ''}
-                  />
+                  <FormLabel>Card Value:</FormLabel>
+                  <Input defaultValue={editCard ? editCard.value : ''} />
                 </Stack>
               </FormControl>
               <FormControl id="link" isRequired>
                 <Stack spacing={2} direction="row" align="center">
-                  <FormLabel htmlFor="link">Link:</FormLabel>
-                  <Input defaultValue={editIssue ? editIssue.link : ''} />
+                  <FormLabel htmlFor="link">Units(short):</FormLabel>
+                  <Input defaultValue={editCard ? editCard.base64 : ''} />
                 </Stack>
               </FormControl>
-              <Stack spacing={2} direction="row" align="center">
-                <FormLabel>Priority:</FormLabel>
-                <Select
-                  defaultValue={editIssue ? editIssue.priority : ''}
-                  variant="filled"
-                  bg="gray.100"
-                >
-                  <option value="LOW">Low</option>
-                  <option value="MEDIUM">Medium</option>
-                  <option value="HIGH">High</option>
-                </Select>
-              </Stack>
             </Stack>
           </ModalBody>
 
@@ -81,4 +65,4 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
   );
 };
 
-export default IssueModal;
+export default GameCardModal;
