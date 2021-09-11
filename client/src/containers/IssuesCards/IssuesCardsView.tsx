@@ -8,7 +8,7 @@ import IssueModal from '../../components/IssueModal/IssueModal';
 import IssueCardButton from '../../components/IssueCardButton/IssueCardButton';
 
 const IssueCardView = (props: IIssues): JSX.Element => {
-  const { issues, modal } = props;
+  const { issues, modal, editIssue } = props;
 
   return (
     <Stack w="100%" wrap="wrap" direction="row">
@@ -23,7 +23,7 @@ const IssueCardView = (props: IIssues): JSX.Element => {
       })}
       <IssueCardButton onClick={modal.onClick} />
 
-      <IssueModal issue={modal} />
+      <IssueModal issue={modal} editIssue={editIssue} />
     </Stack>
   );
 };

@@ -1,4 +1,5 @@
 import { OBJ_PROCESSOR } from '../../shared/helpers/processors/obj-processor';
+import { KnownErrorsKey } from '../../shared/knownErrorsKeys';
 import { NoConnectionToServerPage } from './containers/ErrorsMUX/ErrorsPages/NoConnectionToServerPage/NoConnectionToServerPage';
 
 export interface AppError {
@@ -7,20 +8,6 @@ export interface AppError {
   more?: string;
   Component?: () => JSX.Element;
 }
-
-class knownErrorsKeys {
-  readonly NO_CONNECTION_TO_SERVER = 'NO_CONNECTION_TO_SERVER';
-
-  readonly FAILED_TO_SEND_MSG_TO_SERVER = 'FAILED_TO_SEND_MSG_TO_SERVER';
-
-  readonly UNEXPECTED_REDIRECT_TO_ERROR = 'UNEXPECTED_REDIRECT_TO_ERROR';
-}
-
-export const KNOWN_ERRORS_KEYS = OBJ_PROCESSOR.deepFreeze(
-  new knownErrorsKeys(),
-);
-
-export type KnownErrorsKey = keyof knownErrorsKeys;
 
 export const KNOWN_ERRORS: Record<KnownErrorsKey, AppError> = {
   NO_CONNECTION_TO_SERVER: {
@@ -35,6 +22,18 @@ export const KNOWN_ERRORS: Record<KnownErrorsKey, AppError> = {
   FAILED_TO_SEND_MSG_TO_SERVER: {
     type: 'communication',
     description: 'failed to send msg through ws',
+  },
+  SC_PROTOCOL_ERROR: {
+    type: 'communication',
+    description: 'Generic protocol error',
+  },
+  SC_ALREADY_CONNECTED_TO_SESSION: {
+    type: 'communication',
+    description: 'You already connected to a session',
+  },
+  SESSION_DOES_NOT_EXIST: {
+    type: 'communication',
+    description: `Session doesn't exist`,
   },
 };
 

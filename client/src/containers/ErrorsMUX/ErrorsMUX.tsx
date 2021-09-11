@@ -1,5 +1,6 @@
 import React from 'react';
-import { KnownErrorsKey, KNOWN_ERRORS } from '../../knownErrors';
+import { KnownErrorsKey } from '../../../../shared/knownErrorsKeys';
+import { KNOWN_ERRORS } from '../../knownErrors';
 import { useTypedSelector } from '../../redux/store';
 import { GenericErrorPage } from './ErrorsPages/GenericErrorPage/GenericErrorPage';
 

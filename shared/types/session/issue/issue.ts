@@ -28,8 +28,10 @@ export interface IIssueModal {
 export interface IIssues {
   issues: Issue[];
   modal: IIssueModal;
+  editIssue: Issue | undefined;
 }
 
 export interface IIssueModalData {
   issue: IIssueModal;
+  editIssue: Issue | undefined;
 }

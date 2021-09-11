@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useDisclosure } from '@chakra-ui/react';
 
@@ -11,20 +11,6 @@ import IssueCardView from './IssuesCardsView';
 
 const IssuesCards = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  //! временные хуки, для визуализации. В будущем будет реализовано через стор.
-
-  // const [id, setId] = useState('');
-
-  //!
-
-  const createIssue = (newId?: string): void => {
-    if (newId) {
-      console.log(newId);
-    }
-
-    onOpen();
-  };
 
   const issue1: Issue = {
     id: '1',
@@ -41,7 +27,26 @@ const IssuesCards = (): JSX.Element => {
     id: '2',
     title: 'b',
     pos: 2,
-    priority: 'LOW',
+    priority: 'HIGH',
+  };
+
+  const [issue, setIssue] = useState<Issue>();
+
+  //! временные хуки, для визуализации. В будущем будет реализовано через стор.
+  const issues = [issue1, issue2];
+
+  //!
+
+  const createIssue = (issueId?: string): void => {
+    if (issueId) {
+      console.log("load issues's data= ", issueId);
+
+      setIssue(issues.find(issue => issue.id === issueId));
+    } else {
+      setIssue(undefined);
+    }
+
+    onOpen();
   };
 
   const modalData: IIssueModal = {
@@ -50,7 +55,7 @@ const IssuesCards = (): JSX.Element => {
     onClick: createIssue,
   };
 
-  return <IssueCardView issues={[issue1, issue2]} modal={modalData} />;
+  return <IssueCardView issues={issues} modal={modalData} editIssue={issue} />;
 };
 
 export default IssuesCards;

@@ -18,7 +18,7 @@ import {
 import { IIssueModalData } from '../../../../shared/types/session/issue/issue';
 
 const IssueModal = (props: IIssueModalData): JSX.Element => {
-  const { issue } = props;
+  const { issue, editIssue } = props;
 
   const { isOpen, onClose } = issue;
 
@@ -34,21 +34,28 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
               <FormControl id="title" isRequired>
                 <Stack spacing={2} direction="row" align="center">
                   <FormLabel>Title:</FormLabel>
-                  <Input placeholder="Issue name" />
+                  <Input
+                    placeholder="Issue name"
+                    defaultValue={editIssue ? editIssue.title : ''}
+                  />
                 </Stack>
               </FormControl>
               <FormControl id="link" isRequired>
                 <Stack spacing={2} direction="row" align="center">
                   <FormLabel htmlFor="link">Link:</FormLabel>
-                  <Input />
+                  <Input defaultValue={editIssue ? editIssue.link : ''} />
                 </Stack>
               </FormControl>
               <Stack spacing={2} direction="row" align="center">
                 <FormLabel>Priority:</FormLabel>
-                <Select variant="filled" bg="gray.100">
-                  <option value="low">Low</option>
-                  <option value="middle">Middle</option>
-                  <option value="high">High</option>
+                <Select
+                  defaultValue={editIssue ? editIssue.priority : ''}
+                  variant="filled"
+                  bg="gray.100"
+                >
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
                 </Select>
               </Stack>
             </Stack>
