@@ -58,6 +58,7 @@ export class SessionManager {
       userSessionPublicId: this.genNewMemberId(),
       isSynced: true,
     };
+
     this.members[member.userSessionPublicId] = member;
     this.webSocketsMap.set(init.initWS, member.userSessionPublicId);
 
@@ -91,8 +92,8 @@ export class SessionManager {
 
     /* eslint-disable no-fallthrough */
     switch (member.userRole) {
-      case USER_ROLES.DEALER:
-        this.dealerManager.addMember(ws, member.userSessionPublicId);
+      // case USER_ROLES.DEALER:
+      //   this.dealerManager.addMember(ws, member.userSessionPublicId);
       case USER_ROLES.PLAYER:
         this.playersManager.addMember(ws, member.userSessionPublicId);
       default:
@@ -112,7 +113,10 @@ export class SessionManager {
     const id = this.webSocketsMap.get(ws);
 
     if (id !== undefined && this.members[id]) {
-      this.members[id].userState = 'DISCONNECTED';
+      this.spectatorsManager.removeMember(ws, id);
+      this.playersManager.removeMember(ws, id);
+      this.dealerManager.removeMember(ws, id);
+      this.members[id].userState = USER_STATES.DISCONNECTED;
       console.log('member disconnected');
       // TODO (no95typem): broadcast change;
       // remove event listeners

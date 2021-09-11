@@ -12,12 +12,21 @@ export abstract class RoleManager {
     }
   > = {};
 
-  constructor(private broadcast: (msg: SCMsg, level: UserRole) => void) {}
+  constructor(protected broadcast: (msg: SCMsg, level: UserRole) => void) {}
 
   addMember(ws: WebSocket, id: number) {
     const listener = this.listen.bind(this, ws, id) as () => void;
     this.serviceData[id] = { ws, listener };
     ws.addEventListener('message', listener);
+  }
+
+  removeMember(ws: WebSocket, id: number) {
+    const data = this.serviceData[id];
+
+    if (data) {
+      data.ws.removeEventListener('message', data.listener);
+      delete this.serviceData[id];
+    }
   }
 
   protected abstract listen: (
