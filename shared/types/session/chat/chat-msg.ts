@@ -9,11 +9,11 @@
 
 export interface UnregisteredChatMsg {
   readonly text: string;
+  readonly time: number; // Date.now()
+  readonly memberId: number;
   readonly senderMsgId: string;
 }
 
 export interface RegisteredChatMsg extends UnregisteredChatMsg {
-  readonly memberId: number;
-  readonly time: number; // Date.now()
   readonly serverMsgId: number;
 }

@@ -3,20 +3,18 @@
 import WebSocket from 'ws';
 import { purify } from '../../../shared/helpers/processors/purify';
 import { SESSION_INIT_STATE } from '../../../shared/initStates';
-import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
-import { CSMSG_CIPHERS } from '../../../shared/types/cs-msgs/cs-msg-ciphers';
-import { CSMsgChatMsg } from '../../../shared/types/cs-msgs/msgs/cs-chat-msg';
 import { CSMsgConnToSess } from '../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../shared/types/cs-msgs/msgs/cs-create-sess';
-import { SCMsgChatMsg } from '../../../shared/types/sc-msgs/msgs/sc-chat-msg';
 import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
 import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
 import { Member } from '../../../shared/types/session/member';
 import { SessionState } from '../../../shared/types/session/state/session-state';
 import { UserRole, USER_ROLES } from '../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../shared/types/user/user-state';
-import { WebSocketEvent } from '../../../shared/types/ws-event';
 import { WebSocketSendFunc } from '../types';
+import { DealerManager } from './DealerManager';
+import { PlayersManager } from './PlayersManager';
+import { SpectatorManager } from './SpectatorManager';
 
 export interface SessionManagerInit {
   initWS: WebSocket;
@@ -25,48 +23,31 @@ export interface SessionManagerInit {
 }
 
 export class SessionManager {
+  private dealerManager: DealerManager;
+
+  private playersManager: PlayersManager;
+
+  private spectatorsManager: SpectatorManager;
+
+  private sessionId: string;
+
+  private sessionState: SessionState<Member> = SESSION_INIT_STATE;
+
   private members: Record<number, Member> = {};
 
   private webSocketsMap: Map<WebSocket, number> = new Map();
 
-  private idCounter = 0;
+  private membersIdCounter = 0;
 
   private genNewMemberId(): number {
-    return this.idCounter++;
+    return this.membersIdCounter++;
   }
-
-  private msgCounter = 0;
-
-  private genNewMsgId(): number {
-    return this.msgCounter++;
-  }
-
-  private sessionState: SessionState<Member> = SESSION_INIT_STATE;
-
-  private sessionId: string;
-
-  private spectatorLvlServiceData: Record<
-    number,
-    {
-      ws: WebSocket;
-      listener: () => void;
-    }
-  > = {};
-
-  private playerLvlServiceData: Record<
-    number,
-    {
-      ws: WebSocket;
-      listener: () => void;
-    }
-  > = {};
-
-  private dealerLvlServiceData:
-    | { ws: WebSocket; listener: () => void }
-    | undefined;
 
   constructor(init: SessionManagerInit, private send: WebSocketSendFunc) {
     this.sessionId = init.id;
+    this.dealerManager = new DealerManager(this.broadcast);
+    this.playersManager = new PlayersManager(this.broadcast);
+    this.spectatorsManager = new SpectatorManager(this.broadcast);
 
     const msg = purify(init.initMsg);
 
@@ -111,11 +92,11 @@ export class SessionManager {
     /* eslint-disable no-fallthrough */
     switch (member.userRole) {
       case USER_ROLES.DEALER:
-        this.makeDealer(ws);
+        this.dealerManager.addMember(ws, member.userSessionPublicId);
       case USER_ROLES.PLAYER:
-        this.makePlayer(ws, member.userSessionPublicId);
+        this.playersManager.addMember(ws, member.userSessionPublicId);
       default:
-        this.makeSpectator(ws, member.userSessionPublicId);
+        this.spectatorsManager.addMember(ws, member.userSessionPublicId);
     }
     /* eslint-enable no-fallthrough */
 
@@ -143,80 +124,24 @@ export class SessionManager {
     }
   }
 
-  private makeSpectator(ws: WebSocket, id: number) {
-    const listener = this.listenSpectatorLvl.bind(this, ws, id) as () => void;
-    this.spectatorLvlServiceData[id] = { ws, listener };
-    ws.addEventListener('message', listener);
-  }
-
-  private listenSpectatorLvl = (
-    ws: WebSocket,
-    id: number,
-    e: WebSocketEvent,
-  ) => {
-    try {
-      const parsed = JSON.parse(e.data as string);
-
-      if ('cipher' in parsed) {
-        switch ((parsed as CSMsg).cipher) {
-          case CSMSG_CIPHERS.CHAT_MSG:
-            this.handleChatMsg(ws, id, parsed as CSMsgChatMsg);
-
-            return;
-
-          default:
-            // eslint-disable-next-line no-useless-return
-            return;
-        }
-      }
-    } catch {
-      //
-    }
-  };
-
-  private makePlayer(ws: WebSocket, id: number) {
-    const listener = this.listenPlayerLvl.bind(this, ws) as () => void;
-    this.playerLvlServiceData[id] = { ws, listener };
-    ws.addEventListener('message', listener);
-  }
-
-  private listenPlayerLvl = (ws: WebSocket, e: WebSocketEvent) => {};
-
-  private makeDealer(ws: WebSocket) {
-    const listener = this.listenDealerLvl.bind(this, ws) as () => void;
-    ws.addEventListener('message', listener);
-  }
-
-  private listenDealerLvl = (ws: WebSocket, e: WebSocketEvent) => {};
-
-  private handleChatMsg(ws: WebSocket, id: number, dirtyMsg: CSMsgChatMsg) {
-    // TODO (no95typem) add memory ?
-    const pureMsg = purify(dirtyMsg);
-    const msg = new SCMsgChatMsg({
-      memberId: id,
-      text: pureMsg.msg.text,
-      senderMsgId: pureMsg.msg.senderMsgId,
-      time: Date.now(),
-      serverMsgId: this.genNewMsgId(),
-    });
-    this.broadcast(msg, USER_ROLES.SPECTATOR);
-  }
-
-  private broadcast(msg: SCMsg, level: UserRole) {
+  private broadcast = (msg: SCMsg, level: UserRole) => {
     /* eslint-disable no-fallthrough */
     switch (level) {
       case USER_ROLES.SPECTATOR:
-        Object.values(this.spectatorLvlServiceData).forEach(rec => {
-          this.send(rec.ws, msg);
+        this.spectatorsManager.getWebSockets().forEach(ws => {
+          this.send(ws, msg);
         });
       case USER_ROLES.PLAYER:
-        Object.values(this.playerLvlServiceData).forEach(rec => {
-          this.send(rec.ws, msg);
+        this.playersManager.getWebSockets().forEach(ws => {
+          this.send(ws, msg);
         });
       default:
-        if (this.dealerLvlServiceData?.ws)
-          this.send(this.dealerLvlServiceData.ws, msg);
+        this.dealerManager.getWebSockets().forEach(ws => {
+          this.send(ws, msg);
+        });
+
+        return;
     }
     /* eslint-enable no-fallthrough */
-  }
+  };
 }
