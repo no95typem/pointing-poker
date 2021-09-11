@@ -1,6 +1,6 @@
 import { Settings } from '../../settings';
 import { Card } from '../card';
-import { ChatMsg } from '../chat/chat-msg';
+import { UnregisteredChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
 import { Member } from '../member';
 import { RoundState } from '../round/round-state';
@@ -19,7 +19,7 @@ export interface SessionState<M extends Member> {
 
   chat: {
     isVisible: boolean;
-    msgs: Record<string, ChatMsg>;
+    msgs: Record<number, UnregisteredChatMsg>;
     typedText?: string;
   };
 
