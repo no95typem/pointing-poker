@@ -3,6 +3,8 @@ import {
   KNOWN_ERRORS_KEYS,
 } from '../../../../shared/knownErrorsKeys';
 import { CSMsg } from '../../../../shared/types/cs-msgs/cs-msg';
+import { CSMSG_CIPHERS } from '../../../../shared/types/cs-msgs/cs-msg-ciphers';
+import { SCMsgChatMsg } from '../../../../shared/types/sc-msgs/msgs/sc-chat-msg';
 import { SCMsgConnToSessStatus } from '../../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
 import { SCMsg } from '../../../../shared/types/sc-msgs/sc-msg';
 import { SCMSG_CIPHERS } from '../../../../shared/types/sc-msgs/sc-msg-ciphers';
@@ -27,13 +29,17 @@ class ServerAdapter {
       if ('cipher' in parsed) {
         switch ((parsed as SCMsg).cipher) {
           case SCMSG_CIPHERS.CONN_TO_SESS_STATUS:
-            // TODO (no95typem) compare equality of reqId and resId
             this.handleConnToSessStatus(parsed as SCMsgConnToSessStatus);
+
+            return;
+          case CSMSG_CIPHERS.CHAT_MSG:
+            this.handleChatMsg(parsed as SCMsgChatMsg);
 
             return;
 
           default:
-            throw new Error(); // TODO (no95typem)
+            // just ignore
+            return;
         }
       }
     } catch {
@@ -42,8 +48,6 @@ class ServerAdapter {
   };
 
   private handleConnToSessStatus(msg: SCMsgConnToSessStatus) {
-    console.log(msg);
-
     if (!msg.response.connInfo) {
       const errorKey: KnownErrorsKey =
         msg.response.reason || KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR;
@@ -55,65 +59,74 @@ class ServerAdapter {
     store.dispatch(removeLoad('CONNECTING_TO_SERVER'));
   }
 
+  private handleChatMsg(msg: SCMsgChatMsg) {
+    // TODO
+  }
+
+  private handleWSErrorOrClose() {
+    store.dispatch(setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
+
+    if (this.ws) {
+      this.ws.removeEventListener('message', this.obeyTheServer);
+      this.ws.onopen = null;
+      this.ws.onerror = null;
+      this.ws.onclose = null;
+      this.ws = undefined;
+    }
+  }
+
+  private handleWSOpen() {
+    (this.ws as WebSocket).addEventListener('message', this.obeyTheServer);
+    store.dispatch(setServerConnectionStatus('connected'));
+  }
+
   connect(): Promise<boolean> {
     store.dispatch(setLoadByKey(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
     store.dispatch(removeError(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
 
     return new Promise<boolean>(res => {
       if (this.ws) {
-        // ? TODO (no95typem)
-        // ? disconnect from a previous server
-        // but for now:
+        // ? TODO (no95typem) disconnect from a previous server but for now:
         res(true);
 
         return;
       }
 
+      const resFalse = () => {
+        this.handleWSErrorOrClose();
+        res(false);
+      };
+
       try {
         this.ws = new WebSocket(this.apiUrl);
-        this.ws.addEventListener('open', () => {
-          (this.ws as WebSocket).addEventListener(
-            'message',
-            this.obeyTheServer,
-          );
+        this.ws.onopen = () => {
+          this.handleWSOpen();
           res(true);
-          store.dispatch(setServerConnectionStatus('connected'));
-        });
-        this.ws.addEventListener('error', e => {
-          store.dispatch(
-            setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-          );
-          this.ws = undefined;
-          res(false);
-        });
-        this.ws.addEventListener('close', e => {
-          store.dispatch(
-            setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-          );
-          this.ws = undefined;
-          res(false);
-        });
-      } catch (err) {
-        res(false);
-        store.dispatch(
-          setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER),
-        );
-        this.ws = undefined;
+        };
+        this.ws.onerror = resFalse;
+        this.ws.onclose = resFalse;
+      } catch {
+        resFalse();
       }
     }).finally(() => {
       store.dispatch(removeLoad(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
     });
   }
 
+  private handleSendError = FE_ALONE
+    ? () => console.warn('front end is standalone mode')
+    : () => {
+        store.dispatch(
+          setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),
+        );
+      };
+
   send(msg: CSMsg) {
     try {
       (this.ws as WebSocket).send(JSON.stringify(msg));
       console.log('msg sent');
     } catch (err) {
-      !FE_ALONE &&
-        store.dispatch(
-          setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),
-        );
+      this.handleSendError();
     }
   }
 }
