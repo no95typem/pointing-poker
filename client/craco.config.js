@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const cracoBabelLoader = require('craco-babel-loader');
+const cracoBabelLoaderPlugin = require('craco-babel-loader-plugin');
 const webpack = require('webpack');
 
 const appDirectory = fs.realpathSync(process.cwd());
@@ -9,7 +9,7 @@ const resolvePackage = relativePath => path.resolve(appDirectory, relativePath);
 module.exports = {
   plugins: [
     {
-      plugin: cracoBabelLoader,
+      plugin: cracoBabelLoaderPlugin,
       options: {
         includes: [resolvePackage('../shared')],
       },
