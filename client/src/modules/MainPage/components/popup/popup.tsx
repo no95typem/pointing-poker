@@ -9,6 +9,7 @@ import {
   ModalBody,
   Button,
   Flex,
+  Text,
 } from '@chakra-ui/react';
 import RadioButtons from '../radio-buttons/radio-buttons';
 import InputsStack from '../inputs-stack/inputs-stack';
@@ -18,9 +19,10 @@ import { userInfoSlice } from '../../../../redux/slices/userInfo';
 interface Props {
   isOpen: boolean;
   close: () => void;
+  dealer: boolean;
 }
 
-const Popup = ({ isOpen, close }: Props): JSX.Element => {
+const Popup = ({ isOpen, close, dealer }: Props): JSX.Element => {
   const dispatch = useDispatch();
   const {
     changeName,
@@ -60,7 +62,7 @@ const Popup = ({ isOpen, close }: Props): JSX.Element => {
               <InputsStack />
               <AvatarForm />
             </Flex>
-            <RadioButtons />
+            {dealer ? <Text>Welcome, Dealer</Text> : <RadioButtons />}
           </Flex>
         </ModalBody>
 

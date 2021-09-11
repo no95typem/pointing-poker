@@ -44,7 +44,7 @@ const InputsStack = () => {
           size="md"
           isRequired
         />
-        <FormErrorMessage></FormErrorMessage>
+        <FormErrorMessage>Name is required</FormErrorMessage>
       </FormControl>
       <FormControl>
         <FormLabel>Your last name:</FormLabel>

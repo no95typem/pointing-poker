@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import {
   Image,
   Heading,
@@ -12,10 +12,15 @@ import {
 import pokerPlaning from '../../assets/images/poker-planing.png';
 
 interface Props {
-  open: () => void;
+  open: (name: string) => void;
 }
 
 const Page = ({ open }: Props): JSX.Element => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    const { name } = e.target as HTMLButtonElement;
+    open(name);
+  };
+
   return (
     <Flex align="center" justify="center">
       <Flex width="70%" direction="column" gridGap="2rem" align="center">
@@ -28,7 +33,11 @@ const Page = ({ open }: Props): JSX.Element => {
 
               <Flex justify="space-between">
                 <Text>Create session:</Text>
-                <Button colorScheme="facebook" onClick={open}>
+                <Button
+                  colorScheme="facebook"
+                  name="dealer"
+                  onClick={handleClick}
+                >
                   Start new game
                 </Button>
               </Flex>
@@ -36,11 +45,12 @@ const Page = ({ open }: Props): JSX.Element => {
 
             <Flex direction="column" gridGap="2rem">
               <Heading>OR:</Heading>
-
               <Text>Connect to lobby by URL:</Text>
               <Flex>
                 <Input />
-                <Button colorScheme="facebook">Connect</Button>
+                <Button colorScheme="facebook" onClick={handleClick}>
+                  Connect
+                </Button>
               </Flex>
             </Flex>
           </Flex>
