@@ -19,7 +19,7 @@ export interface SessionState<M extends Member> {
 
   chat: {
     isVisible: boolean;
-    msgs: Record<string, ChatMsg>;
+    msgs: Record<number, ChatMsg>;
     typedText?: string;
   };
 

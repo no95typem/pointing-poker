@@ -2,6 +2,7 @@
 
 import WebSocket from 'ws';
 import { purify } from '../../../shared/helpers/processors/purify';
+import { SESSION_INIT_STATE } from '../../../shared/initStates';
 import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
 import { CSMSG_CIPHERS } from '../../../shared/types/cs-msgs/cs-msg-ciphers';
 import { CSMsgChatMsg } from '../../../shared/types/cs-msgs/msgs/cs-chat-msg';
@@ -11,6 +12,7 @@ import { SCMsgChatMsg } from '../../../shared/types/sc-msgs/msgs/sc-chat-msg';
 import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
 import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
 import { Member } from '../../../shared/types/session/member';
+import { SessionState } from '../../../shared/types/session/state/session-state';
 import { UserRole, USER_ROLES } from '../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../shared/types/user/user-state';
 import { WebSocketEvent } from '../../../shared/types/ws-event';
@@ -28,6 +30,18 @@ export class SessionManager {
   private webSocketsMap: Map<WebSocket, number> = new Map();
 
   private idCounter = 0;
+
+  private genNewMemberId(): number {
+    return this.idCounter++;
+  }
+
+  private msgCounter = 0;
+
+  private genNewMsgId(): number {
+    return this.msgCounter++;
+  }
+
+  private sessionState: SessionState<Member> = SESSION_INIT_STATE;
 
   private sessionId: string;
 
@@ -50,10 +64,6 @@ export class SessionManager {
   private dealerLvlServiceData:
     | { ws: WebSocket; listener: () => void }
     | undefined;
-
-  private genNewMemberId(): number {
-    return this.idCounter++;
-  }
 
   constructor(init: SessionManagerInit, private send: WebSocketSendFunc) {
     this.sessionId = init.id;
@@ -180,11 +190,14 @@ export class SessionManager {
   private listenDealerLvl = (ws: WebSocket, e: WebSocketEvent) => {};
 
   private handleChatMsg(ws: WebSocket, id: number, dirtyMsg: CSMsgChatMsg) {
+    // TODO (no95typem) add memory ?
     const pureMsg = purify(dirtyMsg);
     const msg = new SCMsgChatMsg({
-      text: pureMsg.text,
-      senderMsgId: pureMsg.id,
       memberId: id,
+      text: pureMsg.msg.text,
+      senderMsgId: pureMsg.msg.senderMsgId,
+      time: Date.now(),
+      serverMsgId: this.genNewMsgId(),
     });
     this.broadcast(msg, USER_ROLES.SPECTATOR);
   }
