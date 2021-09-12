@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Button, HStack, Image, Text, VStack } from '@chakra-ui/react';
+import { Button, HStack, Image, Input, Text, VStack } from '@chakra-ui/react';
 import { useAppDispatch } from '../../redux/store';
-import { createSession } from '../../redux/slices/connect';
+import { connectToLobby, createSession } from '../../redux/slices/connect';
 import { useState } from 'react';
 import { useImgConvertor } from '../../hooks/useImgConvertor';
 import { useLoadImg } from '../../hooks/useImgLoader';
@@ -15,6 +15,8 @@ export const Root = (): JSX.Element => {
 
   const convert = useImgConvertor();
   const loadImg = useLoadImg();
+
+  const [sessionId, setSessionId] = useState<string>('');
 
   return (
     <VStack>
@@ -37,6 +39,14 @@ export const Root = (): JSX.Element => {
         }}
       >
         test img loader
+      </Button>
+      <Input
+        type="text"
+        value={sessionId}
+        onChange={e => setSessionId(e.target.value)}
+      />
+      <Button onClick={() => dispatch(connectToLobby(sessionId))}>
+        Connect to session
       </Button>
       <HStack>
         <Image src={fullImgSrc} maxW="600px" maxH="300px" />

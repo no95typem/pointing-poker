@@ -1,13 +1,29 @@
-import * as http from 'http';
-import * as WebSocket from 'ws';
+import http from 'http';
+import WebSocket from 'ws';
 import { Socket } from 'net';
 import internal from 'stream';
 import { ClientManager } from './ClientManager';
+import { SCMSG_CIPHERS } from '../../../shared/types/sc-msgs/sc-msg-ciphers';
+import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
+import { WebSocketSendFunc } from '../types';
 
 export class PointingPokerServer {
   static readonly DEFAULT_PORT = 9000;
 
-  private server = http.createServer();
+  private httpRequestsListener: http.RequestListener = (
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+  ) => {
+    console.warn(
+      `API schema violation 
+      from ip: ${req.socket.remoteAddress}, 
+      forwarder for: ${req.headers['x-forwarded-for']}`,
+    );
+    res.statusCode = 400;
+    res.end('API schema violation');
+  };
+
+  private server = http.createServer(this.httpRequestsListener);
 
   private wss = new WebSocket.Server({ noServer: true });
 
@@ -15,7 +31,21 @@ export class PointingPokerServer {
 
   private aliveMap: Map<WebSocket, boolean> = new Map();
 
-  private clientManager = new ClientManager();
+  private send = (ws: WebSocket, msg: SCMsg) => {
+    try {
+      ws.send(JSON.stringify(msg));
+
+      return true;
+    } catch (err) {
+      if (msg.cipher === SCMSG_CIPHERS.FATAL_ERROR) this.closeConnection(ws);
+
+      return false;
+    }
+  };
+
+  private clientManager = new ClientManager(
+    this.send as unknown as WebSocketSendFunc,
+  );
 
   constructor() {
     this.wss.on('connection', this.handleNewConnection);

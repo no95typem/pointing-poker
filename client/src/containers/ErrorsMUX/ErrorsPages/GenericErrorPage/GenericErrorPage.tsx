@@ -1,7 +1,8 @@
 import React from 'react';
 import { Alert, AlertIcon, Button, VStack } from '@chakra-ui/react';
-import { AppError, KnownErrorsKey } from '../../../../knownErrors';
+import { AppError } from '../../../../knownErrors';
 import { useHistory } from 'react-router-dom';
+import { KnownErrorsKey } from '../../../../../../shared/knownErrorsKeys';
 
 export interface GenericErrorPageProps {
   key?: KnownErrorsKey;

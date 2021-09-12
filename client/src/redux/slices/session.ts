@@ -1,17 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Member } from '../../../../shared/types/session/member';
-import { SessionState } from '../../../../shared/types/session/state/session-state';
 import { SessionStage } from '../../../../shared/types/session/state/stages';
 
-const initialState: SessionState<Member> = {
-  stage: 'EMPTY',
-  members: {},
-  chat: {
-    isVisible: false,
-    msgs: {},
-  },
-  issues: {},
-};
+import { SESSION_INIT_STATE } from '../../../../shared/initStates';
+
+const initialState = SESSION_INIT_STATE;
 
 export const sessionSlice = createSlice({
   name: 'session',
