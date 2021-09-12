@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 
 import { useDisclosure } from '@chakra-ui/react';
 
-import { UserInfo } from '../../../../shared/types/user/user-info';
-import { ConnectionData } from '../../../../shared/types/session/connection-data';
+import { member1, member2, playerData } from './userCardsTemplateData';
 import { Member, IMemberData } from '../../../../shared/types/session/member';
 
 import { IKickModal } from '../../components/KickModal/KickModal';
@@ -47,27 +46,6 @@ const UserCards = (): JSX.Element => {
     return playerData.userSessionPublicId === member.userSessionPublicId;
   };
 
-  const playerData: ConnectionData = {
-    role: 'DEALER',
-    userSessionPrivateId: '1',
-    userSessionPublicId: 1,
-  };
-
-  const userCard1: UserInfo = {
-    name: 'Dan',
-    surname: 'Smith',
-    avatarBgColor: 'rgb(0,200,100)',
-    jobPosition: 'Senior developer',
-  };
-
-  const member1: Member = {
-    userInfo: userCard1,
-    userSessionPublicId: 1,
-    userRole: 'DEALER',
-    userState: 'CONNECTED',
-    isSynced: true,
-  };
-
   const memberdData1: IMemberData = {
     member: member1,
     isRoundStarted: false,
@@ -75,26 +53,10 @@ const UserCards = (): JSX.Element => {
     kickPlayer: kickMessage,
   };
 
-  const userCard2: UserInfo = {
-    name: 'Matt',
-    surname: 'Rogers',
-    avatarBgColor: 'rgb(200,200,100)',
-    jobPosition: 'Junior developer',
-  };
-
-  const member2: Member = {
-    userInfo: userCard2,
-    userSessionPublicId: 2,
-    userRole: 'PLAYER',
-    userState: 'CONNECTED',
-    isSynced: true,
-  };
-
   const memberdData2: IMemberData = {
+    ...memberdData1,
     member: member2,
-    isRoundStarted: false,
     isItYou: isItYou(member2),
-    kickPlayer: kickMessage,
   };
 
   const membersData = [memberdData1, memberdData2];

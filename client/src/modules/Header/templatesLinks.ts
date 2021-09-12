@@ -1,3 +1,4 @@
+import { RoutesPath } from '../Routes/routesData';
 import { TemplateRoutesPath } from '../Routes/templateRoutesData';
 
 export interface ILink {
@@ -9,6 +10,10 @@ const templatesLinks: ILink[] = [
   {
     text: 'Root',
     link: TemplateRoutesPath.ROOT,
+  },
+  {
+    text: 'Lobby',
+    link: RoutesPath.LOBBY,
   },
   {
     text: 'Animation',

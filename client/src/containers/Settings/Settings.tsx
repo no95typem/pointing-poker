@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stack, Heading } from '@chakra-ui/react';
+import { Stack, Heading, Box } from '@chakra-ui/react';
 import { LOCALE_US } from '../../locales/locale-us';
 import { ISettingsComponent } from '../../../../shared/types/settings';
 import Switcher from '../../components/Switcher/Switcher';
@@ -35,22 +35,24 @@ const Settings = (): JSX.Element => {
   ];
 
   return (
-    <Stack direction="column" spacing={5} w="40%">
-      <Heading size="md" textAlign="end">
-        Game settings:
-      </Heading>
-      {switchersData.map(switcherData => {
-        const { name } = switcherData;
+    <Box mb="30px">
+      <Stack direction="column" spacing={5} w="40%">
+        <Heading size="md" textAlign="end">
+          Game settings:
+        </Heading>
+        {switchersData.map(switcherData => {
+          const { name } = switcherData;
 
-        return <Switcher data={switcherData} key={name} />;
-      })}
-      {inputsData.map(iputData => {
-        const { name } = iputData;
+          return <Switcher data={switcherData} key={name} />;
+        })}
+        {inputsData.map(iputData => {
+          const { name } = iputData;
 
-        return <InputText data={iputData} key={name} />;
-      })}
-      <Timer />
-    </Stack>
+          return <InputText data={iputData} key={name} />;
+        })}
+        <Timer />
+      </Stack>
+    </Box>
   );
 };
 

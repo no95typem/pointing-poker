@@ -7,14 +7,14 @@ import {
   Issue,
 } from '../../../../shared/types/session/issue/issue';
 
-import IssueCardView from './IssuesCardsView';
+import IssueCardsView from './IssuesCardsView';
 
 const IssuesCards = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const issue1: Issue = {
     id: '1',
-    title: 'isssue 123',
+    title: 'Isssue 123',
     link: 'www.a.com/123',
     priority: 'MEDIUM',
     pos: 1,
@@ -25,7 +25,7 @@ const IssuesCards = (): JSX.Element => {
   const issue2: Issue = {
     ...issue1,
     id: '2',
-    title: 'issue 45',
+    title: 'Issue 45',
     link: 'www.a.com/45',
     priority: 'HIGH',
   };
@@ -47,7 +47,7 @@ const IssuesCards = (): JSX.Element => {
     editIssue: editIssue,
   };
 
-  return <IssueCardView issues={issues} modal={modalData} />;
+  return <IssueCardsView issues={issues} modal={modalData} />;
 };
 
 export default IssuesCards;

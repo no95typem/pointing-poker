@@ -24,7 +24,6 @@ const NewIssueButton = (props: IIssueData): JSX.Element => {
       <IconButton
         aria-label="edit"
         background="transparent"
-        visibility={true ? 'visible' : 'hidden'}
         size="lg"
         icon={<ImPlus />}
       />

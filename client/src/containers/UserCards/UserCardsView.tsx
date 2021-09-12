@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stack } from '@chakra-ui/react';
+import { Box, Heading, Stack } from '@chakra-ui/react';
 
 import { IMemberData } from '../../../../shared/types/session/member';
 
@@ -16,19 +16,24 @@ const UserCardsView = (props: IUserCardView): JSX.Element => {
   const { membersData, modalData } = props;
 
   return (
-    <Stack w="100%" wrap="wrap" direction="row">
-      {membersData.map(memberData => {
-        const id = memberData.member.userSessionPublicId;
+    <Box mb="30px">
+      <Heading textAlign="center" size="lg" mb="40px">
+        Members:
+      </Heading>
+      <Stack w="100%" wrap="wrap" direction="row">
+        {membersData.map(memberData => {
+          const id = memberData.member.userSessionPublicId;
 
-        return (
-          <Stack w="300px" key={`${id}-wrap`}>
-            <UserCard data={memberData} key={id} />;
-          </Stack>
-        );
-      })}
+          return (
+            <Stack w="300px" key={`${id}-wrap`}>
+              <UserCard data={memberData} key={id} />;
+            </Stack>
+          );
+        })}
 
-      <KickModal data={modalData} />
-    </Stack>
+        <KickModal data={modalData} />
+      </Stack>
+    </Box>
   );
 };
 

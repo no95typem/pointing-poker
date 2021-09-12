@@ -27,7 +27,7 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create Issue</ModalHeader>
+          <ModalHeader>Card Data:</ModalHeader>
 
           <ModalBody mb="20px">
             <Stack d="flex" justify="space-around" align="stretch">
@@ -53,10 +53,10 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
               display="flex"
               justifyContent="space-between"
             >
-              <Button padding="0 50px">Yes</Button>
               <Button padding="0 50px" variant="outline" onClick={onClose}>
                 No
               </Button>
+              <Button padding="0 50px">Yes</Button>
             </ButtonGroup>
           </ModalFooter>
         </ModalContent>

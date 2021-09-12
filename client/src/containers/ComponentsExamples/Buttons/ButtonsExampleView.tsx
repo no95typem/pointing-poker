@@ -2,8 +2,8 @@ import React from 'react';
 
 import { ButtonGroup } from '@chakra-ui/react';
 
-import ActionButton from '../../../components/Button/Button';
-import { IButton } from '../../../components/Button/buttonTypes';
+import ActionButton from '../../../components/templates/Button/Button';
+import { IButton } from '../../../components/templates/Button/buttonTypes';
 
 interface IButtonsData {
   data: IButton[];

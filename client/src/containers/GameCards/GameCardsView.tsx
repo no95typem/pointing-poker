@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stack } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 
 import { ICardsView } from '../../../../shared/types/session/card';
 
@@ -12,21 +12,23 @@ const IssueCardView = (props: ICardsView): JSX.Element => {
   const { cards, modal } = props;
 
   return (
-    <Stack w="100%" wrap="wrap" direction="row">
-      {cards.map(card => {
-        const id = card.value;
+    <Box mb="30px">
+      <Stack w="100%" wrap="wrap" direction="row">
+        {cards.map(card => {
+          const id = card.value;
 
-        return (
-          <Stack key={`${id}-wrap`}>
-            <GameCard card={card} onClick={modal.onClick} key={id} />;
-          </Stack>
-        );
-      })}
+          return (
+            <Stack key={`${id}-wrap`}>
+              <GameCard card={card} onClick={modal.onClick} key={id} />;
+            </Stack>
+          );
+        })}
 
-      <NewGameCardButton onClick={modal.onClick} />
+        <NewGameCardButton onClick={modal.onClick} />
 
-      <GameCardModal card={modal} />
-    </Stack>
+        <GameCardModal card={modal} />
+      </Stack>
+    </Box>
   );
 };
 

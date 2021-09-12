@@ -69,10 +69,10 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
               display="flex"
               justifyContent="space-between"
             >
-              <Button padding="0 50px">Yes</Button>
               <Button padding="0 50px" variant="outline" onClick={onClose}>
                 No
               </Button>
+              <Button padding="0 50px">Yes</Button>
             </ButtonGroup>
           </ModalFooter>
         </ModalContent>

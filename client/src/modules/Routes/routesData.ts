@@ -1,4 +1,5 @@
 import ChakraButtons from '../../components/templates/ChakraButtons/ChakraButtons';
+import Lobby from '../Lobby/Lobby';
 import { Root } from '../Root/root';
 
 export interface IRoute {
@@ -29,7 +30,7 @@ const routes: IRoute[] = [
     key: 'routeLobby',
     path: RoutesPath.LOBBY,
     isExact: true,
-    Component: ChakraButtons, //Заглушка, заменяем своими компонентами по мере готовности
+    Component: Lobby,
   },
   {
     key: 'routeGame',

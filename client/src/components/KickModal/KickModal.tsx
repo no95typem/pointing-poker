@@ -56,15 +56,15 @@ const KickModal = (props: IKickModalBundle): JSX.Element => {
               display="flex"
               justifyContent="space-between"
             >
+              <Button padding="0 50px" variant="outline" onClick={onClose}>
+                No
+              </Button>
               <Button
                 onClick={onConfirm}
                 isLoading={isLoading}
                 padding="0 50px"
               >
                 Yes
-              </Button>
-              <Button padding="0 50px" variant="outline" onClick={onClose}>
-                No
               </Button>
             </ButtonGroup>
           </ModalFooter>

@@ -12,7 +12,7 @@ export interface Member extends Synchronized {
 
 export interface IMemberData {
   member: Member;
-  isRoundStarted: boolean;
+  isRoundStarted?: boolean;
   isItYou: boolean;
   kickPlayer: (id: number, name: string) => void;
 }
