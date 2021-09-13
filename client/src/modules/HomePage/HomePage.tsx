@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import MainPage from './components/main-page/main-page';
-import Popup from './components/popup/popup';
+import ConnectPopup from './components/popup/popup';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { UserRole } from '../../../../shared/types/user/user-role';
 
@@ -22,7 +22,7 @@ const HomePage = (): JSX.Element => {
   return (
     <>
       <MainPage onPopupCalled={onPopupCall} />
-      <Popup isOpen={isOpen} onClose={onClose} forDealer={dealer} />
+      <ConnectPopup isOpen={isOpen} onClose={onClose} forDealer={dealer} />
     </>
   );
 };

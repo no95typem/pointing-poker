@@ -21,13 +21,17 @@ import {
   changeAvatarBgColor,
 } from '../../../../redux/slices/userInfo';
 
-interface PopupProps {
+interface ConnectPopupProps {
   isOpen: boolean;
   onClose: () => void;
   forDealer: boolean;
 }
 
-const Popup = ({ isOpen, onClose, forDealer }: PopupProps): JSX.Element => {
+const ConnectPopup = ({
+  isOpen,
+  onClose,
+  forDealer,
+}: ConnectPopupProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const clearForm = (): void => {
@@ -83,4 +87,4 @@ const Popup = ({ isOpen, onClose, forDealer }: PopupProps): JSX.Element => {
   );
 };
 
-export default Popup;
+export default ConnectPopup;
