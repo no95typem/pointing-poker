@@ -1,4 +1,3 @@
-import React, { MouseEvent } from 'react';
 import {
   Image,
   Heading,
@@ -8,19 +7,15 @@ import {
   Flex,
   Box,
 } from '@chakra-ui/react';
-// import * as UI from "@chakra-ui/react";
 import pokerPlaning from '../../assets/images/poker-planing.png';
+import { UserRole } from '../../../../../../shared/types/user/user-role';
+import { USER_ROLES } from '../../../../../../shared/types/user/user-role';
 
-interface Props {
-  open: (name: string) => void;
+interface MainPageProps {
+  onPopupCalled: (forRole: UserRole) => void;
 }
 
-const Page = ({ open }: Props): JSX.Element => {
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    const { name } = e.target as HTMLButtonElement;
-    open(name);
-  };
-
+const MainPage = ({ onPopupCalled }: MainPageProps): JSX.Element => {
   return (
     <Flex align="center" justify="center">
       <Flex width="70%" direction="column" gridGap="2rem" align="center">
@@ -35,8 +30,7 @@ const Page = ({ open }: Props): JSX.Element => {
                 <Text>Create session:</Text>
                 <Button
                   colorScheme="facebook"
-                  name="dealer"
-                  onClick={handleClick}
+                  onClick={() => onPopupCalled(USER_ROLES.DEALER)}
                 >
                   Start new game
                 </Button>
@@ -48,7 +42,10 @@ const Page = ({ open }: Props): JSX.Element => {
               <Text>Connect to lobby by URL:</Text>
               <Flex>
                 <Input />
-                <Button colorScheme="facebook" onClick={handleClick}>
+                <Button
+                  colorScheme="facebook"
+                  onClick={() => onPopupCalled(USER_ROLES.PLAYER)}
+                >
                   Connect
                 </Button>
               </Flex>
@@ -62,4 +59,4 @@ const Page = ({ open }: Props): JSX.Element => {
   );
 };
 
-export default Page;
+export default MainPage;

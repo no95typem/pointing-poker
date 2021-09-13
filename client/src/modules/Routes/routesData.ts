@@ -1,5 +1,5 @@
 import ChakraButtons from '../../components/templates/ChakraButtons/ChakraButtons';
-import MainPage from '../MainPage/MainPage';
+import HomePage from '../HomePage/HomePage';
 
 export interface IRoute {
   key: string;
@@ -23,7 +23,7 @@ const routes: IRoute[] = [
     key: 'routeRoot',
     path: RoutesPath.ROOT,
     isExact: true,
-    Component: MainPage, //Заглушка, заменяем своими компонентами по мере готовности
+    Component: HomePage, //Заглушка, заменяем своими компонентами по мере готовности
   },
   {
     key: 'routeLobby',

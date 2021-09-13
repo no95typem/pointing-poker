@@ -30,3 +30,11 @@ export const userInfoSlice = createSlice({
     },
   },
 });
+
+export const {
+  changeName,
+  changeSurname,
+  changeJobPosition,
+  changeAvatarBase64,
+  changeAvatarBgColor,
+} = userInfoSlice.actions;

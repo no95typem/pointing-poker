@@ -1,5 +1,3 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
 import {
   Modal,
   ModalOverlay,
@@ -14,23 +12,23 @@ import {
 import RadioButtons from '../radio-buttons/radio-buttons';
 import InputsStack from '../inputs-stack/inputs-stack';
 import AvatarForm from '../avatar-form/avatar-form';
-import { userInfoSlice } from '../../../../redux/slices/userInfo';
+import { useAppDispatch } from '../../../../redux/store';
+import {
+  changeName,
+  changeSurname,
+  changeJobPosition,
+  changeAvatarBase64,
+  changeAvatarBgColor,
+} from '../../../../redux/slices/userInfo';
 
-interface Props {
+interface PopupProps {
   isOpen: boolean;
-  close: () => void;
-  dealer: boolean;
+  onClose: () => void;
+  forDealer: boolean;
 }
 
-const Popup = ({ isOpen, close, dealer }: Props): JSX.Element => {
-  const dispatch = useDispatch();
-  const {
-    changeName,
-    changeSurname,
-    changeJobPosition,
-    changeAvatarBase64,
-    changeAvatarBgColor,
-  } = userInfoSlice.actions;
+const Popup = ({ isOpen, onClose, forDealer }: PopupProps): JSX.Element => {
+  const dispatch = useAppDispatch();
 
   const clearForm = (): void => {
     dispatch(changeName(''));
@@ -41,7 +39,7 @@ const Popup = ({ isOpen, close, dealer }: Props): JSX.Element => {
   };
 
   const clickButtonClose = () => {
-    close();
+    onClose();
     clearForm();
   };
 
@@ -49,7 +47,7 @@ const Popup = ({ isOpen, close, dealer }: Props): JSX.Element => {
     <Modal
       size="xl"
       isOpen={isOpen}
-      onClose={close}
+      onClose={onClose}
       motionPreset="slideInBottom"
       onOverlayClick={clearForm}
     >
@@ -62,7 +60,11 @@ const Popup = ({ isOpen, close, dealer }: Props): JSX.Element => {
               <InputsStack />
               <AvatarForm />
             </Flex>
-            {dealer ? <Text>Welcome, Dealer</Text> : <RadioButtons />}
+            {forDealer ? (
+              <Text>Welcome, You will be a dealer</Text>
+            ) : (
+              <RadioButtons />
+            )}
           </Flex>
         </ModalBody>
 

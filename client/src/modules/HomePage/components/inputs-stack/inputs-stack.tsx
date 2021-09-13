@@ -1,5 +1,4 @@
-import React, { ChangeEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { ChangeEvent } from 'react';
 import {
   Stack,
   Input,
@@ -7,17 +6,18 @@ import {
   FormLabel,
   FormErrorMessage,
 } from '@chakra-ui/react';
-import { RootState } from '../../../../redux/store';
-import { userInfoSlice } from '../../../../redux/slices/userInfo';
+import { useTypedSelector, useAppDispatch } from '../../../../redux/store';
+import {
+  changeName,
+  changeSurname,
+  changeJobPosition,
+} from '../../../../redux/slices/userInfo';
 
 const InputsStack = () => {
-  const dispatch = useDispatch();
-  const { name, surname, jobPosition } = useSelector(
-    (state: RootState) => state.userInfo,
+  const dispatch = useAppDispatch();
+  const { name, surname, jobPosition } = useTypedSelector(
+    state => state.userInfo,
   );
-
-  const { changeName, changeSurname, changeJobPosition } =
-    userInfoSlice.actions;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

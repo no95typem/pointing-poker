@@ -1,17 +1,17 @@
-import React from 'react';
 import { Button, Flex, Box, FormLabel, Avatar } from '@chakra-ui/react';
 import { useImgConvertor } from '../../../../hooks/useImgConvertor';
 import { useLoadImg } from '../../../../hooks/useImgLoader';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../../../redux/store';
-import { userInfoSlice } from '../../../../redux/slices/userInfo';
+import { useTypedSelector, useAppDispatch } from '../../../../redux/store';
+import {
+  changeAvatarBase64,
+  changeAvatarBgColor,
+} from '../../../../redux/slices/userInfo';
 
 const AvatarForm = () => {
-  const dispatch = useDispatch();
-  const { name, surname, avatarBase64, avatarBgColor } = useSelector(
-    (state: RootState) => state.userInfo,
+  const dispatch = useAppDispatch();
+  const { name, surname, avatarBase64, avatarBgColor } = useTypedSelector(
+    state => state.userInfo,
   );
-  const { changeAvatarBase64, changeAvatarBgColor } = userInfoSlice.actions;
 
   const convert = useImgConvertor();
   const loadImg = useLoadImg();
@@ -19,7 +19,7 @@ const AvatarForm = () => {
   const avatarChange = (): void => {
     loadImg()
       .then(src => {
-        convert({ src, w: 200, h: 200 })
+        convert({ src, w: AVATAR_WIDTH, h: AVATAR_HEIGHT })
           .then(base64 => {
             dispatch(changeAvatarBase64(base64));
           })
