@@ -5,6 +5,7 @@ import { errorsSlice } from './slices/errors';
 import { loadsSlice } from './slices/loads';
 import { localeSlice } from './slices/locale';
 import { sessionSlice } from './slices/session';
+import { userInfoSlice } from './slices/userInfo';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     loads: loadsSlice.reducer,
     connect: connectSlice.reducer,
     session: sessionSlice.reducer,
+    userInfo: userInfoSlice.reducer,
   },
   devTools: process.env.NODE_ENV === 'development',
 });
