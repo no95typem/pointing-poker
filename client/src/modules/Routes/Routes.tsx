@@ -15,9 +15,13 @@ const TRANSITION = `opacity ${TRANSITION_TIME}ms ease-in`;
 
 export const Routes = (): JSX.Element => {
   const location = useLocation();
+
   const nodeRef = useRef<any>(null);
+
   const errors = useTypedSelector(state => state.errors);
+
   const loads = useTypedSelector(state => state.loads);
+
   console.log(`LOADS ${Object.keys(loads).length}`);
 
   return (

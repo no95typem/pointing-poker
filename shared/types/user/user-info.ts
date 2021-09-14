@@ -5,7 +5,3 @@ export interface UserInfo {
   avatarBase64?: string;
   avatarBgColor?: string;
 }
-
-export interface IUserCardData {
-  card: UserInfo;
-}
