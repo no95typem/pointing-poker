@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { IButton } from '../../../components/Button/buttonTypes';
+import { IButton } from '../../../components/templates/Button/buttonTypes';
 import ButtonsExampleView from './ButtonsExampleView';
 
 const ActionButtonExample = (): JSX.Element => {

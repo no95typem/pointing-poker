@@ -1,3 +1,4 @@
+import { RoutesPath } from '../Routes/routesData';
 import { TemplateRoutesPath } from '../Routes/templateRoutesData';
 
 export interface ILink {
@@ -9,6 +10,10 @@ const templatesLinks: ILink[] = [
   {
     text: 'Root',
     link: TemplateRoutesPath.ROOT,
+  },
+  {
+    text: 'Lobby',
+    link: RoutesPath.LOBBY,
   },
   {
     text: 'Animation',
@@ -47,8 +52,16 @@ const templatesLinks: ILink[] = [
     link: TemplateRoutesPath.BUTTONS_EXAMPLE,
   },
   {
-    text: 'User Card',
-    link: TemplateRoutesPath.USER_CARD,
+    text: 'Settings',
+    link: TemplateRoutesPath.SETTINGS,
+  },
+  {
+    text: 'Issues',
+    link: TemplateRoutesPath.ISSUES,
+  },
+  {
+    text: 'Game Cards',
+    link: TemplateRoutesPath.CARDS,
   },
 ];
 
