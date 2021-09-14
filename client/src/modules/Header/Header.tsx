@@ -27,7 +27,7 @@ export const Header = (): JSX.Element => {
       justifyContent="space-between"
       px="2"
     >
-      <HStack h="100%">
+      <HStack h="100%" fontFamily="handwrite">
         <Image src={logo} maxH="95%" />
         <h1>
           Pointing Poker
