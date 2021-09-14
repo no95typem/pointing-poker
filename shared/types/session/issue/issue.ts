@@ -5,11 +5,10 @@ import { Synchronized } from '../../syncable';
 // ? Make it class?
 
 export interface Issue extends Synchronized {
-  id: string;
+  id: number;
   title: string;
   link: string;
   priority: IssuePriority;
-  pos: number;
   closed: boolean;
   stat?: RoundStat;
 }

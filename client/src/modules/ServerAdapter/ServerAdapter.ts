@@ -48,12 +48,12 @@ class ServerAdapter {
   };
 
   private handleConnToSessStatus(msg: SCMsgConnToSessStatus) {
-    if (!msg.response.connInfo) {
+    if (!msg.response.success) {
       const errorKey: KnownErrorsKey =
         msg.response.reason || KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR;
       store.dispatch(setErrorByKey(errorKey));
     } else {
-      store.dispatch(setSessionId(msg.response.connInfo.sessionId));
+      store.dispatch(setSessionId(msg.response.success.sessionId));
       store.dispatch(setSessionStatus(SESSION_STAGES.LOBBY)); // ! TODO (no95type) remove!
     }
     store.dispatch(removeLoad('CONNECTING_TO_SERVER'));
@@ -114,7 +114,7 @@ class ServerAdapter {
   }
 
   private handleSendError = FE_ALONE
-    ? () => console.warn('front end is standalone mode')
+    ? () => console.warn('front end in standalone mode')
     : () => {
         store.dispatch(
           setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),

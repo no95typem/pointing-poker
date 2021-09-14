@@ -1,7 +1,6 @@
 import { UserRole } from '../user/user-role';
 
 export interface ConnectionData {
-  userSessionPublicId?: number; // Публичный id
-  userSessionPrivateId?: string; // Приватный id
+  userSessionPublicId: number; // Публичный id
   role: UserRole;
 }

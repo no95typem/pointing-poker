@@ -3,8 +3,6 @@ import WebSocket from 'ws';
 import { Socket } from 'net';
 import internal from 'stream';
 import { ClientManager } from './ClientManager';
-import { SCMSG_CIPHERS } from '../../../shared/types/sc-msgs/sc-msg-ciphers';
-import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
 import { WebSocketSendFunc } from '../types';
 
 export class PointingPokerServer {
@@ -15,8 +13,8 @@ export class PointingPokerServer {
     res: http.ServerResponse,
   ) => {
     console.warn(
-      `API schema violation 
-      from ip: ${req.socket.remoteAddress}, 
+      `API schema violation
+      from ip: ${req.socket.remoteAddress},
       forwarder for: ${req.headers['x-forwarded-for']}`,
     );
     res.statusCode = 400;
@@ -31,13 +29,13 @@ export class PointingPokerServer {
 
   private aliveMap: Map<WebSocket, boolean> = new Map();
 
-  private send = (ws: WebSocket, msg: SCMsg) => {
+  private send = (ws: WebSocket, data: string) => {
     try {
-      ws.send(JSON.stringify(msg));
+      ws.send(data);
 
       return true;
     } catch (err) {
-      if (msg.cipher === SCMSG_CIPHERS.FATAL_ERROR) this.closeConnection(ws);
+      this.closeConnection(ws);
 
       return false;
     }
