@@ -20,7 +20,7 @@ const IssueCard = (props: IIssueData): JSX.Element => {
   const { id, title, priority } = issue as Issue;
 
   return (
-    <Stack direction="row" align="center" p="10px 10px" boxShadow="lg">
+    <Stack direction="row" align="center" p="10px" boxShadow="lg">
       <Stat>
         <StatNumber>{title}</StatNumber>
         <StatHelpText mb="0">{priority}</StatHelpText>

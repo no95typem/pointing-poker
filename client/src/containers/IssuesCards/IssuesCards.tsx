@@ -13,18 +13,17 @@ const IssuesCards = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const issue1: Issue = {
-    id: '1',
+    id: 1,
     title: 'Isssue 123',
     link: 'www.a.com/123',
     priority: 'MEDIUM',
-    pos: 1,
     isSynced: true,
     closed: false,
   };
 
   const issue2: Issue = {
     ...issue1,
-    id: '2',
+    id: 2,
     title: 'Issue 45',
     link: 'www.a.com/45',
     priority: 'HIGH',
@@ -34,7 +33,7 @@ const IssuesCards = (): JSX.Element => {
 
   const issues = [issue1, issue2];
 
-  const openModal = (issueId?: string): void => {
+  const openModal = (issueId?: number): void => {
     setEditIssue(issues.find(issue => issue.id === issueId));
 
     onOpen();

@@ -1,19 +1,22 @@
 import { Settings } from '../../settings';
-import { Card } from '../card';
+import { CardData } from '../card';
 import { UnregisteredChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
 import { Member } from '../member';
 import { RoundState } from '../round/round-state';
 import { SessionStage } from './stages';
 
-export interface SessionState<M extends Member> {
-  sessionId?: string;
+export interface ISessionName {
+  value: string;
+  isSynced: boolean;
+}
 
-  dealer?: M;
+export interface SessionState {
+  sessionId: string;
 
-  members: Record<string, M>; // key - publicId od member
+  members: Record<number, Member>; // key - publicId od member
 
-  name?: { value: string; isSynced: boolean };
+  name: { value: string; isSynced: boolean };
 
   stage: SessionStage;
 
@@ -23,9 +26,9 @@ export interface SessionState<M extends Member> {
     typedText?: string;
   };
 
-  issues: Record<string, Issue>;
+  issues: Issue[];
 
-  currentGameSettings?: Settings;
+  currentGameSettings: Settings;
 
   game?: {
     roundState: RoundState;
@@ -33,7 +36,11 @@ export interface SessionState<M extends Member> {
     currIssueId: string;
     votes?: {
       memberPublicId: number;
-      card?: Card;
+      card?: CardData;
     }[];
   };
+}
+
+export interface ISessionStateClient extends SessionState {
+  clientId: number;
 }

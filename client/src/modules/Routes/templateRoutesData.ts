@@ -11,7 +11,6 @@ import ChakraAvatar from '../../components/templates/Avatar/ChakraAvatar';
 import ChakraLoader from '../../components/templates/Loader/ChakraLoader';
 import ChakraEditableText from '../../components/templates/EditableText/ChakraEditableText';
 import ActionButtonExample from '../../containers/ComponentsExamples/Buttons/ButtonsExample';
-import UserCards from '../../containers/UserCards/UserCards';
 import Settings from '../../containers/Settings/Settings';
 import IssuesCards from '../../containers/IssuesCards/IssuesCards';
 import GameCards from '../../containers/GameCards/GameCards';
@@ -27,7 +26,6 @@ export enum TemplateRoutesPath {
   LOADER = '/loader/',
   EDITABLE = '/editable/',
   BUTTONS_EXAMPLE = '/buttons-example',
-  USER_CARDS = '/user-cards',
   SETTINGS = '/settings',
   ISSUES = '/issues',
   CARDS = '/cards',
@@ -87,12 +85,6 @@ const templatesRoutes: IRoute[] = [
     path: TemplateRoutesPath.BUTTONS_EXAMPLE,
     isExact: true,
     Component: ActionButtonExample,
-  },
-  {
-    key: 'userPanel',
-    path: TemplateRoutesPath.USER_CARDS,
-    isExact: true,
-    Component: UserCards,
   },
   {
     key: 'settings',

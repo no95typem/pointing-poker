@@ -13,9 +13,10 @@ const NewIssueButton = (props: IIssueData): JSX.Element => {
       onClick={() => onClick()}
       direction="row"
       align="center"
-      p="10px 10px"
+      p="10px"
       boxShadow="lg"
       cursor="pointer"
+      w="300px"
     >
       <Stat>
         <StatNumber>Create new issue</StatNumber>

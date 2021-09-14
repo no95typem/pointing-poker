@@ -51,14 +51,15 @@ const UserCard = (props: IMemberDataBundle): JSX.Element => {
         <StatHelpText mb="0">{jobPosition}</StatHelpText>
       </Stat>
 
-      <IconButton
-        aria-label="Kick player"
-        background="transparent"
-        visibility={isKickShown ? 'visible' : 'hidden'}
-        size="lg"
-        icon={<ImBlocked />}
-        onClick={() => kickPlayer(id, fullName)}
-      />
+      {kickPlayer && isKickShown && (
+        <IconButton
+          aria-label="Kick player"
+          background="transparent"
+          size="lg"
+          icon={<ImBlocked />}
+          onClick={() => kickPlayer(id, fullName)}
+        />
+      )}
     </Stack>
   );
 };

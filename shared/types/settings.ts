@@ -1,4 +1,4 @@
-import { Card } from './session/card';
+import { CardData } from './session/card';
 
 export interface Settings {
   dealerAsPlayer: boolean;
@@ -7,7 +7,7 @@ export interface Settings {
   scoreTypeShort: string;
   isTimerNeeded: boolean;
   roundTime?: number;
-  cards: Record<string, Card>; // key - id
+  cards: Record<string, CardData>; // key - id
   cardBackType: ''; // TODO (no95typem)
 }
 

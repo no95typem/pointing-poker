@@ -2,18 +2,28 @@ import React from 'react';
 
 import { Box, Heading, Stack } from '@chakra-ui/react';
 
-import { IMemberData } from '../../../../shared/types/session/member';
+import {
+  IMemberData,
+  IUserCardsViewBundle,
+  Member,
+} from '../../../../shared/types/session/member';
 
 import UserCard from '../../components/UserCard/UserCard';
-import KickModal, { IKickModal } from '../../components/KickModal/KickModal';
+import KickModal from '../../components/KickModal/KickModal';
 
-interface IUserCardView {
-  membersData: IMemberData[];
-  modalData: IKickModal;
-}
+const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
+  const { cardsData, modalData } = props;
 
-const UserCardsView = (props: IUserCardView): JSX.Element => {
-  const { membersData, modalData } = props;
+  const { members, findWhoIsUser } = cardsData;
+
+  const setMemberData = (member: Member): IMemberData => {
+    return {
+      member: member,
+      isItYou: findWhoIsUser(member),
+      isRoundStarted: false,
+      kickPlayer: modalData.kickPlayer,
+    };
+  };
 
   return (
     <Box mb="30px">
@@ -21,17 +31,17 @@ const UserCardsView = (props: IUserCardView): JSX.Element => {
         Members:
       </Heading>
       <Stack w="100%" wrap="wrap" direction="row">
-        {membersData.map(memberData => {
-          const id = memberData.member.userSessionPublicId;
+        {Object.entries(members).map(([id, member]) => {
+          if (!+id) return null;
 
           return (
             <Stack w="300px" key={`${id}-wrap`}>
-              <UserCard data={memberData} key={id} />;
+              <UserCard data={setMemberData(member)} key={id} />;
             </Stack>
           );
         })}
 
-        <KickModal data={modalData} />
+        <KickModal modalData={modalData} />
       </Stack>
     </Box>
   );
