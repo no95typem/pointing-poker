@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { connectSlice } from './slices/connect';
 import { errorsSlice } from './slices/errors';
+import { homePageSlice } from './slices/home-page';
 import { loadsSlice } from './slices/loads';
 import { localeSlice } from './slices/locale';
 import { sessionSlice } from './slices/session';
@@ -9,6 +10,7 @@ import { userInfoSlice } from './slices/userInfo';
 
 export const store = configureStore({
   reducer: {
+    homePage: homePageSlice.reducer,
     locale: localeSlice.reducer,
     errors: errorsSlice.reducer,
     loads: loadsSlice.reducer,

@@ -3,7 +3,7 @@
 import WebSocket from 'ws';
 import { DEALER_ID } from '../../../shared/const';
 import { purify } from '../../../shared/helpers/processors/purify';
-import { SESSION_INIT_STATE } from '../../../shared/initStates';
+import { CREATE_INIT_STATE } from '../../../shared/initStates';
 import { CSMsgConnToSess } from '../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { CSMsgVotekick } from '../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
@@ -14,6 +14,10 @@ import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
 import { Member } from '../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
 import { SessionState } from '../../../shared/types/session/state/session-state';
+import {
+  SessionStage,
+  SESSION_STAGES,
+} from '../../../shared/types/session/state/stages';
 import { UserRole, USER_ROLES } from '../../../shared/types/user/user-role';
 import { UserState, USER_STATES } from '../../../shared/types/user/user-state';
 import { ClientManagerAPI, SessionManagerAPI } from '../types';
@@ -35,7 +39,7 @@ export class SessionManager {
 
   private spectatorsManager: SpectatorManager;
 
-  private sessionState: SessionState<Member> = SESSION_INIT_STATE;
+  private sessionState: SessionState = CREATE_INIT_STATE();
 
   private webSocketsMap: Map<WebSocket, number> = new Map();
 
@@ -72,7 +76,13 @@ export class SessionManager {
     this.kicksMan = new KicksManager(this.api);
 
     this.sessionState.sessionId = init.id;
-    this.sessionState.currentGameSettings = purify(init.initMsg.query.settings);
+    try {
+      this.sessionState.currentGameSettings = purify(
+        init.initMsg.query.settings,
+      );
+    } catch (err) {
+      console.log(err);
+    }
 
     const fakeConnMsg = new CSMsgConnToSess({
       sessId: this.sessionState.sessionId,
@@ -96,9 +106,10 @@ export class SessionManager {
     const member: Member = {
       userInfo: pureInitMsg.query.info,
       userRole:
-        role || pureInitMsg.query.role === 'PLAYER'
+        role ||
+        (pureInitMsg.query.role === 'PLAYER'
           ? USER_ROLES.PLAYER
-          : USER_ROLES.SPECTATOR,
+          : USER_ROLES.SPECTATOR),
       userState: USER_STATES.CONNECTED,
       userSessionPublicId: this.genNewMemberId(),
       isSynced: true,
@@ -130,6 +141,7 @@ export class SessionManager {
         state: this.sessionState,
       },
     });
+
     this.api.send(ws, JSON.stringify(rMsg));
 
     console.log('member connected');
@@ -155,6 +167,8 @@ export class SessionManager {
       const msg = new SCMsgMembersChanged(update);
       this.broadcast(msg, USER_ROLES.SPECTATOR);
 
+      if (id === DEALER_ID) this.endSession();
+
       console.log('member disconnected');
     } else {
       // should never be executed
@@ -164,7 +178,7 @@ export class SessionManager {
     }
   }
 
-  private updateState = (update: Partial<SessionState<Member>>) => {
+  private updateState = (update: Partial<SessionState>) => {
     Object.assign(this.sessionState, update);
 
     const msg = new SCMsgUpdateSessionStateMsg(update);
@@ -181,16 +195,18 @@ export class SessionManager {
 
   private broadcast = (msg: SCMsg, level: UserRole, skipIds?: number[]) => {
     const json = JSON.stringify(msg);
-    /* eslint-disable no-fallthrough */
+
     switch (level) {
       case USER_ROLES.SPECTATOR:
         this.spectatorsManager.getMembers().forEach(entry => {
           if (!skipIds?.includes(entry.id)) this.api.send(entry.ws, json);
         });
+        break;
       case USER_ROLES.PLAYER:
         this.playersManager.getMembers().forEach(entry => {
           if (!skipIds?.includes(entry.id)) this.api.send(entry.ws, json);
         });
+        break;
       default:
         this.dealerManager.getMembers().forEach(entry => {
           if (!skipIds?.includes(entry.id)) this.api.send(entry.ws, json);
@@ -198,28 +214,29 @@ export class SessionManager {
 
         return;
     }
-    /* eslint-enable no-fallthrough */
   };
 
   /* GAME */
-  private tryToEndRound() {
+  private tryToEndRound(force?: true) {
     if (this.sessionState.game?.roundState === ROUND_STATES.IN_PROCESS) {
       const playersRecs = this.playersManager.getMembers();
 
-      const isNotEnd = playersRecs.some(rec => {
-        if (
-          rec.id === DEALER_ID &&
-          !this.sessionState.currentGameSettings.dealerAsPlayer
-        ) {
+      const isNotEnd =
+        !force &&
+        playersRecs.some(rec => {
+          if (
+            rec.id === DEALER_ID &&
+            !this.sessionState.currentGameSettings.dealerAsPlayer
+          ) {
+            return false;
+          }
+
+          const vote = this.sessionState.game?.votes[rec.id];
+
+          if (vote === undefined) return true;
+
           return false;
-        }
-
-        const vote = this.sessionState.game?.votes[rec.id];
-
-        if (vote === undefined) return true;
-
-        return false;
-      });
+        });
 
       if (!isNotEnd) {
         const game = this.sessionState.game;
@@ -257,4 +274,15 @@ export class SessionManager {
     this.updateState({ game });
   }
   /* /GAME */
+
+  private endSession() {
+    this.tryToEndRound(true);
+
+    // ? disable players and dealer?
+    // ? left only spectators handling (chat msgs)?
+
+    const stage: SessionStage = SESSION_STAGES.STATS;
+
+    this.updateState({ stage });
+  }
 }

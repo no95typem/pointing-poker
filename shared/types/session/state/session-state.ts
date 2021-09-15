@@ -1,13 +1,13 @@
 import { Settings } from '../../settings';
+import { Synchronized } from '../../syncable';
 import { ChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
 import { Member } from '../member';
 import { RoundState } from '../round/round-state';
 import { SessionStage } from './stages';
 
-export interface ISessionName {
+export interface ISessionName extends Synchronized {
   value: string;
-  isSynced: boolean;
 }
 
 export interface SessionState {
@@ -15,7 +15,7 @@ export interface SessionState {
 
   members: Record<number, Member>; // key - publicId od member
 
-  name: { value: string; isSynced: boolean };
+  name: ISessionName;
 
   stage: SessionStage;
 
@@ -39,5 +39,5 @@ export interface SessionState {
 }
 
 export interface ISessionStateClient extends SessionState {
-  clientId: number;
+  clientId?: number;
 }

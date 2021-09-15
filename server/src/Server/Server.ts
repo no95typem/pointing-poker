@@ -67,7 +67,6 @@ export class PointingPokerServer {
     try {
       // TODO (no95typem): FILTER BY ORIGIN
       if (!(socket instanceof Socket)) throw new Error();
-
       this.wss.handleUpgrade(request, socket, head, ws => {
         this.wss.emit('connection', ws, request);
       });

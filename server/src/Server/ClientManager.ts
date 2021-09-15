@@ -41,6 +41,7 @@ export class ClientManager {
     const listener = this.clientListener.bind(this, ws);
     this.clients.set(ws, { listener });
     ws.addEventListener('message', listener as () => void);
+    console.log('client added');
   }
 
   removeClient(ws: WebSocket) {
@@ -52,6 +53,8 @@ export class ClientManager {
 
     ws.removeEventListener('message', data.listener as () => void);
     this.clients.delete(ws);
+
+    console.log('client removed');
   }
 
   private createSession(ws: WebSocket, initMsg: CSMsgCreateSession) {
@@ -68,6 +71,7 @@ export class ClientManager {
       this.send(ws, JSON.stringify(msg));
     } else {
       const id = genUniqIdWithCrypto(Object.keys(this.sessionManagers));
+      console.log(id);
       this.sessionManagers[id] = new SessionManager(
         {
           initWS: ws,
@@ -76,6 +80,7 @@ export class ClientManager {
         },
         this.api,
       );
+      console.log('dsaa');
       this.clients.set(ws, {
         ...data,
         sessId: id,
@@ -137,6 +142,7 @@ export class ClientManager {
   private clientListener = (ws: WebSocket, e: WebSocketEvent) => {
     try {
       const parsed = JSON.parse(e.data as string);
+      console.log(parsed);
 
       if ('cipher' in parsed) {
         switch ((parsed as CSMsg).cipher) {
@@ -151,11 +157,12 @@ export class ClientManager {
             this.disconnectFromSession(ws);
             break;
           default:
+            console.log(this.apiListeners.size);
             this.apiListeners.forEach(listener => {
               try {
                 listener(parsed as CSMsg);
-              } catch {
-                //
+              } catch (err) {
+                console.error(`error ${err} in listener ${listener}`);
               }
             });
             break;

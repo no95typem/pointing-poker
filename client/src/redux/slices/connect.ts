@@ -1,11 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
-import { Settings } from '../../../../shared/types/settings';
-import { UserInfo } from '../../../../shared/types/user/user-info';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { KNOWN_LOADS_KEYS } from '../../knownLoads';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+import { RootState } from '../store';
 import { setLoadByKey } from './loads';
 
 export type WSConnectionStatus = 'connecting' | 'connected' | 'failed';
@@ -20,12 +19,13 @@ const initialState = { serverConnectionStatus: undefined } as ConnectState;
 
 export const connectToLobby = createAsyncThunk(
   'connection/connectToSession',
-  async (id: string, thunkAPI) => {
+  async (args, thunkAPI) => {
     // TODO (no95typem): get params from the state!
+    const state = thunkAPI.getState() as RootState;
     const msg = new CSMsgConnToSess({
-      info: {} as UserInfo,
+      info: state.userInfo,
       role: USER_ROLES.PLAYER,
-      sessId: id,
+      sessId: state.homePage.lobbyURL,
     });
     SERVER_ADAPTER.send(msg);
     thunkAPI.dispatch(setLoadByKey(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
@@ -35,7 +35,11 @@ export const connectToLobby = createAsyncThunk(
 export const createSession = createAsyncThunk(
   'connection/createSession',
   async (args, thunkAPI) => {
-    const msg = new CSMsgCreateSession({} as UserInfo, {} as Settings);
+    const state = thunkAPI.getState() as RootState;
+    const msg = new CSMsgCreateSession({
+      userInfo: state.userInfo,
+      settings: state.session.currentGameSettings, // ! TODO (no95typem)
+    });
     SERVER_ADAPTER.send(msg);
     thunkAPI.dispatch(setLoadByKey(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
   },

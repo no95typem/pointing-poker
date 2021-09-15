@@ -16,6 +16,7 @@ export class DealerManager extends RoleManager {
         this.handleStartGame();
         break;
       case CSMSG_CIPHERS.UPDATE_SESSION_STATE:
+        console.log(msg);
         this.handleSessionStateUpdate(msg as CSMsgUpdateState);
         break;
       case CSMSG_CIPHERS.FORCE_KICK:

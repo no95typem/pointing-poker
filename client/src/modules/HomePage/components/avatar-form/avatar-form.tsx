@@ -6,6 +6,7 @@ import {
   changeAvatarBase64,
   changeAvatarBgColor,
 } from '../../../../redux/slices/userInfo';
+import { AVATAR_HEIGHT, AVATAR_WIDTH } from '../../../../constants';
 
 const AvatarForm = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +26,9 @@ const AvatarForm = () => {
           })
           .catch(() => {}); // user's file is invalid, show some error
       })
-      .catch(() => {}); // user didn't pick a file, just ignore
+      .catch(err => {
+        console.log(err);
+      }); // user didn't pick a file, just ignore
   };
 
   const deleteAvatar = (): void => {
@@ -35,10 +38,11 @@ const AvatarForm = () => {
   return (
     <Flex direction="column" justify="space-between" alignItems="center">
       <Avatar
-        name={name + ' ' + surname}
+        name={`${name} ${surname}`}
         bg={avatarBgColor}
         size="2xl"
         src={avatarBase64}
+        color="white"
       />
       <input
         type="color"

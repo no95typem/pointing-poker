@@ -20,6 +20,10 @@ import {
   changeAvatarBase64,
   changeAvatarBgColor,
 } from '../../../../redux/slices/userInfo';
+import {
+  connectToLobby,
+  createSession,
+} from '../../../../redux/slices/connect';
 
 interface ConnectPopupProps {
   isOpen: boolean;
@@ -80,7 +84,14 @@ const ConnectPopup = ({
           >
             Close
           </Button>
-          <Button colorScheme="facebook">Confirm</Button>
+          <Button
+            colorScheme="facebook"
+            onClick={() =>
+              forDealer ? dispatch(createSession()) : dispatch(connectToLobby())
+            }
+          >
+            Confirm
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
