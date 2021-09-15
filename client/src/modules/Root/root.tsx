@@ -45,7 +45,7 @@ export const Root = (): JSX.Element => {
         value={sessionId}
         onChange={e => setSessionId(e.target.value)}
       />
-      <Button onClick={() => dispatch(connectToLobby(sessionId))}>
+      <Button onClick={() => dispatch(connectToLobby())}>
         Connect to session
       </Button>
       <HStack>

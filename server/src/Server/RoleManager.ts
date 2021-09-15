@@ -1,32 +1,45 @@
 import WebSocket from 'ws';
-import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
-import { UserRole } from '../../../shared/types/user/user-role';
-import { WebSocketEvent } from '../../../shared/types/ws-event';
+import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
+import { ClientApiMsgListener, SessionManagerAPI } from '../types';
 
 export abstract class RoleManager {
   private serviceData: Record<
     number,
     {
       ws: WebSocket;
-      listener: () => void;
+      listener: ClientApiMsgListener;
     }
   > = {};
 
-  constructor(private broadcast: (msg: SCMsg, level: UserRole) => void) {}
+  constructor(protected api: SessionManagerAPI) {}
 
   addMember(ws: WebSocket, id: number) {
-    const listener = this.listen.bind(this, ws, id) as () => void;
+    const listener = this.listen.bind(this, ws, id);
     this.serviceData[id] = { ws, listener };
-    ws.addEventListener('message', listener);
+    this.api.addMsgListener(listener);
+  }
+
+  removeMember(ws: WebSocket, id: number) {
+    const data = this.serviceData[id];
+
+    if (data) {
+      this.api.removeMsgListener(data.listener);
+      delete this.serviceData[id];
+    }
   }
 
   protected abstract listen: (
     ws: WebSocket,
     id: number,
-    e: WebSocketEvent,
+    parsedMsg: CSMsg,
   ) => void;
 
-  getWebSockets(): WebSocket[] {
-    return Object.values(this.serviceData).map(data => data.ws);
+  getMembers() {
+    return Object.entries(this.serviceData).map(entry => {
+      return {
+        id: +entry[0],
+        ws: entry[1].ws,
+      };
+    });
   }
 }

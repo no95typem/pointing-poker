@@ -10,6 +10,7 @@ import {
 
 import UserCard from '../../components/UserCard/UserCard';
 import KickModal from '../../components/KickModal/KickModal';
+import { DEALER_ID } from '../../../../shared/const';
 
 const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
   const { cardsData, modalData } = props;
@@ -25,6 +26,8 @@ const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
     };
   };
 
+  console.log(members);
+
   return (
     <Box mb="30px">
       <Heading textAlign="center" size="lg" mb="40px">
@@ -32,7 +35,7 @@ const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
       </Heading>
       <Stack w="100%" wrap="wrap" direction="row">
         {Object.entries(members).map(([id, member]) => {
-          if (!+id) return null;
+          if (+id === DEALER_ID) return null;
 
           return (
             <Stack w="300px" key={`${id}-wrap`}>

@@ -1,9 +1,7 @@
 import React from 'react';
-import { useLocation } from 'react-router';
 import { Box } from '@chakra-ui/react';
 
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
-import { setSessionName } from '../../redux/slices/session';
 
 import {
   IMemberData,
@@ -19,24 +17,28 @@ import IssueCards from '../../containers/IssuesCards/IssuesCards';
 import Settings from '../../containers/Settings/Settings';
 import GameCards from '../../containers/GameCards/GameCards';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
+import { updSessState } from '../../redux/slices/session';
+// import { useLocation } from 'react-router-dom';
+import { addIssue, deleteIssue } from '../../redux/slices/mockSession';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 import {
   IIssuesData,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
-import { addIssue, deleteIssue } from '../../redux/slices/mockSession';
 
 const Lobby = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
-  const location = useLocation();
+  // const location = useLocation();
+
+  // const trueSessionData = useTypedSelector(state => state.session);
 
   const sessionData = useTypedSelector(state => state.mockSession);
 
   const dealerData = sessionData.members[0];
 
   const setNewSessionName = (newName: string): void => {
-    dispatch(setSessionName({ value: newName, isSynced: false }));
+    dispatch(updSessState({ name: { value: newName, isSynced: false } }));
   };
 
   const addNewIssue = (issue: Issue): void => {
@@ -78,6 +80,8 @@ const Lobby = (): JSX.Element => {
     removeIssue: removeIssue,
   };
 
+  console.log(membersData);
+
   return (
     <Box minH="100vh" maxW="1440px" w="90%" m="0 auto" p="5px">
       <EditableHeader
@@ -85,7 +89,7 @@ const Lobby = (): JSX.Element => {
         changeTopic={setNewSessionName}
       />
       <DealerPlate data={dealerInfo} />
-      <JoinGameLink link={`${location.pathname}`} />
+      <JoinGameLink link={`${window.location}`} />
       <GameControlButtons />
       <UserCards cardsData={membersData} />
       <IssueCards {...issuesData} />

@@ -1,14 +1,16 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { SessionStage } from '../../../shared/types/session/state/stages';
-import { useTypedSelector } from '../redux/store';
+import { homePageSlice } from '../redux/slices/home-page';
+import { useAppDispatch, useTypedSelector } from '../redux/store';
 
-const calcRedirectPathForSession = (params: {
+const usePathParser = (params: {
   stage: SessionStage;
   sessionId?: string;
   path: string;
 }) => {
   const { stage: sessionStage, path, sessionId } = params;
+  const dispatch = useAppDispatch();
 
   switch (sessionStage) {
     case 'LOBBY':
@@ -27,7 +29,14 @@ const calcRedirectPathForSession = (params: {
 
       return undefined;
     case 'EMPTY':
-      if (path.includes('session')) return '';
+      if (path !== `/`) {
+        if (path.startsWith('/session/')) {
+          const lobbyId = path.split('/')[2];
+          dispatch(homePageSlice.actions.setLobbyURL(lobbyId));
+        }
+
+        return '/';
+      }
 
       return undefined;
     default:
@@ -35,27 +44,29 @@ const calcRedirectPathForSession = (params: {
   }
 };
 
-export const useRouterController = () => {
+export const useRouterController = (): string | undefined => {
   const location = useLocation();
   const sessionState = useTypedSelector(state => state.session);
   const history = useHistory();
   const path = location.pathname;
 
-  /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    // for session
-    const { stage, sessionId } = sessionState;
-    const requiredPathBySession = calcRedirectPathForSession({
-      stage,
-      sessionId,
-      path,
-    });
+  const { stage, sessionId } = sessionState;
+  const requiredPathBySession = usePathParser({
+    stage,
+    sessionId,
+    path,
+  });
 
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useLayoutEffect(() => {
+    // for session
     if (requiredPathBySession) {
       history.push(requiredPathBySession);
 
       return;
     }
-  }, [path, sessionState]);
+  }, [requiredPathBySession]);
   /* eslint-enable react-hooks/exhaustive-deps */
+
+  return requiredPathBySession;
 };
