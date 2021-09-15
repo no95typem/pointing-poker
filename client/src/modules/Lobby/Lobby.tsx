@@ -19,13 +19,19 @@ import IssueCards from '../../containers/IssuesCards/IssuesCards';
 import Settings from '../../containers/Settings/Settings';
 import GameCards from '../../containers/GameCards/GameCards';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
+import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
+import {
+  IIssuesData,
+  Issue,
+} from '../../../../shared/types/session/issue/issue';
+import { addIssue, deleteIssue } from '../../redux/slices/mockSession';
 
 const Lobby = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const location = useLocation();
 
-  const sessionData = useTypedSelector(state => state.session);
+  const sessionData = useTypedSelector(state => state.mockSession);
 
   const dealerData = sessionData.members[0];
 
@@ -33,12 +39,23 @@ const Lobby = (): JSX.Element => {
     dispatch(setSessionName({ value: newName, isSynced: false }));
   };
 
+  const addNewIssue = (issue: Issue): void => {
+    dispatch(addIssue(issue));
+  };
+
+  const removeIssue = (id: number): void => {
+    dispatch(deleteIssue(id));
+  };
+
   const isItYou = (member: Member) => {
     return sessionData.clientId === member.userSessionPublicId;
   };
 
   const isRoundStarted = (): boolean => {
-    return !!sessionData.game && sessionData.game.roundState === 'IN_PROCESS';
+    return (
+      !!sessionData.game &&
+      sessionData.game.roundState === ROUND_STATES.IN_PROCESS
+    );
   };
 
   console.log(sessionData);
@@ -55,6 +72,12 @@ const Lobby = (): JSX.Element => {
     isRoundStarted: isRoundStarted(),
   };
 
+  const issuesData: IIssuesData = {
+    issues: sessionData.issues,
+    addNewIssue: addNewIssue,
+    removeIssue: removeIssue,
+  };
+
   return (
     <Box minH="100vh" maxW="1440px" w="90%" m="0 auto" p="5px">
       <EditableHeader
@@ -65,8 +88,8 @@ const Lobby = (): JSX.Element => {
       <JoinGameLink link={`${location.pathname}`} />
       <GameControlButtons />
       <UserCards cardsData={membersData} />
-      <IssueCards />
-      <Settings />
+      <IssueCards {...issuesData} />
+      <Settings {...sessionData.currentGameSettings} />
       <GameCards />
     </Box>
   );

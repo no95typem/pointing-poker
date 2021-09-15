@@ -9,22 +9,32 @@ import {
 } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
+import { CloseIcon } from '@chakra-ui/icons';
+
 import {
   IIssueData,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
 
 const IssueCard = (props: IIssueData): JSX.Element => {
-  const { issue, onClick } = props;
+  const { issue, editIssue, removeIssue } = props;
 
   const { id, title, priority } = issue as Issue;
 
   return (
     <Stack direction="row" align="center" p="10px" boxShadow="lg">
       <Stat>
-        <StatNumber>{title}</StatNumber>
+        <StatNumber isTruncated={true}>{title}</StatNumber>
         <StatHelpText mb="0">{priority}</StatHelpText>
       </Stat>
+      <IconButton
+        aria-label="delete"
+        background="transparent"
+        visibility={true ? 'visible' : 'hidden'}
+        size="lg"
+        icon={<CloseIcon />}
+        onClick={() => removeIssue(id)}
+      />
 
       <IconButton
         aria-label="edit"
@@ -32,7 +42,7 @@ const IssueCard = (props: IIssueData): JSX.Element => {
         visibility={true ? 'visible' : 'hidden'}
         size="lg"
         icon={<ImPencil />}
-        onClick={() => onClick(id)}
+        onClick={() => editIssue(id)}
       />
     </Stack>
   );

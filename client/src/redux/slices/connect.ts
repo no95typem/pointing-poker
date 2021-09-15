@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
-import { Settings } from '../../../../shared/types/settings';
+import { ISettings } from '../../../../shared/types/settings';
 import { UserInfo } from '../../../../shared/types/user/user-info';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { KNOWN_LOADS_KEYS } from '../../knownLoads';
@@ -35,7 +35,7 @@ export const connectToLobby = createAsyncThunk(
 export const createSession = createAsyncThunk(
   'connection/createSession',
   async (args, thunkAPI) => {
-    const msg = new CSMsgCreateSession({} as UserInfo, {} as Settings);
+    const msg = new CSMsgCreateSession({} as UserInfo, {} as ISettings);
     SERVER_ADAPTER.send(msg);
     thunkAPI.dispatch(setLoadByKey(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
   },

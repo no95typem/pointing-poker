@@ -4,6 +4,7 @@ import { connectSlice } from './slices/connect';
 import { errorsSlice } from './slices/errors';
 import { loadsSlice } from './slices/loads';
 import { localeSlice } from './slices/locale';
+import { mockSessionSlice } from './slices/mockSession';
 import { sessionSlice } from './slices/session';
 import { userInfoSlice } from './slices/userInfo';
 
@@ -15,6 +16,7 @@ export const store = configureStore({
     connect: connectSlice.reducer,
     session: sessionSlice.reducer,
     userInfo: userInfoSlice.reducer,
+    mockSession: mockSessionSlice.reducer,
   },
   devTools: process.env.NODE_ENV === 'development',
 });
@@ -25,4 +27,5 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
+
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;

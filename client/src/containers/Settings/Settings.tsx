@@ -2,24 +2,38 @@ import React from 'react';
 
 import { Stack, Heading, Box } from '@chakra-ui/react';
 import { LOCALE_US } from '../../locales/locale-us';
-import { ISettingsComponent } from '../../../../shared/types/settings';
+import {
+  ISettingsComponent,
+  ISettings,
+} from '../../../../shared/types/settings';
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
 import Timer from '../Timer/Timer';
 
-const Settings = (): JSX.Element => {
+const Settings = (props: ISettings): JSX.Element => {
+  const {
+    dealerAsPlayer,
+    changingCardInRoundEnd,
+    isTimerNeeded,
+    scoreType,
+    scoreTypeShort,
+    roundTime,
+  } = props;
   const switchersData: ISettingsComponent[] = [
     {
-      name: 'dealerPlayer',
+      name: 'dealerAsPlayer',
       label: LOCALE_US.SETTINGS_IS_DEALER_PLAYER,
+      value: dealerAsPlayer,
     },
     {
-      name: 'openCardsOnRoundEnd',
+      name: 'changingCardInRoundEnd',
       label: LOCALE_US.SETTINGS_OPEN_CARDS_ON_ROUND_END,
+      value: changingCardInRoundEnd,
     },
     {
-      name: 'isTimerOn',
+      name: 'isTimerNeeded',
       label: LOCALE_US.SETTINGS_IS_TIMER_ON,
+      value: isTimerNeeded,
     },
   ];
 
@@ -27,10 +41,12 @@ const Settings = (): JSX.Element => {
     {
       name: 'scoreType',
       label: LOCALE_US.SETTINGS_SCORE_TYPE,
+      value: scoreType,
     },
     {
-      name: 'scoreTypeSort',
+      name: 'scoreTypeShort',
       label: LOCALE_US.SETTINGS_SCORE_TYPE_SHORT,
+      value: scoreTypeShort,
     },
   ];
 
@@ -50,7 +66,8 @@ const Settings = (): JSX.Element => {
 
           return <InputText data={iputData} key={name} />;
         })}
-        <Timer />
+
+        {isTimerNeeded && <Timer time={roundTime} />}
       </Stack>
     </Box>
   );

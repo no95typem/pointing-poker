@@ -7,7 +7,7 @@ import { ISettingsComponentData } from '../../../../shared/types/settings';
 const Switcher = (props: ISettingsComponentData): JSX.Element => {
   const { data } = props;
 
-  const { name, label } = data;
+  const { name, label, value } = data;
 
   return (
     <FormControl
@@ -18,7 +18,12 @@ const Switcher = (props: ISettingsComponentData): JSX.Element => {
       <FormLabel htmlFor={name} mb="0">
         {label}
       </FormLabel>
-      <Switch colorScheme="green" id={name} name={name} />
+      <Switch
+        colorScheme="green"
+        id={name}
+        name={name}
+        isChecked={value as boolean}
+      />
     </FormControl>
   );
 };

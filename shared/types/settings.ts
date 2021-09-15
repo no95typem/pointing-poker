@@ -1,12 +1,12 @@
 import { CardData } from './session/card';
 
-export interface Settings {
+export interface ISettings {
   dealerAsPlayer: boolean;
   changingCardInRoundEnd: boolean;
   scoreType: string;
   scoreTypeShort: string;
   isTimerNeeded: boolean;
-  roundTime?: number;
+  roundTime: number;
   cards: Record<string, CardData>; // key - id
   cardBackType: ''; // TODO (no95typem)
 }
@@ -14,6 +14,7 @@ export interface Settings {
 export interface ISettingsComponent {
   name: string;
   label: string;
+  value: string | boolean;
 }
 
 export interface ISettingsComponentData {
