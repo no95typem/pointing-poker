@@ -1,11 +1,23 @@
 import { OBJ_PROCESSOR } from '../../helpers/processors/obj-processor';
 
 class SCMsgCiphers {
-  readonly FATAL_ERROR = 'FATAL_ERROR';
+  readonly CHAT_MSG = 'CHAT_MSG';
 
   readonly CONN_TO_SESS_STATUS = 'CONN_TO_SESS_STATUS';
 
-  readonly CHAT_MSG = 'CHAT_MSG';
+  readonly FATAL_ERROR = 'FATAL_ERROR';
+
+  readonly MEMBERS_CHANGED = 'MEMBERS_CHANGED';
+
+  readonly UPDATE_SESSION_STATE = 'UPDATE_SESSION_STATE';
+
+  readonly VOTEKICK = 'VOTEKICK';
+
+  readonly VOTEKICK_RESPONSE = 'VOTEKICK_RESPONSE';
+
+  readonly VOTEKICK_RESULT = 'VOTEKICK_RESULT';
+
+  readonly FORCE_KICK = 'FORCE_KICK';
 }
 
 export const SCMSG_CIPHERS = OBJ_PROCESSOR.deepFreeze(new SCMsgCiphers());

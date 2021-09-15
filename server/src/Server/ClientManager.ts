@@ -7,7 +7,11 @@ import { CSMSG_CIPHERS } from '../../../shared/types/cs-msgs/cs-msg-ciphers';
 import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
 import { WebSocketEvent } from '../../../shared/types/ws-event';
 import { SessionManager } from './SessionManager';
-import { WebSocketSendFunc } from '../types';
+import {
+  ClientApiMsgListener,
+  ClientManagerAPI,
+  WebSocketSendFunc,
+} from '../types';
 import { KNOWN_ERRORS_KEYS } from '../../../shared/knownErrorsKeys';
 
 export class ClientManager {
@@ -21,12 +25,23 @@ export class ClientManager {
 
   private sessionManagers: Record<string, SessionManager> = {};
 
+  private apiListeners: Set<ClientApiMsgListener> = new Set();
+
+  private api: ClientManagerAPI = {
+    send: this.send,
+    addMsgListener: (listener: ClientApiMsgListener) =>
+      this.apiListeners.add(listener),
+    removeMsgListener: (listener: ClientApiMsgListener) =>
+      this.apiListeners.delete(listener),
+  };
+
   constructor(private send: WebSocketSendFunc) {}
 
   addClient(ws: WebSocket) {
     const listener = this.clientListener.bind(this, ws);
     this.clients.set(ws, { listener });
     ws.addEventListener('message', listener as () => void);
+    console.log('client added');
   }
 
   removeClient(ws: WebSocket) {
@@ -38,6 +53,8 @@ export class ClientManager {
 
     ws.removeEventListener('message', data.listener as () => void);
     this.clients.delete(ws);
+
+    console.log('client removed');
   }
 
   private createSession(ws: WebSocket, initMsg: CSMsgCreateSession) {
@@ -45,21 +62,25 @@ export class ClientManager {
 
     if (!data || data.sessId) {
       const msg = new SCMsgConnToSessStatus({
-        reason: data?.sessId
-          ? KNOWN_ERRORS_KEYS.SC_ALREADY_CONNECTED_TO_SESSION
-          : KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR,
+        fail: {
+          reason: data?.sessId
+            ? KNOWN_ERRORS_KEYS.SC_ALREADY_CONNECTED_TO_SESSION
+            : KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR,
+        },
       });
-      this.send(ws, msg);
+      this.send(ws, JSON.stringify(msg));
     } else {
       const id = genUniqIdWithCrypto(Object.keys(this.sessionManagers));
+      console.log(id);
       this.sessionManagers[id] = new SessionManager(
         {
           initWS: ws,
           initMsg,
           id,
         },
-        this.send,
+        this.api,
       );
+      console.log('dsaa');
       this.clients.set(ws, {
         ...data,
         sessId: id,
@@ -72,19 +93,23 @@ export class ClientManager {
 
     if (!data || data.sessId) {
       const msg = new SCMsgConnToSessStatus({
-        reason: data?.sessId
-          ? KNOWN_ERRORS_KEYS.SC_ALREADY_CONNECTED_TO_SESSION
-          : KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR,
+        fail: {
+          reason: data?.sessId
+            ? KNOWN_ERRORS_KEYS.SC_ALREADY_CONNECTED_TO_SESSION
+            : KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR,
+        },
       });
-      this.send(ws, msg);
+      this.send(ws, JSON.stringify(msg));
     } else {
       const session = this.sessionManagers[initMsg.query.sessId];
 
       if (!session) {
         const msg = new SCMsgConnToSessStatus({
-          reason: KNOWN_ERRORS_KEYS.SESSION_DOES_NOT_EXIST,
+          fail: {
+            reason: KNOWN_ERRORS_KEYS.SESSION_DOES_NOT_EXIST,
+          },
         });
-        this.send(ws, msg);
+        this.send(ws, JSON.stringify(msg));
       } else {
         session.addMember(ws, initMsg);
         this.clients.set(ws, {
@@ -117,27 +142,30 @@ export class ClientManager {
   private clientListener = (ws: WebSocket, e: WebSocketEvent) => {
     try {
       const parsed = JSON.parse(e.data as string);
+      console.log(parsed);
 
       if ('cipher' in parsed) {
         switch ((parsed as CSMsg).cipher) {
           case CSMSG_CIPHERS.CREATE_SESS:
             this.createSession(ws, parsed as CSMsgCreateSession);
-
-            return;
-
+            break;
           case CSMSG_CIPHERS.CONN_TO_SESS:
             console.log('conn to session');
             this.connectToSession(ws, parsed as CSMsgConnToSess);
-
-            return;
-
+            break;
           case CSMSG_CIPHERS.DISCONN_FROM_SESS:
             this.disconnectFromSession(ws);
-
-            return;
+            break;
           default:
-            // eslint-disable-next-line no-useless-return
-            return;
+            console.log(this.apiListeners.size);
+            this.apiListeners.forEach(listener => {
+              try {
+                listener(parsed as CSMsg);
+              } catch (err) {
+                console.error(`error ${err} in listener ${listener}`);
+              }
+            });
+            break;
         }
       }
     } catch {

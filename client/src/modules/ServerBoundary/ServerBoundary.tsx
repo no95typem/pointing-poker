@@ -9,11 +9,11 @@ export interface ServerBoundaryProps {
 
 export const ServerBoundary = (props: ServerBoundaryProps) => {
   useConnectionStatusToast();
-  useRouterController();
+  const newPath = useRouterController();
 
   useEffect(() => {
     !FE_ALONE && SERVER_ADAPTER.connect();
   }, []);
 
-  return <>{props.children}</>;
+  return <>{newPath ? undefined : props.children}</>;
 };

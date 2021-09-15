@@ -1,19 +1,10 @@
-// senderMsgId нужен для сопоставления сообщения до и после регистрации этого сообщения на сервере
-// в качестве key в реакте предлагаю использовать key объекта (*ChatMsg) в session.chat.msgs
-// в этом объекте в качестве ключей исользовать serverMsgId (это будет номер [0, Integer.MAX_INTEGER]),
-// таким образом почти всегда будет использоваться serverMsgId за исключением моментов
-// пока сообщение незарегестрировано на сервере
-// senderMsgId предлагаю получать через Date.now()
-// т.к. это во первых его будет всегда держать последним в списке,
-// а во вторых вероятность что пользователь сможет создать 2 action в 1 ms => 0
+import { Synchronized } from '../../syncable';
 
-export interface UnregisteredChatMsg {
+export interface ChatMsg extends Synchronized {
   readonly text: string;
   readonly time: number; // Date.now()
   readonly memberId: number;
-  readonly senderMsgId: string;
+  readonly rejected?: true;
 }
 
-export interface RegisteredChatMsg extends UnregisteredChatMsg {
-  readonly serverMsgId: number;
-}
+// key for ChatMsgs {} - `${memberId}-${time}`

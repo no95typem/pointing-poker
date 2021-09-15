@@ -23,6 +23,7 @@ export const userInfoSlice = createSlice({
       state.jobPosition = action.payload;
     },
     changeAvatarBase64(state, action) {
+      console.log(action.payload);
       state.avatarBase64 = action.payload;
     },
     changeAvatarBgColor(state, action) {

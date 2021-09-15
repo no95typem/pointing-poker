@@ -1,14 +1,13 @@
 import { Settings } from '../../settings';
-import { CardData } from '../card';
-import { UnregisteredChatMsg } from '../chat/chat-msg';
+import { Synchronized } from '../../syncable';
+import { ChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
 import { Member } from '../member';
 import { RoundState } from '../round/round-state';
 import { SessionStage } from './stages';
 
-export interface ISessionName {
+export interface ISessionName extends Synchronized {
   value: string;
-  isSynced: boolean;
 }
 
 export interface SessionState {
@@ -16,14 +15,14 @@ export interface SessionState {
 
   members: Record<number, Member>; // key - publicId od member
 
-  name: { value: string; isSynced: boolean };
+  name: ISessionName;
 
   stage: SessionStage;
 
   chat: {
     isVisible: boolean;
-    msgs: Record<number, UnregisteredChatMsg>;
-    typedText?: string;
+    msgs: Record<number, ChatMsg>;
+    typedText: string;
   };
 
   issues: Issue[];
@@ -32,15 +31,13 @@ export interface SessionState {
 
   game?: {
     roundState: RoundState;
-    roundStartTime?: number;
-    currIssueId: string;
-    votes?: {
-      memberPublicId: number;
-      card?: CardData;
-    }[];
+    roundStartTime: number;
+    currIssueIndex: number;
+    // key number - userPublicId, val number - value of card
+    votes: Record<number, string | undefined>;
   };
 }
 
 export interface ISessionStateClient extends SessionState {
-  clientId: number;
+  clientId?: number;
 }

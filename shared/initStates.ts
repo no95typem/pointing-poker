@@ -1,3 +1,4 @@
+import { OBJ_PROCESSOR } from './helpers/processors/obj-processor';
 import { CardData } from './types/session/card';
 import { Member } from './types/session/member';
 import {
@@ -5,6 +6,7 @@ import {
   SessionState,
 } from './types/session/state/session-state';
 import { Settings } from './types/settings';
+import { USER_ROLES } from './types/user/user-role';
 
 const testCardsData: Record<string, CardData> = {
   //тестовый объект, отладка
@@ -24,17 +26,26 @@ const defaultSettings: Settings = {
   cardBackType: '',
 };
 
-export const SESSION_INIT_STATE: SessionState = {
+const SESSION_INIT_STATE: SessionState = {
   sessionId: '',
-  name: { value: '', isSynced: false },
-  stage: 'EMPTY',
+  stage: 'LOBBY',
+  name: { value: 'unnamed pp session', isSynced: true },
   members: {},
   currentGameSettings: defaultSettings,
   chat: {
     isVisible: false,
     msgs: {},
+    typedText: '',
   },
   issues: [],
+};
+
+export const CREATE_INIT_STATE = () =>
+  OBJ_PROCESSOR.deepClone(SESSION_INIT_STATE);
+
+export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
+  ...SESSION_INIT_STATE,
+  stage: 'EMPTY',
 };
 
 //Временные переменые, исключительно для отладки.
@@ -47,7 +58,7 @@ const sampleMember: Member = {
     avatarBgColor: 'green',
   },
   userSessionPublicId: 0,
-  userRole: 'DEALER',
+  userRole: USER_ROLES.DEALER,
   userState: 'CONNECTED',
   isSynced: true,
 };
@@ -86,6 +97,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   chat: {
     isVisible: false,
     msgs: {},
+    typedText: '',
   },
   issues: [],
 };
