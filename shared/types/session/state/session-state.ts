@@ -1,4 +1,4 @@
-import { Settings } from '../../settings';
+import { ISettings } from '../../settings';
 import { Synchronized } from '../../syncable';
 import { ChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
@@ -27,7 +27,7 @@ export interface SessionState {
 
   issues: Issue[];
 
-  currentGameSettings: Settings;
+  currentGameSettings: ISettings;
 
   game?: {
     roundState: RoundState;

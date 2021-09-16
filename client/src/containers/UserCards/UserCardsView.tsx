@@ -26,8 +26,6 @@ const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
     };
   };
 
-  console.log(members);
-
   return (
     <Box mb="30px">
       <Heading textAlign="center" size="lg" mb="40px">

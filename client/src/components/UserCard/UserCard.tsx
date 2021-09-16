@@ -13,6 +13,8 @@ import {
 import { ImBlocked } from 'react-icons/im';
 
 import { IMemberDataBundle } from '../../../../shared/types/session/member';
+import { USER_ROLES } from '../../../../shared/types/user/user-role';
+import { USER_STATES } from '../../../../shared/types/user/user-state';
 
 const UserCard = (props: IMemberDataBundle): JSX.Element => {
   const { data } = props;
@@ -21,7 +23,7 @@ const UserCard = (props: IMemberDataBundle): JSX.Element => {
 
   const { userInfo, userState, userRole, userSessionPublicId: id } = member;
 
-  console.log(userInfo, member);
+  // console.log(userInfo, member);
 
   const { name, surname, avatarBase64, avatarBgColor, jobPosition } = userInfo;
 
@@ -30,8 +32,8 @@ const UserCard = (props: IMemberDataBundle): JSX.Element => {
   const isKickShown: boolean =
     !isRoundStarted &&
     !isItYou &&
-    userRole !== 'DEALER' &&
-    userState === 'CONNECTED';
+    userRole !== USER_ROLES.DEALER &&
+    userState === USER_STATES.CONNECTED;
 
   return (
     <Stack direction="row" align="center" p="10px 10px" boxShadow="lg">
@@ -47,7 +49,7 @@ const UserCard = (props: IMemberDataBundle): JSX.Element => {
       </Avatar>
 
       <Stat>
-        <StatNumber as={userState === 'KICKED' ? 'del' : 'abbr'}>
+        <StatNumber as={userState === USER_STATES.KICKED ? 'del' : 'abbr'}>
           {fullName}
         </StatNumber>
         <StatHelpText mb="0">{jobPosition}</StatHelpText>

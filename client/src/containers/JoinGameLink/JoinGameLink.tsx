@@ -1,6 +1,13 @@
 import React from 'react';
 
-import { Button, Stack, Heading, Box, useToast } from '@chakra-ui/react';
+import {
+  Button,
+  Stack,
+  Heading,
+  Box,
+  useToast,
+  useClipboard,
+} from '@chakra-ui/react';
 
 interface ILink {
   link: string;
@@ -11,14 +18,16 @@ const JoinGameLink = (props: ILink) => {
 
   const toast = useToast();
 
+  const { hasCopied, onCopy } = useClipboard(link);
+
   const saveToClipboard = (): void => {
-    navigator.clipboard.writeText(link).then(() => {
-      toast({
-        title: 'Successfully saved!',
-        status: 'success',
-        duration: 1200,
-        isClosable: true,
-      });
+    onCopy();
+
+    toast({
+      title: 'Successfully saved!',
+      status: 'success',
+      duration: 1200,
+      isClosable: true,
     });
   };
 
@@ -55,7 +64,7 @@ const JoinGameLink = (props: ILink) => {
           variant="solid"
           onClick={saveToClipboard}
         >
-          Copy
+          {hasCopied ? 'Done!' : 'Copy'}
         </Button>
       </Stack>
     </Box>

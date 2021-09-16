@@ -7,7 +7,13 @@ import { ISettingsComponentData } from '../../../../shared/types/settings';
 const InputText = (props: ISettingsComponentData): JSX.Element => {
   const { data } = props;
 
-  const { name, label } = data;
+  const { name, label, value, onChange } = data;
+
+  const setData = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const input = e.target;
+
+    onChange(input.name, input.value);
+  };
 
   return (
     <FormControl
@@ -18,7 +24,15 @@ const InputText = (props: ISettingsComponentData): JSX.Element => {
       <FormLabel htmlFor={name} mb="0">
         {label}
       </FormLabel>
-      <Input boxShadow="md" w="60%" border="black 2px solid" id={name} />
+      <Input
+        boxShadow="md"
+        w="60%"
+        border="black 2px solid"
+        id={name}
+        name={name}
+        value={value as string}
+        onChange={setData}
+      />
     </FormControl>
   );
 };
