@@ -41,7 +41,9 @@ export class KicksManager {
   }
 
   private countKickers(): number {
-    return Object.values(this.api.getSessionState().members).filter(
+    const { state } = this.api.getSessionState();
+
+    return Object.values(state.members).filter(
       m =>
         m.userState === USER_STATES.CONNECTED &&
         m.userRole !== USER_ROLES.SPECTATOR,
@@ -118,7 +120,9 @@ export class KicksManager {
     const votes: Record<number, boolean> = {};
     votes[initId] = true;
 
-    const targetRole = this.api.getSessionState().members[targetId]?.userRole;
+    const { state } = this.api.getSessionState();
+
+    const targetRole = state.members[targetId]?.userRole;
 
     if (targetRole && targetRole !== USER_ROLES.SPECTATOR) {
       votes[targetId] = false;

@@ -7,7 +7,7 @@ export interface Settings {
   scoreTypeShort: string;
   isTimerNeeded: boolean;
   roundTime?: number;
-  cards: Record<string, CardData>; // key - id
+  cards: CardData[];
   cardBackType: ''; // TODO (no95typem)
 }
 
