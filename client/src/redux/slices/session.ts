@@ -4,20 +4,13 @@ import {
   SessionState,
 } from '../../../../shared/types/session/state/session-state';
 
-//! Временно создан SESSION_TESTING_STATE, исключительно для отладки.
-import {
-  SESSION_CLIENT_INIT_STATE,
-  // SESSION_TESTING_STATE,
-} from '../../../../shared/initStates';
+import { SESSION_CLIENT_INIT_STATE } from '../../../../shared/initStates';
 import { Synchronized } from '../../../../shared/types/syncable';
 import { purify } from '../../../../shared/helpers/processors/purify';
 import { CSMsgUpdateState } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
-import { Issue } from '../../../../shared/types/session/issue/issue';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
-
-// const initialState = SESSION_TESTING_STATE;
 
 const setSynced = <T>(thing: T, synced: boolean): T => {
   if (typeof thing === 'object' && thing !== null) {
@@ -50,11 +43,10 @@ export const sessionSlice = createSlice({
       action: PayloadAction<Partial<ISessionStateClient>>,
     ) {
       const purified = purify(action.payload);
+
       const synced = setSynced(purified, true);
+
       Object.assign(state, synced);
-    },
-    addIssue(state, action: PayloadAction<Issue>) {
-      state.issues.push(action.payload);
     },
   },
 });
