@@ -3,14 +3,17 @@ import React from 'react';
 import { Stack, IconButton, Stat, StatNumber } from '@chakra-ui/react';
 
 import { ImPlus } from 'react-icons/im';
-import { IIssueData } from '../../../../shared/types/session/issue/issue';
 
-const NewIssueButton = (props: IIssueData): JSX.Element => {
-  const { onClick } = props;
+interface IIssueButtonData {
+  editIssue: () => void;
+}
+
+const NewIssueButton = (props: IIssueButtonData): JSX.Element => {
+  const { editIssue } = props;
 
   return (
     <Stack
-      onClick={() => onClick()}
+      onClick={editIssue}
       direction="row"
       align="center"
       p="10px"

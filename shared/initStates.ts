@@ -5,7 +5,7 @@ import {
   ISessionStateClient,
   SessionState,
 } from './types/session/state/session-state';
-import { Settings } from './types/settings';
+import { ISettings } from './types/settings';
 import { USER_ROLES } from './types/user/user-role';
 
 const testCardsData: CardData[] = [
@@ -16,12 +16,13 @@ const testCardsData: CardData[] = [
   { value: '3' },
 ];
 
-const defaultSettings: Settings = {
+export const defaultSettings: ISettings = {
   dealerAsPlayer: true,
   changingCardInRoundEnd: false,
   isTimerNeeded: true,
   scoreType: 'story points',
   scoreTypeShort: 'SP',
+  roundTime: 140,
   cards: testCardsData, //placeholder
   cardBackType: '',
 };

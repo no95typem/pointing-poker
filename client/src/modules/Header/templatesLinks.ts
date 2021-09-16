@@ -56,10 +56,6 @@ const templatesLinks: ILink[] = [
     link: TemplateRoutesPath.SETTINGS,
   },
   {
-    text: 'Issues',
-    link: TemplateRoutesPath.ISSUES,
-  },
-  {
     text: 'Game Cards',
     link: TemplateRoutesPath.CARDS,
   },

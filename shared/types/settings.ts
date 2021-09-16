@@ -1,6 +1,6 @@
 import { CardData } from './session/card';
 
-export interface Settings {
+export interface ISettings {
   dealerAsPlayer: boolean;
   changingCardInRoundEnd: boolean;
   scoreType: string;
@@ -14,6 +14,8 @@ export interface Settings {
 export interface ISettingsComponent {
   name: string;
   label: string;
+  value: string | boolean;
+  onChange: (name: string, value: string | boolean) => void;
 }
 
 export interface ISettingsComponentData {

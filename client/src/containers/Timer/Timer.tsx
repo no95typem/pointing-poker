@@ -4,7 +4,19 @@ import { FormControl, FormLabel, Stack, Text } from '@chakra-ui/react';
 
 import InputNumber from '../../components/InputNumber/InputNumber';
 
-const Timer = (): JSX.Element => {
+interface ITimer {
+  time: number;
+}
+
+const Timer = (props: ITimer): JSX.Element => {
+  const { time } = props;
+
+  console.log(time);
+
+  const minutes = Math.trunc(time / 60);
+
+  const seconds = time % 60;
+
   return (
     <FormControl
       display="flex"
@@ -25,11 +37,11 @@ const Timer = (): JSX.Element => {
         w="150px"
         height="75px"
       >
-        <InputNumber defaultvalue={2} units="minutes" />
+        <InputNumber defaultvalue={minutes} units="minutes" />
 
         <Text>:</Text>
 
-        <InputNumber defaultvalue={20} units="seconds" />
+        <InputNumber defaultvalue={seconds} units="seconds" />
       </Stack>
     </FormControl>
   );
