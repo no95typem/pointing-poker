@@ -8,15 +8,15 @@ import {
 import { ISettings } from './types/settings';
 import { USER_ROLES } from './types/user/user-role';
 
-const testCardsData: Record<string, CardData> = {
+const testCardsData: CardData[] = [
   //тестовый объект, отладка
-  unknown: { value: 'unknown' },
-  '1': { value: '1' },
-  '2': { value: '2' },
-  '3': { value: '3' },
-};
+  { value: 'unknown' },
+  { value: '1' },
+  { value: '2' },
+  { value: '3' },
+];
 
-const defaultSettings: ISettings = {
+export const defaultSettings: ISettings = {
   dealerAsPlayer: true,
   changingCardInRoundEnd: false,
   isTimerNeeded: true,

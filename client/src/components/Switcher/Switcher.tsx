@@ -7,7 +7,13 @@ import { ISettingsComponentData } from '../../../../shared/types/settings';
 const Switcher = (props: ISettingsComponentData): JSX.Element => {
   const { data } = props;
 
-  const { name, label, value } = data;
+  const { name, label, value, onChange } = data;
+
+  const setData = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const input = e.target;
+
+    onChange(input.name, input.checked);
+  };
 
   return (
     <FormControl
@@ -23,6 +29,7 @@ const Switcher = (props: ISettingsComponentData): JSX.Element => {
         id={name}
         name={name}
         isChecked={value as boolean}
+        onChange={setData}
       />
     </FormControl>
   );

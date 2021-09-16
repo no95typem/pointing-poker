@@ -7,7 +7,13 @@ import { ISettingsComponentData } from '../../../../shared/types/settings';
 const InputText = (props: ISettingsComponentData): JSX.Element => {
   const { data } = props;
 
-  const { name, label, value } = data;
+  const { name, label, value, onChange } = data;
+
+  const setData = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const input = e.target;
+
+    onChange(input.name, input.value);
+  };
 
   return (
     <FormControl
@@ -25,7 +31,7 @@ const InputText = (props: ISettingsComponentData): JSX.Element => {
         id={name}
         name={name}
         value={value as string}
-        onChange={() => {}}
+        onChange={setData}
       />
     </FormControl>
   );

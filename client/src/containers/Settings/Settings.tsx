@@ -2,15 +2,19 @@ import React from 'react';
 
 import { Stack, Heading, Box } from '@chakra-ui/react';
 import { LOCALE_US } from '../../locales/locale-us';
-import {
-  ISettingsComponent,
-  ISettings,
-} from '../../../../shared/types/settings';
+import { ISettingsComponent } from '../../../../shared/types/settings';
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
 import Timer from '../Timer/Timer';
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
+import { setSettings } from '../../redux/slices/settings';
+import GameCards from '../GameCards/GameCards';
 
-const Settings = (props: ISettings): JSX.Element => {
+const Settings = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+
+  const localSettings = useTypedSelector(state => state.settings);
+
   const {
     dealerAsPlayer,
     changingCardInRoundEnd,
@@ -18,22 +22,34 @@ const Settings = (props: ISettings): JSX.Element => {
     scoreType,
     scoreTypeShort,
     roundTime,
-  } = props;
+  } = localSettings;
+
+  const setLocalSettings = (name: string, value: string | boolean): void => {
+    dispatch(setSettings({ ...localSettings, [name]: value }));
+
+    // dispatch(setSettings({ ...localSettings, dealerAsPlayer: false }));
+
+    console.log(localSettings);
+  };
+
   const switchersData: ISettingsComponent[] = [
     {
       name: 'dealerAsPlayer',
       label: LOCALE_US.SETTINGS_IS_DEALER_PLAYER,
       value: dealerAsPlayer,
+      onChange: setLocalSettings,
     },
     {
       name: 'changingCardInRoundEnd',
       label: LOCALE_US.SETTINGS_OPEN_CARDS_ON_ROUND_END,
       value: changingCardInRoundEnd,
+      onChange: setLocalSettings,
     },
     {
       name: 'isTimerNeeded',
       label: LOCALE_US.SETTINGS_IS_TIMER_ON,
       value: isTimerNeeded,
+      onChange: setLocalSettings,
     },
   ];
 
@@ -42,17 +58,19 @@ const Settings = (props: ISettings): JSX.Element => {
       name: 'scoreType',
       label: LOCALE_US.SETTINGS_SCORE_TYPE,
       value: scoreType,
+      onChange: setLocalSettings,
     },
     {
       name: 'scoreTypeShort',
       label: LOCALE_US.SETTINGS_SCORE_TYPE_SHORT,
       value: scoreTypeShort,
+      onChange: setLocalSettings,
     },
   ];
 
   return (
-    <Box mb="30px">
-      <Stack direction="column" spacing={5} w="40%">
+    <Box>
+      <Stack direction="column" spacing={5} w="40%" mb="30px">
         <Heading size="md" textAlign="end">
           Game settings:
         </Heading>
@@ -69,6 +87,7 @@ const Settings = (props: ISettings): JSX.Element => {
 
         {isTimerNeeded && <Timer time={roundTime} />}
       </Stack>
+      <GameCards cards={localSettings.cards} />
     </Box>
   );
 };

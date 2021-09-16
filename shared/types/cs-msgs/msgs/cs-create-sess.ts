@@ -1,4 +1,4 @@
-import { Settings } from '../../settings';
+import { ISettings } from '../../settings';
 import { UserInfo } from '../../user/user-info';
 import { CSMsg } from '../cs-msg';
 import { CSMSG_CIPHERS } from '../cs-msg-ciphers';
@@ -9,7 +9,7 @@ export class CSMsgCreateSession implements CSMsg {
   constructor(
     readonly query: {
       readonly userInfo: UserInfo;
-      readonly settings: Settings;
+      readonly settings: ISettings;
     },
   ) {}
 }

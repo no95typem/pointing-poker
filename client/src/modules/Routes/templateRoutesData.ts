@@ -11,7 +11,6 @@ import ChakraAvatar from '../../components/templates/Avatar/ChakraAvatar';
 import ChakraLoader from '../../components/templates/Loader/ChakraLoader';
 import ChakraEditableText from '../../components/templates/EditableText/ChakraEditableText';
 import ActionButtonExample from '../../containers/ComponentsExamples/Buttons/ButtonsExample';
-import GameCards from '../../containers/GameCards/GameCards';
 
 export enum TemplateRoutesPath {
   ROOT = '/',
@@ -82,12 +81,6 @@ const templatesRoutes: IRoute[] = [
     path: TemplateRoutesPath.BUTTONS_EXAMPLE,
     isExact: true,
     Component: ActionButtonExample,
-  },
-  {
-    key: 'cards',
-    path: TemplateRoutesPath.CARDS,
-    isExact: true,
-    Component: GameCards,
   },
 ];
 

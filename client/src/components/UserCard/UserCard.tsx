@@ -23,7 +23,7 @@ const UserCard = (props: IMemberDataBundle): JSX.Element => {
 
   const { userInfo, userState, userRole, userSessionPublicId: id } = member;
 
-  console.log(userInfo, member);
+  // console.log(userInfo, member);
 
   const { name, surname, avatarBase64, avatarBgColor, jobPosition } = userInfo;
 

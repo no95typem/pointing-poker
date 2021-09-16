@@ -6,7 +6,7 @@ import { ICardsView } from '../../../../shared/types/session/card';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
-import NewGameCardButton from '../../components/NewPlayCardButton/NewGameCardButton';
+import NewGameCardButton from '../../components/NewGameCardButton/NewGameCardButton';
 
 const IssueCardView = (props: ICardsView): JSX.Element => {
   const { cards, modal } = props;

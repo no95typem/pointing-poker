@@ -28,21 +28,20 @@ const IssueCard = (props: IIssueData): JSX.Element => {
         <StatHelpText mb="0">{priority}</StatHelpText>
       </Stat>
       <IconButton
-        aria-label="delete"
-        background="transparent"
-        visibility={true ? 'visible' : 'hidden'}
-        size="lg"
-        icon={<CloseIcon />}
-        onClick={() => removeIssue(id)}
-      />
-
-      <IconButton
         aria-label="edit"
         background="transparent"
         visibility={true ? 'visible' : 'hidden'}
         size="lg"
         icon={<ImPencil />}
         onClick={() => editIssue(id)}
+      />
+      <IconButton
+        aria-label="delete"
+        background="transparent"
+        visibility={true ? 'visible' : 'hidden'}
+        size="lg"
+        icon={<CloseIcon />}
+        onClick={() => removeIssue(id)}
       />
     </Stack>
   );

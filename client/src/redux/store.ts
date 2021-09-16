@@ -7,6 +7,7 @@ import { loadsSlice } from './slices/loads';
 import { localeSlice } from './slices/locale';
 import { mockSessionSlice } from './slices/mockSession';
 import { sessionSlice } from './slices/session';
+import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
 
 export const store = configureStore({
@@ -19,6 +20,7 @@ export const store = configureStore({
     session: sessionSlice.reducer,
     userInfo: userInfoSlice.reducer,
     mockSession: mockSessionSlice.reducer,
+    settings: settingsSlice.reducer,
   },
   devTools: process.env.NODE_ENV === 'development',
 });

@@ -6,22 +6,28 @@ import { CardData, ICardModal } from '../../../../shared/types/session/card';
 
 import GameCardsView from './GameCardsView';
 
-const GameCards = (): JSX.Element => {
+interface ICardsData {
+  cards: CardData[];
+}
+
+const GameCards = (props: ICardsData): JSX.Element => {
+  const { cards } = props;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const card1: CardData = {
-    value: '1',
-    base64: 'sp',
-  };
+  // const card1: CardData = {
+  //   value: '1',
+  //   base64: 'sp',
+  // };
 
-  const card2: CardData = {
-    value: '2',
-    base64: 'sp',
-  };
+  // const card2: CardData = {
+  //   value: '2',
+  //   base64: 'sp',
+  // };
 
   const [editCard, setEditCard] = useState<CardData>();
 
-  const cards = [card1, card2];
+  // const cards = [card1, card2];
 
   const openModal = (cardValue?: string): void => {
     setEditCard(cards.find(card => card.value === cardValue));

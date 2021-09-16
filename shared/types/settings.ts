@@ -7,7 +7,7 @@ export interface ISettings {
   scoreTypeShort: string;
   isTimerNeeded: boolean;
   roundTime: number;
-  cards: Record<string, CardData>; // key - id
+  cards: CardData[]; // key - id
   cardBackType: ''; // TODO (no95typem)
 }
 
@@ -15,6 +15,7 @@ export interface ISettingsComponent {
   name: string;
   label: string;
   value: string | boolean;
+  onChange: (name: string, value: string | boolean) => void;
 }
 
 export interface ISettingsComponentData {

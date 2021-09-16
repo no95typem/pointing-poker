@@ -12,14 +12,12 @@ import IssueCardsView from './IssuesCardsView';
 import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
 
 const IssuesCards = (props: IIssuesData): JSX.Element => {
-  const { issues, addNewIssue, removeIssue } = props;
+  const { issues, addNewIssue, removeIssue, newIssueId } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [issueId, setIssueId] = useState(1);
-
   const newIssue: Issue = {
-    id: issueId,
+    id: newIssueId,
     title: '',
     link: '',
     priority: ISSUE_PRIORITIES.LOW,
@@ -49,8 +47,6 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
 
   const changeIssue = (issue: Issue): void => {
     setActiveIssue({ ...issue });
-
-    setIssueId(issueId + 1);
   };
 
   const modalData: IIssueModal = {

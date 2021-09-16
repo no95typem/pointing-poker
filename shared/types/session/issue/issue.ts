@@ -26,6 +26,7 @@ export interface IIssueData {
 
 export interface IIssuesData {
   issues: Issue[];
+  newIssueId: number;
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
 }
