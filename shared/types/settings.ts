@@ -6,7 +6,7 @@ export interface ISettings {
   scoreType: string;
   scoreTypeShort: string;
   isTimerNeeded: boolean;
-  roundTime?: number;
+  roundTime: number;
   cards: CardData[];
   cardBackType: ''; // TODO (no95typem)
 }
