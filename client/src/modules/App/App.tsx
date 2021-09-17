@@ -5,22 +5,22 @@ import '@fontsource/architects-daughter';
 import { ChakraProvider, Grid, ColorModeScript } from '@chakra-ui/react';
 import { Header } from '../Header/Header';
 import { Routes } from '../Routes/Routes';
-import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 import { Footer } from '../Footer/Footer';
 import { theme } from '../../theme';
+import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
 export const App = () => {
   return (
     <>
       <ColorModeScript />
       <ChakraProvider theme={theme}>
-        <Grid minH="100vh" templateRows="50px 1fr 50px" alignItems="center">
-          <ServerBoundary>
+        <ServerBoundary>
+          <Grid minH="100vh" templateRows="50px 1fr 50px" alignItems="center">
             <Header />
             <Routes />
             <Footer />
-          </ServerBoundary>
-        </Grid>
+          </Grid>
+        </ServerBoundary>
       </ChakraProvider>
     </>
   );

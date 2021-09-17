@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { useConnectionStatusToast } from '../../hooks/useConnectionStatusToast';
-import { useRouterController } from '../../hooks/useRouterController';
+import React, { useEffect, useState } from 'react';
 import { SERVER_ADAPTER } from '../ServerAdapter/ServerAdapter';
 
 export interface ServerBoundaryProps {
@@ -8,12 +6,14 @@ export interface ServerBoundaryProps {
 }
 
 export const ServerBoundary = (props: ServerBoundaryProps) => {
-  useConnectionStatusToast();
-  const newPath = useRouterController();
+  const [executePreRender, setExecutePreRender] = useState(!FE_ALONE);
 
   useEffect(() => {
-    !FE_ALONE && SERVER_ADAPTER.connect();
-  }, []);
+    if (executePreRender) {
+      SERVER_ADAPTER.connect();
+      setExecutePreRender(false);
+    }
+  }, [executePreRender]);
 
-  return <>{newPath ? undefined : props.children}</>;
+  return <>{executePreRender ? undefined : props.children}</>;
 };

@@ -28,9 +28,7 @@ export interface SessionState {
   stage: SessionStage;
 
   chat: {
-    isVisible: boolean;
-    msgs: Record<number, ChatMsg>;
-    typedText: string;
+    msgs: Record<string, ChatMsg>;
   };
 
   issues: Issue[];

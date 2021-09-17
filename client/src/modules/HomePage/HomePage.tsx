@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import MainPage from './components/main-page/main-page';
 import ConnectPopup from './components/popup/popup';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { UserRole } from '../../../../shared/types/user/user-role';
+import { useAppDispatch } from '../../redux/store';
+import { sessionSlice } from '../../redux/slices/session';
 
 const HomePage = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,6 +20,12 @@ const HomePage = (): JSX.Element => {
       onOpen();
     }
   };
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(sessionSlice.actions.dang_reset());
+  }, [dispatch]);
 
   return (
     <>

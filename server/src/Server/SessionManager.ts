@@ -9,9 +9,9 @@ import { CREATE_INIT_STATE } from '../../../shared/initStates';
 import { CSMsgConnToSess } from '../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { CSMsgVotekick } from '../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
-import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
+import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-msg-conn-to-sess-status';
 import { SCMsgMembersChanged } from '../../../shared/types/sc-msgs/msgs/sc-msg-members-changed';
-import { SCMsgUpdateSessionStateMsg } from '../../../shared/types/sc-msgs/msgs/sc-update-session-state';
+import { SCMsgUpdateSessionState } from '../../../shared/types/sc-msgs/msgs/sc-msg-update-session-state';
 import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
 import { Member } from '../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
@@ -64,6 +64,7 @@ export class SessionManager {
       getSessionState: () => {
         return { state: this.sessionState };
       },
+      dang_getSessState: () => this.sessionState,
       updateState: this.updateState,
       kick: this.kick,
       votekick: (ws: WebSocket, id: number, msg: CSMsgVotekick) => {
@@ -188,7 +189,7 @@ export class SessionManager {
   private updateState = (update: Partial<SessionState>) => {
     Object.assign(this.sessionState, update);
 
-    const msg = new SCMsgUpdateSessionStateMsg(update);
+    const msg = new SCMsgUpdateSessionState(update);
     this.broadcast(msg, USER_ROLES.SPECTATOR);
 
     this.tryToEndRound();
