@@ -11,6 +11,8 @@ import NewIssueButton from '../../components/NewIssueButton/NewIssueButton';
 const IssueCardsView = (props: IIssues): JSX.Element => {
   const { issues, modal } = props;
 
+  const { onClick, removeIssue, isPlayerDealer } = modal;
+
   return (
     <Box mb="50px">
       <Heading textAlign="center" size="lg" mb="40px">
@@ -23,8 +25,9 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
           return (
             <Stack w="300px" key={`${id}-wrap`}>
               <IssueCard
-                editIssue={modal.onClick}
-                removeIssue={modal.removeIssue}
+                isPlayerDealer={isPlayerDealer}
+                editIssue={onClick}
+                removeIssue={removeIssue}
                 issue={issue}
                 key={id}
               />
@@ -33,7 +36,7 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
           );
         })}
 
-        <NewIssueButton editIssue={modal.onClick} />
+        {isPlayerDealer && <NewIssueButton editIssue={onClick} />}
 
         <IssueModal issue={modal} />
       </Stack>

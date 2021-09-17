@@ -15,7 +15,7 @@ export interface ISettingsComponent {
   name: string;
   label: string;
   value: string | boolean;
-  onChange: (name: string, value: string | boolean) => void;
+  onChange: (name: string, value: string | boolean | CardData[]) => void;
 }
 
 export interface ISettingsComponentData {

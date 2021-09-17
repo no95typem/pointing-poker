@@ -12,6 +12,7 @@ import UserCards from '../../containers/UserCards/UserCards';
 import IssueCards from '../../containers/IssuesCards/IssuesCards';
 import Settings from '../../containers/Settings/Settings';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
+import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
 const Lobby = (): JSX.Element => {
   const sessionData = useTypedSelector(state => state.session);
@@ -27,7 +28,8 @@ const Lobby = (): JSX.Element => {
       <GameControlButtons />
       <UserCards cardsData={membersData} />
       <IssueCards {...issuesData} />
-      <Settings />
+      {sessionData.members[sessionData.clientId].userRole ===
+        USER_ROLES.DEALER && <Settings />}
     </Box>
   );
 };

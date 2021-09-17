@@ -20,6 +20,7 @@ export interface Issue extends Synchronized {
 
 export interface IIssueData {
   issue: Issue;
+  isPlayerDealer: boolean;
   editIssue: (id?: number) => void;
   removeIssue: (id: number) => void;
 }
@@ -27,6 +28,7 @@ export interface IIssueData {
 export interface IIssuesData {
   issues: Issue[];
   newIssueId: number;
+  isPlayerDealer: boolean;
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
 }
@@ -38,6 +40,7 @@ export interface IIssueModal {
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
   isOpen: boolean;
+  isPlayerDealer: boolean;
   activeIssue: Issue;
 }
 

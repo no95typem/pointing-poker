@@ -39,5 +39,5 @@ export interface SessionState {
 }
 
 export interface ISessionStateClient extends SessionState {
-  clientId?: number;
+  clientId: number;
 }

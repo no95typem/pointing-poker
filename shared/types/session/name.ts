@@ -7,4 +7,5 @@ export interface SessionName extends Synchronized {
 export interface ISessionNameHandling {
   value: string;
   changeValue: (name: string) => void;
+  isPlayerDealer: boolean;
 }

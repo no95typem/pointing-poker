@@ -16,6 +16,7 @@ import {
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 import { updSessState } from '../../redux/slices/session';
 import { useAppDispatch } from '../../redux/store';
+import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;
@@ -46,6 +47,9 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
   const setNewSessionName = (newName: string): void => {
     dispatch(updSessState({ name: { value: newName, isSynced: false } }));
   };
+
+  const isPlayerDealer =
+    sessionData.members[sessionData.clientId].userRole === USER_ROLES.DEALER;
 
   const addNewIssue = (issue: Issue): void => {
     const issueIndex = findIssueIndex(issue.id);
@@ -93,6 +97,7 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
   const sessionNameData: ISessionNameHandling = {
     value: sessionData.name.value,
     changeValue: setNewSessionName,
+    isPlayerDealer: isPlayerDealer,
   };
 
   const dealerData: IMemberData = {
@@ -112,6 +117,7 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
     addNewIssue: addNewIssue,
     removeIssue: removeIssue,
     newIssueId: newIssueId,
+    isPlayerDealer: isPlayerDealer,
   };
 
   const settingsData: ISettingsData = {

@@ -55,11 +55,13 @@ export const updSessState = createAsyncThunk(
   'session/updSessState',
   async (update: Partial<SessionState>, thunkAPI) => {
     const synced = setSynced(update, false);
+
     thunkAPI.dispatch(
       sessionSlice.actions.internal_updSessStateFromClient(synced),
     );
 
     const msg = new CSMsgUpdateState(update);
+
     SERVER_ADAPTER.send(msg);
   },
 );

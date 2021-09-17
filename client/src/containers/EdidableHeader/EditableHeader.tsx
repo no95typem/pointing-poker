@@ -22,7 +22,7 @@ import { ImPencil } from 'react-icons/im';
 import { ISessionNameHandling } from '../../../../shared/types/session/name';
 
 const EditableHeader = (props: ISessionNameHandling) => {
-  const { value, changeValue } = props;
+  const { value, changeValue, isPlayerDealer } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -39,16 +39,18 @@ const EditableHeader = (props: ISessionNameHandling) => {
       <Heading size="lg" maxW="300px" isTruncated>
         {value}
       </Heading>
-      <IconButton
-        top="0"
-        right="0"
-        aria-label="edit"
-        background="transparent"
-        visibility={true ? 'visible' : 'hidden'} //в фазе игры возможность редактировать тему отсутствует
-        size="lg"
-        icon={<ImPencil />}
-        onClick={onOpen}
-      />
+      {isPlayerDealer && (
+        <IconButton
+          top="0"
+          right="0"
+          aria-label="edit"
+          background="transparent"
+          visibility={true ? 'visible' : 'hidden'} //в фазе игры возможность редактировать тему отсутствует
+          size="lg"
+          icon={<ImPencil />}
+          onClick={onOpen}
+        />
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
