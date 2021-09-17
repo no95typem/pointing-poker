@@ -6,20 +6,26 @@ import {
 } from '../../../../shared/knownErrorsKeys';
 import { CSMsg } from '../../../../shared/types/cs-msgs/cs-msg';
 import { CSMSG_CIPHERS } from '../../../../shared/types/cs-msgs/cs-msg-ciphers';
+import { CSMsgDisconFromSess } from '../../../../shared/types/cs-msgs/msgs/cs-disconn-from-sess';
 import { CSMsgUpdateState } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
-import { SCMsgChatMsg } from '../../../../shared/types/sc-msgs/msgs/sc-chat-msg';
-import { SCMsgConnToSessStatus } from '../../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
+import { CSMsgStartGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-start-game';
+import { SCMsgChatMsgsChanged } from '../../../../shared/types/sc-msgs/msgs/sc-msg-chat-msgs-changed';
+import { SCMsgConnToSessStatus } from '../../../../shared/types/sc-msgs/msgs/sc-msg-conn-to-sess-status';
 import { SCMsgMembersChanged } from '../../../../shared/types/sc-msgs/msgs/sc-msg-members-changed';
 import { SCMsg } from '../../../../shared/types/sc-msgs/sc-msg';
 import { SCMSG_CIPHERS } from '../../../../shared/types/sc-msgs/sc-msg-ciphers';
 import { Member } from '../../../../shared/types/session/member';
-import { KNOWN_LOADS_KEYS } from '../../knownLoads';
+import { KNOWN_LOADS_KEYS } from '../../../../shared/knownLoadsKeys';
 import { setServerConnectionStatus } from '../../redux/slices/connect';
 import { removeError, setErrorByKey } from '../../redux/slices/errors';
-import { removeLoad, setLoadByKey } from '../../redux/slices/loads';
-import { server_updSessState } from '../../redux/slices/session';
+import { removeLoad, setGLoadByKey } from '../../redux/slices/loads';
+import { sessionSlice } from '../../redux/slices/session';
 
 import { store } from '../../redux/store';
+import { SessionState } from '../../../../shared/types/session/state/session-state';
+import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
+
+const updateState = sessionSlice.actions.dang_updSessStateFromServer;
 
 class ServerAdapter {
   private apiUrl = 'ws://localhost:9000';
@@ -39,14 +45,15 @@ class ServerAdapter {
 
             return;
           case CSMSG_CIPHERS.CHAT_MSG:
-            this.handleChatMsg(purified as SCMsgChatMsg);
+            this.handleChatMsg(purified as SCMsgChatMsgsChanged);
 
             return;
 
           case SCMSG_CIPHERS.UPDATE_SESSION_STATE:
-            store.dispatch(
-              server_updSessState((purified as CSMsgUpdateState).update),
+            this.takeoffLoadBySessStateUpdate(
+              (purified as CSMsgUpdateState).update,
             );
+            store.dispatch(updateState((purified as CSMsgUpdateState).update));
 
             return;
           case SCMSG_CIPHERS.MEMBERS_CHANGED:
@@ -65,15 +72,21 @@ class ServerAdapter {
     }
   };
 
+  private takeoffLoadBySessStateUpdate(update: Partial<SessionState>) {
+    if (update.stage) {
+      store.dispatch(removeLoad(KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE));
+    }
+  }
+
   private handleConnToSessStatus(msg: SCMsgConnToSessStatus) {
     if (!msg.response.success) {
       const errorKey: KnownErrorsKey =
         msg.response.fail?.reason || KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR;
       store.dispatch(setErrorByKey(errorKey));
     } else {
-      store.dispatch(server_updSessState(msg.response.success.state));
+      store.dispatch(updateState(msg.response.success.state));
       const clientId = msg.response.success.yourId;
-      store.dispatch(server_updSessState({ clientId }));
+      store.dispatch(updateState({ clientId }));
     }
     store.dispatch(removeLoad('CONNECTING_TO_SERVER'));
   }
@@ -93,10 +106,10 @@ class ServerAdapter {
     Object.assign(newMembers, members);
 
     console.log(newMembers);
-    store.dispatch(server_updSessState({ members: newMembers }));
+    store.dispatch(updateState({ members: newMembers }));
   }
 
-  private handleChatMsg(msg: SCMsgChatMsg) {
+  private handleChatMsg(msg: SCMsgChatMsgsChanged) {
     // TODO
   }
 
@@ -118,7 +131,12 @@ class ServerAdapter {
   }
 
   connect(): Promise<boolean> {
-    store.dispatch(setLoadByKey(KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER));
+    store.dispatch(
+      setGLoadByKey({
+        loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER,
+        errorKey: KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER,
+      }),
+    );
     store.dispatch(removeError(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
 
     return new Promise<boolean>(res => {
@@ -158,14 +176,31 @@ class ServerAdapter {
         );
       };
 
-  send(msg: CSMsg) {
+  send = (msg: CSMsg) => {
     try {
       (this.ws as WebSocket).send(JSON.stringify(msg));
       console.log('msg sent');
     } catch (err) {
+      console.log(err);
       this.handleSendError();
     }
-  }
+  };
+
+  exitGame = () => {
+    store.dispatch(updateState({ stage: SESSION_STAGES.EMPTY }));
+    const msg = new CSMsgDisconFromSess();
+    this.send(msg);
+  };
+
+  startGame = () => {
+    store.dispatch(
+      setGLoadByKey({
+        loadKey: KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE,
+      }),
+    );
+    const msg = new CSMsgStartGame();
+    this.send(msg);
+  };
 }
 
 export const SERVER_ADAPTER = new ServerAdapter();

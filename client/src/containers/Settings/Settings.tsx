@@ -85,7 +85,7 @@ const Settings = (): JSX.Element => {
           return <InputText data={iputData} key={name} />;
         })}
 
-        {isTimerNeeded && <Timer time={roundTime} />}
+        {isTimerNeeded && <Timer time={roundTime || 0} />}
       </Stack>
       <GameCards cards={localSettings.cards} />
     </Box>

@@ -1,28 +1,22 @@
 import { ClassNames } from '@emotion/react';
-import React, { useRef } from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { useRef } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { ErrorsMUX } from '../../containers/ErrorsMUX/ErrorsMUX';
 import { LoadsMUX } from '../../containers/LoadsMUX/LoadsMUX';
-import { useTypedSelector } from '../../redux/store';
+import { useRouterController } from '../../hooks/useRouterController';
 
 import routes from './routesData';
 import templatesRoutes from './templateRoutesData';
 
 const TRANSITION_TIME = 500;
 
-const TRANSITION = `opacity ${TRANSITION_TIME}ms ease-in`;
+const TRANSITION = `opacity ${TRANSITION_TIME}ms ease-in-out`;
 
 export const Routes = (): JSX.Element => {
-  const location = useLocation();
+  const nodeRef = useRef<HTMLDivElement>(null);
 
-  const nodeRef = useRef<any>(null);
-
-  const errors = useTypedSelector(state => state.errors);
-
-  const loads = useTypedSelector(state => state.loads);
-
-  console.log(`LOADS ${Object.keys(loads).length}`);
+  const location = useRouterController()[1];
 
   return (
     <ClassNames>
@@ -30,7 +24,11 @@ export const Routes = (): JSX.Element => {
         <SwitchTransition>
           <CSSTransition
             key={location.pathname}
-            timeout={TRANSITION_TIME}
+            addEndListener={done => {
+              if (nodeRef.current) {
+                nodeRef.current.addEventListener('transitionend', done, false);
+              } else setTimeout(done, TRANSITION_TIME);
+            }}
             nodeRef={nodeRef}
             classNames={{
               enter: css({ opacity: 0 }),
@@ -41,33 +39,29 @@ export const Routes = (): JSX.Element => {
               exit: css({ opacity: 1 }),
               exitActive: css({
                 opacity: 0,
-                transition: TRANSITION,
+                transition: 'all 0.1s',
               }),
             }}
           >
             <Switch location={location}>
-              {Object.keys(errors).length > 0 && (
-                <Route key="ErrorsMUX" path="*">
-                  <div ref={nodeRef}>
-                    <ErrorsMUX />
-                  </div>
-                </Route>
-              )}
+              <Route key="ErrorsMUX" path="/error">
+                <div ref={nodeRef}>
+                  <ErrorsMUX />
+                </div>
+              </Route>
 
-              {Object.keys(loads).length > 0 && (
-                <Route key="LoadsMUX" path="*">
-                  <div ref={nodeRef}>
-                    <LoadsMUX />
-                  </div>
-                </Route>
-              )}
+              <Route key="LoadsMUX" path="/loading">
+                <div ref={nodeRef}>
+                  <LoadsMUX />
+                </div>
+              </Route>
 
               {templatesRoutes.map(route => {
                 const { key, path, isExact, Component } = route;
 
                 return (
                   <Route key={key} path={path} exact={isExact}>
-                    <div ref={nodeRef} key={`${key}-div`}>
+                    <div ref={nodeRef}>
                       <Component />
                     </div>
                   </Route>
@@ -79,7 +73,7 @@ export const Routes = (): JSX.Element => {
 
                 return (
                   <Route key={key} path={path} exact={isExact}>
-                    <div ref={nodeRef} key={`${key}-div`}>
+                    <div ref={nodeRef}>
                       <Component />
                     </div>
                   </Route>

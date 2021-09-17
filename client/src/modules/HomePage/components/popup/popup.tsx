@@ -14,13 +14,6 @@ import InputsStack from '../inputs-stack/inputs-stack';
 import AvatarForm from '../avatar-form/avatar-form';
 import { useAppDispatch } from '../../../../redux/store';
 import {
-  changeName,
-  changeSurname,
-  changeJobPosition,
-  changeAvatarBase64,
-  changeAvatarBgColor,
-} from '../../../../redux/slices/userInfo';
-import {
   connectToLobby,
   createSession,
 } from '../../../../redux/slices/connect';
@@ -38,26 +31,14 @@ const ConnectPopup = ({
 }: ConnectPopupProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
-  const clearForm = (): void => {
-    dispatch(changeName(''));
-    dispatch(changeSurname(''));
-    dispatch(changeJobPosition(''));
-    dispatch(changeAvatarBase64(''));
-    dispatch(changeAvatarBgColor('#385898'));
-  };
-
-  const clickButtonClose = () => {
-    onClose();
-    clearForm();
-  };
-
   return (
     <Modal
       size="xl"
       isOpen={isOpen}
       onClose={onClose}
       motionPreset="slideInBottom"
-      onOverlayClick={clearForm}
+      onOverlayClick={onClose}
+      isCentered={true}
     >
       <ModalOverlay />
       <ModalContent>
@@ -69,7 +50,7 @@ const ConnectPopup = ({
               <AvatarForm />
             </Flex>
             {forDealer ? (
-              <Text>Welcome, You will be a dealer</Text>
+              <Text size="2xl">You will be a dealer</Text>
             ) : (
               <RadioButtons />
             )}
@@ -77,11 +58,7 @@ const ConnectPopup = ({
         </ModalBody>
 
         <ModalFooter justifyContent="space-between">
-          <Button
-            colorScheme="facebook"
-            variant="outline"
-            onClick={clickButtonClose}
-          >
+          <Button colorScheme="facebook" variant="outline" onClick={onClose}>
             Close
           </Button>
           <Button

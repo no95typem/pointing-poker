@@ -4,7 +4,6 @@ import { CSMsgConnToSess } from '../../../shared/types/cs-msgs/msgs/cs-conn-to-s
 import { CSMsgCreateSession } from '../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
 import { CSMSG_CIPHERS } from '../../../shared/types/cs-msgs/cs-msg-ciphers';
-import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
 import { WebSocketEvent } from '../../../shared/types/ws-event';
 import { SessionManager } from './SessionManager';
 import {
@@ -13,6 +12,7 @@ import {
   WebSocketSendFunc,
 } from '../types';
 import { KNOWN_ERRORS_KEYS } from '../../../shared/knownErrorsKeys';
+import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-msg-conn-to-sess-status';
 
 export class ClientManager {
   private clients: Map<
@@ -142,32 +142,32 @@ export class ClientManager {
   private clientListener = (ws: WebSocket, e: WebSocketEvent) => {
     try {
       const parsed = JSON.parse(e.data as string);
-      console.log(parsed);
 
-      if ('cipher' in parsed) {
-        switch ((parsed as CSMsg).cipher) {
-          case CSMSG_CIPHERS.CREATE_SESS:
-            this.createSession(ws, parsed as CSMsgCreateSession);
-            break;
-          case CSMSG_CIPHERS.CONN_TO_SESS:
-            console.log('conn to session');
-            this.connectToSession(ws, parsed as CSMsgConnToSess);
-            break;
-          case CSMSG_CIPHERS.DISCONN_FROM_SESS:
-            this.disconnectFromSession(ws);
-            break;
-          default:
-            console.log(this.apiListeners.size);
-            this.apiListeners.forEach(listener => {
-              try {
-                listener(parsed as CSMsg);
-              } catch (err) {
-                console.error(`error ${err} in listener ${listener}`);
-              }
-            });
-            break;
+      setTimeout(() => {
+        if ('cipher' in parsed) {
+          switch ((parsed as CSMsg).cipher) {
+            case CSMSG_CIPHERS.CREATE_SESS:
+              this.createSession(ws, parsed as CSMsgCreateSession);
+              break;
+            case CSMSG_CIPHERS.CONN_TO_SESS:
+              console.log('conn to session');
+              this.connectToSession(ws, parsed as CSMsgConnToSess);
+              break;
+            case CSMSG_CIPHERS.DISCONN_FROM_SESS:
+              this.disconnectFromSession(ws);
+              break;
+            default:
+              this.apiListeners.forEach(listener => {
+                try {
+                  listener(parsed as CSMsg);
+                } catch (err) {
+                  console.error(`error ${err} in listener ${listener}`);
+                }
+              });
+              break;
+          }
         }
-      }
+      }, 2000);
     } catch {
       //
     }
