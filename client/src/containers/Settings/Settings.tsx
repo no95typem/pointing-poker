@@ -9,6 +9,7 @@ import Timer from '../Timer/Timer';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { setSettings } from '../../redux/slices/settings';
 import GameCards from '../GameCards/GameCards';
+import { CardData, ICardsData } from '../../../../shared/types/session/card';
 
 const Settings = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -22,14 +23,14 @@ const Settings = (): JSX.Element => {
     scoreType,
     scoreTypeShort,
     roundTime,
+    cards,
   } = localSettings;
 
-  const setLocalSettings = (name: string, value: string | boolean): void => {
+  const setLocalSettings = (
+    name: string,
+    value: string | boolean | CardData[],
+  ): void => {
     dispatch(setSettings({ ...localSettings, [name]: value }));
-
-    // dispatch(setSettings({ ...localSettings, dealerAsPlayer: false }));
-
-    // console.log(localSettings);
   };
 
   const switchersData: ISettingsComponent[] = [
@@ -68,26 +69,35 @@ const Settings = (): JSX.Element => {
     },
   ];
 
+  const cardsData: ICardsData = {
+    cards,
+    units: scoreTypeShort,
+    setLocalSettings,
+  };
+
   return (
     <Box>
       <Stack direction="column" spacing={5} w="40%" mb="30px">
         <Heading size="md" textAlign="end">
           Game settings:
         </Heading>
+
         {switchersData.map(switcherData => {
           const { name } = switcherData;
 
           return <Switcher data={switcherData} key={name} />;
         })}
-        {inputsData.map(iputData => {
-          const { name } = iputData;
 
-          return <InputText data={iputData} key={name} />;
+        {inputsData.map(inputData => {
+          const { name } = inputData;
+
+          return <InputText data={inputData} key={name} />;
         })}
 
         {isTimerNeeded && <Timer time={roundTime || 0} />}
       </Stack>
-      <GameCards cards={localSettings.cards} />
+
+      <GameCards {...cardsData} />
     </Box>
   );
 };

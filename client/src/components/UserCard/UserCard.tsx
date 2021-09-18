@@ -12,14 +12,12 @@ import {
 
 import { ImBlocked } from 'react-icons/im';
 
-import { IMemberDataBundle } from '../../../../shared/types/session/member';
+import { IMemberData } from '../../../../shared/types/session/member';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
 
-const UserCard = (props: IMemberDataBundle): JSX.Element => {
-  const { data } = props;
-
-  const { member, isItYou, isRoundStarted, kickPlayer } = data;
+const UserCard = (props: IMemberData): JSX.Element => {
+  const { member, isItYou, isRoundStarted, kickPlayer } = props;
 
   const { userInfo, userState, userRole, userSessionPublicId: id } = member;
 

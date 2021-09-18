@@ -5,17 +5,14 @@ import { useDisclosure } from '@chakra-ui/react';
 import {
   IKickModal,
   IUserCards,
-  IUserCardsData,
 } from '../../../../shared/types/session/member';
 
 import UserCardsView from './UserCardsView';
 
-const UserCards = (props: IUserCardsData): JSX.Element => {
+const UserCards = (props: IUserCards): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { cardsData } = props;
-
-  const { members, findWhoIsUser, isRoundStarted } = cardsData;
+  const { members, findWhoIsUser, isRoundStarted } = props;
 
   const [kickedName, setKickedName] = useState('');
 

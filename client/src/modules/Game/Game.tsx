@@ -10,10 +10,9 @@ import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import EditableHeader from '../../containers/EdidableHeader/EditableHeader';
 import UserCards from '../../containers/UserCards/UserCards';
 import IssueCards from '../../containers/IssuesCards/IssuesCards';
-import Settings from '../../containers/Settings/Settings';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 
-const Lobby = (): JSX.Element => {
+const Game = (): JSX.Element => {
   const sessionData = useTypedSelector(state => state.session);
 
   const {
@@ -32,9 +31,8 @@ const Lobby = (): JSX.Element => {
       <GameControlButtons isPlayerDealer={isPlayerDealer} />
       <UserCards {...membersData} />
       <IssueCards {...issuesData} />
-      {isPlayerDealer && <Settings />}
     </Box>
   );
 };
 
-export default Lobby;
+export default Game;

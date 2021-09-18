@@ -23,7 +23,9 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
 
   const { isOpen, onClose, activeIssue, changeIssue, addNewIssue } = issueData;
 
-  const seIssueData = (
+  const { title, link, priority } = activeIssue;
+
+  const setIssueData = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ): void => {
     const input = e.target;
@@ -46,26 +48,22 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
                   <Input
                     name="title"
                     placeholder="Issue name"
-                    value={activeIssue.title}
-                    onChange={seIssueData}
+                    value={title}
+                    onChange={setIssueData}
                   />
                 </Stack>
               </FormControl>
               <FormControl id="link">
                 <Stack spacing={2} direction="row" align="center">
                   <FormLabel htmlFor="link">Link:</FormLabel>
-                  <Input
-                    name="link"
-                    value={activeIssue.link}
-                    onChange={seIssueData}
-                  />
+                  <Input name="link" value={link} onChange={setIssueData} />
                 </Stack>
               </FormControl>
               <Stack spacing={2} direction="row" align="center">
                 <FormLabel>Priority:</FormLabel>
                 <Select
-                  value={activeIssue.priority}
-                  onChange={seIssueData}
+                  value={priority}
+                  onChange={setIssueData}
                   name="priority"
                   variant="filled"
                   bg="gray.100"

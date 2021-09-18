@@ -1,10 +1,12 @@
 import { Synchronized } from '../syncable';
+import { ISessionName } from './state/session-state';
 
 export interface SessionName extends Synchronized {
   name: string;
 }
 
 export interface ISessionNameHandling {
-  value: string;
+  name: ISessionName;
   changeValue: (name: string) => void;
+  isPlayerDealer: boolean;
 }

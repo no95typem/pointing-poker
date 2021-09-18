@@ -22,6 +22,11 @@ const LocaleUS: Record<LocaleKey, string> = {
   SETTINGS_SCORE_TYPE: 'Score type:',
 
   SETTINGS_SCORE_TYPE_SHORT: 'Score type (Short):',
+
+  SETTINGS_CARDS_HEADER: 'Adjust cards values:',
+
+  SETTINGS_CARDS_MODAL_CUSTOM:
+    "If it's custom value, add image to illustrate it:",
 };
 
 export const LOCALE_US = OBJ_PROCESSOR.deepFreeze(LocaleUS);

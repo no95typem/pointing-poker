@@ -4,22 +4,37 @@ export interface CardData {
 }
 
 export interface ICardModal {
-  onClick: (id?: string) => void;
+  openModal: (id?: string) => void;
   onClose: () => void;
   isOpen: boolean;
-  editCard: CardData | undefined;
+  activeCard: CardData;
+  changeCardValue: (card: CardData) => void;
+  setCard: () => void;
 }
 
 export interface ICardsView {
   cards: CardData[];
   modal: ICardModal;
+  units: string;
+  deleteCard: (value: string) => void;
 }
 
 export interface ICardModalData {
-  card: ICardModal;
+  modal: ICardModal;
 }
 
 export interface ICardData {
   card: CardData;
-  onClick: (id?: string) => void;
+  units: string;
+  edit: (id?: string) => void;
+  deleteCard: (value: string) => void;
+}
+
+export interface ICardsData {
+  cards: CardData[];
+  units: string;
+  setLocalSettings: (
+    name: string,
+    value: string | boolean | CardData[],
+  ) => void;
 }
