@@ -28,7 +28,9 @@ import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 const updateState = sessionSlice.actions.dang_updSessStateFromServer;
 
 class ServerAdapter {
-  private apiUrl = 'ws://localhost:9000';
+  private apiUrl = IS_PROD
+    ? 'https://rss-react-2021q3-pp.herokuapp.com/'
+    : 'ws://localhost:9000';
 
   private ws: WebSocket | undefined;
 
