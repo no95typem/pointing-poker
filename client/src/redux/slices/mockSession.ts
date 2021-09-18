@@ -22,25 +22,27 @@ export const mockSessionSlice = createSlice({
       state.name = action.payload;
     },
     addIssue(state, action: PayloadAction<Issue>) {
-      const editedIssue = state.issues.find(
-        issue => issue.id === action.payload.id,
-      );
+      const issues = state.issues.list;
+
+      const editedIssue = issues.find(issue => issue.id === action.payload.id);
 
       if (editedIssue) {
-        const issueIndex = state.issues.indexOf(editedIssue);
+        const issueIndex = issues.indexOf(editedIssue);
 
-        state.issues[issueIndex] = action.payload;
+        issues[issueIndex] = action.payload;
       } else {
-        state.issues.push(action.payload);
+        issues.push(action.payload);
       }
     },
     deleteIssue(state, action: PayloadAction<number>) {
-      const issue = state.issues.find(issue => issue.id === action.payload);
+      const issues = state.issues.list;
+
+      const issue = issues.find(issue => issue.id === action.payload);
 
       if (issue) {
-        const issueIndex = state.issues.indexOf(issue);
+        const issueIndex = issues.indexOf(issue);
 
-        state.issues.splice(issueIndex, 1);
+        issues.splice(issueIndex, 1);
       }
     },
   },

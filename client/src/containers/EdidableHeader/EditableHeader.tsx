@@ -20,9 +20,12 @@ import {
 
 import { ImPencil } from 'react-icons/im';
 import { ISessionNameHandling } from '../../../../shared/types/session/name';
+import ChakraLoader from '../../components/Loader/ChakraLoader';
 
 const EditableHeader = (props: ISessionNameHandling) => {
-  const { value, changeValue, isPlayerDealer } = props;
+  const { name, changeValue, isPlayerDealer } = props;
+
+  const { value, isSynced } = name;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -35,7 +38,15 @@ const EditableHeader = (props: ISessionNameHandling) => {
   };
 
   return (
-    <Stack w="100%" direction="row" justify="center" align="center" p="10px">
+    <Stack
+      position="relative"
+      w="100%"
+      direction="row"
+      justify="center"
+      align="center"
+      p="10px"
+      opacity={isSynced ? 1 : 0.5}
+    >
       <Heading size="lg" maxW="300px" isTruncated>
         {value}
       </Heading>
@@ -45,11 +56,12 @@ const EditableHeader = (props: ISessionNameHandling) => {
         right="0"
         aria-label="edit"
         background="transparent"
-        visibility={isPlayerDealer ? 'visible' : 'hidden'}
+        visibility={isPlayerDealer && isSynced ? 'visible' : 'hidden'}
         size="lg"
         icon={<ImPencil />}
         onClick={onOpen}
       />
+      {!isSynced && <ChakraLoader />}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

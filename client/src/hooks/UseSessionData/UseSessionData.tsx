@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { ISettings } from '../../../../shared/types/settings';
+
+import { useAppDispatch } from '../../redux/store';
+import { updSessState } from '../../redux/slices/session';
+
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
+import { ISettings } from '../../../../shared/types/settings';
 import {
   IIssuesData,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
 import { ISessionNameHandling } from '../../../../shared/types/session/name';
-
 import { ISessionStateClient } from '../../../../shared/types/session/state/session-state';
 import {
   IMemberData,
@@ -14,8 +17,6 @@ import {
   Member,
 } from '../../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
-import { updSessState } from '../../redux/slices/session';
-import { useAppDispatch } from '../../redux/store';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
 interface ILobbyData {
@@ -38,9 +39,11 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
   const [newIssueId, setNewIssueId] = useState(1);
 
   const findIssueIndex = (id: number): number | null => {
-    const issue = sessionData.issues.find(issue => issue.id === id);
+    const list = sessionData.issues.list;
 
-    return issue ? sessionData.issues.indexOf(issue) : null;
+    const issue = list.find(issue => issue.id === id);
+
+    return issue ? list.indexOf(issue) : null;
   };
 
   const dealerInfo = sessionData.members[0];
@@ -55,14 +58,18 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
   const addNewIssue = (issue: Issue): void => {
     const issueIndex = findIssueIndex(issue.id);
 
-    const issues = OBJ_PROCESSOR.deepClone(sessionData.issues);
+    const issues = OBJ_PROCESSOR.deepClone(sessionData.issues.list);
 
     if (issueIndex !== null) {
       issues[issueIndex] = issue;
 
-      dispatch(updSessState({ issues: [...issues] }));
+      dispatch(
+        updSessState({ issues: { list: [...issues], isSynced: false } }),
+      );
     } else {
-      dispatch(updSessState({ issues: [...issues, issue] }));
+      dispatch(
+        updSessState({ issues: { list: [...issues, issue], isSynced: false } }),
+      );
 
       setNewIssueId(newIssueId + 1);
     }
@@ -71,12 +78,14 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
   const removeIssue = (id: number): void => {
     const issueIndex = findIssueIndex(id);
 
-    const issues = OBJ_PROCESSOR.deepClone(sessionData.issues);
+    const issues = OBJ_PROCESSOR.deepClone(sessionData.issues.list);
 
     if (issueIndex !== null) {
       issues.splice(issueIndex, 1);
 
-      dispatch(updSessState({ issues: [...issues] }));
+      dispatch(
+        updSessState({ issues: { list: [...issues], isSynced: false } }),
+      );
     }
   };
 
@@ -96,7 +105,7 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
   };
 
   const sessionNameData: ISessionNameHandling = {
-    value: sessionData.name.value,
+    name: sessionData.name,
     changeValue: setNewSessionName,
     isPlayerDealer: isPlayerDealer,
   };

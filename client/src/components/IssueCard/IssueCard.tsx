@@ -15,7 +15,6 @@ import {
   IIssueData,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
-import ChakraLoader from '../Loader/ChakraLoader';
 
 const IssueCard = (props: IIssueData): JSX.Element => {
   const { issue, openModal, removeIssue, isPlayerDealer } = props;
@@ -29,28 +28,22 @@ const IssueCard = (props: IIssueData): JSX.Element => {
         <StatHelpText mb="0">{priority}</StatHelpText>
       </Stat>
 
-      {isSynced ? (
-        <>
-          <IconButton
-            aria-label="edit"
-            background="transparent"
-            visibility={isPlayerDealer ? 'visible' : 'hidden'}
-            size="lg"
-            icon={<ImPencil />}
-            onClick={() => openModal(id)}
-          />
-          <IconButton
-            aria-label="delete"
-            background="transparent"
-            visibility={isPlayerDealer ? 'visible' : 'hidden'}
-            size="lg"
-            icon={<CloseIcon />}
-            onClick={() => removeIssue(id)}
-          />
-        </>
-      ) : (
-        <ChakraLoader />
-      )}
+      <IconButton
+        aria-label="edit"
+        background="transparent"
+        visibility={isPlayerDealer && isSynced ? 'visible' : 'hidden'}
+        size="lg"
+        icon={<ImPencil />}
+        onClick={() => openModal(id)}
+      />
+      <IconButton
+        aria-label="delete"
+        background="transparent"
+        visibility={isPlayerDealer && isSynced ? 'visible' : 'hidden'}
+        size="lg"
+        icon={<CloseIcon />}
+        onClick={() => removeIssue(id)}
+      />
     </Stack>
   );
 };

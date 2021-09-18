@@ -29,7 +29,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
   const [activeIssue, setActiveIssue] = useState<Issue>(newIssue);
 
   const findIssue = (issueId?: number): void => {
-    const editIssue = issues.find(issue => issue.id === issueId);
+    const editIssue = issues.list.find(issue => issue.id === issueId);
 
     setActiveIssue(editIssue ? editIssue : newIssue);
   };

@@ -29,7 +29,7 @@ const Lobby = (): JSX.Element => {
       <EditableHeader {...sessionNameData} />
       <DealerPlate {...dealerData} />
       <JoinGameLink link={`${window.location}`} />
-      <GameControlButtons />
+      <GameControlButtons isPlayerDealer={isPlayerDealer} />
       <UserCards {...membersData} />
       <IssueCards {...issuesData} />
       {isPlayerDealer && <Settings />}

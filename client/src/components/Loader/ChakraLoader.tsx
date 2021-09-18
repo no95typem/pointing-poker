@@ -6,11 +6,18 @@ const ChakraLoader = (): JSX.Element => {
   return (
     <>
       <Spinner
+        position="absolute"
+        // m="0 auto"
+        // textAlign="center"
+        top="50%"
+        left="50%"
+        right="0"
+        bottom="0"
         thickness="4px"
         speed="0.65s"
         emptyColor="gray.200"
         color="blue.500"
-        size="md"
+        size="xl"
       />
     </>
   );

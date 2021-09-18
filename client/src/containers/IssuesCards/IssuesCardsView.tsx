@@ -11,9 +11,12 @@ import {
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
 import NewIssueButton from '../../components/NewIssueButton/NewIssueButton';
+import ChakraLoader from '../../components/Loader/ChakraLoader';
 
 const IssueCardsView = (props: IIssues): JSX.Element => {
   const { issues, modal } = props;
+
+  const { list, isSynced } = issues;
 
   const { openModal, removeIssue, isPlayerDealer } = modal;
 
@@ -26,16 +29,13 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
     };
   };
 
-  const isNewIssueButtonVisible =
-    isPlayerDealer && (!issues.length || issues[0].isSynced);
-
   return (
-    <Box mb="50px">
+    <Box mb="50px" position="relative">
       <Heading textAlign="center" size="lg" mb="40px">
         Issues:
       </Heading>
-      <Stack w="100%" wrap="wrap" direction="row">
-        {issues.map(issue => {
+      <Stack w="100%" wrap="wrap" direction="row" opacity={isSynced ? 1 : 0.5}>
+        {list.map(issue => {
           const id = issue.id;
 
           return (
@@ -45,10 +45,11 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
           );
         })}
 
-        {isNewIssueButtonVisible && <NewIssueButton editIssue={openModal} />}
+        {isPlayerDealer && isSynced && <NewIssueButton editIssue={openModal} />}
 
         <IssueModal issue={modal} />
       </Stack>
+      {!isSynced && <ChakraLoader />}
     </Box>
   );
 };
