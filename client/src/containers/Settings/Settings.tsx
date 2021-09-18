@@ -29,7 +29,7 @@ const Settings = (): JSX.Element => {
 
     // dispatch(setSettings({ ...localSettings, dealerAsPlayer: false }));
 
-    console.log(localSettings);
+    // console.log(localSettings);
   };
 
   const switchersData: ISettingsComponent[] = [

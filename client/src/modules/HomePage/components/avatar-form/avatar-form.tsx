@@ -27,7 +27,7 @@ const AvatarForm = () => {
           .catch(() => {}); // user's file is invalid, show some error
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       }); // user didn't pick a file, just ignore
   };
 
