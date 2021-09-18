@@ -252,7 +252,7 @@ export class SessionManager {
         const game = OBJ_PROCESSOR.deepClone(this.sessionState.game);
         const issues = OBJ_PROCESSOR.deepClone(this.sessionState.issues);
 
-        const currIssue = issues.find(
+        const currIssue = issues.list.find(
           iss => iss.id === this.sessionState.game?.currIssueId,
         );
 

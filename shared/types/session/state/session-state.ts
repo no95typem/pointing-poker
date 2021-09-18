@@ -18,6 +18,10 @@ export interface ISessionGameState {
   votes: Record<number, string | undefined>;
 }
 
+export interface ISessionIssues extends Synchronized {
+  list: Issue[];
+}
+
 export interface SessionState {
   sessionId: string;
 
@@ -31,7 +35,7 @@ export interface SessionState {
     msgs: Record<string, ChatMsg>;
   };
 
-  issues: { list: Issue[]; isSynced: boolean };
+  issues: ISessionIssues;
 
   currentGameSettings: ISettings;
 
