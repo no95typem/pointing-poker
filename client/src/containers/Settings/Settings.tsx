@@ -31,8 +31,6 @@ const Settings = (): JSX.Element => {
     value: string | boolean | CardData[],
   ): void => {
     dispatch(setSettings({ ...localSettings, [name]: value }));
-
-    console.log(localSettings);
   };
 
   const switchersData: ISettingsComponent[] = [

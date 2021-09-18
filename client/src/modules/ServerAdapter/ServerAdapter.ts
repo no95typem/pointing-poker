@@ -38,6 +38,8 @@ class ServerAdapter {
       const parsed = JSON.parse(e.data);
       const purified = purify(parsed);
 
+      console.log(`received msg, cipher: ${purified.cipher}`);
+
       if ('cipher' in purified) {
         switch ((purified as SCMsg).cipher) {
           case SCMSG_CIPHERS.CONN_TO_SESS_STATUS:
@@ -105,7 +107,7 @@ class ServerAdapter {
     const newMembers: Record<number, Member> = {};
     Object.assign(newMembers, members);
 
-    console.log(newMembers);
+    // console.log(newMembers);
     store.dispatch(updateState({ members: newMembers }));
   }
 
@@ -114,6 +116,7 @@ class ServerAdapter {
   }
 
   private handleWSErrorOrClose() {
+    console.log('err');
     store.dispatch(setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
 
     if (this.ws) {
