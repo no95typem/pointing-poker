@@ -8,7 +8,7 @@ const webpack = require('webpack');
 const isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-  devtool: isDev ? 'source-map' : '',
+  devtool: isDev ? 'source-map' : undefined,
   mode: isDev ? 'development' : 'production',
   target: 'node14.7',
   resolve: {
