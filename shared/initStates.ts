@@ -36,7 +36,10 @@ const SESSION_INIT_STATE: SessionState = {
   chat: {
     msgs: {},
   },
-  issues: [],
+  issues: {
+    isSynced: true,
+    list: [],
+  },
 };
 
 export const CREATE_INIT_STATE = () =>
@@ -96,5 +99,8 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   chat: {
     msgs: {},
   },
-  issues: [],
+  issues: {
+    list: [],
+    isSynced: true,
+  },
 };
