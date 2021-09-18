@@ -28,6 +28,9 @@ module.exports = {
         TARGET_PLATFORM: JSON.stringify('web'),
         FE_ALONE: process.env.FE_ALONE,
         IS_PROD: process.env.NODE_ENV === 'production',
+        BASENAME: process.env.BASENAME
+          ? JSON.stringify(process.env.BASENAME)
+          : '',
       });
 
       webpackConfig.plugins.push(definePlugin);
