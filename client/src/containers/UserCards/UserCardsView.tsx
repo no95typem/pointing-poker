@@ -37,7 +37,7 @@ const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
 
           return (
             <Stack w="300px" key={`${id}-wrap`}>
-              <UserCard data={setMemberData(member)} key={id} />;
+              <UserCard {...setMemberData(member)} key={id} />;
             </Stack>
           );
         })}

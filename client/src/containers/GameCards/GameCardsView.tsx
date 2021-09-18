@@ -6,7 +6,7 @@ import { ICardData, ICardsView } from '../../../../shared/types/session/card';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
-import NewGameCardButton from '../../components/newGameCardButton/NewGameCardButton';
+import NewGameCardButton from '../../components/NewGameCardButton/NewGameCardButton';
 import { LOCALE_US } from '../../locales/locale-us';
 
 const IssueCardView = (props: ICardsView): JSX.Element => {

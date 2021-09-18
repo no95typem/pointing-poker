@@ -24,6 +24,7 @@ interface ILobbyData {
   membersData: IUserCards;
   issuesData: IIssuesData;
   settingsData: ISettingsData;
+  isPlayerDealer: boolean;
 }
 
 export interface ISettingsData {
@@ -133,6 +134,7 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
     membersData,
     issuesData,
     settingsData,
+    isPlayerDealer,
   };
 };
 

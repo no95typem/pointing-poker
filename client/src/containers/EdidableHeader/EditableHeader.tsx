@@ -39,18 +39,17 @@ const EditableHeader = (props: ISessionNameHandling) => {
       <Heading size="lg" maxW="300px" isTruncated>
         {value}
       </Heading>
-      {isPlayerDealer && (
-        <IconButton
-          top="0"
-          right="0"
-          aria-label="edit"
-          background="transparent"
-          visibility={true ? 'visible' : 'hidden'} //в фазе игры возможность редактировать тему отсутствует
-          size="lg"
-          icon={<ImPencil />}
-          onClick={onOpen}
-        />
-      )}
+
+      <IconButton
+        top="0"
+        right="0"
+        aria-label="edit"
+        background="transparent"
+        visibility={isPlayerDealer ? 'visible' : 'hidden'}
+        size="lg"
+        icon={<ImPencil />}
+        onClick={onOpen}
+      />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
