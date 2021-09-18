@@ -4,9 +4,10 @@ For gh-pages build:
       "homepage": "https://mygithubname.github.io/myawesomerepo"
       OR (not tested)
       "homepage": "./myawesomerepo"
-  2. Build with npm run build:gh-pages
-  3. Move files from the build to another folder
-  4. Do git things in this another folder
+  2. Change the script in client/package.json "build:gh-pages" - change BASENAME according to step 1.
+  3. Build with npm run build:gh-pages
+  4. Move files from the build to another folder
+  5. Do git things in this another folder
 
 For netlify (not tested):
   1. delete homepage from client/package.json
