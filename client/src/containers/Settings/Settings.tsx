@@ -96,7 +96,7 @@ const Settings = (): JSX.Element => {
           return <InputText data={inputData} key={name} />;
         })}
 
-        {isTimerNeeded && <Timer time={roundTime} />}
+        {isTimerNeeded && <Timer time={roundTime || 0} />}
       </Stack>
 
       <GameCards {...cardsData} />

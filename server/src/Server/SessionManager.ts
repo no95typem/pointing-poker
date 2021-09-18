@@ -2,14 +2,16 @@
 
 import WebSocket from 'ws';
 import { DEALER_ID } from '../../../shared/const';
+import { calcPercentage } from '../../../shared/helpers/calcs/game-calcs';
+import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
 import { CREATE_INIT_STATE } from '../../../shared/initStates';
 import { CSMsgConnToSess } from '../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { CSMsgVotekick } from '../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
-import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-conn-to-sess-status';
+import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-msg-conn-to-sess-status';
 import { SCMsgMembersChanged } from '../../../shared/types/sc-msgs/msgs/sc-msg-members-changed';
-import { SCMsgUpdateSessionStateMsg } from '../../../shared/types/sc-msgs/msgs/sc-update-session-state';
+import { SCMsgUpdateSessionState } from '../../../shared/types/sc-msgs/msgs/sc-msg-update-session-state';
 import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
 import { Member } from '../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
@@ -59,7 +61,10 @@ export class SessionManager {
       broadcast: this.broadcast,
       checkMemberState: (id: number) =>
         this.sessionState.members[id]?.userState,
-      getSessionState: () => this.sessionState,
+      getSessionState: () => {
+        return { state: this.sessionState };
+      },
+      dang_getSessState: () => this.sessionState,
       updateState: this.updateState,
       kick: this.kick,
       votekick: (ws: WebSocket, id: number, msg: CSMsgVotekick) => {
@@ -68,6 +73,8 @@ export class SessionManager {
       forcekick: (targetId: number) => {
         this.kicksMan.handleDealerForceKick(targetId);
       },
+      tryToEndRound: this.tryToEndRound,
+      endSession: this.endSession,
     };
 
     this.dealerManager = new DealerManager(this.api);
@@ -168,6 +175,7 @@ export class SessionManager {
       this.broadcast(msg, USER_ROLES.SPECTATOR);
 
       if (id === DEALER_ID) this.endSession();
+      else this.tryToEndRound();
 
       console.log('member disconnected');
     } else {
@@ -181,8 +189,10 @@ export class SessionManager {
   private updateState = (update: Partial<SessionState>) => {
     Object.assign(this.sessionState, update);
 
-    const msg = new SCMsgUpdateSessionStateMsg(update);
+    const msg = new SCMsgUpdateSessionState(update);
     this.broadcast(msg, USER_ROLES.SPECTATOR);
+
+    this.tryToEndRound();
   };
 
   private kick = (id: number) => {
@@ -217,7 +227,7 @@ export class SessionManager {
   };
 
   /* GAME */
-  private tryToEndRound(force?: true) {
+  private tryToEndRound = (force?: true) => {
     if (this.sessionState.game?.roundState === ROUND_STATES.IN_PROCESS) {
       const playersRecs = this.playersManager.getMembers();
 
@@ -239,15 +249,25 @@ export class SessionManager {
         });
 
       if (!isNotEnd) {
-        const game = this.sessionState.game;
+        const game = OBJ_PROCESSOR.deepClone(this.sessionState.game);
+        const issues = OBJ_PROCESSOR.deepClone(this.sessionState.issues);
+
+        const currIssue = issues.find(
+          iss => iss.id === this.sessionState.game?.currIssueId,
+        );
+
+        if (currIssue) {
+          currIssue.stat = {
+            votes: game.votes,
+            percentage: calcPercentage(game.votes),
+          };
+        }
+
         game.roundState = ROUND_STATES.ENDED;
-
-        // const issues =
-
-        this.updateState({ game });
+        this.updateState({ game, issues });
       }
     }
-  }
+  };
 
   private pickCard(id: number, value: string | undefined) {
     if (!this.sessionState.game) return;
@@ -272,6 +292,8 @@ export class SessionManager {
     game.votes[id] = value;
 
     this.updateState({ game });
+
+    this.tryToEndRound();
   }
   /* /GAME */
 

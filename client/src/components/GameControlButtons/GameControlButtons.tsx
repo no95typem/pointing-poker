@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Button, Stack } from '@chakra-ui/react';
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
 
 const GameControlButtons = (): JSX.Element => {
   return (
@@ -9,7 +10,7 @@ const GameControlButtons = (): JSX.Element => {
         colorScheme="facebook"
         w="130px"
         variant="outline"
-        // onClick={onClick}
+        onClick={SERVER_ADAPTER.exitGame}
       >
         Cancel Game
       </Button>
@@ -17,7 +18,7 @@ const GameControlButtons = (): JSX.Element => {
         colorScheme="facebook"
         w="130px"
         variant="solid"
-        // onClick={onClick}
+        onClick={SERVER_ADAPTER.startGame}
       >
         Start Game
       </Button>

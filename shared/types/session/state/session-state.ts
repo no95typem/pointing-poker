@@ -10,6 +10,14 @@ export interface ISessionName extends Synchronized {
   value: string;
 }
 
+export interface ISessionGameState {
+  roundState: RoundState;
+  roundStartTime?: number;
+  currIssueId: number;
+  // key number - userPublicId, val number - value of card
+  votes: Record<number, string | undefined>;
+}
+
 export interface SessionState {
   sessionId: string;
 
@@ -20,22 +28,14 @@ export interface SessionState {
   stage: SessionStage;
 
   chat: {
-    isVisible: boolean;
-    msgs: Record<number, ChatMsg>;
-    typedText: string;
+    msgs: Record<string, ChatMsg>;
   };
 
   issues: Issue[];
 
   currentGameSettings: ISettings;
 
-  game?: {
-    roundState: RoundState;
-    roundStartTime: number;
-    currIssueIndex: number;
-    // key number - userPublicId, val number - value of card
-    votes: Record<number, string | undefined>;
-  };
+  game?: ISessionGameState;
 }
 
 export interface ISessionStateClient extends SessionState {

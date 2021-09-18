@@ -14,7 +14,6 @@ export enum RoutesPath {
   LOBBY = '/session/:id/lobby',
   GAME = '/session/:id/game',
   STATS = '/session/:id/stats',
-  ROUTE_404 = '*', // а нужен ли он нам?, может просто редирект на ROOT ?
   ERROR = '/error',
   LOADING = '/loading',
 }
@@ -42,12 +41,6 @@ const routes: IRoute[] = [
     key: 'routeStats',
     path: RoutesPath.STATS,
     isExact: true,
-    Component: ChakraButtons, //Заглушка, заменяем своими компонентами по мере готовности
-  },
-  {
-    key: 'route404',
-    path: RoutesPath.ROUTE_404,
-    isExact: false,
     Component: ChakraButtons, //Заглушка, заменяем своими компонентами по мере готовности
   },
 ];

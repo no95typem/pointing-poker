@@ -5,8 +5,6 @@ class SCMsgCiphers {
 
   readonly CONN_TO_SESS_STATUS = 'CONN_TO_SESS_STATUS';
 
-  readonly FATAL_ERROR = 'FATAL_ERROR';
-
   readonly MEMBERS_CHANGED = 'MEMBERS_CHANGED';
 
   readonly UPDATE_SESSION_STATE = 'UPDATE_SESSION_STATE';

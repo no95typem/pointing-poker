@@ -1,4 +1,5 @@
 import { OBJ_PROCESSOR } from '../../shared/helpers/processors/obj-processor';
+import { KnownLoadKey } from '../../shared/knownLoadsKeys';
 
 export interface AppLoad {
   type: 'unknown' | 'communication';
@@ -6,16 +7,6 @@ export interface AppLoad {
   more?: string;
   Component?: () => JSX.Element;
 }
-
-class knownLoadsKeys {
-  readonly UNEXPECTED_REDIRECT_TO_LOAD = 'UNEXPECTED_REDIRECT_TO_LOAD';
-
-  readonly CONNECTING_TO_SERVER = 'CONNECTING_TO_SERVER';
-}
-
-export const KNOWN_LOADS_KEYS = OBJ_PROCESSOR.deepFreeze(new knownLoadsKeys());
-
-export type KnownLoadKey = keyof knownLoadsKeys;
 
 export const KNOWN_LOADS: Record<KnownLoadKey, AppLoad> = {
   UNEXPECTED_REDIRECT_TO_LOAD: {
@@ -25,6 +16,14 @@ export const KNOWN_LOADS: Record<KnownLoadKey, AppLoad> = {
   CONNECTING_TO_SERVER: {
     type: 'communication',
     description: `Please wait until a connection with a server will be established`,
+  },
+  SESSION_STAGE_CHANGE: {
+    type: 'communication',
+    description: `Session stage is changing. please wait...`,
+  },
+  CONNECTING_TO_LOBBY: {
+    type: 'communication',
+    description: `Connecting to lobby...`,
   },
 };
 

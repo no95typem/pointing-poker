@@ -32,13 +32,13 @@ export const sessionSlice = createSlice({
   name: 'session',
   initialState,
   reducers: {
-    internal_updSessStateFromClient(
+    dang_updSessStateFromClient(
       state,
       action: PayloadAction<Partial<ISessionStateClient>>,
     ) {
       Object.assign(state, action.payload);
     },
-    server_updSessState(
+    dang_updSessStateFromServer(
       state,
       action: PayloadAction<Partial<ISessionStateClient>>,
     ) {
@@ -48,6 +48,12 @@ export const sessionSlice = createSlice({
 
       Object.assign(state, synced);
     },
+    dang_reset(state) {
+      Object.keys(state).forEach(key => {
+        delete (state as Record<string, unknown>)[key];
+      });
+      Object.assign(state, initialState);
+    },
   },
 });
 
@@ -55,15 +61,10 @@ export const updSessState = createAsyncThunk(
   'session/updSessState',
   async (update: Partial<SessionState>, thunkAPI) => {
     const synced = setSynced(update, false);
-
-    thunkAPI.dispatch(
-      sessionSlice.actions.internal_updSessStateFromClient(synced),
-    );
+    thunkAPI.dispatch(sessionSlice.actions.dang_updSessStateFromClient(synced));
 
     const msg = new CSMsgUpdateState(update);
 
     SERVER_ADAPTER.send(msg);
   },
 );
-
-export const { server_updSessState } = sessionSlice.actions;

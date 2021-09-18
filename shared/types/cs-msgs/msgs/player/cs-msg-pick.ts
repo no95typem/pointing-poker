@@ -4,5 +4,5 @@ import { CSMSG_CIPHERS } from '../../cs-msg-ciphers';
 export class CSMsgPick implements CSMsg {
   readonly cipher = CSMSG_CIPHERS.PICK;
 
-  constructor(readonly value: number) {}
+  constructor(readonly value: string | undefined) {}
 }

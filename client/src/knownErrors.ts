@@ -35,6 +35,10 @@ export const KNOWN_ERRORS: Record<KnownErrorsKey, AppError> = {
     type: 'communication',
     description: `Session doesn't exist`,
   },
+  UNKNOWN_ERROR: {
+    type: 'unknown',
+    description: `Unknown error, try to reload the page`,
+  },
 };
 
 OBJ_PROCESSOR.deepFreeze(KNOWN_ERRORS);

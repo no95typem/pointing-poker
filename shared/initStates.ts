@@ -34,9 +34,7 @@ const SESSION_INIT_STATE: SessionState = {
   members: {},
   currentGameSettings: defaultSettings,
   chat: {
-    isVisible: false,
     msgs: {},
-    typedText: '',
   },
   issues: [],
 };
@@ -97,9 +95,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   },
   currentGameSettings: defaultSettings,
   chat: {
-    isVisible: false,
     msgs: {},
-    typedText: '',
   },
   issues: [],
 };
