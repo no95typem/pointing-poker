@@ -20,9 +20,7 @@ export interface SessionState {
   stage: SessionStage;
 
   chat: {
-    isVisible: boolean;
     msgs: Record<number, ChatMsg>;
-    typedText: string;
   };
 
   issues: Issue[];

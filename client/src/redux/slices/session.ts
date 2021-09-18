@@ -13,6 +13,7 @@ import { Synchronized } from '../../../../shared/types/syncable';
 import { purify } from '../../../../shared/helpers/processors/purify';
 import { CSMsgUpdateState } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/cs-chat-msg';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -64,6 +65,19 @@ export const updSessState = createAsyncThunk(
     );
 
     const msg = new CSMsgUpdateState(update);
+    SERVER_ADAPTER.send(msg);
+  },
+);
+
+export const sendMessage = createAsyncThunk(
+  'chat/sendMessage',
+  async (typedText: string, thunkAPI) => {
+    const msg = new CSMsgChatMsg({
+      text: typedText,
+      time: Date.now(),
+      memberId: 1, //!!!
+      isSynced: true,
+    });
     SERVER_ADAPTER.send(msg);
   },
 );

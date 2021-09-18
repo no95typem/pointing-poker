@@ -7,7 +7,7 @@ import { loadsSlice } from './slices/loads';
 import { localeSlice } from './slices/locale';
 import { sessionSlice } from './slices/session';
 import { userInfoSlice } from './slices/userInfo';
-import { chatVisibleSlice } from './slices/chat';
+import { chatSlice } from './slices/chat';
 
 export const store = configureStore({
   reducer: {
@@ -18,7 +18,7 @@ export const store = configureStore({
     connect: connectSlice.reducer,
     session: sessionSlice.reducer,
     userInfo: userInfoSlice.reducer,
-    chatVisible: chatVisibleSlice.reducer,
+    chat: chatSlice.reducer,
   },
   devTools: process.env.NODE_ENV === 'development',
 });

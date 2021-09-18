@@ -1,8 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import '@fontsource/architects-daughter';
 
-import { ChakraProvider, Grid, ColorModeScript } from '@chakra-ui/react';
+import {
+  ChakraProvider,
+  Grid,
+  ColorModeScript,
+  Portal,
+} from '@chakra-ui/react';
 import { Header } from '../Header/Header';
 import { Routes } from '../Routes/Routes';
 import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
@@ -12,8 +16,7 @@ import { useTypedSelector } from '../../redux/store';
 import Chat from '../Chat/сhat';
 
 export const App = () => {
-  const { isVisible } = useTypedSelector(state => state.chatVisible);
-  const el = document.createElement('div');
+  const { isVisible } = useTypedSelector(state => state.chat);
 
   return (
     <>
@@ -22,8 +25,11 @@ export const App = () => {
         <Grid minH="100vh" templateRows="50px 1fr 50px" alignItems="center">
           <ServerBoundary>
             <Header />
-            {isVisible ? ReactDOM.createPortal(<Chat />, el) : <></>}
-            {isVisible ? <Chat /> : <></>}
+            {isVisible && (
+              <Portal>
+                <Chat />
+              </Portal>
+            )}
             <Routes />
             <Footer />
           </ServerBoundary>

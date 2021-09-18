@@ -1,29 +1,45 @@
 import { Rnd } from 'react-rnd';
+import { Flex, CloseButton } from '@chakra-ui/react';
+import ChatView from './components/ChatView/ChatView';
+import MessageInputBox from './components/MessageInputBox/MessageInputBox';
+import { useAppDispatch } from '../../redux/store';
+import { chatStateToggle } from '../../redux/slices/chat';
 
 const Chat = (): JSX.Element => {
+  const dispatch = useAppDispatch();
   const style = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     border: 'solid 1px #ddd',
     background: '#f0f0f0',
-    visually: 'hidden',
+  };
+
+  const closeChat = (): void => {
+    dispatch(chatStateToggle());
   };
 
   return (
     <Rnd
       style={style}
       default={{
-        x: 150,
-        y: 205,
-        width: 500,
-        height: 190,
+        x: document.documentElement.clientWidth / 2,
+        y: -document.documentElement.clientHeight,
+        width: document.documentElement.clientWidth / 7,
+        height: document.documentElement.clientHeight / 1.5,
       }}
-      minWidth={500}
-      minHeight={190}
-      bounds="window"
+      minWidth={320}
+      minHeight={568}
+      bounds="body"
     >
-      RND
+      <Flex
+        w="95%"
+        h="95%"
+        direction="column"
+        align="flex-end"
+        justify="space-between"
+      >
+        <CloseButton onClick={closeChat} />
+        <ChatView />
+        <MessageInputBox />
+      </Flex>
     </Rnd>
   );
 };
