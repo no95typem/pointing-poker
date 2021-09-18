@@ -53,7 +53,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
   const modalData: IIssueModal = {
     onClose: onClose,
     isOpen: isOpen,
-    onClick: openModal,
+    openModal: openModal,
     activeIssue: activeIssue,
     addNewIssue: setNewIssue,
     changeIssue: changeIssue,

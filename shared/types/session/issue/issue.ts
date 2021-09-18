@@ -21,7 +21,7 @@ export interface Issue extends Synchronized {
 export interface IIssueData {
   issue: Issue;
   isPlayerDealer: boolean;
-  editIssue: (id?: number) => void;
+  openModal: (id?: number) => void;
   removeIssue: (id: number) => void;
 }
 
@@ -34,7 +34,7 @@ export interface IIssuesData {
 }
 
 export interface IIssueModal {
-  onClick: (id?: number) => void;
+  openModal: (id?: number) => void;
   onClose: () => void;
   changeIssue: (issue: Issue) => void;
   addNewIssue: (issue: Issue) => void;

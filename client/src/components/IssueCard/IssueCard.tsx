@@ -15,11 +15,12 @@ import {
   IIssueData,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
+import ChakraLoader from '../Loader/ChakraLoader';
 
 const IssueCard = (props: IIssueData): JSX.Element => {
-  const { issue, editIssue, removeIssue, isPlayerDealer } = props;
+  const { issue, openModal, removeIssue, isPlayerDealer } = props;
 
-  const { id, title, priority } = issue as Issue;
+  const { id, title, priority, isSynced } = issue as Issue;
 
   return (
     <Stack direction="row" align="center" p="10px" boxShadow="lg">
@@ -27,25 +28,28 @@ const IssueCard = (props: IIssueData): JSX.Element => {
         <StatNumber isTruncated={true}>{title}</StatNumber>
         <StatHelpText mb="0">{priority}</StatHelpText>
       </Stat>
-      {isPlayerDealer && (
-        <IconButton
-          aria-label="edit"
-          background="transparent"
-          visibility={true ? 'visible' : 'hidden'}
-          size="lg"
-          icon={<ImPencil />}
-          onClick={() => editIssue(id)}
-        />
-      )}
-      {isPlayerDealer && (
-        <IconButton
-          aria-label="delete"
-          background="transparent"
-          visibility={true ? 'visible' : 'hidden'}
-          size="lg"
-          icon={<CloseIcon />}
-          onClick={() => removeIssue(id)}
-        />
+
+      {isSynced ? (
+        <>
+          <IconButton
+            aria-label="edit"
+            background="transparent"
+            visibility={isPlayerDealer ? 'visible' : 'hidden'}
+            size="lg"
+            icon={<ImPencil />}
+            onClick={() => openModal(id)}
+          />
+          <IconButton
+            aria-label="delete"
+            background="transparent"
+            visibility={isPlayerDealer ? 'visible' : 'hidden'}
+            size="lg"
+            icon={<CloseIcon />}
+            onClick={() => removeIssue(id)}
+          />
+        </>
+      ) : (
+        <ChakraLoader />
       )}
     </Stack>
   );

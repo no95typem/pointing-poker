@@ -2,7 +2,11 @@ import React from 'react';
 
 import { Box, Heading, Stack } from '@chakra-ui/react';
 
-import { IIssues } from '../../../../shared/types/session/issue/issue';
+import {
+  IIssueData,
+  IIssues,
+  Issue,
+} from '../../../../shared/types/session/issue/issue';
 
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
@@ -11,7 +15,19 @@ import NewIssueButton from '../../components/NewIssueButton/NewIssueButton';
 const IssueCardsView = (props: IIssues): JSX.Element => {
   const { issues, modal } = props;
 
-  const { onClick, removeIssue, isPlayerDealer } = modal;
+  const { openModal, removeIssue, isPlayerDealer } = modal;
+
+  const setIssueData = (issue: Issue): IIssueData => {
+    return {
+      isPlayerDealer: isPlayerDealer,
+      openModal: openModal,
+      removeIssue: removeIssue,
+      issue: issue,
+    };
+  };
+
+  const isNewIssueButtonVisible =
+    isPlayerDealer && (!issues.length || issues[0].isSynced);
 
   return (
     <Box mb="50px">
@@ -24,19 +40,12 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
 
           return (
             <Stack w="300px" key={`${id}-wrap`}>
-              <IssueCard
-                isPlayerDealer={isPlayerDealer}
-                editIssue={onClick}
-                removeIssue={removeIssue}
-                issue={issue}
-                key={id}
-              />
-              ;
+              <IssueCard {...setIssueData(issue)} key={id} />
             </Stack>
           );
         })}
 
-        {isPlayerDealer && <NewIssueButton editIssue={onClick} />}
+        {isNewIssueButtonVisible && <NewIssueButton editIssue={openModal} />}
 
         <IssueModal issue={modal} />
       </Stack>

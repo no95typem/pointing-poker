@@ -31,7 +31,7 @@ export interface SessionState {
     msgs: Record<string, ChatMsg>;
   };
 
-  issues: Issue[];
+  issues: { list: Issue[]; isSynced: boolean };
 
   currentGameSettings: ISettings;
 
