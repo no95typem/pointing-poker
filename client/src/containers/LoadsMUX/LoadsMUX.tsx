@@ -1,5 +1,6 @@
 import React from 'react';
-import { KnownLoadKey, KNOWN_LOADS } from '../../knownLoads';
+import { KnownLoadKey } from '../../../../shared/knownLoadsKeys';
+import { KNOWN_LOADS } from '../../knownLoads';
 
 import { useTypedSelector } from '../../redux/store';
 import { GenericLoadPage } from './LoadsPages/GenericLoadPage/GenericLoadPage';

@@ -4,46 +4,59 @@ import { useDisclosure } from '@chakra-ui/react';
 
 import {
   IIssueModal,
+  IIssuesData,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
 
 import IssueCardsView from './IssuesCardsView';
+import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
 
-const IssuesCards = (): JSX.Element => {
+const IssuesCards = (props: IIssuesData): JSX.Element => {
+  const { issues, addNewIssue, removeIssue, newIssueId } = props;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const issue1: Issue = {
-    id: 1,
-    title: 'Isssue 123',
-    link: 'www.a.com/123',
-    priority: 'MEDIUM',
-    isSynced: true,
+  const newIssue: Issue = {
+    id: newIssueId,
+    title: '',
+    link: '',
+    priority: ISSUE_PRIORITIES.LOW,
+    isSynced: false,
     closed: false,
   };
 
-  const issue2: Issue = {
-    ...issue1,
-    id: 2,
-    title: 'Issue 45',
-    link: 'www.a.com/45',
-    priority: 'HIGH',
+  const [activeIssue, setActiveIssue] = useState<Issue>(newIssue);
+
+  const findIssue = (issueId?: number): void => {
+    const editIssue = issues.find(issue => issue.id === issueId);
+
+    setActiveIssue(editIssue ? editIssue : newIssue);
   };
 
-  const [editIssue, setEditIssue] = useState<Issue>();
-
-  const issues = [issue1, issue2];
-
   const openModal = (issueId?: number): void => {
-    setEditIssue(issues.find(issue => issue.id === issueId));
+    findIssue(issueId);
 
     onOpen();
+  };
+
+  const setNewIssue = (issue: Issue): void => {
+    addNewIssue(issue);
+
+    onClose();
+  };
+
+  const changeIssue = (issue: Issue): void => {
+    setActiveIssue({ ...issue });
   };
 
   const modalData: IIssueModal = {
     onClose: onClose,
     isOpen: isOpen,
     onClick: openModal,
-    editIssue: editIssue,
+    activeIssue: activeIssue,
+    addNewIssue: setNewIssue,
+    changeIssue: changeIssue,
+    removeIssue: removeIssue,
   };
 
   return <IssueCardsView issues={issues} modal={modalData} />;

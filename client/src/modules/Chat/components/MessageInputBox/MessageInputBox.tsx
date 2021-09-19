@@ -7,9 +7,13 @@ import { sendMessage } from '../../../../redux/slices/session';
 const MessageInputBox = () => {
   const dispatch = useAppDispatch();
   const { typedText } = useTypedSelector(state => state.chat);
+  const sessionData = useTypedSelector(state => state.session);
   const handleClick = () => {
-    dispatch(sendMessage(typedText));
-    dispatch(clearText());
+    if (sessionData.clientId) {
+      const time = Date.now();
+      dispatch(sendMessage([typedText, sessionData.clientId, time]));
+      dispatch(clearText());
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Container, Flex } from '@chakra-ui/react';
 import UserCard from '../../../../components/UserCard/UserCard';
-import { useTypedSelector } from '../../../../redux/store';
+import { store, useTypedSelector } from '../../../../redux/store';
 import {
   IMemberData,
   Member,
@@ -9,39 +9,7 @@ import {
 
 const ChatView = () => {
   const sessionData = useTypedSelector(state => state.session);
-
-  let msgs = {
-    0: {
-      text: 'John',
-      time: Date.now(),
-      memberId: 1,
-    },
-    1: {
-      text: 'John',
-      time: Date.now(),
-      memberId: 2,
-    },
-    2: {
-      text: 'John',
-      time: Date.now(),
-      memberId: 3,
-    },
-    3: {
-      text: 'John',
-      time: Date.now(),
-      memberId: 1,
-    },
-    4: {
-      text: 'John',
-      time: Date.now(),
-      memberId: 2,
-    },
-    5: {
-      text: 'John',
-      time: Date.now(),
-      memberId: 3,
-    },
-  };
+  const { msgs } = store.getState().session.chat;
 
   const [kickedName, setKickedName] = useState('');
   console.log(kickedName);
@@ -69,6 +37,21 @@ const ChatView = () => {
     };
   };
 
+  const convertTime = (dateNow: number) => {
+    const date = new Date(dateNow);
+
+    return (
+      (date.getHours() < 10 ? '0' : '') +
+      date.getHours() +
+      ':' +
+      (date.getMinutes() < 10 ? '0' : '') +
+      date.getMinutes() +
+      ':' +
+      (date.getSeconds() < 10 ? '0' : '') +
+      date.getSeconds()
+    );
+  };
+
   return (
     <Container overflow-y="scroll">
       {Object.values(msgs).map(msg => {
@@ -76,7 +59,7 @@ const ChatView = () => {
           <Flex>
             <Container>
               <Box>{msg.text}</Box>
-              <Box>{msg.time}</Box>
+              <Box>{convertTime(msg.time)}</Box>
             </Container>
             <UserCard data={setMemberData(sessionData.members[msg.memberId])} />
           </Flex>

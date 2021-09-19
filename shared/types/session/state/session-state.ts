@@ -1,4 +1,4 @@
-import { Settings } from '../../settings';
+import { ISettings } from '../../settings';
 import { Synchronized } from '../../syncable';
 import { ChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
@@ -8,6 +8,14 @@ import { SessionStage } from './stages';
 
 export interface ISessionName extends Synchronized {
   value: string;
+}
+
+export interface ISessionGameState {
+  roundState: RoundState;
+  roundStartTime?: number;
+  currIssueId: number;
+  // key number - userPublicId, val number - value of card
+  votes: Record<number, string | undefined>;
 }
 
 export interface SessionState {
@@ -20,20 +28,14 @@ export interface SessionState {
   stage: SessionStage;
 
   chat: {
-    msgs: Record<number, ChatMsg>;
+    msgs: Record<string, ChatMsg>;
   };
 
   issues: Issue[];
 
-  currentGameSettings: Settings;
+  currentGameSettings: ISettings;
 
-  game?: {
-    roundState: RoundState;
-    roundStartTime: number;
-    currIssueIndex: number;
-    // key number - userPublicId, val number - value of card
-    votes: Record<number, string | undefined>;
-  };
+  game?: ISessionGameState;
 }
 
 export interface ISessionStateClient extends SessionState {

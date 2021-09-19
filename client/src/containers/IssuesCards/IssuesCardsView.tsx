@@ -22,12 +22,18 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
 
           return (
             <Stack w="300px" key={`${id}-wrap`}>
-              <IssueCard onClick={modal.onClick} issue={issue} key={id} />;
+              <IssueCard
+                editIssue={modal.onClick}
+                removeIssue={modal.removeIssue}
+                issue={issue}
+                key={id}
+              />
+              ;
             </Stack>
           );
         })}
 
-        <NewIssueButton onClick={modal.onClick} />
+        <NewIssueButton editIssue={modal.onClick} />
 
         <IssueModal issue={modal} />
       </Stack>

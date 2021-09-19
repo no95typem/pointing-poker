@@ -1,8 +1,10 @@
 import { useLayoutEffect } from 'react';
+import H from 'history';
 import { useHistory, useLocation } from 'react-router';
 import { SessionStage } from '../../../shared/types/session/state/stages';
 import { homePageSlice } from '../redux/slices/home-page';
 import { useAppDispatch, useTypedSelector } from '../redux/store';
+import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 
 const usePathParser = (params: {
   stage: SessionStage;
@@ -10,7 +12,18 @@ const usePathParser = (params: {
   path: string;
 }) => {
   const { stage: sessionStage, path, sessionId } = params;
+
   const dispatch = useAppDispatch();
+  const errors = useTypedSelector(state => state.errors);
+  const loads = useTypedSelector(state => state.loads);
+
+  if (Object.keys(errors).length > 0) {
+    return path !== '/error' ? '/error' : undefined;
+  }
+
+  if (Object.keys(loads).length > 0) {
+    return path !== '/loading' ? '/loading' : undefined;
+  }
 
   switch (sessionStage) {
     case 'LOBBY':
@@ -44,7 +57,7 @@ const usePathParser = (params: {
   }
 };
 
-export const useRouterController = (): string | undefined => {
+export const useRouterController = (): [boolean, H.Location] => {
   const location = useLocation();
   const sessionState = useTypedSelector(state => state.session);
   const history = useHistory();
@@ -68,5 +81,10 @@ export const useRouterController = (): string | undefined => {
   }, [requiredPathBySession]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
-  return requiredPathBySession;
+  const newLocation = OBJ_PROCESSOR.deepClone(location);
+  newLocation.pathname = requiredPathBySession || location.pathname;
+
+  console.log(requiredPathBySession);
+
+  return [!!requiredPathBySession, newLocation];
 };

@@ -19,21 +19,17 @@ import {
 } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
+import { ISessionNameHandling } from '../../../../shared/types/session/name';
 
-interface IHeader {
-  topic: string;
-  changeTopic: (newTopic: string) => void;
-}
-
-const EditableHeader = (props: IHeader) => {
-  const { topic, changeTopic } = props;
+const EditableHeader = (props: ISessionNameHandling) => {
+  const { value, changeValue } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [topicView, setTopicView] = useState(topic);
+  const [topicView, setTopicView] = useState(value);
 
   const updateTopic = (): void => {
-    changeTopic(topicView);
+    changeValue(topicView);
 
     onClose();
   };
@@ -41,7 +37,7 @@ const EditableHeader = (props: IHeader) => {
   return (
     <Stack w="100%" direction="row" justify="center" align="center" p="10px">
       <Heading size="lg" maxW="300px" isTruncated>
-        {topic}
+        {value}
       </Heading>
       <IconButton
         top="0"

@@ -19,9 +19,17 @@ import {
 import { IIssueModalData } from '../../../../shared/types/session/issue/issue';
 
 const IssueModal = (props: IIssueModalData): JSX.Element => {
-  const { issue } = props;
+  const { issue: issueData } = props;
 
-  const { isOpen, onClose, editIssue } = issue;
+  const { isOpen, onClose, activeIssue, changeIssue, addNewIssue } = issueData;
+
+  const seIssueData = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ): void => {
+    const input = e.target;
+
+    changeIssue({ ...activeIssue, [input.name]: input.value });
+  };
 
   return (
     <>
@@ -36,21 +44,29 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
                 <Stack spacing={2} direction="row" align="center">
                   <FormLabel>Title:</FormLabel>
                   <Input
+                    name="title"
                     placeholder="Issue name"
-                    defaultValue={editIssue ? editIssue.title : ''}
+                    value={activeIssue.title}
+                    onChange={seIssueData}
                   />
                 </Stack>
               </FormControl>
-              <FormControl id="link" isRequired>
+              <FormControl id="link">
                 <Stack spacing={2} direction="row" align="center">
                   <FormLabel htmlFor="link">Link:</FormLabel>
-                  <Input defaultValue={editIssue ? editIssue.link : ''} />
+                  <Input
+                    name="link"
+                    value={activeIssue.link}
+                    onChange={seIssueData}
+                  />
                 </Stack>
               </FormControl>
               <Stack spacing={2} direction="row" align="center">
                 <FormLabel>Priority:</FormLabel>
                 <Select
-                  defaultValue={editIssue ? editIssue.priority : ''}
+                  value={activeIssue.priority}
+                  onChange={seIssueData}
+                  name="priority"
                   variant="filled"
                   bg="gray.100"
                 >
@@ -72,7 +88,9 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
               <Button padding="0 50px" variant="outline" onClick={onClose}>
                 No
               </Button>
-              <Button padding="0 50px">Yes</Button>
+              <Button onClick={() => addNewIssue(activeIssue)} padding="0 50px">
+                Yes
+              </Button>
             </ButtonGroup>
           </ModalFooter>
         </ModalContent>

@@ -1,10 +1,10 @@
 import { Synchronized } from '../../syncable';
 
-export interface ChatMsg extends Synchronized {
-  readonly text: string;
-  readonly time: number; // Date.now()
-  readonly memberId: number;
-  readonly rejected?: true;
-}
+// key for ChatMsgs {} - `${time}-${memberId}`
 
-// key for ChatMsgs {} - `${memberId}-${time}`
+export interface ChatMsg extends Synchronized {
+  readonly memberId: number;
+  readonly text: string;
+  readonly time: number; // Date.now() will be overwritten by server!
+  readonly clientTime?: number; // server sends clientTime to sender
+}

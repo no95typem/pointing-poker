@@ -5,7 +5,9 @@ import { errorsSlice } from './slices/errors';
 import { homePageSlice } from './slices/home-page';
 import { loadsSlice } from './slices/loads';
 import { localeSlice } from './slices/locale';
+import { mockSessionSlice } from './slices/mockSession';
 import { sessionSlice } from './slices/session';
+import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
 import { chatSlice } from './slices/chat';
 
@@ -19,6 +21,8 @@ export const store = configureStore({
     session: sessionSlice.reducer,
     userInfo: userInfoSlice.reducer,
     chat: chatSlice.reducer,
+    mockSession: mockSessionSlice.reducer,
+    settings: settingsSlice.reducer,
   },
   devTools: process.env.NODE_ENV === 'development',
 });
@@ -29,4 +33,5 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
+
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
