@@ -43,9 +43,11 @@
     "dev": "cross-env FE_ALONE=false craco start",
     "dev:mock": "cross-env FE_ALONE=true craco start",
     "build": "cross-env FE_ALONE=false craco build",
+    "build:gh-pages": "cross-env FE_ALONE=false BASENAME='/pp' craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
+  "homepage": "./pp",
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
