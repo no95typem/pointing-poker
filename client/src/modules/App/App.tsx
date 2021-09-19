@@ -12,7 +12,7 @@ import { Routes } from '../Routes/Routes';
 import { Footer } from '../Footer/Footer';
 import { theme } from '../../theme';
 import { useTypedSelector } from '../../redux/store';
-import Chat from '../Chat/сhat';
+import Chat from '../Chat/Сhat';
 import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
 export const App = () => {
