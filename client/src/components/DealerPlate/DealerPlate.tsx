@@ -5,14 +5,23 @@ import { Stack, Text } from '@chakra-ui/react';
 import { IMemberData } from '../../../../shared/types/session/member';
 
 import UserCard from '../../components/UserCard/UserCard';
+import { QuestionIcon } from '@chakra-ui/icons';
 
-const DealerPlate = (props: IMemberData): JSX.Element => {
+export interface IDealerPlateProps {
+  dealerMemberData?: IMemberData;
+}
+
+const DealerPlate = (props: IDealerPlateProps): JSX.Element => {
   return (
     <Stack w="300px" mb="30px">
       <Text mb="-10px" padding="0 10px">
         Dealer:
       </Text>
-      <UserCard {...props} />;
+      {props.dealerMemberData ? (
+        <UserCard {...props.dealerMemberData} />
+      ) : (
+        <QuestionIcon />
+      )}
     </Stack>
   );
 };

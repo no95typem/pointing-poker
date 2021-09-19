@@ -114,7 +114,29 @@ class ServerAdapter {
   }
 
   private handleChatMsg(msg: SCMsgChatMsgsChanged) {
-    // TODO
+    const state = store.getState();
+    const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+
+    switch (msg.command) {
+      case 'A':
+        Object.values(msg.update).forEach(chatMsg => {
+          if (
+            chatMsg.clientTime &&
+            state.session.clientId === chatMsg.memberId
+          ) {
+            delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
+          }
+        });
+        Object.assign(chat.msgs, msg.update);
+        break;
+      case 'D':
+        Object.keys(msg.update).forEach(key => delete chat.msgs[key]);
+        break;
+      default:
+        break;
+    }
+
+    store.dispatch(updateState({ chat }));
   }
 
   private handleWSErrorOrClose() {

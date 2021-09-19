@@ -13,7 +13,11 @@ import IssueCards from '../../containers/IssuesCards/IssuesCards';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 
 const Game = (): JSX.Element => {
-  const sessionData = useTypedSelector(state => state.session);
+  const session = useTypedSelector(state => state.session);
+
+  const sessionData = UseSessionData(session);
+
+  if (!sessionData) return <></>;
 
   const {
     dealerData,
@@ -21,12 +25,12 @@ const Game = (): JSX.Element => {
     sessionNameData,
     issuesData,
     isPlayerDealer,
-  } = UseSessionData(sessionData);
+  } = sessionData;
 
   return (
     <Box minH="100vh" maxW="1440px" w="90%" m="0 auto" p="5px">
       <EditableHeader {...sessionNameData} />
-      <DealerPlate {...dealerData} />
+      <DealerPlate dealerMemberData={dealerData} />
       <JoinGameLink link={`${window.location}`} />
       <GameControlButtons isPlayerDealer={isPlayerDealer} />
       <UserCards {...membersData} />

@@ -15,9 +15,16 @@ import {
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
 import { HeaderDevDrawer } from './drawer';
+import { useAppDispatch } from '../../redux/store';
+import { chatStateToggle } from '../../redux/slices/chat';
 
 export const Header = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useAppDispatch();
+
+  const toggleChat = (): void => {
+    dispatch(chatStateToggle());
+  };
 
   return (
     <Flex
@@ -41,7 +48,11 @@ export const Header = (): JSX.Element => {
         <Spacer />
         <ColorModeSwitcher justifySelf="flex-end" />
         <Spacer />
-        <IconButton aria-label="chat" icon={<ChatIcon />} />
+        <IconButton
+          aria-label="chat"
+          icon={<ChatIcon />}
+          onClick={toggleChat}
+        />
       </HStack>
     </Flex>
   );

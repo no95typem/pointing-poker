@@ -9,6 +9,7 @@ import { mockSessionSlice } from './slices/mockSession';
 import { sessionSlice } from './slices/session';
 import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
+import { chatSlice } from './slices/chat';
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     connect: connectSlice.reducer,
     session: sessionSlice.reducer,
     userInfo: userInfoSlice.reducer,
+    chat: chatSlice.reducer,
     mockSession: mockSessionSlice.reducer,
     settings: settingsSlice.reducer,
   },

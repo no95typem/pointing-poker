@@ -18,10 +18,11 @@ import {
 } from '../../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
+import { DEALER_ID } from '../../../../shared/const';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;
-  dealerData: IMemberData;
+  dealerData?: IMemberData;
   membersData: IUserCards;
   issuesData: IIssuesData;
   settingsData: ISettingsData;
@@ -33,10 +34,23 @@ export interface ISettingsData {
   setGameSettings: (settings: ISettings) => void;
 }
 
-const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
+const UseSessionData = (
+  sessionData: ISessionStateClient,
+): ILobbyData | undefined => {
   const dispatch = useAppDispatch();
 
   const [newIssueId, setNewIssueId] = useState(1);
+
+  if (sessionData.clientId === undefined) return undefined;
+
+  const dealerInfo = sessionData.members[DEALER_ID] as Member | undefined;
+
+  const setNewSessionName = (newName: string): void => {
+    dispatch(updSessState({ name: { value: newName, isSynced: false } }));
+  };
+
+  const isPlayerDealer =
+    sessionData.members[sessionData.clientId].userRole === USER_ROLES.DEALER;
 
   const findIssueIndex = (id: number): number | null => {
     const list = sessionData.issues.list;
@@ -45,15 +59,6 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
 
     return issue ? list.indexOf(issue) : null;
   };
-
-  const dealerInfo = sessionData.members[0];
-
-  const setNewSessionName = (newName: string): void => {
-    dispatch(updSessState({ name: { value: newName, isSynced: false } }));
-  };
-
-  const isPlayerDealer =
-    sessionData.members[sessionData.clientId].userRole === USER_ROLES.DEALER;
 
   const addNewIssue = (issue: Issue): void => {
     const issueIndex = findIssueIndex(issue.id);
@@ -110,11 +115,13 @@ const UseSessionData = (sessionData: ISessionStateClient): ILobbyData => {
     isPlayerDealer: isPlayerDealer,
   };
 
-  const dealerData: IMemberData = {
-    member: dealerInfo,
-    isItYou: isItYou(dealerInfo),
-    isRoundStarted: isRoundStarted(),
-  };
+  const dealerData: IMemberData | undefined = dealerInfo
+    ? {
+        member: dealerInfo,
+        isItYou: isItYou(dealerInfo),
+        isRoundStarted: isRoundStarted(),
+      }
+    : undefined;
 
   const membersData: IUserCards = {
     members: sessionData.members,

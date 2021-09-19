@@ -9,6 +9,10 @@ import { Synchronized } from '../../../../shared/types/syncable';
 import { purify } from '../../../../shared/helpers/processors/purify';
 import { CSMsgUpdateState } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/spectator/cs-msg-chat-msg';
+import { RootState } from '../store';
+import { ChatMsg } from '../../../../shared/types/session/chat/chat-msg';
+import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -66,5 +70,31 @@ export const updSessState = createAsyncThunk(
     const msg = new CSMsgUpdateState(update);
 
     SERVER_ADAPTER.send(msg);
+  },
+);
+
+export const sendMessage = createAsyncThunk(
+  'session/sendChatMessage',
+  async (text: string, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const memberId = state.session.clientId;
+
+    console.log(memberId);
+
+    if (memberId === undefined) return false;
+
+    const time = Date.now();
+    const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+
+    const chatMsg: ChatMsg = { memberId, text, time, isSynced: false };
+
+    const msg = new CSMsgChatMsg(chatMsg);
+    SERVER_ADAPTER.send(msg);
+
+    chat.msgs[`${time}-${memberId}`] = chatMsg;
+
+    thunkAPI.dispatch(
+      sessionSlice.actions.dang_updSessStateFromClient({ chat }),
+    );
   },
 );
