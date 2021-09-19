@@ -17,10 +17,23 @@ import {
 
 import { ICardModalData } from '../../../../shared/types/session/card';
 
-const GameCardModal = (props: ICardModalData): JSX.Element => {
-  const { card } = props;
+import AvatarForm from '../../modules/HomePage/components/avatar-form/avatar-form';
+import { LOCALE_US } from '../../locales/locale-us';
 
-  const { isOpen, onClose, editCard } = card;
+const GameCardModal = (props: ICardModalData): JSX.Element => {
+  const { modal } = props;
+
+  const { isOpen, onClose, activeCard, changeCardValue, setCard } = modal;
+
+  const { value, base64 } = activeCard;
+
+  console.log(base64); //! если загружено изображение, засетать его в base64, иначе =undefined
+
+  const setCardData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target;
+
+    changeCardValue({ ...activeCard, [input.name]: input.value });
+  };
 
   return (
     <>
@@ -31,18 +44,18 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
 
           <ModalBody mb="20px">
             <Stack d="flex" justify="space-around" align="stretch">
-              <FormControl id="title" isRequired>
+              <FormControl mb="10px" id="title" isRequired>
                 <Stack spacing={2} direction="row" align="center">
                   <FormLabel>Card Value:</FormLabel>
-                  <Input defaultValue={editCard ? editCard.value : ''} />
+                  <Input value={value} onChange={setCardData} name="value" />
                 </Stack>
               </FormControl>
-              <FormControl id="link" isRequired>
-                <Stack spacing={2} direction="row" align="center">
-                  <FormLabel htmlFor="link">Units(short):</FormLabel>
-                  <Input defaultValue={editCard ? editCard.base64 : ''} />
-                </Stack>
-              </FormControl>
+              <Stack spacing={2} direction="column" align="center">
+                <FormLabel>{LOCALE_US.SETTINGS_CARDS_MODAL_CUSTOM}</FormLabel>
+                <AvatarForm />
+                {/* Требуется слегка изменненная версия данного компонента:
+                без дефолтной аватары, кнопка ресет - отсутствие изображения. */}
+              </Stack>
             </Stack>
           </ModalBody>
 
@@ -56,7 +69,9 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
               <Button padding="0 50px" variant="outline" onClick={onClose}>
                 No
               </Button>
-              <Button padding="0 50px">Yes</Button>
+              <Button padding="0 50px" onClick={setCard}>
+                Yes
+              </Button>
             </ButtonGroup>
           </ModalFooter>
         </ModalContent>

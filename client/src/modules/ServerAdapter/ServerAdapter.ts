@@ -28,7 +28,9 @@ import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 const updateState = sessionSlice.actions.dang_updSessStateFromServer;
 
 class ServerAdapter {
-  private apiUrl = 'ws://localhost:9000';
+  private apiUrl = IS_PROD
+    ? 'wss://rss-react-2021q3-pp.herokuapp.com/'
+    : 'ws://localhost:9000';
 
   private ws: WebSocket | undefined;
 
@@ -37,6 +39,8 @@ class ServerAdapter {
       // console.log(e.data);
       const parsed = JSON.parse(e.data);
       const purified = purify(parsed);
+
+      console.log(`received msg, cipher: ${purified.cipher}`);
 
       if ('cipher' in purified) {
         switch ((purified as SCMsg).cipher) {
@@ -105,7 +109,7 @@ class ServerAdapter {
     const newMembers: Record<number, Member> = {};
     Object.assign(newMembers, members);
 
-    console.log(newMembers);
+    // console.log(newMembers);
     store.dispatch(updateState({ members: newMembers }));
   }
 
@@ -114,6 +118,7 @@ class ServerAdapter {
   }
 
   private handleWSErrorOrClose() {
+    console.log('err');
     store.dispatch(setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
 
     if (this.ws) {

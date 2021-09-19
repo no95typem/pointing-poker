@@ -8,7 +8,7 @@ import ChakraAlertDialog from '../../components/templates/AlertDialog/ChakraAler
 import ChakraButtons from '../../components/templates/ChakraButtons/ChakraButtons';
 import ChakraModal from '../../components/templates/Modal/ChakraModal';
 import ChakraAvatar from '../../components/templates/Avatar/ChakraAvatar';
-import ChakraLoader from '../../components/templates/Loader/ChakraLoader';
+import ChakraLoader from '../../components/Loader/ChakraLoader';
 import ChakraEditableText from '../../components/templates/EditableText/ChakraEditableText';
 import ActionButtonExample from '../../containers/ComponentsExamples/Buttons/ButtonsExample';
 

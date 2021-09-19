@@ -41,18 +41,16 @@
     "react-transition-group": "^4.4.2"
   },
   "scripts": {
-    "dev": "cross-env FE_ALONE=true craco start",
-    "dev:fullstack": "cross-env FE_ALONE=false craco start",
+    "dev": "cross-env FE_ALONE=false craco start",
+    "dev:mock": "cross-env FE_ALONE=true craco start",
     "build": "cross-env FE_ALONE=false craco build",
+    "build:gh-pages": "cross-env FE_ALONE=false BASENAME='/pp' craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
+  "homepage": "./pp",
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

@@ -76,6 +76,7 @@ export const updSessState = createAsyncThunk(
     thunkAPI.dispatch(sessionSlice.actions.dang_updSessStateFromClient(synced));
 
     const msg = new CSMsgUpdateState(update);
+
     SERVER_ADAPTER.send(msg);
   },
 );

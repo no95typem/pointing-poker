@@ -10,10 +10,10 @@ import { USER_ROLES } from './types/user/user-role';
 
 const testCardsData: CardData[] = [
   //тестовый объект, отладка
-  { value: 'unknown' },
   { value: '1' },
   { value: '2' },
   { value: '3' },
+  { value: 'Unknown', base64: '<img>' },
 ];
 
 export const defaultSettings: ISettings = {
@@ -36,7 +36,10 @@ const SESSION_INIT_STATE: SessionState = {
   chat: {
     msgs: {},
   },
-  issues: [],
+  issues: {
+    isSynced: true,
+    list: [],
+  },
 };
 
 export const CREATE_INIT_STATE = () =>
@@ -44,6 +47,7 @@ export const CREATE_INIT_STATE = () =>
 
 export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
   ...SESSION_INIT_STATE,
+  clientId: 0,
   stage: 'EMPTY',
 };
 
@@ -96,5 +100,8 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   chat: {
     msgs: {},
   },
-  issues: [],
+  issues: {
+    list: [],
+    isSynced: true,
+  },
 };
