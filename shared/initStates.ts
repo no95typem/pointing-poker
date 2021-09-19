@@ -47,7 +47,7 @@ export const CREATE_INIT_STATE = () =>
 
 export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
   ...SESSION_INIT_STATE,
-  clientId: 0,
+  clientId: undefined,
   stage: 'EMPTY',
 };
 

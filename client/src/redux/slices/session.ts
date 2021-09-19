@@ -11,6 +11,8 @@ import { CSMsgUpdateState } from '../../../../shared/types/cs-msgs/msgs/dealer/c
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
 import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/spectator/cs-msg-chat-msg';
 import { RootState } from '../store';
+import { ChatMsg } from '../../../../shared/types/session/chat/chat-msg';
+import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -56,16 +58,6 @@ export const sessionSlice = createSlice({
       });
       Object.assign(state, initialState);
     },
-    updChatMsgs(state, action) {
-      const { command, update } = action.payload.update;
-      const msg = {
-        [`${update.time} - ${update.clientId}`]: update.text,
-      };
-
-      if (command === 'A') {
-        Object.assign(state.chat.msgs, msg);
-      }
-    },
   },
 });
 
@@ -82,21 +74,27 @@ export const updSessState = createAsyncThunk(
 );
 
 export const sendMessage = createAsyncThunk(
-  'chat/sendMessage',
-  async (data: [string, number, number], thunkAPI) => {
-    const [typedText, clientId, time] = data;
+  'session/sendChatMessage',
+  async (text: string, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
+    const memberId = state.session.clientId;
 
-    const msg = new CSMsgChatMsg({
-      memberId: clientId,
-      text: typedText,
-      time: time,
-      isSynced: true,
-    });
+    console.log(memberId);
+
+    if (memberId === undefined) return false;
+
+    const time = Date.now();
+    const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+
+    const chatMsg: ChatMsg = { memberId, text, time, isSynced: false };
+
+    const msg = new CSMsgChatMsg(chatMsg);
     SERVER_ADAPTER.send(msg);
 
-    Object.assign(state.session.chat.msgs, {
-      [`${time} - ${clientId}`]: typedText,
-    });
+    chat.msgs[`${time}-${memberId}`] = chatMsg;
+
+    thunkAPI.dispatch(
+      sessionSlice.actions.dang_updSessStateFromClient({ chat }),
+    );
   },
 );

@@ -9,9 +9,8 @@ const MessageInputBox = () => {
   const { typedText } = useTypedSelector(state => state.chat);
   const sessionData = useTypedSelector(state => state.session);
   const handleClick = () => {
-    if (sessionData.clientId) {
-      const time = Date.now();
-      dispatch(sendMessage([typedText, sessionData.clientId, time]));
+    if (sessionData.clientId !== undefined) {
+      dispatch(sendMessage(typedText));
       dispatch(clearText());
     }
   };
@@ -21,13 +20,13 @@ const MessageInputBox = () => {
       <WrapItem w="60%">
         <Input
           w="100%"
-          size="lg"
+          size="md"
           value={typedText}
           onChange={e => dispatch(changeText(e.target.value))}
         />
       </WrapItem>
       <Wrap>
-        <Button size="lg" colorScheme="facebook" onClick={handleClick}>
+        <Button size="md" colorScheme="facebook" onClick={handleClick}>
           Send
         </Button>
       </Wrap>

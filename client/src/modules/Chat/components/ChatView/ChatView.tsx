@@ -54,14 +54,14 @@ const ChatView = () => {
 
   return (
     <Container overflow-y="scroll">
-      {Object.values(msgs).map(msg => {
+      {Object.entries(msgs).map(([key, msg]) => {
         return (
-          <Flex>
+          <Flex key={key}>
             <Container>
               <Box>{msg.text}</Box>
               <Box>{convertTime(msg.time)}</Box>
             </Container>
-            <UserCard data={setMemberData(sessionData.members[msg.memberId])} />
+            <UserCard {...setMemberData(sessionData.members[msg.memberId])} />
           </Flex>
         );
       })}
