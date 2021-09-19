@@ -21,6 +21,7 @@ const NewGameCardButton = (props: IGameCardCreate): JSX.Element => {
       p="10px"
       boxShadow="lg"
       cursor="pointer"
+      _hover={{ bg: 'green.300' }}
     >
       <Icon as={ImPlus} w={8} h={8} />
     </Stack>

@@ -17,7 +17,13 @@ const usePathParser = (params: {
   const errors = useTypedSelector(state => state.errors);
   const loads = useTypedSelector(state => state.loads);
 
+  if (path.startsWith('/session/')) {
+    const lobbyId = path.split('/')[2];
+    dispatch(homePageSlice.actions.setLobbyURL(lobbyId));
+  }
+
   if (Object.keys(errors).length > 0) {
+    // console.log(errors);
     return path !== '/error' ? '/error' : undefined;
   }
 
@@ -42,14 +48,7 @@ const usePathParser = (params: {
 
       return undefined;
     case 'EMPTY':
-      if (path !== `/`) {
-        if (path.startsWith('/session/')) {
-          const lobbyId = path.split('/')[2];
-          dispatch(homePageSlice.actions.setLobbyURL(lobbyId));
-        }
-
-        return '/';
-      }
+      if (path !== `/`) return '/';
 
       return undefined;
     default:
@@ -84,7 +83,7 @@ export const useRouterController = (): [boolean, H.Location] => {
   const newLocation = OBJ_PROCESSOR.deepClone(location);
   newLocation.pathname = requiredPathBySession || location.pathname;
 
-  console.log(requiredPathBySession);
+  // console.log(requiredPathBySession);
 
   return [!!requiredPathBySession, newLocation];
 };

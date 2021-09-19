@@ -12,7 +12,8 @@ import IssueCardsView from './IssuesCardsView';
 import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
 
 const IssuesCards = (props: IIssuesData): JSX.Element => {
-  const { issues, addNewIssue, removeIssue, newIssueId } = props;
+  const { issues, addNewIssue, removeIssue, newIssueId, isPlayerDealer } =
+    props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -28,7 +29,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
   const [activeIssue, setActiveIssue] = useState<Issue>(newIssue);
 
   const findIssue = (issueId?: number): void => {
-    const editIssue = issues.find(issue => issue.id === issueId);
+    const editIssue = issues.list.find(issue => issue.id === issueId);
 
     setActiveIssue(editIssue ? editIssue : newIssue);
   };
@@ -52,11 +53,12 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
   const modalData: IIssueModal = {
     onClose: onClose,
     isOpen: isOpen,
-    onClick: openModal,
+    openModal: openModal,
     activeIssue: activeIssue,
     addNewIssue: setNewIssue,
     changeIssue: changeIssue,
     removeIssue: removeIssue,
+    isPlayerDealer: isPlayerDealer,
   };
 
   return <IssueCardsView issues={issues} modal={modalData} />;

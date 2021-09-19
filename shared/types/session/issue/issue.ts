@@ -1,6 +1,7 @@
 import { IssuePriority } from './issue-priority';
 import { RoundStat } from '../round/round-stat';
 import { Synchronized } from '../../syncable';
+import { ISessionIssues } from '../state/session-state';
 
 export interface Issue extends Synchronized {
   [key: string]:
@@ -20,29 +21,32 @@ export interface Issue extends Synchronized {
 
 export interface IIssueData {
   issue: Issue;
-  editIssue: (id?: number) => void;
+  isPlayerDealer: boolean;
+  openModal: (id?: number) => void;
   removeIssue: (id: number) => void;
 }
 
 export interface IIssuesData {
-  issues: Issue[];
+  issues: ISessionIssues;
   newIssueId: number;
+  isPlayerDealer: boolean;
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
 }
 
 export interface IIssueModal {
-  onClick: (id?: number) => void;
+  openModal: (id?: number) => void;
   onClose: () => void;
   changeIssue: (issue: Issue) => void;
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
   isOpen: boolean;
+  isPlayerDealer: boolean;
   activeIssue: Issue;
 }
 
 export interface IIssues {
-  issues: Issue[];
+  issues: ISessionIssues;
   modal: IIssueModal;
 }
 

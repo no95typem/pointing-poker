@@ -2,14 +2,15 @@
 
 import React from 'react';
 
-import { Stack, IconButton, Heading } from '@chakra-ui/react';
+import { Stack, IconButton, Heading, Text } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
+import { CloseIcon } from '@chakra-ui/icons';
 
 import { ICardData } from '../../../../shared/types/session/card';
 
 const GameCard = (props: ICardData): JSX.Element => {
-  const { card, onClick } = props;
+  const { card, edit, units, deleteCard } = props;
 
   const { value, base64 } = card;
 
@@ -24,20 +25,47 @@ const GameCard = (props: ICardData): JSX.Element => {
       p="10px 10px"
       boxShadow="lg"
     >
-      <Heading size="2xl">{value}</Heading>
-      <Heading fontStyle="italic" size="xl">
-        {base64}
-      </Heading>
+      <Text
+        fontSize="2xl"
+        maxW="130px"
+        fontStyle="italic"
+        fontWeight="bold"
+        isTruncated
+        mb="20px"
+      >
+        {value}
+      </Text>
+      {base64 ? (
+        // img src={base64}
+        <Heading fontStyle="italic" size="lg">
+          {base64}
+        </Heading>
+      ) : (
+        <Heading fontStyle="italic" size="lg">
+          {units}
+        </Heading>
+      )}
       <IconButton
         position="absolute"
         aria-label="edit"
         background="transparent"
         visibility={true ? 'visible' : 'hidden'}
         top="0"
-        right="0"
+        left="0"
         size="lg"
         icon={<ImPencil />}
-        onClick={() => onClick(value)}
+        onClick={() => edit(value)}
+      />
+      <IconButton
+        position="absolute"
+        aria-label="delete"
+        background="transparent"
+        visibility={true ? 'visible' : 'hidden'}
+        top="0"
+        right="0"
+        size="lg"
+        icon={<CloseIcon />}
+        onClick={() => deleteCard(value)}
       />
     </Stack>
   );

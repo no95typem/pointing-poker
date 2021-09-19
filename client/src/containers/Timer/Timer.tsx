@@ -11,7 +11,7 @@ interface ITimer {
 const Timer = (props: ITimer): JSX.Element => {
   const { time } = props;
 
-  console.log(time);
+  // console.log(time);
 
   const minutes = Math.trunc(time / 60);
 
