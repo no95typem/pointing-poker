@@ -13,6 +13,10 @@ import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/spectator/cs
 import { RootState } from '../store';
 import { ChatMsg } from '../../../../shared/types/session/chat/chat-msg';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
+import { DEALER_ID } from '../../../../shared/const';
+import { CSMsgForceKick } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-force-kick';
+import { CSMsgVotekick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
+import { USER_STATES } from '../../../../shared/types/user/user-state';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -73,13 +77,11 @@ export const updSessState = createAsyncThunk(
   },
 );
 
-export const sendMessage = createAsyncThunk(
+export const sendChatMessage = createAsyncThunk(
   'session/sendChatMessage',
   async (text: string, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const memberId = state.session.clientId;
-
-    console.log(memberId);
 
     if (memberId === undefined) return false;
 
@@ -96,5 +98,42 @@ export const sendMessage = createAsyncThunk(
     thunkAPI.dispatch(
       sessionSlice.actions.dang_updSessStateFromClient({ chat }),
     );
+  },
+);
+
+export interface IKickArgs {
+  targetId: number;
+  decision: boolean;
+  initId?: number;
+}
+
+export const kick = createAsyncThunk(
+  'session/kick',
+  async (args: IKickArgs, thunkAPI) => {
+    const { targetId, decision, initId } = args;
+    const state = thunkAPI.getState() as RootState;
+
+    if (targetId === state.session.clientId || targetId === DEALER_ID) return;
+
+    const isUserDealer = state.session.clientId === DEALER_ID;
+
+    const msg =
+      !initId && isUserDealer
+        ? new CSMsgForceKick(targetId)
+        : new CSMsgVotekick(targetId, decision);
+
+    const members = OBJ_PROCESSOR.deepClone(state.session.members);
+
+    if (decision === true) {
+      if (isUserDealer) members[targetId].userState = USER_STATES.KICKED;
+
+      members[targetId].isSynced = false;
+
+      thunkAPI.dispatch(
+        sessionSlice.actions.dang_updSessStateFromClient({ members }),
+      );
+    }
+
+    SERVER_ADAPTER.send(msg);
   },
 );

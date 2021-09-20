@@ -11,7 +11,6 @@ import { DEALER_ID } from '../../../../shared/const';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
 import UserCard from '../../components/UserCard/UserCard';
-import KickModal from '../../components/KickModal/KickModal';
 import UserVote from '../../components/UserVote/UserVote';
 
 const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
@@ -61,8 +60,6 @@ const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
             </Stack>
           );
         })}
-
-        <KickModal modalData={modalData} />
       </Stack>
     </Box>
   );

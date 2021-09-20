@@ -16,14 +16,14 @@ export abstract class RoleManager {
   addMember(ws: WebSocket, id: number) {
     const listener = this.listen.bind(this, ws, id);
     this.serviceData[id] = { ws, listener };
-    this.api.addMsgListener(listener);
+    this.api.addMsgListener(ws, listener);
   }
 
   removeMember(ws: WebSocket, id: number) {
     const data = this.serviceData[id];
 
     if (data) {
-      this.api.removeMsgListener(data.listener);
+      this.api.removeMsgListener(data.ws, data.listener);
       delete this.serviceData[id];
     }
   }

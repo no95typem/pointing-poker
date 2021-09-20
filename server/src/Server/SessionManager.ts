@@ -98,7 +98,7 @@ export class SessionManager {
     });
     this.addMember(init.initWS, fakeConnMsg, USER_ROLES.DEALER);
 
-    console.log('session created');
+    console.log(`session ${init.id} created`);
   }
 
   getConnectedMembers(): Member[] {
@@ -151,7 +151,8 @@ export class SessionManager {
 
     this.api.send(ws, JSON.stringify(rMsg));
 
-    console.log('member connected');
+    console.log(`member ${member.userSessionPublicId} added
+    to session ${this.sessionState.sessionId}`);
   }
 
   removeMember(ws: WebSocket, kick?: true) {
@@ -165,6 +166,7 @@ export class SessionManager {
       this.spectatorsManager.removeMember(ws, id);
       this.playersManager.removeMember(ws, id);
       this.dealerManager.removeMember(ws, id);
+      this.webSocketsMap.delete(ws);
 
       this.sessionState.members[id].userState = newState;
 
@@ -174,14 +176,22 @@ export class SessionManager {
       const msg = new SCMsgMembersChanged(update);
       this.broadcast(msg, USER_ROLES.SPECTATOR);
 
+      if (newState === USER_STATES.KICKED) {
+        const dMsg = new SCMsgUpdateSessionState({
+          stage: SESSION_STAGES.STATS,
+        });
+        this.api.send(ws, JSON.stringify(dMsg));
+      }
+
       if (id === DEALER_ID) this.endSession();
       else this.tryToEndRound();
 
-      console.log('member disconnected');
+      console.log(`member ${id} removed from session`);
     } else {
       // should never be executed
-      console.error(
-        `attempt to remove not existing member fro session ${this.sessionState.sessionId} with id ${id}`,
+      console.warn(
+        `attempt to remove not existing member from session ${this.sessionState.sessionId} with id ${id}
+        it is normal if member was kicked!`,
       );
     }
   }
@@ -199,7 +209,10 @@ export class SessionManager {
     if (this.sessionState.members[id]?.userState === USER_STATES.CONNECTED) {
       const ws = [...this.webSocketsMap].find(entry => entry[1] === id)?.[0];
 
-      if (ws) this.removeMember(ws, true);
+      if (ws) {
+        this.removeMember(ws, true);
+        this.api.disconnectFromSession(ws);
+      }
     }
   };
 
