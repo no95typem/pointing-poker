@@ -28,10 +28,11 @@ export interface IIssueData {
 
 export interface IIssuesData {
   issues: ISessionIssues;
-  newIssueId: number;
-  isPlayerDealer: boolean;
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
+  newIssueId: number;
+  isPlayerDealer: boolean;
+  isGameStage: boolean;
 }
 
 export interface IIssueModal {
@@ -40,9 +41,10 @@ export interface IIssueModal {
   changeIssue: (issue: Issue) => void;
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
+  activeIssue: Issue;
   isOpen: boolean;
   isPlayerDealer: boolean;
-  activeIssue: Issue;
+  isGameStage: boolean;
 }
 
 export interface IIssues {

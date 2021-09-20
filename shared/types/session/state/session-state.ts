@@ -13,7 +13,7 @@ export interface ISessionName extends Synchronized {
 export interface ISessionGameState {
   roundState: RoundState;
   roundStartTime?: number;
-  currIssueId: number;
+  currIssueId: number; // ! TODO-Kaesid: Использовать для подсветки текущей задачи
   // key number - userPublicId, val number - value of card
   votes: Record<number, string | undefined>;
 }
@@ -44,4 +44,14 @@ export interface SessionState {
 
 export interface ISessionStateClient extends SessionState {
   clientId?: number;
+}
+
+export interface IGameStateData {
+  setGameSettings: (settings: ISettings) => void;
+  isPlayerDealer: boolean;
+  isGameStage: boolean;
+}
+
+export interface ILobbyGameStateData extends IGameStateData {
+  localSettings?: ISettings;
 }

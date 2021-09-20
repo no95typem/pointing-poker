@@ -21,3 +21,11 @@ export interface ISettingsComponent {
 export interface ISettingsComponentData {
   data: ISettingsComponent;
 }
+
+export interface ISettingsData {
+  localSettings: ISettings;
+  setLocalSettings: (
+    name: string,
+    value: string | boolean | CardData[],
+  ) => void;
+}

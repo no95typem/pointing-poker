@@ -34,7 +34,14 @@ const UserCard = (props: IMemberData): JSX.Element => {
     userState === USER_STATES.CONNECTED;
 
   return (
-    <Stack direction="row" align="center" p="10px 10px" boxShadow="lg">
+    <Stack
+      w="300px"
+      h="70px"
+      direction="row"
+      align="center"
+      p="10px 10px"
+      boxShadow="lg"
+    >
       <Avatar
         color="white"
         bg={avatarBgColor}

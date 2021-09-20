@@ -2,19 +2,18 @@ import React from 'react';
 
 import { Stack, Heading, Box } from '@chakra-ui/react';
 import { LOCALE_US } from '../../locales/locale-us';
-import { ISettingsComponent } from '../../../../shared/types/settings';
+import {
+  ISettingsComponent,
+  ISettingsData,
+} from '../../../../shared/types/settings';
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
 import Timer from '../Timer/Timer';
-import { useAppDispatch, useTypedSelector } from '../../redux/store';
-import { setSettings } from '../../redux/slices/settings';
 import GameCards from '../GameCards/GameCards';
-import { CardData, ICardsData } from '../../../../shared/types/session/card';
+import { ICardsData } from '../../../../shared/types/session/card';
 
-const Settings = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-
-  const localSettings = useTypedSelector(state => state.settings);
+const Settings = (props: ISettingsData): JSX.Element => {
+  const { localSettings, setLocalSettings } = props;
 
   const {
     dealerAsPlayer,
@@ -25,13 +24,6 @@ const Settings = (): JSX.Element => {
     roundTime,
     cards,
   } = localSettings;
-
-  const setLocalSettings = (
-    name: string,
-    value: string | boolean | CardData[],
-  ): void => {
-    dispatch(setSettings({ ...localSettings, [name]: value }));
-  };
 
   const switchersData: ISettingsComponent[] = [
     {

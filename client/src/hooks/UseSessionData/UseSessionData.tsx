@@ -4,13 +4,15 @@ import { useAppDispatch } from '../../redux/store';
 import { updSessState } from '../../redux/slices/session';
 
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
-import { ISettings } from '../../../../shared/types/settings';
 import {
   IIssuesData,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
 import { ISessionNameHandling } from '../../../../shared/types/session/name';
-import { ISessionStateClient } from '../../../../shared/types/session/state/session-state';
+import {
+  IGameStateData,
+  ISessionStateClient,
+} from '../../../../shared/types/session/state/session-state';
 import {
   IMemberData,
   IUserCards,
@@ -19,19 +21,16 @@ import {
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { DEALER_ID } from '../../../../shared/const';
+import { ISettings } from '../../../../shared/types/settings';
+import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;
   dealerData?: IMemberData;
   membersData: IUserCards;
   issuesData: IIssuesData;
-  settingsData: ISettingsData;
+  gameStateData: IGameStateData;
   isPlayerDealer: boolean;
-}
-
-export interface ISettingsData {
-  // settings: ISettings;
-  setGameSettings: (settings: ISettings) => void;
 }
 
 const UseSessionData = (
@@ -39,7 +38,13 @@ const UseSessionData = (
 ): ILobbyData | undefined => {
   const dispatch = useAppDispatch();
 
-  const [newIssueId, setNewIssueId] = useState(1);
+  const list = sessionData.issues.list;
+
+  const lastIssueId = list[list.length - 1];
+
+  const [newIssueId, setNewIssueId] = useState(
+    lastIssueId ? lastIssueId.id + 1 : 1,
+  );
 
   if (sessionData.clientId === undefined) return undefined;
 
@@ -53,8 +58,6 @@ const UseSessionData = (
     sessionData.members[sessionData.clientId].userRole === USER_ROLES.DEALER;
 
   const findIssueIndex = (id: number): number | null => {
-    const list = sessionData.issues.list;
-
     const issue = list.find(issue => issue.id === id);
 
     return issue ? list.indexOf(issue) : null;
@@ -106,13 +109,17 @@ const UseSessionData = (
   };
 
   const setGameSettings = (settings: ISettings): void => {
-    dispatch(updSessState({ currentGameSettings: settings }));
+    const newSettings = OBJ_PROCESSOR.deepClone(settings);
+
+    dispatch(updSessState({ currentGameSettings: newSettings }));
   };
+
+  const isGameStage = sessionData.stage === SESSION_STAGES.GAME;
 
   const sessionNameData: ISessionNameHandling = {
     name: sessionData.name,
     changeValue: setNewSessionName,
-    isPlayerDealer: isPlayerDealer,
+    isPlayerDealer,
   };
 
   const dealerData: IMemberData | undefined = dealerInfo
@@ -127,21 +134,22 @@ const UseSessionData = (
     members: sessionData.members,
     findWhoIsUser: isItYou,
     isRoundStarted: isRoundStarted(),
+    isGameStage,
   };
 
   const issuesData: IIssuesData = {
     issues: sessionData.issues,
-    addNewIssue: addNewIssue,
-    removeIssue: removeIssue,
-    newIssueId: newIssueId,
-    isPlayerDealer: isPlayerDealer,
+    addNewIssue,
+    removeIssue,
+    newIssueId,
+    isPlayerDealer,
+    isGameStage,
   };
 
-  const settingsData: ISettingsData = {
-    // settings: sessionData.currentGameSettings,
-
-    //! чтобы засетать настройки в стэйт на старт игры.
-    setGameSettings: setGameSettings,
+  const gameStateData: IGameStateData = {
+    isPlayerDealer,
+    setGameSettings,
+    isGameStage,
   };
 
   return {
@@ -149,7 +157,7 @@ const UseSessionData = (
     dealerData,
     membersData,
     issuesData,
-    settingsData,
+    gameStateData,
     isPlayerDealer,
   };
 };
