@@ -13,7 +13,7 @@ export interface IDealerPlateProps {
 
 const DealerPlate = (props: IDealerPlateProps): JSX.Element => {
   return (
-    <Stack w="300px" mb="30px">
+    <Stack w="100%" maxW="280px" mb="30px">
       <Text mb="-10px" padding="0 10px">
         Dealer:
       </Text>

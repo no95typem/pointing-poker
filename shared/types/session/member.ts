@@ -21,6 +21,8 @@ export interface IUserCards {
   members: Record<number, Member>;
   findWhoIsUser: (member: Member) => boolean;
   isRoundStarted: boolean;
+  isGameStage: boolean;
+  isVotersView?: boolean;
 }
 
 export interface IUserCardsViewBundle {

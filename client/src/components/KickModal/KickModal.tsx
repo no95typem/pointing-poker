@@ -14,12 +14,16 @@ import {
 
 import { LOCALE_US } from '../../locales/locale-us';
 
-import { IKickModalBundle } from '../../../../shared/types/session/member';
+export interface IKickModalProps {
+  isOpen: boolean;
+  initName?: string;
+  targetMame: string;
+  onClose: () => void;
+  onConfirm: () => void;
+}
 
-const KickModal = (props: IKickModalBundle): JSX.Element => {
-  const { modalData } = props;
-
-  const { isOpen, onClose, name, onConfirm, initiatorName } = modalData;
+const KickModal = (props: IKickModalProps): JSX.Element => {
+  const { isOpen, onClose, targetMame: name, onConfirm, initName } = props;
 
   return (
     <>
@@ -27,13 +31,13 @@ const KickModal = (props: IKickModalBundle): JSX.Element => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader fontSize="2xl" textAlign="center">
-            {initiatorName ? 'Kick' : ' Kick Player?'}
+            {initName ? 'Kick' : ' Kick Player?'}
           </ModalHeader>
 
           <ModalBody mb="20px">
             <Text textAlign="center">
-              {initiatorName
-                ? `${initiatorName} want to kick ${name}. Do you agree with it?`
+              {initName
+                ? `${initName} want to kick ${name}. Do you agree with it?`
                 : `${LOCALE_US.KICK_PLAYER_MODAL_TEXT_START} ${name} ${LOCALE_US.KICK_PLAYER_MODAL_TEXT_FINISH}`}
             </Text>
           </ModalBody>

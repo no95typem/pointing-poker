@@ -14,8 +14,9 @@ export interface ServerAPI {
 }
 
 export interface ClientManagerAPI extends ServerAPI {
-  addMsgListener: (listener: ClientApiMsgListener) => void;
-  removeMsgListener: (listener: ClientApiMsgListener) => void;
+  addMsgListener: (ws: WebSocket, listener: ClientApiMsgListener) => void;
+  removeMsgListener: (ws: WebSocket, listener: ClientApiMsgListener) => void;
+  disconnectFromSession: (ws: WebSocket) => void;
 }
 
 export interface SessionManagerAPI extends ClientManagerAPI {

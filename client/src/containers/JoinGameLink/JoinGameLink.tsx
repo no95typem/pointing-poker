@@ -38,7 +38,8 @@ const JoinGameLink = (props: ILink) => {
       </Heading>
 
       <Stack
-        maxW="400px"
+        w="100%"
+        maxW="280px"
         direction="row"
         justify="flex-start"
         align="center"

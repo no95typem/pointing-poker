@@ -12,14 +12,13 @@ import UserCardsView from './UserCardsView';
 const UserCards = (props: IUserCards): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { members, findWhoIsUser, isRoundStarted } = props;
-
   const [kickedName, setKickedName] = useState('');
 
   const [kickedId, setKickedId] = useState(0);
 
   const confirmKick = () => {
     onClose();
+
     console.log('server command --kick', kickedId);
   };
 
@@ -40,13 +39,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
     kickPlayer: setModalWindowInfo,
   };
 
-  const userCardsData: IUserCards = {
-    members: members,
-    findWhoIsUser: findWhoIsUser,
-    isRoundStarted: isRoundStarted,
-  };
-
-  return <UserCardsView cardsData={userCardsData} modalData={modalData} />;
+  return <UserCardsView cardsData={props} modalData={modalData} />;
 };
 
 export default UserCards;

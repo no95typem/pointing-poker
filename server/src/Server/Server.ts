@@ -35,6 +35,7 @@ export class PointingPokerServer {
 
       return true;
     } catch (err) {
+      console.error('error when sending msg through ws:', data);
       this.closeConnection(ws);
 
       return false;
@@ -88,7 +89,7 @@ export class PointingPokerServer {
       try {
         ws.pong();
       } catch {
-        //
+        console.error('error on ws.pong()');
       }
     });
     ws.onclose = () => this.closeConnection(ws);
@@ -103,8 +104,8 @@ export class PointingPokerServer {
       ws.close(1001);
       this.connections.delete(ws);
       this.aliveMap.delete(ws);
-    } catch {
-      // TODO (no95typem)
+    } catch (err) {
+      console.error('error when closing connetcion on ws:', err);
     }
   }
 
@@ -132,6 +133,8 @@ export class PointingPokerServer {
 
       return true;
     } catch {
+      console.error('error in checkConnection ws.ping()');
+
       this.closeConnection(ws);
 
       return false;
