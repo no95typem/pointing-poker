@@ -19,7 +19,7 @@ const NewIssueButton = (props: IIssueButtonData): JSX.Element => {
       p="10px"
       boxShadow="lg"
       cursor="pointer"
-      w="300px"
+      w="280px"
     >
       <Stat>
         <StatNumber>Create new issue</StatNumber>

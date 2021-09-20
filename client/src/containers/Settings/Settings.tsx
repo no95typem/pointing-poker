@@ -77,8 +77,8 @@ const Settings = (): JSX.Element => {
 
   return (
     <Box>
-      <Stack direction="column" spacing={5} w="40%" mb="30px">
-        <Heading size="md" textAlign="end">
+      <Stack direction="column" spacing={5} w="100%" mb="30px">
+        <Heading size="md" textAlign="center">
           Game settings:
         </Heading>
 

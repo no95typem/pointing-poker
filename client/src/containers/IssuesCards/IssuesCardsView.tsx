@@ -39,7 +39,7 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
           const id = issue.id;
 
           return (
-            <Stack w="300px" key={`${id}-wrap`}>
+            <Stack w="280px" key={`${id}-wrap`}>
               <IssueCard {...setIssueData(issue)} key={id} />
             </Stack>
           );

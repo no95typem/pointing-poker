@@ -20,6 +20,7 @@ const Switcher = (props: ISettingsComponentData): JSX.Element => {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
+      w="100%"
     >
       <FormLabel htmlFor={name} mb="0">
         {label}

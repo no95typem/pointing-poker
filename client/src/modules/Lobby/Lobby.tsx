@@ -29,7 +29,14 @@ const Lobby = (): JSX.Element => {
   } = sessionData;
 
   return (
-    <Box minH="100vh" maxW="1440px" w="90%" m="0 auto" p="5px">
+    <Box
+      minH="100vh"
+      maxW="1200px"
+      w="90%"
+      m="0 auto"
+      p="5px"
+      overflow="hidden"
+    >
       <EditableHeader {...sessionNameData} />
       <DealerPlate dealerMemberData={dealerData} />
       <JoinGameLink link={`${window.location}`} />
