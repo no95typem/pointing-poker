@@ -6,20 +6,16 @@ import logo from '../../assets/images/shared/logo.svg';
 import {
   VisuallyHidden,
   Flex,
-  useDisclosure,
-  Button,
   IconButton,
   Spacer,
   HStack,
   Image,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
-import { HeaderDevDrawer } from './drawer';
 import { useAppDispatch } from '../../redux/store';
 import { chatStateToggle } from '../../redux/slices/chat';
 
 export const Header = (): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useAppDispatch();
 
   const toggleChat = (): void => {
@@ -43,8 +39,8 @@ export const Header = (): JSX.Element => {
       </HStack>
 
       <HStack justifySelf="end">
-        <Button onClick={onOpen}>DEV_DRAWER</Button>
-        <HeaderDevDrawer isOpen={isOpen} onClose={onClose} />
+        {/* <Button onClick={onOpen}>DEV_DRAWER</Button> */}
+        {/* <HeaderDevDrawer isOpen={isOpen} onClose={onClose} /> */}
         <Spacer />
         <ColorModeSwitcher justifySelf="flex-end" />
         <Spacer />

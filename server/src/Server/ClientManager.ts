@@ -25,23 +25,33 @@ export class ClientManager {
 
   private sessionManagers: Record<string, SessionManager> = {};
 
-  private apiListeners: Set<ClientApiMsgListener> = new Set();
+  private apiListeners: Map<WebSocket, Set<ClientApiMsgListener>> = new Map();
 
-  private api: ClientManagerAPI = {
-    send: this.send,
-    addMsgListener: (listener: ClientApiMsgListener) =>
-      this.apiListeners.add(listener),
-    removeMsgListener: (listener: ClientApiMsgListener) =>
-      this.apiListeners.delete(listener),
-  };
+  private api: ClientManagerAPI;
 
-  constructor(private send: WebSocketSendFunc) {}
+  constructor(private send: WebSocketSendFunc) {
+    this.api = {
+      send: this.send,
+      disconnectFromSession: this.disconnectFromSession,
+      addMsgListener: (ws: WebSocket, listener: ClientApiMsgListener) => {
+        let listeners = this.apiListeners.get(ws);
+
+        if (!listeners) {
+          listeners = new Set();
+          this.apiListeners.set(ws, listeners);
+        }
+
+        listeners.add(listener);
+      },
+      removeMsgListener: (ws: WebSocket, listener: ClientApiMsgListener) =>
+        this.apiListeners.get(ws)?.delete(listener),
+    };
+  }
 
   addClient(ws: WebSocket) {
     const listener = this.clientListener.bind(this, ws);
     this.clients.set(ws, { listener });
     ws.addEventListener('message', listener as () => void);
-    console.log('client added');
   }
 
   removeClient(ws: WebSocket) {
@@ -53,8 +63,6 @@ export class ClientManager {
 
     ws.removeEventListener('message', data.listener as () => void);
     this.clients.delete(ws);
-
-    console.log('client removed');
   }
 
   private createSession(ws: WebSocket, initMsg: CSMsgCreateSession) {
@@ -71,7 +79,6 @@ export class ClientManager {
       this.send(ws, JSON.stringify(msg));
     } else {
       const id = genUniqIdWithCrypto(Object.keys(this.sessionManagers));
-      console.log(id);
       this.sessionManagers[id] = new SessionManager(
         {
           initWS: ws,
@@ -80,7 +87,6 @@ export class ClientManager {
         },
         this.api,
       );
-      console.log('dsaa');
       this.clients.set(ws, {
         ...data,
         sessId: id,
@@ -120,7 +126,7 @@ export class ClientManager {
     }
   }
 
-  private disconnectFromSession(ws: WebSocket) {
+  private disconnectFromSession = (ws: WebSocket) => {
     const data = this.clients.get(ws);
 
     if (data?.sessId) {
@@ -131,13 +137,13 @@ export class ClientManager {
 
         if (sm.getConnectedMembers().length === 0) {
           delete this.sessionManagers[data.sessId];
-          console.log('terminate session');
+          console.log(`terminate session ${data.sessId}`);
         }
       }
 
       data.sessId = undefined;
     }
-  }
+  };
 
   private clientListener = (ws: WebSocket, e: WebSocketEvent) => {
     try {
@@ -150,26 +156,25 @@ export class ClientManager {
               this.createSession(ws, parsed as CSMsgCreateSession);
               break;
             case CSMSG_CIPHERS.CONN_TO_SESS:
-              console.log('conn to session');
               this.connectToSession(ws, parsed as CSMsgConnToSess);
               break;
             case CSMSG_CIPHERS.DISCONN_FROM_SESS:
               this.disconnectFromSession(ws);
               break;
             default:
-              this.apiListeners.forEach(listener => {
+              this.apiListeners.get(ws)?.forEach(listener => {
                 try {
                   listener(parsed as CSMsg);
                 } catch (err) {
-                  console.error(`error ${err} in listener ${listener}`);
+                  console.error('error in a api listener:', err);
                 }
               });
               break;
           }
         }
       }, 2000);
-    } catch {
-      //
+    } catch (err) {
+      console.error('unrecognized error:', err);
     }
   };
 }

@@ -73,7 +73,7 @@ export class KicksManager {
     const kickersCount = this.countKickers();
 
     if (
-      kickersCount < 4 ||
+      kickersCount < 3 ||
       msg.target === DEALER_ID ||
       this.api.checkMemberState(msg.target) !== USER_STATES.CONNECTED
     ) {

@@ -15,23 +15,25 @@ import { ImBlocked } from 'react-icons/im';
 import { IMemberData } from '../../../../shared/types/session/member';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
+import { showKickDialog } from '../../hooks/useKickDialog';
 
 const UserCard = (props: IMemberData): JSX.Element => {
-  const { member, isItYou, isRoundStarted, kickPlayer } = props;
+  const { member, isItYou, isRoundStarted } = props;
 
   const { userInfo, userState, userRole, userSessionPublicId: id } = member;
-
-  // console.log(userInfo, member);
 
   const { name, surname, avatarBase64, avatarBgColor, jobPosition } = userInfo;
 
   const fullName = surname ? `${name} ${surname}` : name;
 
-  const isKickShown: boolean =
+  const isKickAvailable: boolean =
     !isRoundStarted &&
     !isItYou &&
     userRole !== USER_ROLES.DEALER &&
     userState === USER_STATES.CONNECTED;
+
+  const bageColor =
+    userState === USER_STATES.CONNECTED ? 'green.400' : 'red.400';
 
   return (
     <Stack direction="row" align="center" p="10px 10px" boxShadow="lg">
@@ -41,9 +43,7 @@ const UserCard = (props: IMemberData): JSX.Element => {
         name={fullName}
         src={avatarBase64}
       >
-        {isItYou && (
-          <AvatarBadge borderColor="papayawhip" bg="green.400" boxSize="1em" />
-        )}
+        <AvatarBadge borderColor="papayawhip" bg={bageColor} boxSize="1em" />
       </Avatar>
 
       <Stat>
@@ -53,13 +53,13 @@ const UserCard = (props: IMemberData): JSX.Element => {
         <StatHelpText mb="0">{jobPosition}</StatHelpText>
       </Stat>
 
-      {kickPlayer && isKickShown && (
+      {isKickAvailable && (
         <IconButton
           aria-label="Kick player"
           background="transparent"
           size="lg"
           icon={<ImBlocked />}
-          onClick={() => kickPlayer(id, fullName)}
+          onClick={() => showKickDialog(id)}
         />
       )}
     </Stack>

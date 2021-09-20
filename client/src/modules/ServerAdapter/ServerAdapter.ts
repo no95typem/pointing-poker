@@ -24,6 +24,8 @@ import { sessionSlice } from '../../redux/slices/session';
 import { store } from '../../redux/store';
 import { SessionState } from '../../../../shared/types/session/state/session-state';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
+import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
+import { showKickDialog } from '../../hooks/useKickDialog';
 
 const updateState = sessionSlice.actions.dang_updSessStateFromServer;
 
@@ -62,6 +64,18 @@ class ServerAdapter {
             return;
           case SCMSG_CIPHERS.MEMBERS_CHANGED:
             this.handleMembersChanged(purified as SCMsgMembersChanged);
+
+            return;
+
+          case SCMSG_CIPHERS.FORCE_KICK:
+            // TODO showToast?
+            return;
+
+          case SCMSG_CIPHERS.VOTEKICK:
+            showKickDialog(
+              (purified as SCMsgVotekick).targetId,
+              (purified as SCMsgVotekick).initId,
+            );
 
             return;
 
@@ -158,6 +172,7 @@ class ServerAdapter {
   }
 
   connect(): Promise<boolean> {
+    store.dispatch(sessionSlice.actions.dang_reset());
     store.dispatch(
       setGLoadByKey({
         loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER,
@@ -204,6 +219,7 @@ class ServerAdapter {
       };
 
   send = (msg: CSMsg) => {
+    console.log(msg);
     try {
       (this.ws as WebSocket).send(JSON.stringify(msg));
       console.log('msg sent');

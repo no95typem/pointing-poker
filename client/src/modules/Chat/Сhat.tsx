@@ -1,46 +1,54 @@
 import { Rnd } from 'react-rnd';
-import { Flex, CloseButton } from '@chakra-ui/react';
+import { Flex, CloseButton, Portal } from '@chakra-ui/react';
 import ChatView from './components/ChatView/ChatView';
 import MessageInputBox from './components/MessageInputBox/MessageInputBox';
-import { useAppDispatch } from '../../redux/store';
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { chatStateToggle } from '../../redux/slices/chat';
+
+// const style = {
+//   border: 'solid 1px #ddd',
+//   background: '#f0f0f0',
+// };
 
 const Chat = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const style = {
-    border: 'solid 1px #ddd',
-    background: '#f0f0f0',
-  };
+  const { isVisible } = useTypedSelector(state => state.chat);
+  const { clientId } = useTypedSelector(state => state.session);
+
+  if (!isVisible || clientId === undefined) return <></>;
 
   const closeChat = (): void => {
     dispatch(chatStateToggle());
   };
 
   return (
-    <Rnd
-      style={style}
-      default={{
-        x: document.documentElement.clientWidth / 2,
-        y: -document.documentElement.clientHeight,
-        width: document.documentElement.clientWidth / 7,
-        height: document.documentElement.clientHeight / 1.5,
-      }}
-      minWidth={320}
-      minHeight={568}
-      bounds="body"
-    >
-      <Flex
-        w="95%"
-        h="95%"
-        direction="column"
-        align="flex-end"
-        justify="space-between"
+    <Portal>
+      <Rnd
+        // style={style}
+        default={{
+          x: document.documentElement.clientWidth / 2,
+          y: -document.documentElement.clientHeight,
+          width: document.documentElement.clientWidth / 7,
+          height: document.documentElement.clientHeight / 1.5,
+        }}
+        minWidth={320}
+        minHeight={568}
+        bounds="body"
       >
-        <CloseButton onClick={closeChat} />
-        <ChatView />
-        <MessageInputBox />
-      </Flex>
-    </Rnd>
+        <Flex
+          w="95%"
+          h="95%"
+          direction="column"
+          align="flex-end"
+          justify="space-between"
+          background="InfoBackground"
+        >
+          <CloseButton onClick={closeChat} />
+          <ChatView />
+          <MessageInputBox />
+        </Flex>
+      </Rnd>
+    </Portal>
   );
 };
 

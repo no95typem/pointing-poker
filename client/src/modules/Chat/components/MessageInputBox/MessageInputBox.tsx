@@ -2,7 +2,7 @@ import React from 'react';
 import { Wrap, WrapItem, Input, Button } from '@chakra-ui/react';
 import { useTypedSelector, useAppDispatch } from '../../../../redux/store';
 import { changeText, clearText } from '../../../../redux/slices/chat';
-import { sendMessage } from '../../../../redux/slices/session';
+import { sendChatMessage } from '../../../../redux/slices/session';
 
 const MessageInputBox = () => {
   const dispatch = useAppDispatch();
@@ -10,7 +10,7 @@ const MessageInputBox = () => {
   const sessionData = useTypedSelector(state => state.session);
   const handleClick = () => {
     if (sessionData.clientId !== undefined) {
-      dispatch(sendMessage(typedText));
+      dispatch(sendChatMessage(typedText));
       dispatch(clearText());
     }
   };

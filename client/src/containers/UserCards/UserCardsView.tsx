@@ -9,7 +9,6 @@ import {
 } from '../../../../shared/types/session/member';
 
 import UserCard from '../../components/UserCard/UserCard';
-import KickModal from '../../components/KickModal/KickModal';
 import { DEALER_ID } from '../../../../shared/const';
 
 const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
@@ -41,8 +40,6 @@ const UserCardsView = (props: IUserCardsViewBundle): JSX.Element => {
             </Stack>
           );
         })}
-
-        <KickModal modalData={modalData} />
       </Stack>
     </Box>
   );
