@@ -8,7 +8,7 @@ export const GameTimer = (): JSX.Element => {
   );
 
   const roundTime = useTypedSelector(
-    state => state.session.currentGameSettings.roundTime,
+    state => state.session.gSettings?.roundTime,
   );
 
   if (!roundStartTime) return <></>;

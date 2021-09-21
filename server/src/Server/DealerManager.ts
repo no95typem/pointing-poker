@@ -60,8 +60,8 @@ export class DealerManager extends RoleManager {
       game.roundStartTime = time;
       game.votes = {};
 
-      if (state.currentGameSettings.isTimerNeeded) {
-        const roundTime = state.currentGameSettings.roundTime;
+      if (state.gSettings.isTimerNeeded) {
+        const roundTime = state.gSettings.roundTime;
 
         setTimeout(() => {
           const { state } = this.api.getSessionState();
@@ -92,11 +92,7 @@ export class DealerManager extends RoleManager {
   }
 
   private handleSessionStateUpdate(msg: CSMsgUpdateState) {
-    if (
-      msg.update.currentGameSettings ||
-      msg.update.issues ||
-      msg.update.name
-    ) {
+    if (msg.update.gSettings || msg.update.issues || msg.update.name) {
       const purified = purify(msg.update);
       const { state } = this.api.getSessionState();
 
@@ -150,7 +146,7 @@ export class DealerManager extends RoleManager {
 
     if (
       state.stage === SESSION_STAGES.LOBBY &&
-      Object.entries(state.currentGameSettings.cards).length > 0
+      Object.entries(state.gSettings.cards).length > 0
     ) {
       this.api.updateState({ stage: SESSION_STAGES.GAME });
       this.handleNewIssue();

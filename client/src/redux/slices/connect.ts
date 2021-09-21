@@ -43,7 +43,7 @@ export const createSession = createAsyncThunk(
     const state = thunkAPI.getState() as RootState;
     const msg = new CSMsgCreateSession({
       userInfo: state.userInfo,
-      settings: state.session.currentGameSettings,
+      settings: state.session.gSettings,
     });
     SERVER_ADAPTER.send(msg);
     thunkAPI.dispatch(

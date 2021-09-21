@@ -32,7 +32,7 @@ const SESSION_INIT_STATE: SessionState = {
   stage: 'LOBBY',
   name: { value: 'unnamed pp session', isSynced: true },
   members: {},
-  currentGameSettings: defaultSettings,
+  gSettings: defaultSettings,
   chat: {
     msgs: {},
   },
@@ -96,7 +96,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
       userSessionPublicId: 2,
     },
   },
-  currentGameSettings: defaultSettings,
+  gSettings: defaultSettings,
   chat: {
     msgs: {},
   },

@@ -5,8 +5,7 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { homePageSlice } from '../../redux/slices/home-page';
 
-// import UndrawWelcome from '../../../../assets/images/undraw/welcome.svg';
-import { loadFiles } from '../../helpers/loadFiles';
+// import {ReactComponent as UndrawWelcome} from '../../assets/images/undraw/welcome.svg';
 import { GameTimer } from '../GameTimer/GameTimer';
 
 interface MainPageProps {
@@ -62,27 +61,8 @@ const StartPageContent = ({ onPopupCalled }: MainPageProps): JSX.Element => {
           {/* <UndrawWelcome /> */}
 
           <Box bg="grey">
-            <Button
-              onClick={() => {
-                loadFiles()
-                  .then(fileList => {
-                    if (fileList[0]) {
-                    }
-                  })
-                  .catch(() => {});
-              }}
-            >
-              load xlsx
-            </Button>
-            <Button
-              onClick={() => {
-                // XLSX.writeFile(wb, 'state.xlsx');
-              }}
-            >
-              save xlsx
-            </Button>
+            <GameTimer />
           </Box>
-          <GameTimer />
         </Flex>
       </Flex>
     </Flex>

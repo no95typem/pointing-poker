@@ -108,7 +108,7 @@ const UseSessionData = (
   const setGameSettings = (settings: ISettings): void => {
     const newSettings = OBJ_PROCESSOR.deepClone(settings);
 
-    dispatch(updSessState({ currentGameSettings: newSettings }));
+    dispatch(updSessState({ gSettings: newSettings }));
   };
 
   const isGameStage = sessionData.stage === SESSION_STAGES.GAME;
