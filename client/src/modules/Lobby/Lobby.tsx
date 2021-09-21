@@ -14,6 +14,7 @@ import Settings from '../../containers/Settings/Settings';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 import UseLocalSettings from '../../hooks/UseLocalSettings/UseLocalSettings';
 import { ILobbyGameStateData } from '../../../../shared/types/session/state/session-state';
+import { ISettingsData } from '../../../../shared/types/settings';
 
 const Lobby = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -39,8 +40,12 @@ const Lobby = (): JSX.Element => {
     ...gameStateData,
     localSettings,
   };
-
-  // console.log()
+  const settingsData: ISettingsData = {
+    ...{
+      localSettings,
+      setLocalSettings,
+    },
+  };
 
   return (
     <Box
@@ -57,7 +62,7 @@ const Lobby = (): JSX.Element => {
       <GameControlButtons {...gameStateLobby} />
       <UserCards {...membersData} />
       <IssueCards {...issuesData} />
-      {isPlayerDealer && <Settings {...{ localSettings, setLocalSettings }} />}
+      {isPlayerDealer && <Settings {...settingsData} />}
     </Box>
   );
 };

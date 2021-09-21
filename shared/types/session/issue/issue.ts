@@ -1,7 +1,8 @@
 import { IssuePriority } from './issue-priority';
 import { RoundStat } from '../round/round-stat';
 import { Synchronized } from '../../syncable';
-import { ISessionIssues } from '../state/session-state';
+import { ISessionGameState, ISessionIssues } from '../state/session-state';
+// import { ICardsGame } from '../card';
 
 export interface Issue extends Synchronized {
   [key: string]:
@@ -28,14 +29,15 @@ export interface IIssueData {
 
 export interface IIssuesData {
   issues: ISessionIssues;
+  gameState?: ISessionGameState;
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
   newIssueId: number;
   isPlayerDealer: boolean;
-  isGameStage: boolean;
 }
 
 export interface IIssueModal {
+  gameState?: ISessionGameState;
   openModal: (id?: number) => void;
   onClose: () => void;
   changeIssue: (issue: Issue) => void;
@@ -44,7 +46,6 @@ export interface IIssueModal {
   activeIssue: Issue;
   isOpen: boolean;
   isPlayerDealer: boolean;
-  isGameStage: boolean;
 }
 
 export interface IIssues {

@@ -13,23 +13,31 @@ import IssueModal from '../../components/IssueModal/IssueModal';
 import NewIssueButton from '../../components/NewIssueButton/NewIssueButton';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
 import RadioCard from '../../components/RadioCard/RadioCard';
+import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 
 const IssueCardsView = (props: IIssues): JSX.Element => {
   const { issues, modal } = props;
 
   const { list, isSynced } = issues;
 
-  const { openModal, removeIssue, isPlayerDealer, isGameStage } = modal;
+  const { openModal, removeIssue, isPlayerDealer, gameState } = modal;
 
   // const { getRootProps, getRadioProps }
 
-  const { getRadioProps } = useRadioGroup({
-    name: 'framework',
-    defaultValue: issues.list[0] ? String(issues.list[0].id) : '',
-    onChange: console.log,
-  });
+  // const { getRadioProps, setValue } = useRadioGroup({
+  //   name: 'issues',
+  //   value: String(gameState?.currIssueId),
+  //   onChange: changeIssue,
+  // });
 
-  // const group = getRootProps();
+  // const changeIssue = (value: string): void => {
+  //   setValue(value);
+  // };
+
+  const { getRadioProps } = useRadioGroup({
+    name: 'issues',
+    value: String(gameState?.currIssueId),
+  });
 
   const setIssueData = (issue: Issue): IIssueData => {
     return {
@@ -42,16 +50,20 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
 
   return (
     <Box mb="50px" position="relative">
-      {!isGameStage && (
+      {!gameState && (
         <Heading textAlign="center" size="lg" mb="40px">
           Issues:
         </Heading>
       )}
 
+      {gameState && isPlayerDealer && gameState.currIssueId && (
+        <RoundControlButtons {...gameState} />
+      )}
+
       <Stack
-        w={isGameStage ? '300px' : '100%'}
+        w={gameState ? '300px' : '100%'}
         wrap="wrap"
-        direction={isGameStage ? 'column' : 'row'}
+        direction={gameState ? 'column' : 'row'}
         opacity={isSynced ? 1 : 0.5}
       >
         {list.map(issue => {
@@ -63,7 +75,7 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
             </Stack>
           );
 
-          if (isGameStage && isPlayerDealer) {
+          if (gameState && isPlayerDealer) {
             const radio = (getRadioProps as (obj: { value: string }) => any)({
               value: String(issue.id),
             });
@@ -74,7 +86,9 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
               </RadioCard>
             );
           } else {
-            if (isGameStage && list[0] === issue) {
+            console.log(gameState?.currIssueId);
+
+            if (gameState && gameState.currIssueId === issue.id) {
               return (
                 <Stack bg="teal.600" color="white" key={`${id}-checked`}>
                   {issueCard}

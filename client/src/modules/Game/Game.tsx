@@ -11,6 +11,8 @@ import EditableHeader from '../../containers/EdidableHeader/EditableHeader';
 
 import IssueCards from '../../containers/IssuesCards/IssuesCards';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
+import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
+import GameCardsRound from '../../containers/GameCardsRound/GameCardsRound';
 
 const Game = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -27,7 +29,13 @@ const Game = (): JSX.Element => {
     gameStateData,
   } = sessionData;
 
+  const { gameState } = gameStateData;
+
   console.log(session);
+
+  const isRoundStarted = !!(
+    gameState && gameState.roundState === ROUND_STATES.IN_PROCESS
+  );
 
   return (
     <Box minH="100vh" maxW="1440px" w="90%" m="0 auto" p="5px">
@@ -38,6 +46,7 @@ const Game = (): JSX.Element => {
       </Stack>
       <UserCardsTabs {...membersData} />
       <IssueCards {...issuesData} />
+      {isRoundStarted && <GameCardsRound {...gameStateData.gameData} />}
     </Box>
   );
 };

@@ -1,45 +1,64 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { useDisclosure } from '@chakra-ui/react';
+import { Box, Heading, Stack } from '@chakra-ui/react';
 
 import {
-  IKickModal,
+  IMemberData,
   IUserCards,
+  Member,
 } from '../../../../shared/types/session/member';
+import { DEALER_ID } from '../../../../shared/const';
+import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
-import UserCardsView from './UserCardsView';
+import UserCard from '../../components/UserCard/UserCard';
+import UserVote from '../../components/UserVote/UserVote';
 
 const UserCards = (props: IUserCards): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { members, isItYou, isGameStage, isVotersView, isDealerPlaying } =
+    props;
 
-  const [kickedName, setKickedName] = useState('');
-
-  const [kickedId, setKickedId] = useState(0);
-
-  const confirmKick = () => {
-    onClose();
-
-    console.log('server command --kick', kickedId);
+  const setMemberData = (member: Member): IMemberData => {
+    return {
+      member: member,
+      isItYou: isItYou(member),
+      isRoundStarted: false,
+    };
   };
 
-  const setModalWindowInfo = (id: number, name: string) => {
-    setKickedId(id);
-
-    setKickedName(name);
-
-    onOpen();
+  const isIgnoredUser = (id: string, role: string): boolean => {
+    return !!(
+      (+id === DEALER_ID && (!isVotersView || !isDealerPlaying)) ||
+      (isVotersView && role === USER_ROLES.SPECTATOR)
+    );
   };
 
-  const modalData: IKickModal = {
-    onClose: onClose,
-    isOpen: isOpen,
-    name: kickedName,
-    onConfirm: confirmKick,
-    initiatorName: '',
-    kickPlayer: setModalWindowInfo,
-  };
+  return (
+    <Box mb="30px">
+      {!isGameStage && (
+        <Heading textAlign="center" size="lg" mb="40px">
+          Members:
+        </Heading>
+      )}
+      <Stack w="100%" wrap="wrap" direction="row">
+        {Object.entries(members).map(([id, member]) => {
+          if (isIgnoredUser(id, member.userRole)) return null;
 
-  return <UserCardsView cardsData={props} modalData={modalData} />;
+          return (
+            <Stack
+              direction="row"
+              justify="center"
+              align="center"
+              key={`${id}-box`}
+              border={isVotersView ? '1px solid black' : 'none'}
+            >
+              <UserCard {...setMemberData(member)} key={id} />;
+              {isVotersView && <UserVote key={`${id}-vote`} />}
+            </Stack>
+          );
+        })}
+      </Stack>
+    </Box>
+  );
 };
 
 export default UserCards;

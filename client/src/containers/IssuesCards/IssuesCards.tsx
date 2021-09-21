@@ -18,7 +18,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     removeIssue,
     newIssueId,
     isPlayerDealer,
-    isGameStage,
+    gameState,
   } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,14 +32,10 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     closed: false,
   };
 
-  console.log(issues);
-
   const [activeIssue, setActiveIssue] = useState<Issue>(newIssue);
 
   const findIssue = (issueId?: number): void => {
     const editIssue = issues.list.find(issue => issue.id === issueId);
-
-    console.log(editIssue);
 
     setActiveIssue(editIssue ? editIssue : newIssue);
   };
@@ -69,7 +65,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     changeIssue,
     removeIssue,
     isPlayerDealer,
-    isGameStage,
+    gameState,
   };
 
   return <IssueCardsView issues={issues} modal={modalData} />;

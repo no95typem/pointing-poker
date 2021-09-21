@@ -23,6 +23,7 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { DEALER_ID } from '../../../../shared/const';
 import { ISettings } from '../../../../shared/types/settings';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
+import { ICardsGame } from '../../../../shared/types/session/card';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;
@@ -30,6 +31,7 @@ interface ILobbyData {
   membersData: IUserCards;
   issuesData: IIssuesData;
   gameStateData: IGameStateData;
+
   isPlayerDealer: boolean;
 }
 
@@ -54,8 +56,31 @@ const UseSessionData = (
     dispatch(updSessState({ name: { value: newName, isSynced: false } }));
   };
 
+  // const changeRoundState = (): void => {
+  //   if (sessionData.game) {
+  //     dispatch(
+  //       updSessState({
+  //         game: { ...sessionData.game, roundState: ROUND_STATES.IN_PROCESS },
+  //       }),
+  //     );
+  //   }
+  // };
+
   const isPlayerDealer =
     sessionData.members[sessionData.clientId].userRole === USER_ROLES.DEALER;
+
+  const activeIssueId = sessionData.game
+    ? String(sessionData.game.currIssueId)
+    : undefined;
+
+  const setActiveIssueId = (id: string): void => {
+    if (sessionData.game) {
+      console.log(id, '-----');
+      dispatch(
+        updSessState({ game: { ...sessionData.game, currIssueId: +id } }),
+      );
+    }
+  };
 
   const findIssueIndex = (id: number): number | null => {
     const issue = list.find(issue => issue.id === id);
@@ -70,16 +95,22 @@ const UseSessionData = (
 
     if (issueIndex !== null) {
       issues[issueIndex] = issue;
-
-      dispatch(
-        updSessState({ issues: { list: [...issues], isSynced: false } }),
-      );
     } else {
-      dispatch(
-        updSessState({ issues: { list: [...issues, issue], isSynced: false } }),
-      );
+      issues.push(issue);
 
       setNewIssueId(newIssueId + 1);
+    }
+
+    dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));
+
+    // if (issues[0]) {
+    //   console.log(issues[0]);
+    // }
+
+    // console.log(activeIssueId);
+
+    if (issues[0] && activeIssueId !== String(issues[0].id)) {
+      setActiveIssueId(String(issues[0].id));
     }
   };
 
@@ -132,9 +163,9 @@ const UseSessionData = (
 
   const membersData: IUserCards = {
     members: sessionData.members,
-    findWhoIsUser: isItYou,
-    isRoundStarted: isRoundStarted(),
+    isItYou,
     isGameStage,
+    isDealerPlaying: sessionData.currentGameSettings.dealerAsPlayer,
   };
 
   const issuesData: IIssuesData = {
@@ -143,13 +174,21 @@ const UseSessionData = (
     removeIssue,
     newIssueId,
     isPlayerDealer,
+    gameState: sessionData.game,
+  };
+
+  const gameData: ICardsGame = {
+    cards: sessionData.currentGameSettings.cards,
     isGameStage,
+    units: sessionData.currentGameSettings.scoreTypeShort,
   };
 
   const gameStateData: IGameStateData = {
     isPlayerDealer,
     setGameSettings,
-    isGameStage,
+
+    gameState: sessionData.game,
+    gameData,
   };
 
   return {

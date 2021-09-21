@@ -12,10 +12,14 @@ export interface ICardModal {
   setCard: () => void;
 }
 
-export interface ICardsView {
+interface ISharedCardData {
+  units: string;
+  isGameStage?: boolean;
+}
+
+export interface ICardsView extends ISharedCardData {
   cards: CardData[];
   modal: ICardModal;
-  units: string;
   deleteCard: (value: string) => void;
 }
 
@@ -23,18 +27,20 @@ export interface ICardModalData {
   modal: ICardModal;
 }
 
-export interface ICardData {
+export interface ICardData extends ISharedCardData {
   card: CardData;
-  units: string;
-  edit: (id?: string) => void;
-  deleteCard: (value: string) => void;
+  deleteCard?: (value: string) => void;
+  edit?: (id?: string) => void;
 }
 
-export interface ICardsData {
+export interface ICardsData extends ISharedCardData {
   cards: CardData[];
-  units: string;
   setLocalSettings: (
     name: string,
     value: string | boolean | CardData[],
   ) => void;
+}
+
+export interface ICardsGame extends ISharedCardData {
+  cards: CardData[];
 }

@@ -22,7 +22,7 @@ export const defaultSettings: ISettings = {
   isTimerNeeded: true,
   scoreType: 'story points',
   scoreTypeShort: 'SP',
-  roundTime: 140,
+  roundTime: 15000,
   cards: testCardsData, //placeholder
   cardBackType: '',
 };

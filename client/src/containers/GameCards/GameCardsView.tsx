@@ -9,7 +9,7 @@ import GameCardModal from '../../components/GameCardModal/GameCardModal';
 import NewGameCardButton from '../../components/NewGameCardButton/NewGameCardButton';
 import { LOCALE_US } from '../../locales/locale-us';
 
-const IssueCardView = (props: ICardsView): JSX.Element => {
+const GameCardsView = (props: ICardsView): JSX.Element => {
   const { cards, modal, units, deleteCard } = props;
 
   return (
@@ -44,4 +44,4 @@ const IssueCardView = (props: ICardsView): JSX.Element => {
   );
 };
 
-export default IssueCardView;
+export default GameCardsView;
