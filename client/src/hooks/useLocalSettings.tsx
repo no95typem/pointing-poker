@@ -1,7 +1,7 @@
-import { CardData } from '../../../../shared/types/session/card';
-import { ISettings } from '../../../../shared/types/settings';
-import { setSettings } from '../../redux/slices/settings';
-import { useAppDispatch } from '../../redux/store';
+import { CardData } from '../../../shared/types/session/card';
+import { ISettings } from '../../../shared/types/settings';
+import { setSettings } from '../redux/slices/settings';
+import { useAppDispatch } from '../redux/store';
 
 interface ISetSettings {
   setLocalSettings: (

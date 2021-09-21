@@ -1,6 +1,7 @@
 /* eslint max-params: ["warn", 3] */
 
 import WebSocket from 'ws';
+import { DEALER_ID } from '../../../shared/const';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
 import { CSMSG_CIPHERS } from '../../../shared/types/cs-msgs/cs-msg-ciphers';
@@ -16,15 +17,17 @@ export class PlayersManager extends RoleManager {
         this.api.votekick(ws, id, msg as CSMsgVotekick);
         break;
       case CSMSG_CIPHERS.PICK:
-        this.handleCardPick(ws, id, msg as CSMsgPick);
+        this.handleCardPick(id, msg as CSMsgPick);
         break;
       default:
         break;
     }
   };
 
-  private handleCardPick(ws: WebSocket, id: number, msg: CSMsgPick) {
+  private handleCardPick(id: number, msg: CSMsgPick) {
     const { state } = this.api.getSessionState();
+
+    if (id === DEALER_ID && !state.currentGameSettings.dealerAsPlayer) return;
 
     if (state.game) {
       if (

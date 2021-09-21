@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { Button, Stack } from '@chakra-ui/react';
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
 import { CSMsgStartRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-start-round';
 import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-stop-round';
 import { ISessionGameState } from '../../../../shared/types/session/state/session-state';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 
 const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
   const { roundState } = props;

@@ -11,9 +11,10 @@ import {
 import GameCard from '../../components/GameCard/GameCard';
 
 import { LOCALE_US } from '../../locales/locale-us';
-import RadioCard from '../../components/RadioCard/RadioCard';
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+
 import { CSMsgPick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-pick';
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
+import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
 const GameCardsRound = (props: ICardsGame): JSX.Element => {
   const { cards, isGameStage, units } = props;
@@ -63,9 +64,9 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
           });
 
           return (
-            <RadioCard key={`${id}-radio`} {...radio}>
+            <SessionItemRadioCard key={`${id}-radio`} {...radio}>
               {card}
-            </RadioCard>
+            </SessionItemRadioCard>
           );
         })}
       </Stack>

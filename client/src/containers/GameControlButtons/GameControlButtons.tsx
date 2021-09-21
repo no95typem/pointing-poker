@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button, Stack } from '@chakra-ui/react';
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import { ILobbyGameStateData } from '../../../../shared/types/session/state/session-state';
 
 const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {

@@ -16,16 +16,15 @@ import { SCMsg } from '../../../../shared/types/sc-msgs/sc-msg';
 import { SCMSG_CIPHERS } from '../../../../shared/types/sc-msgs/sc-msg-ciphers';
 import { Member } from '../../../../shared/types/session/member';
 import { KNOWN_LOADS_KEYS } from '../../../../shared/knownLoadsKeys';
-import { setServerConnectionStatus } from '../../redux/slices/connect';
 import { removeError, setErrorByKey } from '../../redux/slices/errors';
 import { removeLoad, setGLoadByKey } from '../../redux/slices/loads';
 import { sessionSlice } from '../../redux/slices/session';
-
 import { store } from '../../redux/store';
 import { SessionState } from '../../../../shared/types/session/state/session-state';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
-import { showKickDialog } from '../../hooks/useKickDialog';
+import { showKickDialog } from '../../helpers/showKickDialog';
+import { connectSlice } from '../../redux/slices/connect';
 
 const updateState = sessionSlice.actions.dang_updSessStateFromServer;
 
@@ -123,7 +122,6 @@ class ServerAdapter {
     const newMembers: Record<number, Member> = {};
     Object.assign(newMembers, members);
 
-    // console.log(newMembers);
     store.dispatch(updateState({ members: newMembers }));
   }
 
@@ -168,7 +166,7 @@ class ServerAdapter {
 
   private handleWSOpen() {
     (this.ws as WebSocket).addEventListener('message', this.obeyTheServer);
-    store.dispatch(setServerConnectionStatus('connected'));
+    store.dispatch(connectSlice.actions.setServerConnectionStatus('connected'));
   }
 
   connect(): Promise<boolean> {

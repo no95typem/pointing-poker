@@ -8,7 +8,7 @@ import { SESSION_CLIENT_INIT_STATE } from '../../../../shared/initStates';
 import { Synchronized } from '../../../../shared/types/syncable';
 import { purify } from '../../../../shared/helpers/processors/purify';
 import { CSMsgUpdateState } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/spectator/cs-msg-chat-msg';
 import { RootState } from '../store';
 import { ChatMsg } from '../../../../shared/types/session/chat/chat-msg';

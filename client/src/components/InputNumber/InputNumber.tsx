@@ -9,11 +9,11 @@ import {
 
 export interface INumberInput {
   units: string;
-  defaultvalue: number;
+  value: number;
 }
 
 const InputNumber = (props: INumberInput): JSX.Element => {
-  const { defaultvalue, units } = props;
+  const { value, units } = props;
 
   return (
     <FormControl>
@@ -28,7 +28,7 @@ const InputNumber = (props: INumberInput): JSX.Element => {
       <NumberInput
         position="relative"
         w="55px"
-        defaultValue={defaultvalue}
+        value={value}
         min={0}
         max={59}
         id={units}

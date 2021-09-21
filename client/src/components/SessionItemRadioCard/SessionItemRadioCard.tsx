@@ -1,14 +1,11 @@
 import React from 'react';
-import { useRadio, Box } from '@chakra-ui/react';
+import { Box, useRadio } from '@chakra-ui/react';
 
-// interface Props {
-//   props:
-// }
-
-const RadioCard = (props: any) => {
+const SessionItemRadioCard = (props: any): JSX.Element => {
   const { getInputProps, getCheckboxProps } = useRadio(props);
 
   const input = getInputProps();
+
   const checkbox = getCheckboxProps();
 
   return (
@@ -17,20 +14,14 @@ const RadioCard = (props: any) => {
       <Box
         {...checkbox}
         cursor="pointer"
-        borderWidth="1px"
         borderRadius="md"
-        boxShadow="md"
         _checked={{
-          bg: 'facebook.600',
+          bg: 'teal.600',
           color: 'white',
-          borderColor: 'facebook.600',
         }}
         _focus={{
           boxShadow: 'outline',
         }}
-        w="10rem"
-        textAlign="center"
-        py={3}
       >
         {props.children}
       </Box>
@@ -38,4 +29,4 @@ const RadioCard = (props: any) => {
   );
 };
 
-export default RadioCard;
+export default SessionItemRadioCard;

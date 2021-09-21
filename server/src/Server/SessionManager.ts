@@ -281,33 +281,6 @@ export class SessionManager {
       }
     }
   };
-
-  private pickCard(id: number, value: string | undefined) {
-    if (!this.sessionState.game) return;
-
-    if (this.sessionState.game.roundState === ROUND_STATES.AWAIT_START) return;
-
-    if (
-      this.sessionState.game.roundState === ROUND_STATES.ENDED &&
-      !this.sessionState.currentGameSettings.changingCardInRoundEnd
-    ) {
-      return;
-    }
-
-    if (
-      id === DEALER_ID &&
-      !this.sessionState.currentGameSettings.dealerAsPlayer
-    ) {
-      return;
-    }
-
-    const game = this.sessionState.game;
-    game.votes[id] = value;
-
-    this.updateState({ game });
-
-    this.tryToEndRound();
-  }
   /* /GAME */
 
   private endSession() {

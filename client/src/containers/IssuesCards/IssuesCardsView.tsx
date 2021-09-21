@@ -12,7 +12,7 @@ import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
 import NewIssueButton from '../../components/NewIssueButton/NewIssueButton';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
-import RadioCard from '../../components/RadioCard/RadioCard';
+import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 
 const IssueCardsView = (props: IIssues): JSX.Element => {
@@ -81,9 +81,9 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
             });
 
             return (
-              <RadioCard key={`${id}-radio`} {...radio}>
+              <SessionItemRadioCard key={`${id}-radio`} {...radio}>
                 {issueCard}
-              </RadioCard>
+              </SessionItemRadioCard>
             );
           } else {
             console.log(gameState?.currIssueId);

@@ -8,14 +8,14 @@ interface ITimer {
   time: number;
 }
 
-const Timer = (props: ITimer): JSX.Element => {
-  const { time } = props;
+const PassiveTimer = (props: ITimer): JSX.Element => {
+  const timeInS = props.time / 1000;
 
-  // console.log(time);
+  const minutes = Math.trunc(timeInS / 60);
 
-  const minutes = Math.trunc(time / 60);
+  const seconds = Math.trunc(timeInS % 60);
 
-  const seconds = time % 60;
+  console.log(seconds);
 
   return (
     <FormControl
@@ -37,14 +37,14 @@ const Timer = (props: ITimer): JSX.Element => {
         w="150px"
         height="75px"
       >
-        <InputNumber defaultvalue={minutes} units="minutes" />
+        <InputNumber value={minutes} units="minutes" />
 
         <Text>:</Text>
 
-        <InputNumber defaultvalue={seconds} units="seconds" />
+        <InputNumber value={seconds} units="seconds" />
       </Stack>
     </FormControl>
   );
 };
 
-export default Timer;
+export default PassiveTimer;
