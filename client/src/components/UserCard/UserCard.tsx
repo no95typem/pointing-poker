@@ -15,7 +15,7 @@ import { ImBlocked } from 'react-icons/im';
 import { IMemberData } from '../../../../shared/types/session/member';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
-import { showKickDialog } from '../../hooks/useKickDialog';
+import { showKickDialog } from '../../helpers/showKickDialog';
 
 const UserCard = (props: IMemberData): JSX.Element => {
   const { member, isItYou, isRoundStarted } = props;

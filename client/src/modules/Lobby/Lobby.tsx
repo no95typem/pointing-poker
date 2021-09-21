@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
-import UseSessionData from '../../hooks/UseSessionData/UseSessionData';
+import UseSessionData from '../../hooks/useSessionData';
 
 import GameControlButtons from '../../containers/GameControlButtons/GameControlButtons';
 import DealerPlate from '../../components/DealerPlate/DealerPlate';
@@ -12,7 +12,7 @@ import UserCards from '../../containers/UserCards/UserCards';
 import IssueCards from '../../containers/IssuesCards/IssuesCards';
 import Settings from '../../containers/Settings/Settings';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
-import UseLocalSettings from '../../hooks/UseLocalSettings/UseLocalSettings';
+import UseLocalSettings from '../../hooks/useLocalSettings';
 import { ILobbyGameStateData } from '../../../../shared/types/session/state/session-state';
 
 const Lobby = (): JSX.Element => {

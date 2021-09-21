@@ -1,18 +1,18 @@
 import React from 'react';
 import { Wrap, WrapItem, Input, Button } from '@chakra-ui/react';
 import { useTypedSelector, useAppDispatch } from '../../../../redux/store';
-import { changeText, clearText } from '../../../../redux/slices/chat';
 import { sendChatMessage } from '../../../../redux/slices/session';
+import { chatSlice } from '../../../../redux/slices/chat';
 
-const MessageInputBox = () => {
-  const dispatch = useAppDispatch();
+const { setChatTypedText } = chatSlice.actions;
+
+export const MessageInputBox = () => {
   const { typedText } = useTypedSelector(state => state.chat);
-  const sessionData = useTypedSelector(state => state.session);
-  const handleClick = () => {
-    if (sessionData.clientId !== undefined) {
-      dispatch(sendChatMessage(typedText));
-      dispatch(clearText());
-    }
+  const dispatch = useAppDispatch();
+
+  const handleSend = () => {
+    dispatch(sendChatMessage(typedText));
+    dispatch(setChatTypedText(''));
   };
 
   return (
@@ -22,16 +22,14 @@ const MessageInputBox = () => {
           w="100%"
           size="md"
           value={typedText}
-          onChange={e => dispatch(changeText(e.target.value))}
+          onChange={e => dispatch(setChatTypedText(e.target.value))}
         />
       </WrapItem>
       <Wrap>
-        <Button size="md" colorScheme="facebook" onClick={handleClick}>
+        <Button size="md" colorScheme="facebook" onClick={handleSend}>
           Send
         </Button>
       </Wrap>
     </Wrap>
   );
 };
-
-export default MessageInputBox;

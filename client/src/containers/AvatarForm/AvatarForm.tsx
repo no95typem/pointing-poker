@@ -1,12 +1,12 @@
 import { Button, Flex, Box, FormLabel, Avatar } from '@chakra-ui/react';
-import { useImgConvertor } from '../../../../hooks/useImgConvertor';
-import { useLoadImg } from '../../../../hooks/useImgLoader';
-import { useTypedSelector, useAppDispatch } from '../../../../redux/store';
+import { useImgConvertor } from '../../hooks/useImgConvertor';
+import { loadImg } from '../../helpers/loadImg';
+import { useTypedSelector, useAppDispatch } from '../../redux/store';
 import {
   changeAvatarBase64,
   changeAvatarBgColor,
-} from '../../../../redux/slices/userInfo';
-import { AVATAR_HEIGHT, AVATAR_WIDTH } from '../../../../constants';
+} from '../../redux/slices/userInfo';
+import { AVATAR_HEIGHT, AVATAR_WIDTH } from '../../constants';
 
 const AvatarForm = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +15,6 @@ const AvatarForm = () => {
   );
 
   const convert = useImgConvertor();
-  const loadImg = useLoadImg();
 
   const avatarChange = (): void => {
     loadImg()

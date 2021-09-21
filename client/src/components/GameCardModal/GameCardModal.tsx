@@ -17,7 +17,7 @@ import {
 
 import { ICardModalData } from '../../../../shared/types/session/card';
 
-import AvatarForm from '../../modules/HomePage/components/avatar-form/avatar-form';
+import AvatarForm from '../../containers/AvatarForm/AvatarForm';
 import { LOCALE_US } from '../../locales/locale-us';
 
 const GameCardModal = (props: ICardModalData): JSX.Element => {

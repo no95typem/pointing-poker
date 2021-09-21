@@ -3,7 +3,7 @@ import { Box, Stack } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
-import UseSessionData from '../../hooks/UseSessionData/UseSessionData';
+import UseSessionData from '../../hooks/useSessionData';
 
 import GameControlButtons from '../../containers/GameControlButtons/GameControlButtons';
 import DealerPlate from '../../components/DealerPlate/DealerPlate';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SERVER_ADAPTER } from '../ServerAdapter/ServerAdapter';
+import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 export interface ServerBoundaryProps {
   children: React.ReactNode;

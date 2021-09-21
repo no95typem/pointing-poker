@@ -1,28 +1,25 @@
 import { useState } from 'react';
 
-import { useAppDispatch } from '../../redux/store';
-import { updSessState } from '../../redux/slices/session';
+import { useAppDispatch } from '../redux/store';
+import { updSessState } from '../redux/slices/session';
 
-import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
-import {
-  IIssuesData,
-  Issue,
-} from '../../../../shared/types/session/issue/issue';
-import { ISessionNameHandling } from '../../../../shared/types/session/name';
+import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
+import { IIssuesData, Issue } from '../../../shared/types/session/issue/issue';
+import { ISessionNameHandling } from '../../../shared/types/session/name';
 import {
   IGameStateData,
   ISessionStateClient,
-} from '../../../../shared/types/session/state/session-state';
+} from '../../../shared/types/session/state/session-state';
 import {
   IMemberData,
   IUserCards,
   Member,
-} from '../../../../shared/types/session/member';
-import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
-import { USER_ROLES } from '../../../../shared/types/user/user-role';
-import { DEALER_ID } from '../../../../shared/const';
-import { ISettings } from '../../../../shared/types/settings';
-import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
+} from '../../../shared/types/session/member';
+import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
+import { USER_ROLES } from '../../../shared/types/user/user-role';
+import { DEALER_ID } from '../../../shared/const';
+import { ISettings } from '../../../shared/types/settings';
+import { SESSION_STAGES } from '../../../shared/types/session/state/stages';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;

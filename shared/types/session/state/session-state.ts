@@ -13,7 +13,7 @@ export interface ISessionName extends Synchronized {
 export interface ISessionGameState {
   roundState: RoundState;
   roundStartTime?: number;
-  currIssueId: number; // ! TODO-Kaesid: Использовать для подсветки текущей задачи
+  currIssueId?: number; // ! TODO-Kaesid: Использовать для подсветки текущей задачи
   // key number - userPublicId, val number - value of card
   votes: Record<number, string | undefined>;
 }

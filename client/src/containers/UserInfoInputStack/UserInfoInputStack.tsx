@@ -1,0 +1,55 @@
+import {
+  Stack,
+  Input,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+} from '@chakra-ui/react';
+
+import { ChangeEvent } from 'react';
+import { UserInfo } from '../../../../shared/types/user/user-info';
+
+export interface IUserInfoInputStackProps extends UserInfo {
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  isNameInvalid: boolean;
+}
+
+const UserInfoInputStack = (props: IUserInfoInputStackProps) => {
+  return (
+    <Stack w="60%" spacing={3}>
+      <FormControl isInvalid={props.isNameInvalid}>
+        <FormLabel>Your first name:</FormLabel>
+        <Input
+          name="name"
+          value={props.name}
+          onChange={props.onChange}
+          size="md"
+          isRequired
+        />
+        <FormErrorMessage>Name is required</FormErrorMessage>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Your last name:</FormLabel>
+        <Input
+          name="surname"
+          value={props.surname}
+          onChange={props.onChange}
+          size="md"
+        />
+        <FormErrorMessage></FormErrorMessage>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Your job position:</FormLabel>
+        <Input
+          name="jobPosition"
+          value={props.jobPosition}
+          onChange={props.onChange}
+          size="md"
+        />
+        <FormErrorMessage></FormErrorMessage>
+      </FormControl>
+    </Stack>
+  );
+};
+
+export default UserInfoInputStack;
