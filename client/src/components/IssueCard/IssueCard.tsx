@@ -17,12 +17,33 @@ import {
 } from '../../../../shared/types/session/issue/issue';
 
 const IssueCard = (props: IIssueData): JSX.Element => {
-  const { issue, openModal, removeIssue, isPlayerDealer } = props;
+  const { issue, openModal, removeIssue, isPlayerDealer, openStatisticModal } =
+    props;
 
-  const { id, title, priority, isSynced } = issue as Issue;
+  const { id, title, priority, isSynced, closed } = issue as Issue;
+
+  const showIssueStatistic = (e: React.MouseEvent<HTMLDivElement>): void => {
+    if (!openStatisticModal) return;
+
+    const isButton = e.nativeEvent
+      .composedPath()
+      .some(el => el instanceof HTMLButtonElement);
+
+    if (!isButton) {
+      console.log('hello world', id);
+      openStatisticModal(id);
+    }
+  };
 
   return (
-    <Stack direction="row" align="center" p="10px" boxShadow="lg">
+    <Stack
+      direction="row"
+      align="center"
+      p="10px"
+      boxShadow="lg"
+      cursor={openStatisticModal ? 'pointer' : 'unset'}
+      onClick={showIssueStatistic}
+    >
       <Stat>
         <StatNumber isTruncated={true}>{title}</StatNumber>
         <StatHelpText mb="0">{priority}</StatHelpText>
@@ -31,7 +52,9 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       <IconButton
         aria-label="edit"
         background="transparent"
-        visibility={isPlayerDealer && isSynced ? 'visible' : 'hidden'}
+        visibility={
+          isPlayerDealer && isSynced && !closed ? 'visible' : 'hidden'
+        }
         size="lg"
         icon={<ImPencil />}
         onClick={() => openModal(id)}
@@ -39,7 +62,9 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       <IconButton
         aria-label="delete"
         background="transparent"
-        visibility={isPlayerDealer && isSynced ? 'visible' : 'hidden'}
+        visibility={
+          isPlayerDealer && isSynced && !closed ? 'visible' : 'hidden'
+        }
         size="lg"
         icon={<CloseIcon />}
         onClick={() => removeIssue(id)}

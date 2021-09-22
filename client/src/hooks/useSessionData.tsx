@@ -15,11 +15,13 @@ import {
   IUserCards,
   Member,
 } from '../../../shared/types/session/member';
-import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
-import { USER_ROLES } from '../../../shared/types/user/user-role';
+
 import { DEALER_ID } from '../../../shared/const';
+import { USER_ROLES } from '../../../shared/types/user/user-role';
+import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
 import { ISettings } from '../../../shared/types/settings';
 import { SESSION_STAGES } from '../../../shared/types/session/state/stages';
+import { ICardsGame } from '../../../shared/types/session/card';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;
@@ -27,6 +29,7 @@ interface ILobbyData {
   membersData: IUserCards;
   issuesData: IIssuesData;
   gameStateData: IGameStateData;
+  isPlayerSpectator: boolean;
   isPlayerDealer: boolean;
 }
 
@@ -54,6 +57,23 @@ const UseSessionData = (
   const isPlayerDealer =
     sessionData.members[sessionData.clientId].userRole === USER_ROLES.DEALER;
 
+  const isPlayerSpectator =
+    sessionData.members[sessionData.clientId].userRole === USER_ROLES.SPECTATOR;
+
+  const activeIssueId = sessionData.game
+    ? String(sessionData.game.currIssueId)
+    : undefined;
+
+  const setActiveIssueId = (id: string): void => {
+    if (sessionData.game) {
+      console.log(id, '-----');
+
+      dispatch(
+        updSessState({ game: { ...sessionData.game, currIssueId: +id } }),
+      );
+    }
+  };
+
   const findIssueIndex = (id: number): number | null => {
     const issue = list.find(issue => issue.id === id);
 
@@ -67,17 +87,29 @@ const UseSessionData = (
 
     if (issueIndex !== null) {
       issues[issueIndex] = issue;
-
-      dispatch(
-        updSessState({ issues: { list: [...issues], isSynced: false } }),
-      );
     } else {
-      dispatch(
-        updSessState({ issues: { list: [...issues, issue], isSynced: false } }),
-      );
+      issues.push(issue);
 
       setNewIssueId(newIssueId + 1);
     }
+
+    dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));
+
+    const activeIssue = (issue: Issue): boolean => {
+      const id = String(issue.id);
+
+      if (!issue.closed) {
+        if (activeIssueId !== id) {
+          setActiveIssueId(id);
+        }
+
+        return true;
+      }
+
+      return false;
+    };
+
+    issues.some(activeIssue);
   };
 
   const removeIssue = (id: number): void => {
@@ -129,9 +161,9 @@ const UseSessionData = (
 
   const membersData: IUserCards = {
     members: sessionData.members,
-    findWhoIsUser: isItYou,
-    isRoundStarted: isRoundStarted(),
+    isItYou,
     isGameStage,
+    isDealerPlaying: sessionData.gSettings.dealerAsPlayer,
   };
 
   const issuesData: IIssuesData = {
@@ -140,13 +172,20 @@ const UseSessionData = (
     removeIssue,
     newIssueId,
     isPlayerDealer,
+    gameState: sessionData.game,
+  };
+
+  const gameData: ICardsGame = {
+    cards: sessionData.gSettings.cards,
     isGameStage,
+    units: sessionData.gSettings.scoreTypeShort,
   };
 
   const gameStateData: IGameStateData = {
     isPlayerDealer,
     setGameSettings,
-    isGameStage,
+    gameState: sessionData.game,
+    gameData,
   };
 
   return {
@@ -156,6 +195,7 @@ const UseSessionData = (
     issuesData,
     gameStateData,
     isPlayerDealer,
+    isPlayerSpectator,
   };
 };
 

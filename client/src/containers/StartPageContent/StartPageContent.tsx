@@ -1,12 +1,9 @@
-import { Heading, Text, Button, Input, Flex, Box } from '@chakra-ui/react';
+import { Heading, Text, Button, Input, Flex } from '@chakra-ui/react';
 // import pokerPlaning from '../../assets/images/shared'
 import { UserRole } from '../../../../shared/types/user/user-role';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { homePageSlice } from '../../redux/slices/home-page';
-
-// import {ReactComponent as UndrawWelcome} from '../../assets/images/undraw/welcome.svg';
-import { GameTimer } from '../GameTimer/GameTimer';
 
 interface MainPageProps {
   onPopupCalled: (forRole: UserRole) => void;
@@ -57,12 +54,6 @@ const StartPageContent = ({ onPopupCalled }: MainPageProps): JSX.Element => {
               </Flex>
             </Flex>
           </Flex>
-
-          {/* <UndrawWelcome /> */}
-
-          <Box bg="grey">
-            <GameTimer />
-          </Box>
         </Flex>
       </Flex>
     </Flex>

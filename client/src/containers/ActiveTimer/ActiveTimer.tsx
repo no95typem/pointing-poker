@@ -16,8 +16,11 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
     const planTick = (delay: number) => {
       timeout = setTimeout(() => {
         const realEstTimeInS = (props.endTime - Date.now()) / 1000;
+
         const showedEstTimeInMS = Math.ceil(realEstTimeInS) * 1000;
+
         const newTime = Math.max(showedEstTimeInMS, 0);
+
         setEstTime(newTime);
 
         if (newTime <= 0 && timeout) clearTimeout(timeout);

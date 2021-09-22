@@ -1,5 +1,6 @@
 import { ISettings } from '../../settings';
 import { Synchronized } from '../../syncable';
+import { ICardsGame } from '../card';
 import { ChatMsg } from '../chat/chat-msg';
 import { Issue } from '../issue/issue';
 import { Member } from '../member';
@@ -13,7 +14,7 @@ export interface ISessionName extends Synchronized {
 export interface ISessionGameState {
   roundState: RoundState;
   roundStartTime?: number;
-  currIssueId?: number; // ! TODO-Kaesid: Использовать для подсветки текущей задачи
+  currIssueId?: number;
   // key number - userPublicId, val number - value of card
   votes: Record<number, string | undefined>;
 }
@@ -49,7 +50,8 @@ export interface ISessionStateClient extends SessionState {
 export interface IGameStateData {
   setGameSettings: (settings: ISettings) => void;
   isPlayerDealer: boolean;
-  isGameStage: boolean;
+  gameState?: ISessionGameState;
+  gameData: ICardsGame;
 }
 
 export interface ILobbyGameStateData extends IGameStateData {
