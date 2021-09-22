@@ -8,7 +8,7 @@ import {
 } from '../../../../shared/types/settings';
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
-import Timer from '../Timer/Timer';
+import PassiveTimer from '../PassiveTimer/PassiveTimer';
 import GameCards from '../GameCards/GameCards';
 import { ICardsData } from '../../../../shared/types/session/card';
 
@@ -86,7 +86,7 @@ const Settings = (props: ISettingsData): JSX.Element => {
           return <InputText data={inputData} key={name} />;
         })}
 
-        {isTimerNeeded && <Timer time={roundTime || 0} />}
+        {isTimerNeeded && <PassiveTimer time={roundTime || 0} />}
       </Stack>
 
       <GameCards {...cardsData} />

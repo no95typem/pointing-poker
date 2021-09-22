@@ -19,26 +19,8 @@ export interface IMemberData {
 
 export interface IUserCards {
   members: Record<number, Member>;
-  findWhoIsUser: (member: Member) => boolean;
-  isRoundStarted: boolean;
+  isItYou: (member: Member) => boolean;
   isGameStage: boolean;
   isVotersView?: boolean;
-}
-
-export interface IUserCardsViewBundle {
-  cardsData: IUserCards;
-  modalData: IKickModal;
-}
-
-export interface IKickModal {
-  isOpen: boolean;
-  initiatorName?: string;
-  name: string;
-  onClose: () => void;
-  onConfirm: () => void;
-  kickPlayer: (id: number, name: string) => void;
-}
-
-export interface IKickModalBundle {
-  modalData: IKickModal;
+  isDealerPlaying: boolean;
 }

@@ -1,14 +1,10 @@
 import { Rnd } from 'react-rnd';
 import { Flex, CloseButton, Portal } from '@chakra-ui/react';
-import ChatView from './components/ChatView/ChatView';
-import MessageInputBox from './components/MessageInputBox/MessageInputBox';
-import { useAppDispatch, useTypedSelector } from '../../redux/store';
-import { chatStateToggle } from '../../redux/slices/chat';
+import { ChatView } from './components/ChatView/ChatView';
+import { MessageInputBox } from './components/MessageInputBox/MessageInputBox';
 
-// const style = {
-//   border: 'solid 1px #ddd',
-//   background: '#f0f0f0',
-// };
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
+import { chatSlice } from '../../redux/slices/chat';
 
 const Chat = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -17,14 +13,13 @@ const Chat = (): JSX.Element => {
 
   if (!isVisible || clientId === undefined) return <></>;
 
-  const closeChat = (): void => {
-    dispatch(chatStateToggle());
+  const toggleChat = (): void => {
+    dispatch(chatSlice.actions.toggleChatState());
   };
 
   return (
     <Portal>
       <Rnd
-        // style={style}
         default={{
           x: document.documentElement.clientWidth / 2,
           y: -document.documentElement.clientHeight,
@@ -43,7 +38,7 @@ const Chat = (): JSX.Element => {
           justify="space-between"
           background="InfoBackground"
         >
-          <CloseButton onClick={closeChat} />
+          <CloseButton onClick={toggleChat} />
           <ChatView />
           <MessageInputBox />
         </Flex>

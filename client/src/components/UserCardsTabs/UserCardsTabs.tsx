@@ -9,15 +9,15 @@ const UserCardsTabs = (props: IUserCards): JSX.Element => {
   return (
     <Tabs isManual variant="enclosed">
       <TabList>
-        <Tab>All Users</Tab>
         <Tab>Players only</Tab>
+        <Tab>All Users</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
-          <UserCards {...props} />
+          <UserCards {...{ ...props, isVotersView: true }} />
         </TabPanel>
         <TabPanel>
-          <UserCards {...{ ...props, isVotersView: true }} />
+          <UserCards {...props} />
         </TabPanel>
       </TabPanels>
     </Tabs>

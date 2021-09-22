@@ -28,4 +28,5 @@ export interface ISettingsData {
     name: string,
     value: string | boolean | CardData[],
   ) => void;
+  isGameStage?: boolean;
 }

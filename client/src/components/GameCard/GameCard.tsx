@@ -10,7 +10,7 @@ import { CloseIcon } from '@chakra-ui/icons';
 import { ICardData } from '../../../../shared/types/session/card';
 
 const GameCard = (props: ICardData): JSX.Element => {
-  const { card, edit, units, deleteCard } = props;
+  const { card, edit, units, deleteCard, isGameStage } = props;
 
   const { value, base64 } = card;
 
@@ -49,23 +49,23 @@ const GameCard = (props: ICardData): JSX.Element => {
         position="absolute"
         aria-label="edit"
         background="transparent"
-        visibility={true ? 'visible' : 'hidden'}
+        visibility={isGameStage ? 'hidden' : 'visible'}
         top="0"
         left="0"
         size="lg"
         icon={<ImPencil />}
-        onClick={() => edit(value)}
+        onClick={edit && (() => edit(value))}
       />
       <IconButton
         position="absolute"
         aria-label="delete"
         background="transparent"
-        visibility={true ? 'visible' : 'hidden'}
+        visibility={isGameStage ? 'hidden' : 'visible'}
         top="0"
         right="0"
         size="lg"
         icon={<CloseIcon />}
-        onClick={() => deleteCard(value)}
+        onClick={deleteCard && (() => deleteCard(value))}
       />
     </Stack>
   );

@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import H from 'history';
 import { useHistory, useLocation } from 'react-router';
 import { SessionStage } from '../../../shared/types/session/state/stages';
@@ -17,13 +17,14 @@ const usePathParser = (params: {
   const errors = useTypedSelector(state => state.errors);
   const loads = useTypedSelector(state => state.loads);
 
-  if (path.startsWith('/session/')) {
-    const lobbyId = path.split('/')[2];
-    dispatch(homePageSlice.actions.setLobbyURL(lobbyId));
-  }
+  useEffect(() => {
+    if (path.startsWith('/session/')) {
+      const lobbyId = path.split('/')[2];
+      dispatch(homePageSlice.actions.setLobbyURL(lobbyId));
+    }
+  });
 
   if (Object.keys(errors).length > 0) {
-    // console.log(errors);
     return path !== '/error' ? '/error' : undefined;
   }
 
@@ -70,7 +71,7 @@ export const useRouterController = (): [boolean, H.Location] => {
   });
 
   /* eslint-disable react-hooks/exhaustive-deps */
-  useLayoutEffect(() => {
+  useEffect(() => {
     // for session
     if (requiredPathBySession) {
       history.push(requiredPathBySession);
@@ -82,8 +83,6 @@ export const useRouterController = (): [boolean, H.Location] => {
 
   const newLocation = OBJ_PROCESSOR.deepClone(location);
   newLocation.pathname = requiredPathBySession || location.pathname;
-
-  // console.log(requiredPathBySession);
 
   return [!!requiredPathBySession, newLocation];
 };

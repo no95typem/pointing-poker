@@ -6,6 +6,7 @@ import {
   IIssueModal,
   IIssuesData,
   Issue,
+  IStatisticModal,
 } from '../../../../shared/types/session/issue/issue';
 
 import IssueCardsView from './IssuesCardsView';
@@ -18,10 +19,16 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     removeIssue,
     newIssueId,
     isPlayerDealer,
-    isGameStage,
+    gameState,
   } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const {
+    isOpen: isStaticticOpen,
+    onOpen: openStatistic,
+    onClose: closeStatistic,
+  } = useDisclosure();
 
   const newIssue: Issue = {
     id: newIssueId,
@@ -32,14 +39,10 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     closed: false,
   };
 
-  console.log(issues);
-
   const [activeIssue, setActiveIssue] = useState<Issue>(newIssue);
 
   const findIssue = (issueId?: number): void => {
     const editIssue = issues.list.find(issue => issue.id === issueId);
-
-    console.log(editIssue);
 
     setActiveIssue(editIssue ? editIssue : newIssue);
   };
@@ -48,6 +51,13 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     findIssue(issueId);
 
     onOpen();
+  };
+
+  const openStatisticModal = (issueId: number): void => {
+    console.log('hellllo', issueId);
+    findIssue(issueId);
+
+    openStatistic();
   };
 
   const setNewIssue = (issue: Issue): void => {
@@ -60,6 +70,13 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     setActiveIssue({ ...issue });
   };
 
+  const statisticModal: IStatisticModal = {
+    onOpen: openStatisticModal,
+    isOpen: isStaticticOpen,
+    onClose: closeStatistic,
+    activeIssue,
+  };
+
   const modalData: IIssueModal = {
     onClose,
     isOpen,
@@ -69,7 +86,8 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     changeIssue,
     removeIssue,
     isPlayerDealer,
-    isGameStage,
+    gameState,
+    statisticModal,
   };
 
   return <IssueCardsView issues={issues} modal={modalData} />;

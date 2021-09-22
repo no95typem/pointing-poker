@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { Button, Stack } from '@chakra-ui/react';
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/ServerAdapter';
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import { ILobbyGameStateData } from '../../../../shared/types/session/state/session-state';
 
 const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {
-  const { isPlayerDealer, setGameSettings, localSettings, isGameStage } = props;
+  const { isPlayerDealer, setGameSettings, localSettings, gameData } = props;
 
   const initiateGame = (): void => {
     localSettings && setGameSettings(localSettings);
@@ -28,7 +28,9 @@ const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {
           colorScheme="facebook"
           w="130px"
           variant="solid"
-          visibility={isPlayerDealer && !isGameStage ? 'visible' : 'hidden'}
+          visibility={
+            isPlayerDealer && !gameData.isGameStage ? 'visible' : 'hidden'
+          }
           onClick={initiateGame}
         >
           Start Game

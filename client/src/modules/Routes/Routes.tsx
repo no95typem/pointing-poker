@@ -6,8 +6,7 @@ import { ErrorsMUX } from '../../containers/ErrorsMUX/ErrorsMUX';
 import { LoadsMUX } from '../../containers/LoadsMUX/LoadsMUX';
 import { useRouterController } from '../../hooks/useRouterController';
 
-import routes from './routesData';
-import templatesRoutes from './templateRoutesData';
+import ROUTES from './routesData';
 
 const TRANSITION_TIME = 500;
 
@@ -56,19 +55,7 @@ export const Routes = (): JSX.Element => {
                 </div>
               </Route>
 
-              {templatesRoutes.map(route => {
-                const { key, path, isExact, Component } = route;
-
-                return (
-                  <Route key={key} path={path} exact={isExact}>
-                    <div ref={nodeRef}>
-                      <Component />
-                    </div>
-                  </Route>
-                );
-              })}
-
-              {routes.map(route => {
+              {ROUTES.map(route => {
                 const { key, path, isExact, Component } = route;
 
                 return (

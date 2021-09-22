@@ -1,7 +1,7 @@
-import ChakraButtons from '../../components/templates/ChakraButtons/ChakraButtons';
 import Lobby from '../Lobby/Lobby';
-import HomePage from '../HomePage/HomePage';
+import StartPage from '../HomePage/StartPage';
 import Game from '../Game/Game';
+import Statistics from '../Statistics/Statistics';
 
 export interface IRoute {
   key: string;
@@ -24,7 +24,7 @@ const routes: IRoute[] = [
     key: 'routeRoot',
     path: RoutesPath.ROOT,
     isExact: true,
-    Component: HomePage, //Заглушка, заменяем своими компонентами по мере готовности
+    Component: StartPage,
   },
   {
     key: 'routeLobby',
@@ -42,7 +42,7 @@ const routes: IRoute[] = [
     key: 'routeStats',
     path: RoutesPath.STATS,
     isExact: true,
-    Component: ChakraButtons, //Заглушка, заменяем своими компонентами по мере готовности
+    Component: Statistics,
   },
 ];
 

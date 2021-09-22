@@ -49,8 +49,8 @@ export class DealerManager extends RoleManager {
 
     if (
       state.stage === SESSION_STAGES.GAME &&
-      state.game?.roundState === ROUND_STATES.AWAIT_START &&
-      state.game.currIssueId !== undefined
+      state.game?.currIssueId !== undefined &&
+      state.game.roundState !== ROUND_STATES.IN_PROCESS
     ) {
       const game = OBJ_PROCESSOR.deepClone(state.game);
 
@@ -100,20 +100,21 @@ export class DealerManager extends RoleManager {
       const purified = purify(msg.update);
       const { state } = this.api.getSessionState();
 
-      if (purified.issues && state.game) {
+      this.api.updateState(purified);
+
+      if (purified.issues) {
         // if there is no a current issue
         // OR the current issue was deleted...
         if (
-          state.game.currIssueId === undefined ||
-          !purified.issues.list.some(
-            iss => iss.id === (state.game as ISessionGameState).currIssueId,
-          )
+          state.game &&
+          (state.game.currIssueId === undefined ||
+            !purified.issues.list.some(
+              iss => iss.id === (state.game as ISessionGameState).currIssueId,
+            ))
         ) {
           this.handleNewIssue();
         }
       }
-
-      this.api.updateState(purified);
     }
   }
 
@@ -135,15 +136,13 @@ export class DealerManager extends RoleManager {
 
     const nextIssue = issues.list.find(iss => !iss.closed);
 
-    if (nextIssue) {
-      const game: ISessionGameState = {
-        roundState: ROUND_STATES.AWAIT_START,
-        currIssueId: nextIssue.id,
-        votes: {},
-      };
+    const game: ISessionGameState = {
+      roundState: ROUND_STATES.AWAIT_START,
+      currIssueId: nextIssue?.id,
+      votes: {},
+    };
 
-      this.api.updateState({ game, issues });
-    }
+    this.api.updateState({ game, issues });
   }
 
   private handleStartGame() {

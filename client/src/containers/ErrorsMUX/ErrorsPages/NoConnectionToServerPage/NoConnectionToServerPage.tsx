@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, AlertIcon, Button, VStack } from '@chakra-ui/react';
-import { SERVER_ADAPTER } from '../../../../modules/ServerAdapter/ServerAdapter';
+import { SERVER_ADAPTER } from '../../../../modules/ServerAdapter/serverAdapter';
 
 export const NoConnectionToServerPage = () => {
   return (

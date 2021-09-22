@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Container, Flex } from '@chakra-ui/react';
 import UserCard from '../../../../components/UserCard/UserCard';
 import { store, useTypedSelector } from '../../../../redux/store';
@@ -7,25 +7,12 @@ import {
   Member,
 } from '../../../../../../shared/types/session/member';
 
-const ChatView = () => {
+export const ChatView = () => {
   const sessionData = useTypedSelector(state => state.session);
   const { msgs } = store.getState().session.chat;
 
-  const [kickedName, setKickedName] = useState('');
-  console.log(kickedName);
-
-  const [kickedId, setKickedId] = useState(0);
-  console.log(kickedId);
-
-  const setModalWindowInfo = (id: number, name: string) => {
-    setKickedId(id);
-
-    setKickedName(name);
-  };
-
   const isItYou = (member: Member) => {
-    // return sessionData.clientId === member.userSessionPublicId;
-    return true;
+    return sessionData.clientId === member.userSessionPublicId;
   };
 
   const setMemberData = (member: Member): IMemberData => {
@@ -33,7 +20,6 @@ const ChatView = () => {
       member: member,
       isItYou: isItYou(member),
       isRoundStarted: false,
-      kickPlayer: setModalWindowInfo,
     };
   };
 
@@ -68,5 +54,3 @@ const ChatView = () => {
     </Container>
   );
 };
-
-export default ChatView;
