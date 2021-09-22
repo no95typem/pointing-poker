@@ -10,6 +10,7 @@ import {
   Spacer,
   HStack,
   Image,
+  useColorMode,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
 import { useAppDispatch } from '../../redux/store';
@@ -17,6 +18,7 @@ import { chatSlice } from '../../redux/slices/chat';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const cMode = useColorMode();
 
   const toggleChat = (): void => {
     dispatch(chatSlice.actions.toggleChatState());
@@ -24,7 +26,7 @@ export const Header = (): JSX.Element => {
 
   return (
     <Flex
-      bg="gray.300"
+      bg={cMode.colorMode === 'light' ? 'gray.400' : 'gray.700'}
       height="100%"
       alignItems="center"
       justifyContent="space-between"
