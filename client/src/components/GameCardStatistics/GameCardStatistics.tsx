@@ -15,7 +15,9 @@ interface Props {
 
 const GameCardStatistics = (data: Props): JSX.Element => {
   const { name, stat, quantityVoters } = data;
+
   const localSettings = useTypedSelector(state => state.settings);
+
   const { cards, scoreTypeShort } = localSettings;
 
   const currentCard = cards.find(card => card.value === name);

@@ -28,7 +28,7 @@ interface ILobbyData {
   membersData: IUserCards;
   issuesData: IIssuesData;
   gameStateData: IGameStateData;
-
+  isPlayerSpectator: boolean;
   isPlayerDealer: boolean;
 }
 
@@ -53,18 +53,11 @@ const UseSessionData = (
     dispatch(updSessState({ name: { value: newName, isSynced: false } }));
   };
 
-  // const changeRoundState = (): void => {
-  //   if (sessionData.game) {
-  //     dispatch(
-  //       updSessState({
-  //         game: { ...sessionData.game, roundState: ROUND_STATES.IN_PROCESS },
-  //       }),
-  //     );
-  //   }
-  // };
-
   const isPlayerDealer =
     sessionData.members[sessionData.clientId].userRole === USER_ROLES.DEALER;
+
+  const isPlayerSpectator =
+    sessionData.members[sessionData.clientId].userRole === USER_ROLES.SPECTATOR;
 
   const activeIssueId = sessionData.game
     ? String(sessionData.game.currIssueId)
@@ -73,6 +66,7 @@ const UseSessionData = (
   const setActiveIssueId = (id: string): void => {
     if (sessionData.game) {
       console.log(id, '-----');
+
       dispatch(
         updSessState({ game: { ...sessionData.game, currIssueId: +id } }),
       );
@@ -100,15 +94,21 @@ const UseSessionData = (
 
     dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));
 
-    // if (issues[0]) {
-    //   console.log(issues[0]);
-    // }
+    const activeIssue = (issue: Issue): boolean => {
+      const id = String(issue.id);
 
-    // console.log(activeIssueId);
+      if (!issue.closed) {
+        if (activeIssueId !== id) {
+          setActiveIssueId(id);
+        }
 
-    if (issues[0] && activeIssueId !== String(issues[0].id)) {
-      setActiveIssueId(String(issues[0].id));
-    }
+        return true;
+      }
+
+      return false;
+    };
+
+    issues.some(activeIssue);
   };
 
   const removeIssue = (id: number): void => {
@@ -183,7 +183,6 @@ const UseSessionData = (
   const gameStateData: IGameStateData = {
     isPlayerDealer,
     setGameSettings,
-
     gameState: sessionData.game,
     gameData,
   };
@@ -195,6 +194,7 @@ const UseSessionData = (
     issuesData,
     gameStateData,
     isPlayerDealer,
+    isPlayerSpectator,
   };
 };
 

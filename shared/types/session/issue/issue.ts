@@ -25,6 +25,7 @@ export interface IIssueData {
   isPlayerDealer: boolean;
   openModal: (id?: number) => void;
   removeIssue: (id: number) => void;
+  openStatisticModal?: (id: number) => void;
 }
 
 export interface IIssuesData {
@@ -46,6 +47,7 @@ export interface IIssueModal {
   activeIssue: Issue;
   isOpen: boolean;
   isPlayerDealer: boolean;
+  statisticModal?: IStatisticModal;
 }
 
 export interface IIssues {
@@ -55,4 +57,11 @@ export interface IIssues {
 
 export interface IIssueModalData {
   issue: IIssueModal;
+}
+
+export interface IStatisticModal {
+  onOpen: (issueId: number) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  activeIssue: Issue;
 }

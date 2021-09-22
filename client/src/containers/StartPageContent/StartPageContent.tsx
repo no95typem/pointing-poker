@@ -7,7 +7,7 @@ import { homePageSlice } from '../../redux/slices/home-page';
 
 // import UndrawWelcome from '../../../../assets/images/undraw/welcome.svg';
 import { loadFiles } from '../../helpers/loadFiles';
-import { GameTimer } from '../GameTimer/GameTimer';
+import GameTimer from '../GameTimer/GameTimer';
 
 interface MainPageProps {
   onPopupCalled: (forRole: UserRole) => void;

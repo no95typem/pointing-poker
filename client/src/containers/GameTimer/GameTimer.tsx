@@ -2,7 +2,7 @@ import React from 'react';
 import { useTypedSelector } from '../../redux/store';
 import { ActiveTimer } from '../ActiveTimer/ActiveTimer';
 
-export const GameTimer = (): JSX.Element => {
+const GameTimer = (): JSX.Element => {
   const roundStartTime = useTypedSelector(
     state => state.session.game?.roundStartTime,
   );
@@ -11,7 +11,13 @@ export const GameTimer = (): JSX.Element => {
     state => state.session.currentGameSettings.roundTime,
   );
 
-  if (!roundStartTime) return <></>;
+  const isTimerNeeded = useTypedSelector(
+    state => state.session.currentGameSettings.isTimerNeeded,
+  );
+
+  if (!roundStartTime || !isTimerNeeded) return <></>;
 
   return <ActiveTimer endTime={roundStartTime + roundTime} />;
 };
+
+export default GameTimer;

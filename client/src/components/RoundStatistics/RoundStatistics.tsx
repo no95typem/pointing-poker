@@ -3,6 +3,7 @@ import { UNDEFINED_CARD_VALUE } from '../../../../shared/const';
 import { Box, Heading, Stack } from '@chakra-ui/react';
 
 import { Percentage } from '../../../../shared/types/session/round/round-stat';
+
 import GameCardStatistics from '../GameCardStatistics/GameCardStatistics';
 
 export interface IRoundStatistics {
@@ -12,12 +13,14 @@ export interface IRoundStatistics {
 
 const RoundStatistics = (props: IRoundStatistics): JSX.Element => {
   const { votes } = props;
+
   const percentage: Percentage = {};
 
   const quantityVoters = Object.entries(votes).length;
 
   Object.entries(votes).forEach(([memberId, value]) => {
     const key = value || UNDEFINED_CARD_VALUE;
+
     const data = percentage[key];
 
     if (!data) {
@@ -33,7 +36,7 @@ const RoundStatistics = (props: IRoundStatistics): JSX.Element => {
 
   return (
     <Box mb="30px">
-      <Heading mb="20px" size="md">
+      <Heading textAlign="center" textTransform="uppercase" mb="20px" size="md">
         {props.issueTitle ? props.issueTitle : 'Statistics:'}
       </Heading>
 
