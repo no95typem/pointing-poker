@@ -100,6 +100,8 @@ export class DealerManager extends RoleManager {
       const purified = purify(msg.update);
       const { state } = this.api.getSessionState();
 
+      this.api.updateState(purified);
+
       if (purified.issues) {
         // if there is no a current issue
         // OR the current issue was deleted...
@@ -113,8 +115,6 @@ export class DealerManager extends RoleManager {
           this.handleNewIssue();
         }
       }
-
-      this.api.updateState(purified);
     }
   }
 
