@@ -107,7 +107,7 @@ export class DealerManager extends RoleManager {
         // OR the current issue was deleted...
         if (
           state.game &&
-          (state.game.currIssueId === undefined ||
+          (state.game.roundState === ROUND_STATES.AWAIT_START ||
             !purified.issues.list.some(
               iss => iss.id === (state.game as ISessionGameState).currIssueId,
             ))
@@ -126,7 +126,10 @@ export class DealerManager extends RoleManager {
 
     const issues = OBJ_PROCESSOR.deepClone(state.issues);
 
-    if (state.game?.currIssueId) {
+    if (
+      state.game?.currIssueId !== undefined &&
+      state.game.roundState === ROUND_STATES.ENDED
+    ) {
       const oldIssue = issues.list.find(
         iss => iss.id === state.game?.currIssueId,
       );
