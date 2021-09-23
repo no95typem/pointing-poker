@@ -36,11 +36,18 @@ const RoundStatistics = (props: IRoundStatistics): JSX.Element => {
 
   return (
     <Box mb="30px">
-      <Heading textAlign="center" textTransform="uppercase" mb="20px" size="md">
+      <Heading
+        textAlign="center"
+        mb="10px"
+        as="h2"
+        size="lg"
+        textTransform="uppercase"
+        fontFamily="handwrite"
+      >
         {props.issueTitle ? props.issueTitle : 'Statistics:'}
       </Heading>
 
-      <Stack w="100%" wrap="wrap" direction="row">
+      <Stack w="100%" wrap="wrap" direction="row" justify="center">
         {Object.entries(percentage).map(([name, stat]) => {
           const data = {
             name,
