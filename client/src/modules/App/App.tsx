@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '@fontsource/architects-daughter';
 
 import { ChakraProvider, Grid, ColorModeScript } from '@chakra-ui/react';
@@ -10,6 +10,11 @@ import Chat from '../Chat/Сhat';
 import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
 export const App = () => {
+  useEffect(() => {
+    document.body.style.width = '100%';
+    document.body.style.overflowX = 'hidden';
+  });
+
   return (
     <>
       <ColorModeScript />

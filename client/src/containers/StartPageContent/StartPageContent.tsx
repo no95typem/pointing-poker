@@ -55,7 +55,7 @@ const StartPageContent = ({ onPopupCalled }: MainPageProps): JSX.Element => {
                 maxW={MAX_BUTTON_WIDTH}
                 onClick={() => onPopupCalled(USER_ROLES.DEALER)}
               >
-                {isLargerThan860 ? 'Start new session' : 'START'}
+                {isLargerThan860 ? 'Start new session' : 'Start'}
               </Button>
             </Flex>
           </Flex>

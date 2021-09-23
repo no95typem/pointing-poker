@@ -1,11 +1,15 @@
 import React from 'react';
-import { useRadio, Box } from '@chakra-ui/react';
+import { useRadio, Box, useColorMode } from '@chakra-ui/react';
 
 export const ButtonLikeRadioCard = (props: any) => {
   const { getInputProps, getCheckboxProps } = useRadio(props);
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
+  const cMode = useColorMode();
+
+  const bgColor =
+    cMode.colorMode === 'light' ? 'gray.100' : 'rgba(255, 255, 255, 0.08)';
 
   return (
     <Box as="label">
@@ -13,20 +17,20 @@ export const ButtonLikeRadioCard = (props: any) => {
       <Box
         {...checkbox}
         cursor="pointer"
-        borderWidth="1px"
+        borderWidth="2px"
         borderRadius="md"
         boxShadow="md"
         _checked={{
-          bg: 'facebook.600',
-          color: 'white',
-          borderColor: 'facebook.600',
+          bg: bgColor,
+          transform: 'scale(1) !important',
         }}
         _focus={{
           boxShadow: 'outline',
         }}
-        w="10rem"
+        w="8rem"
         textAlign="center"
-        py={3}
+        py={1.5}
+        style={{ transform: 'scale(0.8)' }}
       >
         {props.children}
       </Box>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChatIcon } from '@chakra-ui/icons';
+import { ChatIcon, HamburgerIcon } from '@chakra-ui/icons';
 
 import logo from '../../assets/images/shared/logo.svg';
 
@@ -14,14 +14,14 @@ import {
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
 import { useAppDispatch } from '../../redux/store';
-import { chatSlice } from '../../redux/slices/chat';
+import { tryToToggleChatState } from '../../redux/slices/chat';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const cMode = useColorMode();
 
   const toggleChat = (): void => {
-    dispatch(chatSlice.actions.toggleChatState());
+    dispatch(tryToToggleChatState());
   };
 
   return (
@@ -45,9 +45,17 @@ export const Header = (): JSX.Element => {
         <ColorModeSwitcher justifySelf="flex-end" />
         <Spacer />
         <IconButton
+          style={{ marginInlineStart: '0px' }}
           aria-label="chat"
           icon={<ChatIcon />}
           onClick={toggleChat}
+        />
+        <Spacer />
+        <IconButton
+          style={{ marginInlineStart: '0px' }}
+          aria-label="menu"
+          icon={<HamburgerIcon />}
+          // onClick={toggleChat}
         />
       </HStack>
     </Flex>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRadioGroup, HStack } from '@chakra-ui/react';
+import { useRadioGroup, Text, Flex } from '@chakra-ui/react';
 import { UserRole, USER_ROLES } from '../../../../shared/types/user/user-role';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { homePageSlice } from '../../redux/slices/home-page';
@@ -21,7 +21,7 @@ const UserRoleRadioButtons = () => {
   const group = getRootProps();
 
   return (
-    <HStack {...group}>
+    <Flex direction={Math.random() > 0.5 ? 'row' : 'row-reverse'} {...group}>
       {options.map(value => {
         const radio = (getRadioProps as (obj: { value: string }) => any)({
           value,
@@ -29,11 +29,11 @@ const UserRoleRadioButtons = () => {
 
         return (
           <ButtonLikeRadioCard key={value} {...radio}>
-            {value}
+            <Text>{value}</Text>
           </ButtonLikeRadioCard>
         );
       })}
-    </HStack>
+    </Flex>
   );
 };
 
