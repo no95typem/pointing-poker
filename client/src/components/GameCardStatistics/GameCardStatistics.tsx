@@ -7,7 +7,7 @@ import { ICardData } from '../../../../shared/types/session/card';
 
 import GameCard from '../GameCard/GameCard';
 
-interface Props {
+interface IGameCardStatistics {
   name: string;
   stat: {
     count: number;
@@ -16,8 +16,8 @@ interface Props {
   quantityVoters: number;
 }
 
-const GameCardStatistics = (data: Props): JSX.Element => {
-  const { name, stat, quantityVoters } = data;
+const GameCardStatistics = (props: IGameCardStatistics): JSX.Element => {
+  const { name, stat, quantityVoters } = props;
 
   const localSettings = useTypedSelector(state => state.settings);
 
@@ -36,7 +36,7 @@ const GameCardStatistics = (data: Props): JSX.Element => {
   };
 
   return (
-    <Stack>
+    <Stack direction="column" spacing="1rem">
       <GameCard {...cardData} />
       <Text textAlign="center">{`${percent}%`}</Text>
     </Stack>
