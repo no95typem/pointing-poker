@@ -4,6 +4,7 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  Text,
 } from '@chakra-ui/react';
 
 import { ChangeEvent } from 'react';
@@ -16,8 +17,8 @@ export interface IUserInfoInputStackProps extends UserInfo {
 
 const UserInfoInputStack = (props: IUserInfoInputStackProps) => {
   return (
-    <Stack w="60%" spacing={3}>
-      <FormControl isInvalid={props.isNameInvalid}>
+    <Stack w="100%" maxW="300px" spacing={3}>
+      <FormControl isInvalid={props.isNameInvalid} pos="relative">
         <FormLabel>Your first name:</FormLabel>
         <Input
           name="name"
@@ -26,7 +27,9 @@ const UserInfoInputStack = (props: IUserInfoInputStackProps) => {
           size="md"
           isRequired
         />
-        <FormErrorMessage>Name is required</FormErrorMessage>
+        <FormErrorMessage pos="absolute" right="5px" bottom="0px">
+          <Text fontStyle="italic">Name is required</Text>
+        </FormErrorMessage>
       </FormControl>
       <FormControl>
         <FormLabel>Your last name:</FormLabel>

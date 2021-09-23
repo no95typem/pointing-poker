@@ -2,12 +2,12 @@ import React from 'react';
 
 import { Code, Link, Text, VStack } from '@chakra-ui/react';
 
-import { Logo } from '../../Logo/Logo';
+import { ChakraLogo } from '../../ChakraLogo/ChakraLogo';
 
 const ChakraAnimation = (): JSX.Element => {
   return (
     <VStack spacing={8}>
-      <Logo h="40vmin" pointerEvents="none" />
+      <ChakraLogo h="40vmin" pointerEvents="none" />
       <Text>
         Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
       </Text>

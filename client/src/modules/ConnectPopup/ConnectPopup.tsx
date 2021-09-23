@@ -8,7 +8,9 @@ import {
   Button,
   Flex,
   Text,
-  FormControl,
+  FormLabel,
+  Box,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import UserInfoInputStack from '../../containers/UserInfoInputStack/UserInfoInputStack';
 import AvatarForm from '../../containers/AvatarForm/AvatarForm';
@@ -17,6 +19,8 @@ import { connectToLobby, createSession } from '../../redux/slices/connect';
 import UserRoleRadioButtons from '../../containers/UserRoleRadioButtons/UserRoleRadioButtons';
 import { ChangeEvent } from 'react';
 import { userInfoSlice } from '../../redux/slices/userInfo';
+import { ReactComponent as UndrawBusinessDecisions } from '../../assets/images/undraw/business-decisions.svg';
+import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player.svg';
 
 interface ConnectPopupProps {
   isOpen: boolean;
@@ -32,6 +36,7 @@ const ConnectPopup = ({
   const dispatch = useAppDispatch();
   const userInfo = useTypedSelector(state => state.userInfo);
   const isNameInvalid = userInfo.name.length === 0;
+  const [isLargerThan640] = useMediaQuery('(min-width: 640px)');
 
   const handleUserInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -49,7 +54,7 @@ const ConnectPopup = ({
 
   return (
     <Modal
-      size="xl"
+      size="3xl"
       isOpen={isOpen}
       onClose={onClose}
       motionPreset="slideInBottom"
@@ -58,11 +63,22 @@ const ConnectPopup = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Connect to lobby</ModalHeader>
+        <ModalHeader fontFamily="handwrite">
+          Setting up your new participating
+        </ModalHeader>
         <ModalBody>
-          <FormControl isInvalid={true}>
-            <Flex direction="column" alignItems="center" gridGap="5rem">
-              <Flex w="100%" justify="space-between">
+          <Flex direction="column" alignItems="center" w="100%" gridGap="6">
+            <Flex
+              w="100%"
+              justify="center"
+              wrap="wrap"
+              gridGap="6"
+              alignItems="center"
+            >
+              <Box>
+                <FormLabel fontFamily="handwrite">
+                  1. Enter or check your user information:
+                </FormLabel>
                 <UserInfoInputStack
                   {...{
                     ...userInfo,
@@ -70,23 +86,47 @@ const ConnectPopup = ({
                     onChange: handleUserInfoChange,
                   }}
                 />
+              </Box>
+              <Box>
+                <FormLabel fontFamily="handwrite">
+                  2. Setup your avatar (optional):
+                </FormLabel>
                 <AvatarForm />
-              </Flex>
-              {forDealer ? (
-                <Text size="2xl">You will be a dealer</Text>
-              ) : (
-                <UserRoleRadioButtons />
-              )}
+              </Box>
             </Flex>
-          </FormControl>
+            <Box mt={isLargerThan640 ? '4' : undefined}>
+              <FormLabel fontFamily="handwrite">
+                3. Check your role for this session:
+              </FormLabel>
+              {forDealer ? (
+                <Flex alignItems="center">
+                  <Text fontFamily="handwrite" fontWeight="bold">
+                    You will be a dealer!
+                  </Text>
+                  <UndrawBusinessDecisions width="70%" />
+                </Flex>
+              ) : (
+                <Flex alignItems="center" wrap="wrap" position="relative">
+                  <Box
+                    position="absolute"
+                    top="5px"
+                    p={1}
+                    backgroundBlendMode="color-burn"
+                  >
+                    <UserRoleRadioButtons />
+                  </Box>
+                  <UndrawSelectPlayer />
+                </Flex>
+              )}
+            </Box>
+          </Flex>
         </ModalBody>
 
         <ModalFooter justifyContent="space-between">
-          <Button colorScheme="facebook" variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose}>
             Close
           </Button>
           <Button
-            colorScheme="facebook"
             disabled={isNameInvalid}
             onClick={() =>
               forDealer ? dispatch(createSession()) : dispatch(connectToLobby())

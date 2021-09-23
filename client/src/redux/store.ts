@@ -10,6 +10,7 @@ import { sessionSlice } from './slices/session';
 import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
 import { chatSlice } from './slices/chat';
+import { notifSlice } from './slices/notifications';
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     chat: chatSlice.reducer,
     mockSession: mockSessionSlice.reducer,
     settings: settingsSlice.reducer,
+    alerts: notifSlice.reducer,
   },
   devTools: process.env.NODE_ENV === 'development',
 });
