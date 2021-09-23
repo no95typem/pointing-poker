@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button, Stack } from '@chakra-ui/react';
 import { CSMsgStartRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-start-round';
@@ -7,14 +7,23 @@ import { ISessionGameState } from '../../../../shared/types/session/state/sessio
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
+import ChakraLoader from '../../components/Loader/ChakraLoader';
 
 const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
   const { roundState } = props;
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [roundState]);
 
   const startRound = (): void => {
     const roundStart = new CSMsgStartRound();
 
     SERVER_ADAPTER.send(roundStart);
+
+    setIsLoading(true);
   };
 
   const stopRound = (): void => {
@@ -24,8 +33,6 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
   };
 
   const nextRound = (): void => {
-    console.log('next round');
-
     const nextIssue = new CSMsgNextIssue();
 
     SERVER_ADAPTER.send(nextIssue);
@@ -37,10 +44,12 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
     } else {
       nextRound();
     }
+    setIsLoading(true);
   };
 
   return (
     <Stack
+      position="relative"
       direction="row"
       align="center"
       justify="space-between"
@@ -53,7 +62,9 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
         p="0 10px"
         variant="solid"
         visibility={
-          roundState === ROUND_STATES.IN_PROCESS ? 'hidden' : 'visible'
+          roundState === ROUND_STATES.IN_PROCESS || isLoading
+            ? 'hidden'
+            : 'visible'
         }
         onClick={startRound}
       >
@@ -68,13 +79,15 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
         p="0 10px"
         variant="solid"
         visibility={
-          roundState === ROUND_STATES.AWAIT_START ? 'hidden' : 'visible'
+          roundState === ROUND_STATES.AWAIT_START || isLoading
+            ? 'hidden'
+            : 'visible'
         }
         onClick={changeRoundState}
       >
         {roundState === ROUND_STATES.ENDED ? ' Next Issue' : 'End Round'}
       </Button>
-      )
+      ){isLoading && <ChakraLoader />}
     </Stack>
   );
 };

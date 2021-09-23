@@ -27,13 +27,7 @@ export const Footer = (): JSX.Element => {
       px="2"
       justify="space-between"
     >
-      <Flex
-        colorScheme="gray"
-        direction="column"
-        align="center"
-        justify="center"
-        fontSize="sm"
-      >
+      <Flex direction="column" align="center" justify="center" fontSize="sm">
         <Text style={{ opacity: 0.7 }}>2021</Text>
         <Link href="">powered by Chakra UI</Link>
         <Link href="">illustrations fron undraw</Link>

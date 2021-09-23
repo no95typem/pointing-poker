@@ -33,7 +33,7 @@ const UserVote = (props: IVote): JSX.Element => {
       boxShadow="lg"
     >
       {card ? (
-        <GameCard card={card} units={scoreTypeShort} />
+        <GameCard card={card} units={scoreTypeShort} isGameStage={true} />
       ) : (
         <QuestionIcon color="facebook.300" w={6} h={6} />
       )}

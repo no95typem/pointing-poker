@@ -9,7 +9,6 @@ import {
   ICardsGame,
 } from '../../../../shared/types/session/card';
 import { CSMsgPick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-pick';
-
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import GameCard from '../../components/GameCard/GameCard';
 
@@ -43,14 +42,20 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
   };
 
   return (
-    <Box mb="30px">
+    <Box w="100%" mb="30px">
       {!isGameStage && (
         <Heading mb="20px" size="md">
           {LOCALE_US.SETTINGS_CARDS_HEADER}
         </Heading>
       )}
 
-      <Stack w="100%" wrap="wrap" direction="row">
+      <Stack
+        w="100%"
+        wrap="wrap"
+        direction="row"
+        justify="center"
+        alignItems="center"
+      >
         {cards.map(cardData => {
           const id = cardData.value;
 

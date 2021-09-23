@@ -11,7 +11,7 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
   );
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout | undefined;
 
     const planTick = (delay: number) => {
       timeout = setTimeout(() => {
@@ -24,7 +24,7 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
         setEstTime(newTime);
 
         if (newTime <= 0 && timeout) clearTimeout(timeout);
-        else {
+        else if (timeout) {
           const shortedDelay =
             1000 - (showedEstTimeInMS - realEstTimeInS * 1000);
 
@@ -38,7 +38,10 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
     planTick(1000);
 
     return () => {
-      timeout && clearTimeout(timeout);
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = undefined;
+      }
     };
   });
 
