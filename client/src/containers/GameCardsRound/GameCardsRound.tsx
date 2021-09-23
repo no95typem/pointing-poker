@@ -1,35 +1,35 @@
 import React, { useState } from 'react';
-
 import { Box, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
+
+import { LOCALE_US } from '../../locales/locale-us';
 
 import {
   CardData,
   ICardData,
   ICardsGame,
 } from '../../../../shared/types/session/card';
-
-import GameCard from '../../components/GameCard/GameCard';
-
-import { LOCALE_US } from '../../locales/locale-us';
-
 import { CSMsgPick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-pick';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
+import GameCard from '../../components/GameCard/GameCard';
+
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
 const GameCardsRound = (props: ICardsGame): JSX.Element => {
   const { cards, isGameStage, units } = props;
 
-  const [value, setValue] = useState('');
+  const [selectedRadioValue, setSelectedRadioValue] = useState('');
 
   const changeIssue = (value: string) => {
-    setValue(value);
+    setSelectedRadioValue(value);
+
     const msg = new CSMsgPick(value);
+
     SERVER_ADAPTER.send(msg);
   };
 
   const { getRadioProps } = useRadioGroup({
     name: 'issues',
-    value: value,
+    value: selectedRadioValue,
     onChange: changeIssue,
   });
 
@@ -42,14 +42,20 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
   };
 
   return (
-    <Box mb="30px">
+    <Box w="100%" mb="30px">
       {!isGameStage && (
         <Heading mb="20px" size="md">
           {LOCALE_US.SETTINGS_CARDS_HEADER}
         </Heading>
       )}
 
-      <Stack w="100%" wrap="wrap" direction="row">
+      <Stack
+        w="100%"
+        wrap="wrap"
+        direction="row"
+        justify="center"
+        alignItems="center"
+      >
         {cards.map(cardData => {
           const id = cardData.value;
 

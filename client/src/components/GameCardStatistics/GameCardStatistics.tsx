@@ -3,8 +3,9 @@ import React from 'react';
 import { Stack, Text } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
-import GameCard from '../GameCard/GameCard';
 import { ICardData } from '../../../../shared/types/session/card';
+
+import GameCard from '../GameCard/GameCard';
 
 interface IGameCardStatistics {
   name: string;
@@ -28,15 +29,16 @@ const GameCardStatistics = (props: IGameCardStatistics): JSX.Element => {
 
   if (!currentCard) return <></>;
 
-  const data: ICardData = {
+  const cardData: ICardData = {
     card: currentCard,
     units: scoreTypeShort,
+    isGameStage: true,
   };
 
   return (
     <Stack direction="column" spacing="1rem">
-      <GameCard {...data} />
-      <Text>{`${percent}%`}</Text>
+      <GameCard {...cardData} />
+      <Text textAlign="center">{`${percent}%`}</Text>
     </Stack>
   );
 };

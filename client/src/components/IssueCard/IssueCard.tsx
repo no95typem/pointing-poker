@@ -40,6 +40,7 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       direction="row"
       align="center"
       p="10px"
+      h="70px"
       boxShadow="lg"
       cursor={openStatisticModal ? 'pointer' : 'unset'}
       onClick={showIssueStatistic}

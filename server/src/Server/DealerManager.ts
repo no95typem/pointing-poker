@@ -98,6 +98,7 @@ export class DealerManager extends RoleManager {
       msg.update.name
     ) {
       const purified = purify(msg.update);
+
       const { state } = this.api.getSessionState();
 
       this.api.updateState(purified);
@@ -105,6 +106,7 @@ export class DealerManager extends RoleManager {
       if (purified.issues) {
         // if there is no a current issue
         // OR the current issue was deleted...
+
         if (
           state.game &&
           (state.game.roundState === ROUND_STATES.AWAIT_START ||

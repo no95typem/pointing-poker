@@ -1,33 +1,68 @@
 import React from 'react';
 
-import { Box, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
+import {
+  Box,
+  ChakraProps,
+  Heading,
+  Stack,
+  useRadioGroup,
+} from '@chakra-ui/react';
+
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
 
 import {
   IIssueData,
   IIssues,
   Issue,
 } from '../../../../shared/types/session/issue/issue';
+import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
 import NewIssueButton from '../../components/NewIssueButton/NewIssueButton';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
-import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 import IssueStatisticModal from '../../components/IssueStatisticModal/IssueStatisticModal';
+import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 
 const IssueCardsView = (props: IIssues): JSX.Element => {
   const { issues, modal } = props;
 
   const { list, isSynced } = issues;
 
-  const { openModal, removeIssue, isPlayerDealer, gameState, statisticModal } =
-    modal;
+  const {
+    openModal,
+    removeIssue,
+    isPlayerDealer,
+    gameState,
+    statisticModal,
+    issuesDndChange,
+  } = modal;
+
+  const IssueStackStyle: ChakraProps = {
+    w: '280px',
+    alignItems: 'center',
+    flexDirection: 'column',
+    opacity: isSynced ? 1 : 0.5,
+  };
 
   const { getRadioProps } = useRadioGroup({
     name: 'issues',
     value: String(gameState?.currIssueId),
   });
+
+  const handleDnd = (result: DropResult): void => {
+    if (!result.destination) return;
+
+    const { source, destination } = result;
+
+    issuesDndChange(source.index, destination.index);
+  };
 
   const setIssueData = (issue: Issue): IIssueData => {
     let issueData: IIssueData = {
@@ -55,14 +90,13 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
   };
 
   const renderRoundControlButtons = (): JSX.Element => {
-    return gameState && isSynced && isPlayerDealer && gameState.currIssueId ? (
-      <RoundControlButtons {...gameState} />
-    ) : (
-      <></>
-    );
+    if (!gameState || !isPlayerDealer || !gameState.currIssueId || !isSynced)
+      return <></>;
+
+    return <RoundControlButtons {...gameState} />;
   };
 
-  const renderIssueCard = (issue: Issue): JSX.Element => {
+  const renderBasicIssueCard = (issue: Issue): JSX.Element => {
     const id = issue.id;
 
     return (
@@ -70,6 +104,9 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
         opacity={issue.closed ? '0.5' : '1'}
         bg={issue.closed ? 'gray.400' : 'unset'}
         w="280px"
+        style={{
+          marginTop: '0',
+        }}
         key={`${id}-wrap`}
       >
         <IssueCard {...setIssueData(issue)} key={id} />
@@ -77,16 +114,38 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
     );
   };
 
+  const renderDealerDraggableCard = (issue: Issue): JSX.Element => {
+    const id = String(issue.id);
+
+    return (
+      <Draggable
+        key={`${id}-drag`}
+        draggableId={id}
+        index={list.indexOf(issue)}
+      >
+        {({ innerRef, draggableProps, dragHandleProps }) => (
+          <Box
+            key={`${id}-radioWrap`}
+            ref={innerRef}
+            {...draggableProps}
+            {...dragHandleProps}
+          >
+            {renderDealerRadioCard(issue)}
+          </Box>
+        )}
+      </Draggable>
+    );
+  };
   const renderDealerRadioCard = (issue: Issue): JSX.Element => {
-    const id = issue.id;
+    const id = String(issue.id);
 
     const radio = (getRadioProps as (obj: { value: string }) => any)({
-      value: String(id),
+      value: id,
     });
 
     return (
       <SessionItemRadioCard key={`${id}-radio`} {...radio}>
-        {renderIssueCard(issue)}
+        {renderBasicIssueCard(issue)}
       </SessionItemRadioCard>
     );
   };
@@ -94,44 +153,73 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
   const renderUserHighlightedCard = (issue: Issue): JSX.Element => {
     const id = issue.id;
 
-    if (gameState && gameState.currIssueId === id) {
-      return (
-        <Stack bg="teal.600" color="white" key={`${id}-checked`}>
-          {renderIssueCard(issue)}
-        </Stack>
-      );
+    return (
+      <Stack bg="teal.600" color="white" key={`${id}-checked`}>
+        {renderBasicIssueCard(issue)}
+      </Stack>
+    );
+  };
+
+  const renderIssueCard = (issue: Issue): JSX.Element => {
+    if (isPlayerDealer) {
+      if (
+        (gameState && gameState.roundState === ROUND_STATES.AWAIT_START) ||
+        !gameState
+      ) {
+        return renderDealerDraggableCard(issue);
+      } else {
+        return renderDealerRadioCard(issue);
+      }
     } else {
-      return renderIssueCard(issue);
+      if (gameState && gameState.currIssueId === issue.id) {
+        return renderUserHighlightedCard(issue);
+      } else {
+        return renderBasicIssueCard(issue);
+      }
     }
   };
 
+  const renderNewIssueButton = (): JSX.Element => {
+    if (!isPlayerDealer || !isSynced) return <></>;
+
+    return <NewIssueButton editIssue={openModal} />;
+  };
+
   return (
-    <Box mb="50px" position="relative">
-      {renderHeading()}
+    <DragDropContext onDragEnd={handleDnd}>
+      <Box mb="50px" position="relative">
+        {renderHeading()}
 
-      {renderRoundControlButtons()}
+        {renderRoundControlButtons()}
 
-      <Stack
-        w={gameState ? '280px' : '100%'}
-        wrap="wrap"
-        direction={gameState ? 'column' : 'row'}
-        opacity={isSynced ? 1 : 0.5}
-      >
-        {list.map(issue => {
-          return gameState && isPlayerDealer
-            ? renderDealerRadioCard(issue)
-            : renderUserHighlightedCard(issue);
-        })}
+        <Stack spacing="3">
+          <Stack {...IssueStackStyle}>
+            {renderNewIssueButton()}
 
-        {isPlayerDealer && isSynced && <NewIssueButton editIssue={openModal} />}
+            {list
+              .filter(issue => issue.closed)
+              .map(issue => renderBasicIssueCard(issue))}
+          </Stack>
 
-        <IssueModal issue={modal} />
+          <Droppable droppableId="issues">
+            {({ droppableProps, innerRef, placeholder }) => (
+              <Stack {...droppableProps} ref={innerRef} {...IssueStackStyle}>
+                {list
+                  .filter(issue => !issue.closed)
+                  .map(issue => renderIssueCard(issue))}
 
-        {statisticModal && <IssueStatisticModal {...statisticModal} />}
-      </Stack>
+                {placeholder}
+              </Stack>
+            )}
+          </Droppable>
 
-      {!isSynced && <ChakraLoader />}
-    </Box>
+          <IssueModal issue={modal} />
+
+          {statisticModal && <IssueStatisticModal {...statisticModal} />}
+        </Stack>
+        {!isSynced && <ChakraLoader />}
+      </Box>
+    </DragDropContext>
   );
 };
 
