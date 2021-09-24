@@ -18,7 +18,7 @@ import UserRoleRadioButtons from '../../containers/UserRoleRadioButtons/UserRole
 import { ChangeEvent } from 'react';
 import { userInfoSlice } from '../../redux/slices/userInfo';
 import { ReactComponent as UndrawBusinessDecisions } from '../../assets/images/undraw/business-decisions.svg';
-import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player.svg';
+import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player-mod.svg';
 import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 interface ConnectPopupProps {
@@ -74,6 +74,7 @@ const ConnectPopup = ({
       motionPreset="slideInBottom"
       onOverlayClick={onClose}
       isCentered={true}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent>
@@ -141,14 +142,14 @@ const ConnectPopup = ({
                   <Flex
                     position="absolute"
                     width="100%"
-                    top="0px"
+                    top="10px"
                     p={1}
                     backgroundBlendMode="color-burn"
                     justify="center"
                   >
                     <UserRoleRadioButtons />
                   </Flex>
-                  <UndrawSelectPlayer width="100%" />
+                  <UndrawSelectPlayer width="100%" style={{maxWidth: '400px'}} />
                 </Flex>
               )}
             </Flex>

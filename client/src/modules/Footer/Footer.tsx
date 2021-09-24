@@ -109,7 +109,7 @@ export const Footer = (): JSX.Element => {
                       <GenericAlert {...val} />
                       <IconButton
                         aria-label="dismiss"
-                        icon={<CloseIcon sc />}
+                        icon={<CloseIcon />}
                         onClick={() => {
                           dispatch(notifSlice.actions.removeAlertRec(+key));
                           ref.current?.focus();

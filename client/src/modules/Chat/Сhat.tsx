@@ -1,10 +1,5 @@
 import { Rnd } from 'react-rnd';
-import {
-  Flex,
-  Portal,
-  useColorMode,
-  IconButton,
-} from '@chakra-ui/react';
+import { Flex, Portal, useColorMode, IconButton } from '@chakra-ui/react';
 import { ChatView } from './components/ChatView/ChatView';
 import { MessageInputBox } from './components/MessageInputBox/MessageInputBox';
 
