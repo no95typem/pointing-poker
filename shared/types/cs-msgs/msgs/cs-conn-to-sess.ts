@@ -11,6 +11,7 @@ export class CSMsgConnToSess implements CSMsg {
       readonly sessId: string;
       readonly info: UserInfo;
       readonly role: UserRole;
+      readonly token?: string;
     },
   ) {}
 }

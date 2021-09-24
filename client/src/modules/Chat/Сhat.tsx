@@ -1,15 +1,22 @@
 import { Rnd } from 'react-rnd';
-import { Flex, CloseButton, Portal } from '@chakra-ui/react';
+import {
+  Flex,
+  Portal,
+  useColorMode,
+  IconButton,
+} from '@chakra-ui/react';
 import { ChatView } from './components/ChatView/ChatView';
 import { MessageInputBox } from './components/MessageInputBox/MessageInputBox';
 
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { chatSlice } from '../../redux/slices/chat';
+import { CloseIcon } from '@chakra-ui/icons';
 
 const Chat = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { isVisible } = useTypedSelector(state => state.chat);
   const { clientId } = useTypedSelector(state => state.session);
+  const cMode = useColorMode();
 
   if (!isVisible || clientId === undefined) return <></>;
 
@@ -21,13 +28,13 @@ const Chat = (): JSX.Element => {
     <Portal>
       <Rnd
         default={{
-          x: document.documentElement.clientWidth / 2,
-          y: -document.documentElement.clientHeight,
-          width: document.documentElement.clientWidth / 7,
-          height: document.documentElement.clientHeight / 1.5,
+          x: document.documentElement.clientWidth - 310,
+          y: -Number.parseFloat(getComputedStyle(document.body).height) + 55,
+          width: '300px',
+          height: '600px',
         }}
         minWidth={320}
-        minHeight={568}
+        minHeight={Math.min(window.innerHeight * 0.9, 520)}
         bounds="body"
       >
         <Flex
@@ -35,11 +42,23 @@ const Chat = (): JSX.Element => {
           h="95%"
           direction="column"
           align="flex-end"
-          justify="space-between"
-          background="InfoBackground"
+          bg={cMode.colorMode === 'light' ? 'gray.200' : 'gray.700'}
+          borderRadius="md"
+          p="2"
+          gridGap="2"
+          overflow="hidden"
         >
-          <CloseButton onClick={toggleChat} />
+          <IconButton
+            aria-label="close-chat"
+            icon={<CloseIcon style={{ transform: 'scale(1.2)' }} />}
+            size="xs"
+            variant="ghost"
+            color="white"
+            onClick={toggleChat}
+          />
+
           <ChatView />
+
           <MessageInputBox />
         </Flex>
       </Rnd>
