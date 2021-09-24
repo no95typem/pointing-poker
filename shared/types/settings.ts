@@ -1,11 +1,12 @@
 import { CardData } from './session/card';
 
 export interface ISettings {
-  dealerAsPlayer: boolean;
-  changingCardInRoundEnd: boolean;
+  isDealerPlayer: boolean;
+  isPlayerCanReselectCard: boolean;
+  isCardShownOnRoundEnd: boolean;
+  isTimerNeeded: boolean;
   scoreType: string;
   scoreTypeShort: string;
-  isTimerNeeded: boolean;
   roundTime: number;
   cards: CardData[];
   cardBackType: ''; // TODO (no95typem)

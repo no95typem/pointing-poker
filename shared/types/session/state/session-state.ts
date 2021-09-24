@@ -52,8 +52,5 @@ export interface IGameStateData {
   isPlayerDealer: boolean;
   gameState?: ISessionGameState;
   gameData: ICardsGame;
-}
-
-export interface ILobbyGameStateData extends IGameStateData {
   localSettings?: ISettings;
 }

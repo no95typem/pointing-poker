@@ -2,15 +2,22 @@ import React from 'react';
 
 import { Button, Stack } from '@chakra-ui/react';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
-import { ILobbyGameStateData } from '../../../../shared/types/session/state/session-state';
+import { IGameStateData } from '../../../../shared/types/session/state/session-state';
+import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
 
-const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {
+const GameControlButtons = (props: IGameStateData): JSX.Element => {
   const { isPlayerDealer, setGameSettings, localSettings, gameData } = props;
 
   const initiateGame = (): void => {
     localSettings && setGameSettings(localSettings);
 
     SERVER_ADAPTER.startGame();
+  };
+
+  const finishGame = (): void => {
+    const endGame = new CSMsgEndGame();
+
+    SERVER_ADAPTER.send(endGame);
   };
 
   return (
@@ -28,12 +35,10 @@ const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {
           colorScheme="facebook"
           w="130px"
           variant="solid"
-          visibility={
-            isPlayerDealer && !gameData.isGameStage ? 'visible' : 'hidden'
-          }
-          onClick={initiateGame}
+          visibility={isPlayerDealer ? 'visible' : 'hidden'}
+          onClick={gameData.isGameStage ? finishGame : initiateGame}
         >
-          Start Game
+          {gameData.isGameStage ? 'Finish Game' : 'Start Game'}
         </Button>
       )}
     </Stack>

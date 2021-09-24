@@ -170,7 +170,7 @@ const UseSessionData = (
     members: sessionData.members,
     isItYou,
     isGameStage,
-    isDealerPlaying: sessionData.currentGameSettings.dealerAsPlayer,
+    isDealerPlaying: sessionData.currentGameSettings.isDealerPlayer,
   };
 
   const issuesData: IIssuesData = {
@@ -187,6 +187,7 @@ const UseSessionData = (
     cards: sessionData.currentGameSettings.cards,
     isGameStage,
     units: sessionData.currentGameSettings.scoreTypeShort,
+    isPlayerDealer,
   };
 
   const gameStateData: IGameStateData = {

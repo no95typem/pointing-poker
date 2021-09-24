@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Button, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
 
 import { LOCALE_US } from '../../locales/locale-us';
 
@@ -15,7 +15,7 @@ import GameCard from '../../components/GameCard/GameCard';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
 const GameCardsRound = (props: ICardsGame): JSX.Element => {
-  const { cards, isGameStage, units } = props;
+  const { cards, isGameStage, units, isPlayerDealer } = props;
 
   const [selectedRadioValue, setSelectedRadioValue] = useState('');
 
@@ -47,6 +47,11 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
         <Heading mb="20px" size="md">
           {LOCALE_US.SETTINGS_CARDS_HEADER}
         </Heading>
+      )}
+      {isGameStage && isPlayerDealer && (
+        <Stack w="100%" mb="30px" align="center" justify="center" p="5px 20px">
+          <Button colorScheme="facebook">Open Cards</Button>
+        </Stack>
       )}
 
       <Stack

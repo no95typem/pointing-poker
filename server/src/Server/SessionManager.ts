@@ -249,7 +249,7 @@ export class SessionManager {
         playersRecs.some(rec => {
           if (
             rec.id === DEALER_ID &&
-            !this.sessionState.currentGameSettings.dealerAsPlayer
+            !this.sessionState.currentGameSettings.isDealerPlayer
           ) {
             return false;
           }
