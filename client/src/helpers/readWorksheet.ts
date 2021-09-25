@@ -9,14 +9,8 @@ export const readWbFromFile = (file: File) => {
 
       if (result instanceof ArrayBuffer) {
         var data = new Uint8Array(result);
-        console.log(data);
         const workbook = XLSX.read(data, { type: 'array' });
         res(workbook);
-        // console.log(workbook);
-        // const ws = workbook.Sheets[workbook.SheetNames[0]];
-        // console.log(ws);
-        // const json = XLSX.utils.sheet_to_json(ws);
-        // console.log(json);
       }
     };
 

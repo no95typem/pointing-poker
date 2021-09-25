@@ -66,6 +66,7 @@ export const Routes = (): JSX.Element => {
                   </Route>
                 );
               })}
+              {/* ! TODO (no95typem) error */}
             </Switch>
           </CSSTransition>
         </SwitchTransition>

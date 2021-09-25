@@ -1,22 +1,42 @@
 /* eslint max-params: ["warn", 3] */
 import XLSX from 'xlsx';
+import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
+
+interface IDeepObjToWorkbookArgs {
+  obj: Record<string, unknown>;
+  name: string;
+  inWb?: XLSX.WorkBook;
+  flag?: 'isArray';
+  copy: boolean;
+}
 
 export const deepObjToWorkbook = (
-  obj: Record<string, unknown>,
-  name: string,
-  inWb?: XLSX.WorkBook,
+  args: IDeepObjToWorkbookArgs,
 ): XLSX.WorkBook => {
+  const { obj, name, inWb, flag, copy } = args;
+  console.log(name);
+  const target: Record<string, unknown> = {};
+  Object.assign(target, copy ? OBJ_PROCESSOR.deepClone(obj) : obj); // assign for [] -> {}
+
+  if (flag) target[flag] = true;
+
   const wb = inWb ?? XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet([obj]);
+
+  const ws = XLSX.utils.json_to_sheet([target]);
+
+  if (flag) delete target[flag];
+
   XLSX.utils.book_append_sheet(wb, ws, name);
 
   Object.entries(obj).forEach(([key, val]) => {
     if (typeof val === 'object' && val !== null) {
-      deepObjToWorkbook(
-        val as Record<string, unknown>,
-        `${name}#${key}`,
-        inWb ?? wb,
-      );
+      deepObjToWorkbook({
+        obj: val as Record<string, unknown>,
+        name: `${name}#${key}`,
+        inWb: inWb ?? wb,
+        flag: Array.isArray(val) ? 'isArray' : undefined,
+        copy: false,
+      });
     }
   });
 
@@ -31,17 +51,15 @@ const setValByKey = (
   const indexOfLast = reversedKeys.length - 1;
   const key = reversedKeys[indexOfLast] as string;
 
-  // console.log(key);
-
   if (reversedKeys.length === 1) {
     obj[key] = val;
-  } else if (key) {
-    if (key in obj) {
-      if (typeof obj[key] !== 'object' || obj[key] === null) {
+  } else {
+    if (key in obj && obj[key] !== null) {
+      if (typeof obj[key] !== 'object') {
         throw new Error('');
-      } else {
-        obj[key] = {};
       }
+    } else {
+      obj[key] = {};
     }
 
     setValByKey(
@@ -52,10 +70,28 @@ const setValByKey = (
   }
 };
 
+export const readTypes = (
+  obj: Record<string, unknown>,
+): Record<string, unknown> | unknown[] => {
+  const copy = OBJ_PROCESSOR.deepClone(obj);
+  const isArray = 'isArray' in copy;
+
+  if (isArray) delete copy['isArray'];
+
+  Object.entries(copy).forEach(([key, val]) => {
+    if (typeof val === 'object' && val !== null) {
+      copy[key] = readTypes(val as Record<string, unknown>);
+    }
+  });
+
+  if (isArray) return Array.from(Object.values(copy));
+  else return copy;
+};
+
 export const workbookToDeepObj = (wb: XLSX.WorkBook) => {
   const deepObj = {};
 
-  wb.SheetNames.forEach(name => {
+  wb.SheetNames.forEach((name, sheetIndex) => {
     const ws = wb.Sheets[name];
     const arr = XLSX.utils.sheet_to_json(ws, { defval: null });
     arr.forEach(el => {
@@ -66,18 +102,21 @@ export const workbookToDeepObj = (wb: XLSX.WorkBook) => {
             : typeof el === 'object' && el !== null
             ? el
             : undefined;
-        console.log(el);
 
         if (obj) {
-          const reversedKeys = name
-            .split('#')
-            .filter(str => str !== '')
-            .reverse();
-          setValByKey(reversedKeys, deepObj, obj);
+          if (sheetIndex === 0) Object.assign(deepObj, obj);
+          else {
+            const reversedKeys = name
+              .split('#')
+              .filter(str => str !== '')
+              .reverse();
+
+            setValByKey(reversedKeys, deepObj, obj);
+          }
         }
       } catch {}
     });
   });
 
-  return deepObj;
+  return readTypes(deepObj);
 };

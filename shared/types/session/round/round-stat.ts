@@ -1,12 +1,11 @@
-export type Percentage = Record<
-  string,
-  {
-    count: number;
-    membersIds: number[];
-  }
->; // key - value of card, number - percentage
+export interface IPercentageRec {
+  count: number;
+  ids: number[];
+}
+
+export type Percentage = Record<string, IPercentageRec>; // key - value of card, number - percentage
 
 export interface RoundStat {
   votes: Record<number, string | undefined>;
-  percentage: Percentage;
+  pct: Percentage;
 }

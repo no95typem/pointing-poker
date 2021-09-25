@@ -6,26 +6,24 @@ import { useTypedSelector } from '../../redux/store';
 import { ICardData } from '../../../../shared/types/session/card';
 
 import GameCard from '../GameCard/GameCard';
+import { IPercentageRec } from '../../../../shared/types/session/round/round-stat';
 
 interface IGameCardStatistics {
-  name: string;
-  stat: {
-    count: number;
-    membersIds: number[];
-  };
-  quantityVoters: number;
+  cardValue: string;
+  pct: IPercentageRec;
+  allPlayersCount: number;
 }
 
 const GameCardStatistics = (props: IGameCardStatistics): JSX.Element => {
-  const { name, stat, quantityVoters } = props;
+  const { cardValue, pct, allPlayersCount } = props;
 
   const localSettings = useTypedSelector(state => state.settings);
 
   const { cards, scoreTypeShort } = localSettings;
 
-  const currentCard = cards.find(card => card.value === name);
+  const currentCard = cards.find(card => card.value === cardValue);
 
-  const percent = (stat.count / quantityVoters) * 100;
+  const percent = (pct.count / allPlayersCount) * 100;
 
   if (!currentCard) return <></>;
 

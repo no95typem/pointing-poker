@@ -1,4 +1,3 @@
-import * as React from 'react';
 import XLSX from 'xlsx';
 import { ChatIcon, HamburgerIcon } from '@chakra-ui/icons';
 
@@ -23,11 +22,8 @@ import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeS
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
 import { loadFiles } from '../../helpers/loadFiles';
-import { readWbFromFile } from '../../helpers/readWorksheet';
-import {
-  deepObjToWorkbook,
-  workbookToDeepObj,
-} from '../../helpers/deep-obj-wb-converters';
+import { deepObjToWorkbook } from '../../helpers/deep-obj-wb-converters';
+import { tryLoadSessionFromFile } from '../../redux/slices/session';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -37,7 +33,7 @@ export const Header = (): JSX.Element => {
     dispatch(tryToToggleChatState());
   };
 
-  const state = useTypedSelector(state => state);
+  const sessionState = useTypedSelector(state => state.session);
 
   return (
     <Flex
@@ -81,28 +77,23 @@ export const Header = (): JSX.Element => {
               <PopoverBody>
                 <Button
                   onClick={() => {
-                    loadFiles()
-                      .then(fileList => {
-                        if (fileList[0]) {
-                          readWbFromFile(fileList[0]).then(wb => {
-                            console.log(wb);
-                            const deepObj = workbookToDeepObj(wb);
-                            console.log(deepObj);
-                          });
-                        }
-                      })
-                      .catch(() => {});
+                    loadFiles().then(fileList => {
+                      if (fileList[0]) {
+                        dispatch(tryLoadSessionFromFile(fileList[0]));
+                      }
+                    });
                   }}
                 >
                   load xlsx
                 </Button>
                 <Button
                   onClick={() => {
-                    const wb = deepObjToWorkbook(
-                      state as unknown as Record<string, unknown>,
-                      '',
-                    );
-                    XLSX.writeFile(wb, 'state.xlsx');
+                    const wb = deepObjToWorkbook({
+                      obj: sessionState as unknown as Record<string, unknown>,
+                      name: '',
+                      copy: true,
+                    });
+                    XLSX.writeFile(wb, 'pp-session.xlsx');
                   }}
                 >
                   save xlsx

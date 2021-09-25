@@ -294,7 +294,7 @@ export class SessionManager {
         if (currIssue) {
           currIssue.stat = {
             votes: game.votes,
-            percentage: calcPercentage(game.votes),
+            pct: calcPercentage(game.votes),
           };
         }
 

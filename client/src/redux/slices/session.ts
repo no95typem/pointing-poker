@@ -17,6 +17,10 @@ import { DEALER_ID } from '../../../../shared/const';
 import { CSMsgForceKick } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-force-kick';
 import { CSMsgVotekick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
+import { readWbFromFile } from '../../helpers/readWorksheet';
+import { workbookToDeepObj } from '../../helpers/deep-obj-wb-converters';
+import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
+import { notifSlice } from './notifications';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -135,5 +139,49 @@ export const kick = createAsyncThunk(
     }
 
     SERVER_ADAPTER.send(msg);
+  },
+);
+
+export const tryLoadSessionFromFile = createAsyncThunk(
+  'session/tryLoadSessionFromFile',
+  async (file: File, thunkAPI) => {
+    readWbFromFile(file)
+      .then(wb => {
+        const deepObj = workbookToDeepObj(wb) as unknown as SessionState;
+        thunkAPI.dispatch(sessionSlice.actions.dang_reset());
+        deepObj.stage = SESSION_STAGES.STATS;
+
+        console.log(deepObj);
+
+        OBJ_PROCESSOR.deepMerge(
+          deepObj as unknown as Record<string, unknown>,
+          initialState as unknown as Record<string, unknown>,
+        );
+
+        console.log(deepObj);
+
+        if (!('sessionId' in deepObj)) throw new Error('sessionId is missing');
+
+        if (typeof deepObj.sessionId !== 'string')
+          throw new Error('sessionId is not string');
+
+        if (deepObj.sessionId === '') throw new Error('sessionId is missing');
+
+        thunkAPI.dispatch(
+          sessionSlice.actions.dang_updSessStateFromClient(deepObj),
+        );
+      })
+      .catch((err: Error) => {
+        console.log(err);
+        setTimeout(() => {
+          thunkAPI.dispatch(
+            notifSlice.actions.addNotifRec({
+              status: 'error',
+              text: `Uploaded file is corrupted: ${err.message}`,
+              needToShow: true,
+            }),
+          );
+        }, 100);
+      });
   },
 );
