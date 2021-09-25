@@ -15,7 +15,7 @@ const UserVote = (props: IVote): JSX.Element => {
 
   const game = useTypedSelector(state => state.session.game);
 
-  const settings = useTypedSelector(state => state.session.currentGameSettings);
+  const settings = useTypedSelector(state => state.session.gSettings);
 
   const { cards, scoreTypeShort } = settings;
 
@@ -33,7 +33,7 @@ const UserVote = (props: IVote): JSX.Element => {
       boxShadow="lg"
     >
       {card ? (
-        <GameCard card={card} units={scoreTypeShort} />
+        <GameCard card={card} units={scoreTypeShort} isGameStage={true} />
       ) : (
         <QuestionIcon color="facebook.300" w={6} h={6} />
       )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
@@ -61,8 +61,10 @@ const Lobby = (): JSX.Element => {
       <JoinGameLink link={`${window.location}`} />
       <GameControlButtons {...gameStateLobby} />
       <UserCards {...membersData} />
-      <IssueCards {...issuesData} />
-      {isPlayerDealer && <Settings {...settingsData} />}
+      <Stack direction="row" wrap="wrap" justify="space-between">
+        <IssueCards {...issuesData} />
+        {isPlayerDealer && <Settings {...settingsData} />}
+      </Stack>
     </Box>
   );
 };

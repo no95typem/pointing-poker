@@ -65,19 +65,29 @@ const UseSessionData = (
     : undefined;
 
   const setActiveIssueId = (id: string): void => {
-    if (sessionData.game) {
-      console.log(id, '-----');
+    if (!sessionData.game) return;
 
-      dispatch(
-        updSessState({ game: { ...sessionData.game, currIssueId: +id } }),
-      );
-    }
+    dispatch(updSessState({ game: { ...sessionData.game, currIssueId: +id } }));
   };
 
   const findIssueIndex = (id: number): number | null => {
     const issue = list.find(issue => issue.id === id);
 
     return issue ? list.indexOf(issue) : null;
+  };
+
+  const activeIssue = (issue: Issue): boolean => {
+    const id = String(issue.id);
+
+    if (!issue.closed) {
+      if (activeIssueId !== id) {
+        setActiveIssueId(id);
+      }
+
+      return true;
+    }
+
+    return false;
   };
 
   const addNewIssue = (issue: Issue): void => {
@@ -95,19 +105,17 @@ const UseSessionData = (
 
     dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));
 
-    const activeIssue = (issue: Issue): boolean => {
-      const id = String(issue.id);
+    issues.some(activeIssue);
+  };
 
-      if (!issue.closed) {
-        if (activeIssueId !== id) {
-          setActiveIssueId(id);
-        }
+  const issuesDndChange = (from: number, to: number) => {
+    const issues = OBJ_PROCESSOR.deepClone(sessionData.issues.list);
 
-        return true;
-      }
+    const [issue] = issues.splice(from, 1);
 
-      return false;
-    };
+    issues.splice(to, 0, issue);
+
+    dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));
 
     issues.some(activeIssue);
   };
@@ -173,6 +181,7 @@ const UseSessionData = (
     newIssueId,
     isPlayerDealer,
     gameState: sessionData.game,
+    issuesDndChange,
   };
 
   const gameData: ICardsGame = {

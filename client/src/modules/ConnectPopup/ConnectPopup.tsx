@@ -8,15 +8,18 @@ import {
   Button,
   Flex,
   Text,
-  FormControl,
+  FormLabel,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import UserInfoInputStack from '../../containers/UserInfoInputStack/UserInfoInputStack';
 import AvatarForm from '../../containers/AvatarForm/AvatarForm';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
-import { connectToLobby, createSession } from '../../redux/slices/connect';
 import UserRoleRadioButtons from '../../containers/UserRoleRadioButtons/UserRoleRadioButtons';
 import { ChangeEvent } from 'react';
 import { userInfoSlice } from '../../redux/slices/userInfo';
+import { ReactComponent as UndrawBusinessDecisions } from '../../assets/images/undraw/business-decisions.svg';
+import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player-mod.svg';
+import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 interface ConnectPopupProps {
   isOpen: boolean;
@@ -32,6 +35,7 @@ const ConnectPopup = ({
   const dispatch = useAppDispatch();
   const userInfo = useTypedSelector(state => state.userInfo);
   const isNameInvalid = userInfo.name.length === 0;
+  const [isLargerThan640] = useMediaQuery('(min-width: 640px)');
 
   const handleUserInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,22 +51,53 @@ const ConnectPopup = ({
     }
   };
 
+  const underlined = {
+    position: 'relative',
+    width: 'fit-content',
+    mb: '2',
+    _after: {
+      content: '""',
+      width: '100%',
+      height: '1px',
+      position: 'absolute',
+      bottom: '-2px',
+      left: '0px',
+      backgroundColor: 'black',
+    },
+  };
+
   return (
     <Modal
-      size="xl"
+      size="3xl"
       isOpen={isOpen}
       onClose={onClose}
       motionPreset="slideInBottom"
       onOverlayClick={onClose}
       isCentered={true}
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Connect to lobby</ModalHeader>
+        <ModalHeader fontFamily="handwrite">
+          Setting up your new participating
+        </ModalHeader>
         <ModalBody>
-          <FormControl isInvalid={true}>
-            <Flex direction="column" alignItems="center" gridGap="5rem">
-              <Flex w="100%" justify="space-between">
+          <Flex direction="column" alignItems="center" w="100%" gridGap="6">
+            <Flex
+              w="100%"
+              justify="center"
+              wrap="wrap"
+              gridGap="6"
+              alignItems="center"
+            >
+              <Flex direction="column" align="center" gridGap={2}>
+                <FormLabel
+                  fontFamily="handwrite"
+                  fontSize="xl"
+                  {...(underlined as any)}
+                >
+                  1. Enter or check your user information:
+                </FormLabel>
                 <UserInfoInputStack
                   {...{
                     ...userInfo,
@@ -70,26 +105,70 @@ const ConnectPopup = ({
                     onChange: handleUserInfoChange,
                   }}
                 />
+              </Flex>
+              <Flex direction="column" align="center" gridGap={4}>
+                <FormLabel
+                  fontFamily="handwrite"
+                  fontSize="xl"
+                  {...(underlined as any)}
+                >
+                  2. Setup your avatar (optional):
+                </FormLabel>
                 <AvatarForm />
               </Flex>
+            </Flex>
+            <Flex
+              mt={isLargerThan640 ? '4' : undefined}
+              direction="column"
+              align="center"
+              gridGap={6}
+            >
+              <FormLabel
+                fontFamily="handwrite"
+                fontSize="xl"
+                {...(underlined as any)}
+              >
+                3. Check your role for this session:
+              </FormLabel>
               {forDealer ? (
-                <Text size="2xl">You will be a dealer</Text>
+                <Flex alignItems="center">
+                  <Text fontFamily="handwrite" fontWeight="bold">
+                    You will be a dealer!
+                  </Text>
+                  <UndrawBusinessDecisions width="70%" />
+                </Flex>
               ) : (
-                <UserRoleRadioButtons />
+                <Flex alignItems="center" wrap="wrap" position="relative">
+                  <Flex
+                    position="absolute"
+                    width="100%"
+                    top="10px"
+                    p={1}
+                    backgroundBlendMode="color-burn"
+                    justify="center"
+                  >
+                    <UserRoleRadioButtons />
+                  </Flex>
+                  <UndrawSelectPlayer
+                    width="100%"
+                    style={{ maxWidth: '400px' }}
+                  />
+                </Flex>
               )}
             </Flex>
-          </FormControl>
+          </Flex>
         </ModalBody>
 
         <ModalFooter justifyContent="space-between">
-          <Button colorScheme="facebook" variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose}>
             Close
           </Button>
           <Button
-            colorScheme="facebook"
             disabled={isNameInvalid}
             onClick={() =>
-              forDealer ? dispatch(createSession()) : dispatch(connectToLobby())
+              forDealer
+                ? SERVER_ADAPTER.createSess()
+                : SERVER_ADAPTER.connToLobby()
             }
           >
             Confirm

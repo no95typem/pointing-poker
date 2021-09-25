@@ -1,5 +1,5 @@
-export const AVATAR_WIDTH = 200;
-export const AVATAR_HEIGHT = 200;
+export const AVATAR_WIDTH = 170;
+export const AVATAR_HEIGHT = 170;
 
 /* STYLING */
 export const MAX_CONTENT_WIDTH = '1400px';

@@ -1,10 +1,13 @@
 import React from 'react';
+
 import { Box, Button, Stack } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
 import UseSessionData from '../../hooks/useSessionData';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
+import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
+import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 import GameControlButtons from '../../containers/GameControlButtons/GameControlButtons';
 import GameTimer from '../../containers/GameTimer/GameTimer';
@@ -14,8 +17,6 @@ import GameCardsRound from '../../containers/GameCardsRound/GameCardsRound';
 
 import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
-import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
-import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 const Game = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -61,8 +62,12 @@ const Game = (): JSX.Element => {
         <GameControlButtons {...gameStateData} />
       </Stack>
       <UserCardsTabs {...membersData} />
-      <IssueCards {...issuesData} />
-      {isRoundStarted && !isPlayerSpectator && <GameCardsRound {...gameData} />}
+      <Stack direction="row" justify="space-between" align="center">
+        <IssueCards {...issuesData} />
+        {isRoundStarted && !isPlayerSpectator && (
+          <GameCardsRound {...gameData} />
+        )}
+      </Stack>
     </Box>
   );
 };

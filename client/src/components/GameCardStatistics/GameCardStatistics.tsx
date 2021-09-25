@@ -1,10 +1,13 @@
 import React from 'react';
 
-import { Stack, Heading, Text } from '@chakra-ui/react';
+import { Stack, Text } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
+import { ICardData } from '../../../../shared/types/session/card';
 
-interface Props {
+import GameCard from '../GameCard/GameCard';
+
+interface IGameCardStatistics {
   name: string;
   stat: {
     count: number;
@@ -13,8 +16,8 @@ interface Props {
   quantityVoters: number;
 }
 
-const GameCardStatistics = (data: Props): JSX.Element => {
-  const { name, stat, quantityVoters } = data;
+const GameCardStatistics = (props: IGameCardStatistics): JSX.Element => {
+  const { name, stat, quantityVoters } = props;
 
   const localSettings = useTypedSelector(state => state.settings);
 
@@ -24,40 +27,18 @@ const GameCardStatistics = (data: Props): JSX.Element => {
 
   const percent = (stat.count / quantityVoters) * 100;
 
+  if (!currentCard) return <></>;
+
+  const cardData: ICardData = {
+    card: currentCard,
+    units: scoreTypeShort,
+    isGameStage: true,
+  };
+
   return (
     <Stack direction="column" spacing="1rem">
-      <Stack
-        position="relative"
-        w="150px"
-        height="210px"
-        direction="column"
-        justify="center"
-        align="center"
-        p="10px 10px"
-        boxShadow="lg"
-      >
-        <Text
-          fontSize="2xl"
-          maxW="130px"
-          fontStyle="italic"
-          fontWeight="bold"
-          isTruncated
-          mb="20px"
-        >
-          {name}
-        </Text>
-        {currentCard?.base64 ? (
-          // img src={base64}
-          <Heading fontStyle="italic" size="lg">
-            {currentCard.base64}
-          </Heading>
-        ) : (
-          <Heading fontStyle="italic" size="lg">
-            {scoreTypeShort}
-          </Heading>
-        )}
-      </Stack>
-      <Text>{`${percent}%`}</Text>
+      <GameCard {...cardData} />
+      <Text textAlign="center">{`${percent}%`}</Text>
     </Stack>
   );
 };

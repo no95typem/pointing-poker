@@ -94,6 +94,7 @@ export class DealerManager extends RoleManager {
   private handleSessionStateUpdate(msg: CSMsgUpdateState) {
     if (msg.update.gSettings || msg.update.issues || msg.update.name) {
       const purified = purify(msg.update);
+
       const { state } = this.api.getSessionState();
 
       this.api.updateState(purified);
@@ -101,9 +102,10 @@ export class DealerManager extends RoleManager {
       if (purified.issues) {
         // if there is no a current issue
         // OR the current issue was deleted...
+
         if (
           state.game &&
-          (state.game.currIssueId === undefined ||
+          (state.game.roundState === ROUND_STATES.AWAIT_START ||
             !purified.issues.list.some(
               iss => iss.id === (state.game as ISessionGameState).currIssueId,
             ))
@@ -122,7 +124,10 @@ export class DealerManager extends RoleManager {
 
     const issues = OBJ_PROCESSOR.deepClone(state.issues);
 
-    if (state.game?.currIssueId) {
+    if (
+      state.game?.currIssueId !== undefined &&
+      state.game.roundState === ROUND_STATES.ENDED
+    ) {
       const oldIssue = issues.list.find(
         iss => iss.id === state.game?.currIssueId,
       );

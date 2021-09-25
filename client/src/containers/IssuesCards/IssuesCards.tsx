@@ -17,6 +17,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     issues,
     addNewIssue,
     removeIssue,
+    issuesDndChange,
     newIssueId,
     isPlayerDealer,
     gameState,
@@ -88,6 +89,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     isPlayerDealer,
     gameState,
     statisticModal,
+    issuesDndChange,
   };
 
   return <IssueCardsView issues={issues} modal={modalData} />;
