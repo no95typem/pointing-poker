@@ -25,7 +25,7 @@ const UserInfoInputStack = (props: IUserInfoInputStackProps) => {
           value={props.name}
           onChange={props.onChange}
           size="md"
-          isRequired
+          isRequired={true}
         />
         <FormErrorMessage pos="absolute" right="5px" bottom="0px">
           <Text fontStyle="italic">Name is required</Text>
