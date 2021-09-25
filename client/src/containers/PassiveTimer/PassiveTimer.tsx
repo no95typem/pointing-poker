@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { FormControl, FormLabel, Stack, Text } from '@chakra-ui/react';
+import { FormLabel, Stack, Text } from '@chakra-ui/react';
 
 import InputNumber from '../../components/InputNumber/InputNumber';
+import { useTypedSelector } from '../../redux/store';
+import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 
 interface ITimer {
   time: number;
@@ -15,17 +17,19 @@ const PassiveTimer = (props: ITimer): JSX.Element => {
 
   const seconds = Math.trunc(timeInS % 60);
 
+  const stage = useTypedSelector(state => state.session.stage);
+
+  const isLobbyStage = stage === SESSION_STAGES.LOBBY;
+
   console.log(seconds);
 
   return (
-    <FormControl
-      display="flex"
-      alignItems="center"
-      justifyContent="space-between"
-    >
-      <FormLabel htmlFor="timer" mb="0">
-        Round time:
-      </FormLabel>
+    <Stack display="flex" align="center" justify="space-between">
+      {isLobbyStage && (
+        <FormLabel htmlFor="timer" mb="0">
+          Round time:
+        </FormLabel>
+      )}
 
       <Stack
         id="timer"
@@ -43,7 +47,7 @@ const PassiveTimer = (props: ITimer): JSX.Element => {
 
         <InputNumber value={seconds} units="seconds" />
       </Stack>
-    </FormControl>
+    </Stack>
   );
 };
 
