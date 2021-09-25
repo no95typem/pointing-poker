@@ -10,6 +10,10 @@ interface IDeepObjToWorkbookArgs {
   copy: boolean;
 }
 
+export const calcSheetName = (name: string): string => {
+  return name.slice(-31).slice(Math.max(name.indexOf('#'), 0)); // 31 - max for sheet
+};
+
 export const deepObjToWorkbook = (
   args: IDeepObjToWorkbookArgs,
 ): XLSX.WorkBook => {
@@ -17,16 +21,17 @@ export const deepObjToWorkbook = (
   console.log(name);
   const target: Record<string, unknown> = {};
   Object.assign(target, copy ? OBJ_PROCESSOR.deepClone(obj) : obj); // assign for [] -> {}
-
-  if (flag) target[flag] = true;
-
   const wb = inWb ?? XLSX.utils.book_new();
+
+  target[`__XLSX_KEYPATH__`] = name;
+  if (flag) target[flag] = true;
 
   const ws = XLSX.utils.json_to_sheet([target]);
 
+  delete target[`__XLSX_KEYPATH__`];
   if (flag) delete target[flag];
 
-  XLSX.utils.book_append_sheet(wb, ws, name);
+  XLSX.utils.book_append_sheet(wb, ws, calcSheetName(name));
 
   Object.entries(obj).forEach(([key, val]) => {
     if (typeof val === 'object' && val !== null) {
@@ -103,10 +108,14 @@ export const workbookToDeepObj = (wb: XLSX.WorkBook) => {
             ? el
             : undefined;
 
-        if (obj) {
+        if (!(`__XLSX_KEYPATH__` in obj)) return;
+
+        const __XLSX_KEYPATH__ = obj[`__XLSX_KEYPATH__`];
+
+        if (obj && typeof __XLSX_KEYPATH__ === 'string') {
           if (sheetIndex === 0) Object.assign(deepObj, obj);
           else {
-            const reversedKeys = name
+            const reversedKeys = __XLSX_KEYPATH__
               .split('#')
               .filter(str => str !== '')
               .reverse();
@@ -114,6 +123,8 @@ export const workbookToDeepObj = (wb: XLSX.WorkBook) => {
             setValByKey(reversedKeys, deepObj, obj);
           }
         }
+
+        delete obj['__XLSX_KEYPATH__'];
       } catch {}
     });
   });
