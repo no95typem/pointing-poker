@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -10,16 +11,20 @@ import {
   Text,
   FormLabel,
   useMediaQuery,
+  FormLabelProps,
 } from '@chakra-ui/react';
+
+import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player-mod.svg';
+import { ReactComponent as UndrawBusinessDecisions } from '../../assets/images/undraw/business-decisions.svg';
+
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
+import { userInfoSlice } from '../../redux/slices/userInfo';
+
+import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
+
 import UserInfoInputStack from '../../containers/UserInfoInputStack/UserInfoInputStack';
 import AvatarForm from '../../containers/AvatarForm/AvatarForm';
-import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import UserRoleRadioButtons from '../../containers/UserRoleRadioButtons/UserRoleRadioButtons';
-import { ChangeEvent } from 'react';
-import { userInfoSlice } from '../../redux/slices/userInfo';
-import { ReactComponent as UndrawBusinessDecisions } from '../../assets/images/undraw/business-decisions.svg';
-import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player-mod.svg';
-import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 interface ConnectPopupProps {
   isOpen: boolean;
@@ -33,12 +38,16 @@ const ConnectPopup = ({
   forDealer,
 }: ConnectPopupProps): JSX.Element => {
   const dispatch = useAppDispatch();
+
   const userInfo = useTypedSelector(state => state.userInfo);
+
   const isNameInvalid = userInfo.name.length === 0;
+
   const [isLargerThan640] = useMediaQuery('(min-width: 640px)');
 
   const handleUserInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     switch (name) {
       case 'name':
         return dispatch(userInfoSlice.actions.changeName(value));
@@ -94,7 +103,7 @@ const ConnectPopup = ({
                 <FormLabel
                   fontFamily="handwrite"
                   fontSize="xl"
-                  {...(underlined as any)}
+                  {...(underlined as FormLabelProps)}
                 >
                   1. Enter or check your user information:
                 </FormLabel>
@@ -110,7 +119,7 @@ const ConnectPopup = ({
                 <FormLabel
                   fontFamily="handwrite"
                   fontSize="xl"
-                  {...(underlined as any)}
+                  {...(underlined as FormLabelProps)}
                 >
                   2. Setup your avatar (optional):
                 </FormLabel>
@@ -126,7 +135,7 @@ const ConnectPopup = ({
               <FormLabel
                 fontFamily="handwrite"
                 fontSize="xl"
-                {...(underlined as any)}
+                {...(underlined as FormLabelProps)}
               >
                 3. Check your role for this session:
               </FormLabel>
@@ -149,7 +158,10 @@ const ConnectPopup = ({
                   >
                     <UserRoleRadioButtons />
                   </Flex>
-                  <UndrawSelectPlayer width="100%" style={{maxWidth: '400px'}} />
+                  <UndrawSelectPlayer
+                    width="100%"
+                    style={{ maxWidth: '400px' }}
+                  />
                 </Flex>
               )}
             </Flex>

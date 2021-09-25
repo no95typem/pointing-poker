@@ -5,15 +5,16 @@ import { Stack, IconButton, Stat, StatNumber } from '@chakra-ui/react';
 import { ImPlus } from 'react-icons/im';
 
 interface IIssueButtonData {
-  editIssue: () => void;
+  openModal: () => void;
+  description: string;
 }
 
-const NewIssueButton = (props: IIssueButtonData): JSX.Element => {
-  const { editIssue } = props;
+const NewElementButton = (props: IIssueButtonData): JSX.Element => {
+  const { openModal, description } = props;
 
   return (
     <Stack
-      onClick={editIssue}
+      onClick={openModal}
       direction="row"
       align="center"
       p="10px"
@@ -23,11 +24,11 @@ const NewIssueButton = (props: IIssueButtonData): JSX.Element => {
       h="70px"
     >
       <Stat>
-        <StatNumber>Create new issue</StatNumber>
+        <StatNumber>{description}</StatNumber>
       </Stat>
 
       <IconButton
-        aria-label="edit"
+        aria-label="add"
         background="transparent"
         size="lg"
         icon={<ImPlus />}
@@ -36,4 +37,4 @@ const NewIssueButton = (props: IIssueButtonData): JSX.Element => {
   );
 };
 
-export default NewIssueButton;
+export default NewElementButton;

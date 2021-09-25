@@ -8,9 +8,6 @@ import {
 } from '../../../../shared/types/settings';
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
-import PassiveTimer from '../PassiveTimer/PassiveTimer';
-import GameCards from '../GameCards/GameCards';
-import { ICardsData } from '../../../../shared/types/session/card';
 
 const Settings = (props: ISettingsData): JSX.Element => {
   const { localSettings, setLocalSettings } = props;
@@ -22,8 +19,6 @@ const Settings = (props: ISettingsData): JSX.Element => {
     isTimerNeeded,
     scoreType,
     scoreTypeShort,
-    roundTime,
-    cards,
   } = localSettings;
 
   const switchersData: ISettingsComponent[] = [
@@ -68,14 +63,8 @@ const Settings = (props: ISettingsData): JSX.Element => {
     },
   ];
 
-  const cardsData: ICardsData = {
-    cards,
-    units: scoreTypeShort,
-    setLocalSettings,
-  };
-
   return (
-    <Box maxW="50%">
+    <Box>
       <Stack direction="column" spacing={5} w="100%" mb="30px">
         <Heading size="md" textAlign="center">
           Game settings:
@@ -92,11 +81,7 @@ const Settings = (props: ISettingsData): JSX.Element => {
 
           return <InputText data={inputData} key={name} />;
         })}
-
-        {isTimerNeeded && <PassiveTimer time={roundTime || 0} />}
       </Stack>
-
-      <GameCards {...cardsData} />
     </Box>
   );
 };

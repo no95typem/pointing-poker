@@ -1,12 +1,6 @@
 import React from 'react';
 
-import {
-  Box,
-  ChakraProps,
-  Heading,
-  Stack,
-  useRadioGroup,
-} from '@chakra-ui/react';
+import { Box, ChakraProps, Stack, useRadioGroup } from '@chakra-ui/react';
 
 import {
   DragDropContext,
@@ -24,7 +18,7 @@ import { ROUND_STATES } from '../../../../shared/types/session/round/round-state
 
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
-import NewIssueButton from '../../components/NewIssueButton/NewIssueButton';
+import NewIssueButton from '../../components/NewElementButton/NewElementButton';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 import IssueStatisticModal from '../../components/IssueStatisticModal/IssueStatisticModal';
@@ -77,16 +71,6 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
     }
 
     return issueData;
-  };
-
-  const renderHeading = (): JSX.Element => {
-    return gameState ? (
-      <></>
-    ) : (
-      <Heading textAlign="center" size="lg" mb="40px">
-        Issues:
-      </Heading>
-    );
   };
 
   const renderRoundControlButtons = (): JSX.Element => {
@@ -182,14 +166,12 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
   const renderNewIssueButton = (): JSX.Element => {
     if (!isPlayerDealer || !isSynced) return <></>;
 
-    return <NewIssueButton editIssue={openModal} />;
+    return <NewIssueButton description="Create issue" openModal={openModal} />;
   };
 
   return (
     <DragDropContext onDragEnd={handleDnd}>
       <Box mb="50px" position="relative">
-        {renderHeading()}
-
         {renderRoundControlButtons()}
 
         <Stack spacing="3">

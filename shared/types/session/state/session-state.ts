@@ -54,3 +54,10 @@ export interface IGameStateData {
   gameData: ICardsGame;
   localSettings?: ISettings;
 }
+
+export interface IConfirmation {
+  action: () => void;
+  onClose: () => void;
+  description: string;
+  isOpen: boolean;
+}

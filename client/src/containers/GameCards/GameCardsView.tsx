@@ -1,22 +1,21 @@
 import React from 'react';
 
-import { Box, Heading, Stack } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 
 import { ICardData, ICardsView } from '../../../../shared/types/session/card';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
-import NewGameCardButton from '../../components/NewGameCardButton/NewGameCardButton';
-import { LOCALE_US } from '../../locales/locale-us';
+import NewGameCardButton from '../../components/NewElementButton/NewElementButton';
 
 const GameCardsView = (props: ICardsView): JSX.Element => {
   const { cards, modal, units, deleteCard } = props;
 
   return (
-    <Box mb="30px">
-      <Heading mb="20px" size="md">
-        {LOCALE_US.SETTINGS_CARDS_HEADER}
-      </Heading>
+    <Box>
+      <Stack direction="row" w="100" justify="center">
+        <NewGameCardButton openModal={modal.openModal} description="Add card" />
+      </Stack>
 
       <Stack w="100%" wrap="wrap" direction="row">
         {cards.map(card => {
@@ -35,8 +34,6 @@ const GameCardsView = (props: ICardsView): JSX.Element => {
             </Stack>
           );
         })}
-
-        <NewGameCardButton onClick={modal.openModal} />
 
         <GameCardModal modal={modal} />
       </Stack>

@@ -42,7 +42,7 @@ const Game = (): JSX.Element => {
   );
 
   return (
-    <Box h="100%" maxW="1440px" w="90%" m="0 auto" p="5px">
+    <Box maxW="1440px" w="90%" m="0 auto" p="5px">
       <EditableHeader {...sessionNameData} />
 
       <Stack direction="row" justify="space-between" align="center">
