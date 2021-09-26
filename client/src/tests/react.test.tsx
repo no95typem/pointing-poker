@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import { Header } from '../modules/Header/Header';
@@ -20,8 +20,7 @@ declare global {
   }
 }
 
-describe('Start Page', () => {
-  afterEach(cleanup);
+describe.skip('Start Page', () => {
   const node = (
     <Provider store={store}>
       <BrowserRouter basename={BASENAME}>
