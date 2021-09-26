@@ -30,4 +30,5 @@ export interface SessionManagerAPI extends ClientManagerAPI {
   kick: (id: number) => void;
   tryToEndRound: (force?: true) => void;
   endSession: () => void;
+  takeFromIncubator: (id: number, allow: boolean) => void;
 }

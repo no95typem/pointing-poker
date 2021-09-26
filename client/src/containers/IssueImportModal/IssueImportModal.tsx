@@ -59,9 +59,15 @@ export const IssueImportModal = (props: IIssueImportModalProps) => {
                 <Tbody>
                   <Tr>
                     <Td fontWeight="semibold">1</Td>
-                    <Td fontStyle="italic" fontWeight="semibold">title</Td>
-                    <Td fontStyle="italic" fontWeight="semibold">link</Td>
-                    <Td fontStyle="italic" fontWeight="semibold">priority</Td>
+                    <Td fontStyle="italic" fontWeight="semibold">
+                      title
+                    </Td>
+                    <Td fontStyle="italic" fontWeight="semibold">
+                      link
+                    </Td>
+                    <Td fontStyle="italic" fontWeight="semibold">
+                      priority
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td fontWeight="semibold">2</Td>
@@ -76,7 +82,9 @@ export const IssueImportModal = (props: IIssueImportModalProps) => {
                     <Td>high</Td>
                   </Tr>
                   <Tr>
-                    <Td borderBottom={0} fontWeight="semibold">...</Td>
+                    <Td borderBottom={0} fontWeight="semibold">
+                      ...
+                    </Td>
                     <Td borderBottom={0}>...</Td>
                     <Td borderBottom={0}>...</Td>
                     <Td borderBottom={0}>...</Td>

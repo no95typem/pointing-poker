@@ -6,6 +6,7 @@ import { purify } from '../../../shared/helpers/processors/purify';
 import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
 import { CSMSG_CIPHERS } from '../../../shared/types/cs-msgs/cs-msg-ciphers';
 import { CSMsgForceKick } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-force-kick';
+import { CSMSGNewConnectionResponse } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-new-connection-response';
 import { CSMsgUpdateState } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
 import { ISessionGameState } from '../../../shared/types/session/state/session-state';
@@ -38,6 +39,12 @@ export class DealerManager extends RoleManager {
         break;
       case CSMSG_CIPHERS.END_GAME:
         this.api.endSession();
+        break;
+      case CSMSG_CIPHERS.NEW_CONNECTION_REPSONSE:
+        this.api.takeFromIncubator(
+          (msg as CSMSGNewConnectionResponse).id,
+          (msg as CSMSGNewConnectionResponse).allow,
+        );
         break;
       default:
         break;
