@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRadioGroup, Text, Flex } from '@chakra-ui/react';
 import { UserRole, USER_ROLES } from '../../../../shared/types/user/user-role';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
@@ -20,8 +20,10 @@ const UserRoleRadioButtons = () => {
 
   const group = getRootProps();
 
+  const dir = useMemo(() => (Math.random() > 0.5 ? 'row' : 'row-reverse'), []);
+
   return (
-    <Flex direction={Math.random() > 0.5 ? 'row' : 'row-reverse'} {...group}>
+    <Flex direction={dir} {...group}>
       {options.map(value => {
         const radio = (getRadioProps as (obj: { value: string }) => any)({
           value,
@@ -29,7 +31,9 @@ const UserRoleRadioButtons = () => {
 
         return (
           <ButtonLikeRadioCard key={value} {...radio}>
-            <Text>{value}</Text>
+            <Text fontFamily="handwrite" fontWeight="extrabold" fontSize="lg">
+              {value}
+            </Text>
           </ButtonLikeRadioCard>
         );
       })}

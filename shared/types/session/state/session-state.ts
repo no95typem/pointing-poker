@@ -38,7 +38,7 @@ export interface SessionState {
 
   issues: ISessionIssues;
 
-  currentGameSettings: ISettings;
+  gSettings: ISettings;
 
   game?: ISessionGameState;
 }

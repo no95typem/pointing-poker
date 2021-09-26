@@ -39,9 +39,12 @@ export const Footer = (): JSX.Element => {
   useEffect(() => {
     if (needToShow) {
       onOpen();
-      dispatch(notifSlice.actions.resetEssentials());
+      // Timeout is needed here because an another popover can steal focus without it!
+      setTimeout(() => dispatch(notifSlice.actions.resetEssentials()));
     }
   });
+
+  console.log(isOpen, needToShow);
 
   return (
     <Flex
@@ -109,7 +112,7 @@ export const Footer = (): JSX.Element => {
                       <GenericAlert {...val} />
                       <IconButton
                         aria-label="dismiss"
-                        icon={<CloseIcon sc />}
+                        icon={<CloseIcon />}
                         onClick={() => {
                           dispatch(notifSlice.actions.removeAlertRec(+key));
                           ref.current?.focus();

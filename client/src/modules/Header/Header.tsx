@@ -1,4 +1,4 @@
-import * as React from 'react';
+import XLSX from 'xlsx';
 import { ChatIcon, HamburgerIcon } from '@chakra-ui/icons';
 
 import logo from '../../assets/images/shared/logo.svg';
@@ -11,10 +11,20 @@ import {
   HStack,
   Image,
   useColorMode,
+  Popover,
+  PopoverTrigger,
+  Portal,
+  PopoverContent,
+  PopoverBody,
+  Button,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
-import { useAppDispatch } from '../../redux/store';
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
+import { loadFiles } from '../../helpers/loadFiles';
+import { deepObjToWorkbook } from '../../helpers/deep-obj-wb-converters';
+import { tryLoadSessionFromFile } from '../../redux/slices/session';
+import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -23,6 +33,8 @@ export const Header = (): JSX.Element => {
   const toggleChat = (): void => {
     dispatch(tryToToggleChatState());
   };
+
+  const sessionState = useTypedSelector(state => state.session);
 
   return (
     <Flex
@@ -51,12 +63,49 @@ export const Header = (): JSX.Element => {
           onClick={toggleChat}
         />
         <Spacer />
-        <IconButton
-          style={{ marginInlineStart: '0px' }}
-          aria-label="menu"
-          icon={<HamburgerIcon />}
-          // onClick={toggleChat}
-        />
+
+        <Popover>
+          <PopoverTrigger>
+            <IconButton
+              style={{ marginInlineStart: '0px' }}
+              aria-label="menu"
+              icon={<HamburgerIcon />}
+              // onClick={toggleChat}
+            />
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent width="fit-content">
+              <PopoverBody>
+                <Button
+                  onClick={() => {
+                    loadFiles().then(fileList => {
+                      if (fileList[0]) {
+                        dispatch(tryLoadSessionFromFile(fileList[0]));
+                      }
+                    });
+                  }}
+                >
+                  load xlsx
+                </Button>
+                <Button
+                  onClick={() => {
+                    const wb = deepObjToWorkbook({
+                      obj: sessionState as unknown as Record<string, unknown>,
+                      name: '',
+                      copy: true,
+                    });
+                    XLSX.writeFile(wb, 'pp-session.xlsx');
+                  }}
+                >
+                  save xlsx
+                </Button>
+                <Button onClick={showIssueImportDialog}>
+                  Show Import Issues Dialog
+                </Button>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
       </HStack>
     </Flex>
   );
