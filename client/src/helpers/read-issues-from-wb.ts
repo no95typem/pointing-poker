@@ -1,6 +1,9 @@
 import XLSX from 'xlsx';
 import { Issue } from '../../../shared/types/session/issue/issue';
-import { ISSUE_PRIORITIES } from '../../../shared/types/session/issue/issue-priority';
+import {
+  IssuePriority,
+  ISSUE_PRIORITIES,
+} from '../../../shared/types/session/issue/issue-priority';
 
 export const isIssue = (obj: unknown) => {
   return (
@@ -62,4 +65,16 @@ export const importIssuesFromWorkbook = (wb: XLSX.WorkBook) => {
   });
 
   return issues;
+};
+
+export const exportTemplate = () => {
+  const wb = XLSX.utils.book_new();
+  const template: Issue = {
+    title: '',
+    link: '',
+    priority: '' as IssuePriority,
+  } as Issue;
+  const ws = XLSX.utils.json_to_sheet([template]);
+  XLSX.utils.book_append_sheet(wb, ws, 'issues');
+  XLSX.writeFile(wb, 'issues-template.xlsx');
 };

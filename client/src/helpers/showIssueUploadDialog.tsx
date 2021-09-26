@@ -1,19 +1,9 @@
-import {
-  ChakraProvider,
-  Flex,
-  IconButton,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-} from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import ReactDOM from 'react-dom';
-import { theme } from '../theme';
-import { ReactComponent as UndrawAddDocument } from '../assets/images/undraw/add-document.svg';
+import { Provider } from 'react-redux';
+import { IssueImportModal } from '../containers/IssueImportModal/IssueImportModal';
 import { store } from '../redux/store';
-import { tryImportIssues } from '../redux/slices/session';
+import { theme } from '../theme';
 
 export const showIssueImportDialog = () => {
   const div = document.createElement('div');
@@ -25,31 +15,9 @@ export const showIssueImportDialog = () => {
 
   ReactDOM.render(
     <ChakraProvider theme={theme}>
-      <Modal isOpen onClose={removeSelf} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader fontSize="2xl" textAlign="center" fontFamily="handwrite">
-            Import issues
-          </ModalHeader>
-
-          <ModalBody mb="20px">
-            <Flex direction="column" align="center">
-              <Text textAlign="center">hello!</Text>
-
-              <IconButton
-                height="fit-content"
-                width="fit-content"
-                p={2}
-                pr="13%"
-                variant="ghost"
-                aria-label="import file"
-                onClick={() => store.dispatch(tryImportIssues())}
-                icon={<UndrawAddDocument width="150px" />}
-              />
-            </Flex>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <Provider store={store}>
+        <IssueImportModal removeSelf={removeSelf} />
+      </Provider>
     </ChakraProvider>,
     div,
   );
