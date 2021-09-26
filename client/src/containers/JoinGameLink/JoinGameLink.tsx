@@ -32,8 +32,8 @@ const JoinGameLink = (props: ILink) => {
   };
 
   return (
-    <Box mb="20px">
-      <Heading fontWeight="medium" fontStyle="italic" size="md">
+    <Box mb="20px" position="relative">
+      <Heading position="absolute" top="-20px" fontWeight="medium" size="md">
         Link to lobby:
       </Heading>
 
@@ -44,7 +44,6 @@ const JoinGameLink = (props: ILink) => {
         justify="flex-start"
         align="center"
         p="10px 0"
-        h="45px"
       >
         <Heading
           fontWeight="medium"

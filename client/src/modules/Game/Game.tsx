@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { Box, Button, Stack } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
 import UseSessionData from '../../hooks/useSessionData';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
-import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
-import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 import GameControlButtons from '../../containers/GameControlButtons/GameControlButtons';
 import GameTimer from '../../containers/GameTimer/GameTimer';
@@ -25,12 +23,6 @@ const Game = (): JSX.Element => {
 
   if (!sessionData) return <></>;
 
-  const finishGame = (): void => {
-    const endGame = new CSMsgEndGame();
-
-    SERVER_ADAPTER.send(endGame);
-  };
-
   const {
     dealerData,
     membersData,
@@ -38,7 +30,6 @@ const Game = (): JSX.Element => {
     issuesData,
     gameStateData,
     isPlayerSpectator,
-    isPlayerDealer,
   } = sessionData;
 
   const { gameState, gameData } = gameStateData;
@@ -50,12 +41,9 @@ const Game = (): JSX.Element => {
   );
 
   return (
-    <Box minH="100vh" maxW="1440px" w="90%" m="0 auto" p="5px">
-      <Stack direction="row" justify="space-between" align="center">
-        <EditableHeader {...sessionNameData} />
+    <Box maxW="1440px" w="90%" m="0 auto" p="5px">
+      <EditableHeader {...sessionNameData} />
 
-        {isPlayerDealer && <Button onClick={finishGame}>End Game</Button>}
-      </Stack>
       <Stack direction="row" justify="space-between" align="center">
         <DealerPlate dealerMemberData={dealerData} />
         {isRoundStarted && <GameTimer />}

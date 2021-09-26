@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Heading, Stack } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 
 import {
   IMemberData,
@@ -13,9 +13,38 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
 
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 const UserCards = (props: IUserCards): JSX.Element => {
-  const { members, isItYou, isGameStage, isVotersView, isDealerPlaying } =
-    props;
+  const { members, isItYou, isVotersView, isDealerPlaying } = props;
+
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+
+    responsive: [
+      {
+        breakpoint: 1000,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 700,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+        },
+      },
+    ],
+  };
 
   const setMemberData = (member: Member): IMemberData => {
     return {
@@ -33,30 +62,28 @@ const UserCards = (props: IUserCards): JSX.Element => {
   };
 
   return (
-    <Box mb="30px">
-      {!isGameStage && (
-        <Heading textAlign="center" size="lg" mb="40px">
-          Members:
-        </Heading>
-      )}
-      <Stack w="100%" wrap="wrap" direction="row">
+    <Box>
+      <Slider {...settings}>
         {Object.entries(members).map(([id, member]) => {
           if (isIgnoredUser(id, member.userRole)) return null;
 
           return (
-            <Stack
-              direction="row"
-              justify="center"
-              align="center"
-              key={`${id}-box`}
-              border={isVotersView ? '1px solid black' : 'none'}
-            >
-              <UserCard {...setMemberData(member)} key={id} />;
-              {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
+            <Stack maxW="400px" key={`${id}-box`}>
+              <Stack
+                direction="row"
+                justify="center"
+                align="center"
+                border={isVotersView ? '1px solid black' : 'none'}
+                key={`${id}-wrap`}
+                mr="20px"
+              >
+                <UserCard {...setMemberData(member)} key={id} />
+                {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
+              </Stack>
             </Stack>
           );
         })}
-      </Stack>
+      </Slider>
     </Box>
   );
 };

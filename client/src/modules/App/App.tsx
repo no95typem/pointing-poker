@@ -20,7 +20,12 @@ export const App = () => {
       <ColorModeScript />
       <ChakraProvider theme={theme}>
         <ServerBoundary>
-          <Grid minH="100vh" templateRows="50px 1fr 50px" alignItems="center">
+          <Grid
+            minH="100vh"
+            maxW="100%"
+            templateRows="50px 1fr 50px"
+            alignItems="center"
+          >
             <Header />
             <Routes />
             <Footer />

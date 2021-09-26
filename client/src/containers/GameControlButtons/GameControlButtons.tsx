@@ -1,16 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Button, Stack } from '@chakra-ui/react';
+import { Button, Stack, useDisclosure } from '@chakra-ui/react';
+
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
-import { ILobbyGameStateData } from '../../../../shared/types/session/state/session-state';
+import {
+  IConfirmation,
+  IGameStateData,
+} from '../../../../shared/types/session/state/session-state';
+import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
 
-const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
+
+const GameControlButtons = (props: IGameStateData): JSX.Element => {
   const { isPlayerDealer, setGameSettings, localSettings, gameData } = props;
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [confirmData, setConfirmData] = useState({
+    description: '',
+    action: () => {},
+  });
+
+  const confirmModalData: IConfirmation = {
+    isOpen,
+    onClose,
+    confirmData,
+  };
+
+  const changeGameModeConfirmation = (): void => {
+    setConfirmData(prevState => {
+      return {
+        ...prevState,
+        description: gameData.isGameStage ? 'Finish Game' : 'Start Game',
+        action: gameData.isGameStage ? finishGame : initiateGame,
+      };
+    });
+
+    onOpen();
+  };
+
+  const leaveGameConfirmation = (): void => {
+    setConfirmData(prevState => {
+      return {
+        ...prevState,
+        description: isPlayerDealer ? 'Cancel Game' : 'Leave Game',
+        action: SERVER_ADAPTER.exitGame,
+      };
+    });
+
+    onOpen();
+  };
 
   const initiateGame = (): void => {
     localSettings && setGameSettings(localSettings);
 
     SERVER_ADAPTER.startGame();
+  };
+
+  const finishGame = (): void => {
+    const endGame = new CSMsgEndGame();
+
+    SERVER_ADAPTER.send(endGame);
   };
 
   return (
@@ -19,7 +69,7 @@ const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {
         colorScheme="facebook"
         w="130px"
         variant="outline"
-        onClick={SERVER_ADAPTER.exitGame}
+        onClick={leaveGameConfirmation}
       >
         {isPlayerDealer ? 'Cancel Game' : 'Leave Game'}
       </Button>
@@ -28,14 +78,13 @@ const GameControlButtons = (props: ILobbyGameStateData): JSX.Element => {
           colorScheme="facebook"
           w="130px"
           variant="solid"
-          visibility={
-            isPlayerDealer && !gameData.isGameStage ? 'visible' : 'hidden'
-          }
-          onClick={initiateGame}
+          visibility={isPlayerDealer ? 'visible' : 'hidden'}
+          onClick={changeGameModeConfirmation}
         >
-          Start Game
+          {gameData.isGameStage ? 'Finish Game' : 'Start Game'}
         </Button>
       )}
+      <ConfirmationModal {...confirmModalData} />
     </Stack>
   );
 };

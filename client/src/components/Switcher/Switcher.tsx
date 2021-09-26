@@ -26,7 +26,7 @@ const Switcher = (props: ISettingsComponentData): JSX.Element => {
         {label}
       </FormLabel>
       <Switch
-        colorScheme="green"
+        colorScheme="facebook"
         id={name}
         name={name}
         isChecked={value as boolean}

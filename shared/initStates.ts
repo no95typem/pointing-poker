@@ -18,8 +18,9 @@ const testCardsData: CardData[] = [
 
 export const defaultSettings: ISettings = {
   autoAdmit: false,
-  dealerAsPlayer: true,
-  changingCardInRoundEnd: false,
+  isDealerPlayer: true,
+  isCardShownOnRoundEnd: false,
+  isPlayerCanReselectCard: true,
   isTimerNeeded: true,
   scoreType: 'story points',
   scoreTypeShort: 'SP',

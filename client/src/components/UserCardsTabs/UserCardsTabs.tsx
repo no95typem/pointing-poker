@@ -7,12 +7,12 @@ import { IUserCards } from '../../../../shared/types/session/member';
 
 const UserCardsTabs = (props: IUserCards): JSX.Element => {
   return (
-    <Tabs isManual variant="enclosed">
+    <Tabs isManual variant="enclosed" mb="40px">
       <TabList>
         <Tab>Players only</Tab>
         <Tab>All Users</Tab>
       </TabList>
-      <TabPanels>
+      <TabPanels maxW="100vw">
         <TabPanel>
           <UserCards {...{ ...props, isVotersView: true }} />
         </TabPanel>

@@ -8,6 +8,8 @@ import {
   AvatarBadge,
   StatNumber,
   StatHelpText,
+  StackProps,
+  ButtonProps,
 } from '@chakra-ui/react';
 
 import { ImBlocked } from 'react-icons/im';
@@ -81,7 +83,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
 
   return (
     <Stack
-      {...(stackStyles as any)}
+      {...(stackStyles as StackProps)}
       overflow="hidden"
       position="relative"
       borderRadius="md"
@@ -127,7 +129,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
           size="lg"
           icon={<ImBlocked />}
           onClick={() => showKickDialog(id)}
-          {...(kickBtnStyles as any)}
+          {...(kickBtnStyles as ButtonProps)}
         />
       )}
     </Stack>

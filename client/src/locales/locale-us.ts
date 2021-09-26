@@ -15,7 +15,10 @@ const LocaleUS: Record<LocaleKey, string> = {
 
   SETTINGS_IS_DEALER_PLAYER: 'Scram dealer as player:',
 
-  SETTINGS_OPEN_CARDS_ON_ROUND_END: 'Open cards on round end:',
+  SETTINGS_IS_CARD_SHOWN_ON_ROUND_END: 'Show cards on round end:',
+
+  SETTINGS_IS_PLAYER_CAN_RESELECT_CARD:
+    'Can player reselect card during round:',
 
   SETTINGS_IS_TIMER_ON: 'Is timer enabled:',
 

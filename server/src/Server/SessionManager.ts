@@ -333,7 +333,7 @@ export class SessionManager {
         playersRecs.some(rec => {
           if (
             rec.id === DEALER_ID &&
-            !this.sessionState.gSettings.dealerAsPlayer
+            !this.sessionState.gSettings.isDealerPlayer
           ) {
             return false;
           }
