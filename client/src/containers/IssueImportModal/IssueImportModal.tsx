@@ -50,27 +50,33 @@ export const IssueImportModal = (props: IIssueImportModalProps) => {
               <Table variant="simple" size="sm">
                 <Thead>
                   <Tr>
-                    <Th>ROW</Th>
-                    <Th>title</Th>
-                    <Th>link</Th>
-                    <Th>priority</Th>
+                    <Th>Row/Col</Th>
+                    <Th>?</Th>
+                    <Th>?+1</Th>
+                    <Th>?+2</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   <Tr>
-                    <Td>1</Td>
+                    <Td fontWeight="semibold">1</Td>
+                    <Td fontStyle="italic" fontWeight="semibold">title</Td>
+                    <Td fontStyle="italic" fontWeight="semibold">link</Td>
+                    <Td fontStyle="italic" fontWeight="semibold">priority</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="semibold">2</Td>
                     <Td>issue name 1</Td>
                     <Td>https://...</Td>
                     <Td>low</Td>
                   </Tr>
                   <Tr>
-                    <Td>2</Td>
+                    <Td fontWeight="semibold">3</Td>
                     <Td>issue name 2</Td>
                     <Td>https://...</Td>
                     <Td>high</Td>
                   </Tr>
                   <Tr>
-                    <Td borderBottom={0}>...</Td>
+                    <Td borderBottom={0} fontWeight="semibold">...</Td>
                     <Td borderBottom={0}>...</Td>
                     <Td borderBottom={0}>...</Td>
                     <Td borderBottom={0}>...</Td>
