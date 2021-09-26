@@ -24,6 +24,7 @@ import { tryToToggleChatState } from '../../redux/slices/chat';
 import { loadFiles } from '../../helpers/loadFiles';
 import { deepObjToWorkbook } from '../../helpers/deep-obj-wb-converters';
 import { tryLoadSessionFromFile } from '../../redux/slices/session';
+import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -97,6 +98,9 @@ export const Header = (): JSX.Element => {
                   }}
                 >
                   save xlsx
+                </Button>
+                <Button onClick={showIssueImportDialog}>
+                  Show Import Issues Dialog
                 </Button>
               </PopoverBody>
             </PopoverContent>

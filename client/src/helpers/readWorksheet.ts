@@ -9,8 +9,12 @@ export const readWbFromFile = (file: File) => {
 
       if (result instanceof ArrayBuffer) {
         var data = new Uint8Array(result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        res(workbook);
+        try {
+          const workbook = XLSX.read(data, { type: 'array' });
+          res(workbook);
+        } catch (err) {
+          rej(err);
+        }
       }
     };
 

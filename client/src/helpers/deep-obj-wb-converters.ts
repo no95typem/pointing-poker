@@ -24,11 +24,13 @@ export const deepObjToWorkbook = (
   const wb = inWb ?? XLSX.utils.book_new();
 
   target[`__XLSX_KEYPATH__`] = name;
+
   if (flag) target[flag] = true;
 
   const ws = XLSX.utils.json_to_sheet([target]);
 
   delete target[`__XLSX_KEYPATH__`];
+
   if (flag) delete target[flag];
 
   XLSX.utils.book_append_sheet(wb, ws, calcSheetName(name));

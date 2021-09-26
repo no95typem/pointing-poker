@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { useAppDispatch } from '../redux/store';
 import { updSessState } from '../redux/slices/session';
 
@@ -22,6 +20,8 @@ import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
 import { ISettings } from '../../../shared/types/settings';
 import { SESSION_STAGES } from '../../../shared/types/session/state/stages';
 import { ICardsGame } from '../../../shared/types/session/card';
+import { calcNextIssueId } from '../helpers/calcNextIssueId';
+import { useMemo } from 'react';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;
@@ -40,11 +40,7 @@ const UseSessionData = (
 
   const list = sessionData.issues.list;
 
-  const lastIssueId = list[list.length - 1];
-
-  const [newIssueId, setNewIssueId] = useState(
-    lastIssueId ? lastIssueId.id + 1 : 1,
-  );
+  const newIssueId = useMemo(() => calcNextIssueId(list), [list]);
 
   if (sessionData.clientId === undefined) return undefined;
 
@@ -99,8 +95,6 @@ const UseSessionData = (
       issues[issueIndex] = issue;
     } else {
       issues.push(issue);
-
-      setNewIssueId(newIssueId + 1);
     }
 
     dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));

@@ -21,6 +21,9 @@ import { readWbFromFile } from '../../helpers/readWorksheet';
 import { workbookToDeepObj } from '../../helpers/deep-obj-wb-converters';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { notifSlice } from './notifications';
+import { loadFiles } from '../../helpers/loadFiles';
+import { importIssuesFromWorkbook } from '../../helpers/read-issues-from-wb';
+import { calcNextIssueId } from '../../helpers/calcNextIssueId';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -73,6 +76,7 @@ export const updSessState = createAsyncThunk(
   'session/updSessState',
   async (update: Partial<SessionState>, thunkAPI) => {
     const synced = setSynced(update, false);
+
     thunkAPI.dispatch(sessionSlice.actions.dang_updSessStateFromClient(synced));
 
     const msg = new CSMsgUpdateState(update);
@@ -183,5 +187,74 @@ export const tryLoadSessionFromFile = createAsyncThunk(
           );
         }, 100);
       });
+  },
+);
+
+export const tryImportIssues = createAsyncThunk(
+  'session/tryImportIssues',
+  async (args, thunkAPI) => {
+    const sessionId = (thunkAPI.getState() as RootState).session.sessionId;
+
+    if (!sessionId) return;
+
+    loadFiles().then(fileList => {
+      if (fileList[0]) {
+        readWbFromFile(fileList[0])
+          .then(wb => {
+            const issues = importIssuesFromWorkbook(wb);
+
+            if (issues.length === 0) {
+              thunkAPI.dispatch(
+                notifSlice.actions.addNotifRec({
+                  status: 'warning',
+                  text: `Can't find issues in the imported file`,
+                  needToShow: true,
+                }),
+              );
+            } else {
+              const state = thunkAPI.getState() as RootState;
+
+              if (sessionId !== state.session.sessionId) return;
+
+              let startId = calcNextIssueId(state.session.issues.list);
+
+              issues.forEach(iss => {
+                iss.id = startId;
+                startId++;
+              });
+
+              const sessionIssues = OBJ_PROCESSOR.deepClone(
+                state.session.issues,
+              );
+
+              const newIssuesList = [...sessionIssues.list, ...issues];
+              const newIssues = {
+                ...sessionIssues,
+                list: newIssuesList,
+                isSynced: false,
+              };
+
+              thunkAPI.dispatch(updSessState({ issues: newIssues }));
+              console.log('dispatched');
+              thunkAPI.dispatch(
+                notifSlice.actions.addNotifRec({
+                  status: 'success',
+                  text: `Issues import complete!`,
+                  needToShow: false,
+                }),
+              );
+            }
+          })
+          .catch(err => {
+            thunkAPI.dispatch(
+              notifSlice.actions.addNotifRec({
+                status: 'error',
+                text: `Can't import issues: ${err.message}`,
+                needToShow: true,
+              }),
+            );
+          });
+      }
+    });
   },
 );
