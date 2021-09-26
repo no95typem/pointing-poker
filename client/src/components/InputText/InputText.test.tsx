@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import InputText from './InputText';
 
-it('Input text', () => {
+describe('Input text', () => {
   const data = {
     name: 'name',
     label: 'label',
@@ -14,11 +14,14 @@ it('Input text', () => {
   const { getByLabelText, queryByLabelText, getByRole } = render(
     <InputText data={data} />,
   );
-  expect(getByRole('textbox', { name: 'label' })).toHaveStyle(
-    'max-width: 150px',
-  );
-  expect(queryByLabelText(/label/i)).toBeTruthy();
-  expect(queryByLabelText(/label/i)).not.toHaveFocus();
-  userEvent.click(getByLabelText(/label/i));
-  expect(queryByLabelText(/label/i)).toHaveFocus();
+  const { label } = data;
+  it('Input text render elements and events', () => {
+    expect(getByRole('textbox', { name: label })).toHaveStyle(
+      'max-width: 150px',
+    );
+    expect(queryByLabelText(label)).toBeTruthy();
+    expect(queryByLabelText(label)).not.toHaveFocus();
+    userEvent.click(getByLabelText(label));
+    expect(queryByLabelText(label)).toHaveFocus();
+  });
 });
