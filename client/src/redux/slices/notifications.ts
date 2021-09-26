@@ -1,10 +1,13 @@
 import { AlertStatus } from '@chakra-ui/alert';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Member } from '../../../../shared/types/session/member';
 
 export interface INotification {
+  specialType?: 'new-connection';
   status: AlertStatus;
   text: string;
   needToShow?: boolean;
+  addData?: Member;
 }
 
 const initialState: Record<number, INotification> = {};

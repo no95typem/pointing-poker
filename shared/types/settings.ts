@@ -1,6 +1,7 @@
 import { CardData } from './session/card';
 
 export interface ISettings {
+  autoAdmit: boolean;
   dealerAsPlayer: boolean;
   changingCardInRoundEnd: boolean;
   scoreType: string;

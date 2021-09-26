@@ -17,6 +17,7 @@ const testCardsData: CardData[] = [
 ];
 
 export const defaultSettings: ISettings = {
+  autoAdmit: false,
   dealerAsPlayer: true,
   changingCardInRoundEnd: false,
   isTimerNeeded: true,

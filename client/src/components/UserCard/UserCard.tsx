@@ -19,6 +19,7 @@ import { showKickDialog } from '../../helpers/showKickDialog';
 
 export interface IUserCard extends IMemberData {
   size?: 'sm' | 'md';
+  w?: string;
   flexDirection?: 'row' | 'row-reverse';
 }
 
@@ -85,6 +86,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
       position="relative"
       borderRadius="md"
       flexDirection={props.flexDirection}
+      w={props.w}
     >
       <Avatar
         color="white"
