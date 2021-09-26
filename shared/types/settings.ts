@@ -5,6 +5,7 @@ export interface ISettings {
   isPlayerCanReselectCard: boolean;
   isCardShownOnRoundEnd: boolean;
   isTimerNeeded: boolean;
+  autoAdmit: boolean;
   scoreType: string;
   scoreTypeShort: string;
   roundTime: number;

@@ -7,12 +7,15 @@ import { genUniqIdWithCrypto } from '../../../shared/helpers/generators/node-spe
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
 import { CREATE_INIT_STATE } from '../../../shared/initStates';
+import { KNOWN_ERRORS_KEYS } from '../../../shared/knownErrorsKeys';
 import { CSMsgConnToSess } from '../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { CSMsgVotekick } from '../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
 import { SCMsgConnToSessStatus } from '../../../shared/types/sc-msgs/msgs/sc-msg-conn-to-sess-status';
 import { SCMsgMembersChanged } from '../../../shared/types/sc-msgs/msgs/sc-msg-members-changed';
+import { SCMsgNewConnection } from '../../../shared/types/sc-msgs/msgs/sc-msg-new-connection';
 import { SCMsgUpdateSessionState } from '../../../shared/types/sc-msgs/msgs/sc-msg-update-session-state';
+import { SCMsgYouWereKicked } from '../../../shared/types/sc-msgs/msgs/sc-msg-you-were-kicked';
 import { SCMsg } from '../../../shared/types/sc-msgs/sc-msg';
 import { Member } from '../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
@@ -58,6 +61,14 @@ export class SessionManager {
 
   private tokens: Record<string, number> = {};
 
+  private incubator: Record<
+    number,
+    {
+      member: Member;
+      ws: WebSocket;
+    }
+  > = {};
+
   constructor(init: SessionManagerInit, private cmAPI: ClientManagerAPI) {
     this.api = {
       ...this.cmAPI,
@@ -78,6 +89,7 @@ export class SessionManager {
       },
       tryToEndRound: this.tryToEndRound,
       endSession: this.endSession,
+      takeFromIncubator: this.takeFromIncubator,
     };
 
     this.dealerManager = new DealerManager(this.api);
@@ -136,14 +148,55 @@ export class SessionManager {
       isSynced: true,
     };
 
+    this.webSocketsMap.set(ws, member.userSessionPublicId);
+
+    const token = isReconnect
+      ? (initMsg.query.token as string)
+      : genUniqIdWithCrypto(Object.keys(this.tokens));
+
+    this.tokens[token] = member.userSessionPublicId;
+
+    const rMsg = new SCMsgConnToSessStatus({
+      wait: {
+        token,
+      },
+    });
+
+    this.api.send(ws, JSON.stringify(rMsg));
+
+    if (
+      role === USER_ROLES.DEALER ||
+      !newId ||
+      this.sessionState.gSettings.autoAdmit
+    ) {
+      this.admitPlayer(ws, member);
+    } else {
+      this.incubator[member.userSessionPublicId] = {
+        member,
+        ws,
+      };
+      const msg = new SCMsgNewConnection(member);
+      this.broadcast(msg, USER_ROLES.DEALER);
+    }
+  }
+
+  private takeFromIncubator = (id: number, allow: boolean) => {
+    if (this.incubator[id]) {
+      if (allow) {
+        this.admitPlayer(this.incubator[id].ws, this.incubator[id].member);
+      } else {
+        this.kick(id, this.incubator[id].ws, true);
+      }
+    }
+  };
+
+  private admitPlayer(ws: WebSocket, member: Member) {
     const update: Record<number, Partial<Member>> = {};
     update[member.userSessionPublicId] = member;
     Object.assign(this.sessionState.members, update);
 
     const bMsg = new SCMsgMembersChanged(update);
     this.broadcast(bMsg, USER_ROLES.SPECTATOR);
-
-    this.webSocketsMap.set(ws, member.userSessionPublicId);
 
     /* eslint-disable no-fallthrough */
     switch (member.userRole) {
@@ -155,60 +208,63 @@ export class SessionManager {
         this.spectatorsManager.addMember(ws, member.userSessionPublicId);
     }
     /* eslint-enable no-fallthrough */
-    const token = isReconnect
-      ? (initMsg.query.token as string)
-      : genUniqIdWithCrypto(Object.keys(this.tokens));
-
-    this.tokens[token] = member.userSessionPublicId;
-
     const rMsg = new SCMsgConnToSessStatus({
       success: {
         yourId: member.userSessionPublicId,
         state: this.sessionState,
-        token,
       },
     });
 
-    console.log(initMsg.query.token, isReconnect, token);
-
     this.api.send(ws, JSON.stringify(rMsg));
 
-    console.log(`member ${member.userSessionPublicId} added
-    to session ${this.sessionState.sessionId}`);
+    console.log(
+      `member ${member.userSessionPublicId} added to session ${this.sessionState.sessionId}`,
+    );
   }
 
   removeMember(ws: WebSocket, kick?: true) {
     const id = this.webSocketsMap.get(ws);
 
-    if (id !== undefined && this.sessionState.members[id]) {
-      const newState: UserState = kick
-        ? USER_STATES.KICKED
-        : USER_STATES.DISCONNECTED;
-
-      this.spectatorsManager.removeMember(ws, id);
-      this.playersManager.removeMember(ws, id);
-      this.dealerManager.removeMember(ws, id);
+    if (id !== undefined) {
       this.webSocketsMap.delete(ws);
 
-      this.sessionState.members[id].userState = newState;
-
-      const update: Record<number, Partial<Member>> = {};
-      update[id] = { userState: newState, isSynced: true };
-
-      const msg = new SCMsgMembersChanged(update);
-      this.broadcast(msg, USER_ROLES.SPECTATOR);
-
-      if (newState === USER_STATES.KICKED) {
-        const dMsg = new SCMsgUpdateSessionState({
-          stage: SESSION_STAGES.STATS,
+      if (id in this.incubator) {
+        delete this.incubator[id];
+        const msg = new SCMsgConnToSessStatus({
+          fail: {
+            reason: KNOWN_ERRORS_KEYS.YOU_WERE_KICKED,
+          },
         });
-        this.api.send(ws, JSON.stringify(dMsg));
+        this.api.send(ws, JSON.stringify(msg));
       }
 
-      if (id === DEALER_ID) this.endSession();
-      else this.tryToEndRound();
+      if (kick) {
+        const msg = new SCMsgYouWereKicked();
+        this.api.send(ws, JSON.stringify(msg));
+      }
 
-      console.log(`member ${id} removed from session`);
+      if (this.sessionState.members[id]) {
+        const newState: UserState = kick
+          ? USER_STATES.KICKED
+          : USER_STATES.DISCONNECTED;
+
+        this.spectatorsManager.removeMember(ws, id);
+        this.playersManager.removeMember(ws, id);
+        this.dealerManager.removeMember(ws, id);
+
+        this.sessionState.members[id].userState = newState;
+
+        const update: Record<number, Partial<Member>> = {};
+        update[id] = { userState: newState, isSynced: true };
+
+        const msg = new SCMsgMembersChanged(update);
+        this.broadcast(msg, USER_ROLES.SPECTATOR);
+
+        if (id === DEALER_ID) this.endSession();
+        else this.tryToEndRound();
+
+        console.log(`member ${id} removed from session`);
+      }
     } else {
       // should never be executed
       console.warn(
@@ -227,13 +283,19 @@ export class SessionManager {
     this.tryToEndRound();
   };
 
-  private kick = (id: number) => {
-    if (this.sessionState.members[id]?.userState === USER_STATES.CONNECTED) {
-      const ws = [...this.webSocketsMap].find(entry => entry[1] === id)?.[0];
+  private kick = (id: number, ws?: WebSocket, noCheckState?: true) => {
+    console.log(`kick member with id: ${id}`);
 
-      if (ws) {
-        this.removeMember(ws, true);
-        this.api.disconnectFromSession(ws);
+    if (
+      noCheckState ||
+      this.sessionState.members[id]?.userState === USER_STATES.CONNECTED
+    ) {
+      const webSocket =
+        ws || [...this.webSocketsMap].find(entry => entry[1] === id)?.[0];
+
+      if (webSocket) {
+        this.removeMember(webSocket, true);
+        this.api.disconnectFromSession(webSocket);
       }
     }
   };
