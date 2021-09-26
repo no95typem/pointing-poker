@@ -104,6 +104,7 @@ export const IssueImportModal = (props: IIssueImportModalProps) => {
               height="fit-content"
               width="fit-content"
               p={2}
+              paddingRight="12%"
               variant="ghost"
               aria-label="import file"
               onClick={() => dispatch(tryImportIssues())}
