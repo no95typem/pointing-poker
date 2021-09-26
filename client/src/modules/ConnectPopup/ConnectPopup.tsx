@@ -9,18 +9,17 @@ import {
   Flex,
   Text,
   FormLabel,
-  Box,
   useMediaQuery,
 } from '@chakra-ui/react';
 import UserInfoInputStack from '../../containers/UserInfoInputStack/UserInfoInputStack';
 import AvatarForm from '../../containers/AvatarForm/AvatarForm';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
-import { connectToLobby, createSession } from '../../redux/slices/connect';
 import UserRoleRadioButtons from '../../containers/UserRoleRadioButtons/UserRoleRadioButtons';
 import { ChangeEvent } from 'react';
 import { userInfoSlice } from '../../redux/slices/userInfo';
 import { ReactComponent as UndrawBusinessDecisions } from '../../assets/images/undraw/business-decisions.svg';
-import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player.svg';
+import { ReactComponent as UndrawSelectPlayer } from '../../assets/images/undraw/select-player-mod.svg';
+import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 
 interface ConnectPopupProps {
   isOpen: boolean;
@@ -52,14 +51,30 @@ const ConnectPopup = ({
     }
   };
 
+  const underlined = {
+    position: 'relative',
+    width: 'fit-content',
+    mb: '2',
+    _after: {
+      content: '""',
+      width: '100%',
+      height: '1px',
+      position: 'absolute',
+      bottom: '-2px',
+      left: '0px',
+      backgroundColor: 'black',
+    },
+  };
+
   return (
     <Modal
-      size="3xl"
       isOpen={isOpen}
       onClose={onClose}
       motionPreset="slideInBottom"
       onOverlayClick={onClose}
       isCentered={true}
+      scrollBehavior="inside"
+      size="4xl"
     >
       <ModalOverlay />
       <ModalContent>
@@ -75,8 +90,12 @@ const ConnectPopup = ({
               gridGap="6"
               alignItems="center"
             >
-              <Box>
-                <FormLabel fontFamily="handwrite">
+              <Flex direction="column" align="center" gridGap={2}>
+                <FormLabel
+                  fontFamily="handwrite"
+                  fontSize="xl"
+                  {...(underlined as any)}
+                >
                   1. Enter or check your user information:
                 </FormLabel>
                 <UserInfoInputStack
@@ -86,16 +105,29 @@ const ConnectPopup = ({
                     onChange: handleUserInfoChange,
                   }}
                 />
-              </Box>
-              <Box>
-                <FormLabel fontFamily="handwrite">
+              </Flex>
+              <Flex direction="column" align="center" gridGap={4}>
+                <FormLabel
+                  fontFamily="handwrite"
+                  fontSize="xl"
+                  {...(underlined as any)}
+                >
                   2. Setup your avatar (optional):
                 </FormLabel>
                 <AvatarForm />
-              </Box>
+              </Flex>
             </Flex>
-            <Box mt={isLargerThan640 ? '4' : undefined}>
-              <FormLabel fontFamily="handwrite">
+            <Flex
+              mt={isLargerThan640 ? '4' : undefined}
+              direction="column"
+              align="center"
+              gridGap={6}
+            >
+              <FormLabel
+                fontFamily="handwrite"
+                fontSize="xl"
+                {...(underlined as any)}
+              >
                 3. Check your role for this session:
               </FormLabel>
               {forDealer ? (
@@ -107,18 +139,23 @@ const ConnectPopup = ({
                 </Flex>
               ) : (
                 <Flex alignItems="center" wrap="wrap" position="relative">
-                  <Box
+                  <Flex
                     position="absolute"
-                    top="5px"
+                    width="100%"
+                    top="10px"
                     p={1}
                     backgroundBlendMode="color-burn"
+                    justify="center"
                   >
                     <UserRoleRadioButtons />
-                  </Box>
-                  <UndrawSelectPlayer />
+                  </Flex>
+                  <UndrawSelectPlayer
+                    width="100%"
+                    style={{ maxWidth: '380px' }}
+                  />
                 </Flex>
               )}
-            </Box>
+            </Flex>
           </Flex>
         </ModalBody>
 
@@ -129,7 +166,9 @@ const ConnectPopup = ({
           <Button
             disabled={isNameInvalid}
             onClick={() =>
-              forDealer ? dispatch(createSession()) : dispatch(connectToLobby())
+              forDealer
+                ? SERVER_ADAPTER.createSess()
+                : SERVER_ADAPTER.connToLobby()
             }
           >
             Confirm

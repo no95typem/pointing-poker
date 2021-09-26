@@ -3,6 +3,7 @@
 import WebSocket from 'ws';
 import { DEALER_ID } from '../../../shared/const';
 import { calcPercentage } from '../../../shared/helpers/calcs/game-calcs';
+import { genUniqIdWithCrypto } from '../../../shared/helpers/generators/node-specific';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
 import { CREATE_INIT_STATE } from '../../../shared/initStates';
@@ -55,6 +56,8 @@ export class SessionManager {
 
   private kicksMan: KicksManager;
 
+  private tokens: Record<string, number> = {};
+
   constructor(init: SessionManagerInit, private cmAPI: ClientManagerAPI) {
     this.api = {
       ...this.cmAPI,
@@ -84,9 +87,7 @@ export class SessionManager {
 
     this.sessionState.sessionId = init.id;
     try {
-      this.sessionState.currentGameSettings = purify(
-        init.initMsg.query.settings,
-      );
+      this.sessionState.gSettings = purify(init.initMsg.query.settings);
     } catch (err) {
       console.log(err);
     }
@@ -110,6 +111,17 @@ export class SessionManager {
   addMember(ws: WebSocket, initMsg: CSMsgConnToSess, role?: UserRole) {
     const pureInitMsg = purify(initMsg);
 
+    const tokenId =
+      initMsg.query.token && initMsg.query.token in this.tokens
+        ? this.tokens[initMsg.query.token]
+        : undefined;
+
+    const isReconnect =
+      tokenId !== undefined &&
+      this.sessionState.members[tokenId]?.userState !== 'CONNECTED';
+
+    const newId = isReconnect ? undefined : this.genNewMemberId();
+
     const member: Member = {
       userInfo: pureInitMsg.query.info,
       userRole:
@@ -118,7 +130,9 @@ export class SessionManager {
           ? USER_ROLES.PLAYER
           : USER_ROLES.SPECTATOR),
       userState: USER_STATES.CONNECTED,
-      userSessionPublicId: this.genNewMemberId(),
+      userSessionPublicId: isReconnect
+        ? (tokenId as number)
+        : (newId as number),
       isSynced: true,
     };
 
@@ -141,13 +155,21 @@ export class SessionManager {
         this.spectatorsManager.addMember(ws, member.userSessionPublicId);
     }
     /* eslint-enable no-fallthrough */
+    const token = isReconnect
+      ? (initMsg.query.token as string)
+      : genUniqIdWithCrypto(Object.keys(this.tokens));
+
+    this.tokens[token] = member.userSessionPublicId;
 
     const rMsg = new SCMsgConnToSessStatus({
       success: {
         yourId: member.userSessionPublicId,
         state: this.sessionState,
+        token,
       },
     });
+
+    console.log(initMsg.query.token, isReconnect, token);
 
     this.api.send(ws, JSON.stringify(rMsg));
 
@@ -249,7 +271,7 @@ export class SessionManager {
         playersRecs.some(rec => {
           if (
             rec.id === DEALER_ID &&
-            !this.sessionState.currentGameSettings.dealerAsPlayer
+            !this.sessionState.gSettings.dealerAsPlayer
           ) {
             return false;
           }
@@ -272,7 +294,7 @@ export class SessionManager {
         if (currIssue) {
           currIssue.stat = {
             votes: game.votes,
-            percentage: calcPercentage(game.votes),
+            pct: calcPercentage(game.votes),
           };
         }
 

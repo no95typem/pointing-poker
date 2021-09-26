@@ -18,15 +18,16 @@ import { Member } from '../../../../shared/types/session/member';
 import { KNOWN_LOADS_KEYS } from '../../../../shared/knownLoadsKeys';
 import { removeError, setErrorByKey } from '../../redux/slices/errors';
 import { removeLoad, setGLoadByKey } from '../../redux/slices/loads';
-import { sessionSlice } from '../../redux/slices/session';
 import { store } from '../../redux/store';
+import { sessionSlice } from '../../redux/slices/session';
 import { SessionState } from '../../../../shared/types/session/state/session-state';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
 import { showKickDialog } from '../../helpers/showKickDialog';
 import { connectSlice } from '../../redux/slices/connect';
-
-const updateState = sessionSlice.actions.dang_updSessStateFromServer;
+import { getCookieValByName } from '../../helpers/getCookie';
+import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
+import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
 
 class ServerAdapter {
   private apiUrl = IS_PROD
@@ -34,6 +35,8 @@ class ServerAdapter {
     : 'ws://localhost:9000';
 
   private ws: WebSocket | undefined;
+
+  private lastToken: string | undefined;
 
   private obeyTheServer = (e: MessageEvent) => {
     try {
@@ -58,7 +61,11 @@ class ServerAdapter {
             this.takeoffLoadBySessStateUpdate(
               (purified as CSMsgUpdateState).update,
             );
-            store.dispatch(updateState((purified as CSMsgUpdateState).update));
+            store.dispatch(
+              sessionSlice.actions.dang_updSessStateFromServer(
+                (purified as CSMsgUpdateState).update,
+              ),
+            );
 
             return;
           case SCMSG_CIPHERS.MEMBERS_CHANGED:
@@ -101,9 +108,17 @@ class ServerAdapter {
         msg.response.fail?.reason || KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR;
       store.dispatch(setErrorByKey(errorKey));
     } else {
-      store.dispatch(updateState(msg.response.success.state));
+      document.cookie = `lastToken=${msg.response.success.token}; Path=/;`; // ! TODO (no95typem) expires ?
+      this.lastToken = msg.response.success.token;
+      store.dispatch(
+        sessionSlice.actions.dang_updSessStateFromServer(
+          msg.response.success.state,
+        ),
+      );
       const clientId = msg.response.success.yourId;
-      store.dispatch(updateState({ clientId }));
+      store.dispatch(
+        sessionSlice.actions.dang_updSessStateFromServer({ clientId }),
+      );
     }
     store.dispatch(removeLoad('CONNECTING_TO_SERVER'));
   }
@@ -122,7 +137,9 @@ class ServerAdapter {
     const newMembers: Record<number, Member> = {};
     Object.assign(newMembers, members);
 
-    store.dispatch(updateState({ members: newMembers }));
+    store.dispatch(
+      sessionSlice.actions.dang_updSessStateFromServer({ members: newMembers }),
+    );
   }
 
   private handleChatMsg(msg: SCMsgChatMsgsChanged) {
@@ -148,7 +165,7 @@ class ServerAdapter {
         break;
     }
 
-    store.dispatch(updateState({ chat }));
+    store.dispatch(sessionSlice.actions.dang_updSessStateFromServer({ chat }));
   }
 
   private handleWSErrorOrClose() {
@@ -227,8 +244,45 @@ class ServerAdapter {
     }
   };
 
+  connToLobby = () => {
+    const state = store.getState();
+    const token = this.lastToken || getCookieValByName('lastToken');
+    const msg = new CSMsgConnToSess({
+      info: state.userInfo,
+      role: state.homePage.lastUserRole,
+      sessId: state.homePage.lobbyURL,
+      token,
+    });
+    SERVER_ADAPTER.send(msg);
+    store.dispatch(
+      setGLoadByKey({
+        loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER,
+        errorKey: KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER,
+      }),
+    );
+  };
+
+  createSess = () => {
+    const state = store.getState();
+    const msg = new CSMsgCreateSession({
+      userInfo: state.userInfo,
+      settings: state.session.gSettings,
+    });
+    SERVER_ADAPTER.send(msg);
+    store.dispatch(
+      setGLoadByKey({
+        loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER,
+        errorKey: KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER,
+      }),
+    );
+  };
+
   exitGame = () => {
-    store.dispatch(updateState({ stage: SESSION_STAGES.EMPTY }));
+    store.dispatch(
+      sessionSlice.actions.dang_updSessStateFromServer({
+        stage: SESSION_STAGES.EMPTY,
+      }),
+    );
     const msg = new CSMsgDisconFromSess();
     this.send(msg);
   };

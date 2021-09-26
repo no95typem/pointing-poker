@@ -15,7 +15,7 @@ const UserVote = (props: IVote): JSX.Element => {
 
   const game = useTypedSelector(state => state.session.game);
 
-  const settings = useTypedSelector(state => state.session.currentGameSettings);
+  const settings = useTypedSelector(state => state.session.gSettings);
 
   const { cards, scoreTypeShort } = settings;
 

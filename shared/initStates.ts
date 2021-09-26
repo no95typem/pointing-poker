@@ -32,7 +32,7 @@ const SESSION_INIT_STATE: SessionState = {
   stage: 'LOBBY',
   name: { value: 'unnamed pp session', isSynced: true },
   members: {},
-  currentGameSettings: defaultSettings,
+  gSettings: defaultSettings,
   chat: {
     msgs: {},
   },
@@ -89,16 +89,26 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
       userInfo: {
         ...sampleMember.userInfo,
         name: 'Kerri',
-        surname: 'Riz',
+        surname: 'Rizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+        jobPosition: 'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG',
         avatarBgColor: 'black',
       },
       userRole: 'PLAYER',
       userSessionPublicId: 2,
     },
   },
-  currentGameSettings: defaultSettings,
+  gSettings: defaultSettings,
   chat: {
-    msgs: {},
+    msgs: {
+      0: {
+        memberId: 0,
+        text: 'hello! zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+        time: Date.now(),
+        isSynced: true,
+      },
+      1: { memberId: 1, text: 'hello!', time: Date.now(), isSynced: true },
+      2: { memberId: 2, text: 'hello!', time: Date.now(), isSynced: true },
+    },
   },
   issues: {
     list: [],

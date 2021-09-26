@@ -11,6 +11,7 @@ export class SCMsgConnToSessStatus implements SCMsg {
       readonly success?: {
         readonly yourId: number;
         readonly state: SessionState;
+        readonly token: string;
       };
       readonly fail?: {
         readonly reason?: KnownErrorsKey;

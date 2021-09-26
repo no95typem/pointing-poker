@@ -1,10 +1,7 @@
-import React from 'react';
-import { UNDEFINED_CARD_VALUE } from '../../../../shared/const';
 import { Box, Heading, Stack } from '@chakra-ui/react';
 
-import { Percentage } from '../../../../shared/types/session/round/round-stat';
-
 import GameCardStatistics from '../GameCardStatistics/GameCardStatistics';
+import { calcPercentage } from '../../../../shared/helpers/calcs/game-calcs';
 
 export interface IRoundStatistics {
   issueTitle: string;
@@ -14,25 +11,7 @@ export interface IRoundStatistics {
 const RoundStatistics = (props: IRoundStatistics): JSX.Element => {
   const { votes } = props;
 
-  const percentage: Percentage = {};
-
-  const quantityVoters = Object.entries(votes).length;
-
-  Object.entries(votes).forEach(([memberId, value]) => {
-    const key = value || UNDEFINED_CARD_VALUE;
-
-    const data = percentage[key];
-
-    if (!data) {
-      percentage[key] = {
-        count: 1,
-        membersIds: [+memberId],
-      };
-    } else {
-      data.count++;
-      data.membersIds = [...data.membersIds, +memberId];
-    }
-  });
+  const allPlayersCount = Object.entries(votes).length;
 
   return (
     <Box mb="30px">
@@ -48,14 +27,15 @@ const RoundStatistics = (props: IRoundStatistics): JSX.Element => {
       </Heading>
 
       <Stack w="100%" wrap="wrap" direction="row" justify="center">
-        {Object.entries(percentage).map(([name, stat]) => {
-          const data = {
-            name,
-            stat,
-            quantityVoters,
-          };
-
-          return <GameCardStatistics {...data} key={name} />;
+        {Object.entries(calcPercentage(votes)).map(([cardValue, pctRec]) => {
+          return (
+            <GameCardStatistics
+              cardValue={cardValue}
+              pct={pctRec}
+              allPlayersCount={allPlayersCount}
+              key={cardValue}
+            />
+          );
         })}
       </Stack>
     </Box>
