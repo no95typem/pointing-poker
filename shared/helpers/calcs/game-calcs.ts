@@ -13,11 +13,11 @@ export const calcPercentage = (
     if (!data) {
       percentage[key] = {
         count: 1,
-        membersIds: [+memberId],
+        ids: [+memberId],
       };
     } else {
       data.count++;
-      data.membersIds = [...data.membersIds, +memberId];
+      data.ids = [...data.ids, +memberId];
     }
   });
 

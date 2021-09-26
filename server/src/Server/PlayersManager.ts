@@ -27,13 +27,13 @@ export class PlayersManager extends RoleManager {
   private handleCardPick(id: number, msg: CSMsgPick) {
     const { state } = this.api.getSessionState();
 
-    if (id === DEALER_ID && !state.currentGameSettings.isDealerPlayer) return;
+    if (id === DEALER_ID && !state.gSettings.isDealerPlayer) return;
 
     if (state.game) {
       if (
         state.game.roundState === ROUND_STATES.IN_PROCESS ||
         (state.game.roundState === ROUND_STATES.ENDED &&
-          state.currentGameSettings.isDealerPlayer)
+          state.gSettings.isPlayerCanReselectCard)
       ) {
         const game = OBJ_PROCESSOR.deepClone(state.game);
         game.votes[id] = msg.value;

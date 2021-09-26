@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import '@fontsource/architects-daughter';
 
 import { ChakraProvider, Grid, ColorModeScript } from '@chakra-ui/react';

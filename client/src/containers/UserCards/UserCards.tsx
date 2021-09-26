@@ -13,21 +13,21 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
 
-import { Swiper, SwiperSlide } from 'swiper/react/';
+// import { Swiper, SwiperSlide } from 'swiper/react/';
 
-import SwiperCore, {
-  EffectCoverflow,
-  Pagination,
-  Navigation,
-} from 'swiper/core';
+// import SwiperCore, {
+//   EffectCoverflow,
+//   Pagination,
+//   Navigation,
+// } from 'swiper/core';
 
-import 'swiper/swiper.scss';
-import 'swiper/components/effect-coverflow/effect-coverflow.scss';
-import 'swiper/components/pagination/pagination.scss';
-import 'swiper/components/navigation/navigation.scss';
+// import 'swiper/swiper.scss';
+// import 'swiper/components/effect-coverflow/effect-coverflow.scss';
+// import 'swiper/components/pagination/pagination.scss';
+// import 'swiper/components/navigation/navigation.scss';
 
 const UserCards = (props: IUserCards): JSX.Element => {
-  SwiperCore.use([EffectCoverflow, Pagination, Navigation]);
+  // SwiperCore.use([EffectCoverflow, Pagination, Navigation]);
 
   const { members, isItYou, isVotersView, isDealerPlaying } = props;
 
@@ -48,7 +48,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
 
   return (
     <Box maxW="300px">
-      <Swiper
+      {/* <Swiper
         slidesPerView={1}
         loop={true}
         pagination={{
@@ -57,26 +57,26 @@ const UserCards = (props: IUserCards): JSX.Element => {
         autoplay={true}
         onSlideChange={() => console.log('slide change')}
         onSwiper={swiper => console.log(swiper)}
-      >
-        {Object.entries(members).map(([id, member]) => {
-          if (isIgnoredUser(id, member.userRole)) return null;
+      > */}
+      {Object.entries(members).map(([id, member]) => {
+        if (isIgnoredUser(id, member.userRole)) return null;
 
-          return (
-            <SwiperSlide key={`${id}-slide`}>
-              <Stack
-                direction="row"
-                justify="center"
-                align="center"
-                key={`${id}-box`}
-                border={isVotersView ? '1px solid black' : 'none'}
-              >
-                <UserCard {...setMemberData(member)} key={id} />;
-                {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
-              </Stack>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+        return (
+          // <SwiperSlide key={`${id}-slide`}>
+          <Stack
+            direction="row"
+            justify="center"
+            align="center"
+            key={`${id}-box`}
+            border={isVotersView ? '1px solid black' : 'none'}
+          >
+            <UserCard {...setMemberData(member)} key={id} />;
+            {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
+          </Stack>
+          // {/* </SwiperSlide> */}
+        );
+      })}
+      {/* </Swiper> */}
     </Box>
   );
 };

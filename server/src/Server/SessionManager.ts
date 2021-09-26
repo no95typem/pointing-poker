@@ -87,9 +87,7 @@ export class SessionManager {
 
     this.sessionState.sessionId = init.id;
     try {
-      this.sessionState.currentGameSettings = purify(
-        init.initMsg.query.settings,
-      );
+      this.sessionState.gSettings = purify(init.initMsg.query.settings);
     } catch (err) {
       console.log(err);
     }
@@ -273,7 +271,7 @@ export class SessionManager {
         playersRecs.some(rec => {
           if (
             rec.id === DEALER_ID &&
-            !this.sessionState.currentGameSettings.isDealerPlayer
+            !this.sessionState.gSettings.isDealerPlayer
           ) {
             return false;
           }
@@ -296,7 +294,7 @@ export class SessionManager {
         if (currIssue) {
           currIssue.stat = {
             votes: game.votes,
-            percentage: calcPercentage(game.votes),
+            pct: calcPercentage(game.votes),
           };
         }
 

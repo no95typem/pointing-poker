@@ -77,13 +77,13 @@ const ConnectPopup = ({
 
   return (
     <Modal
-      size="3xl"
       isOpen={isOpen}
       onClose={onClose}
       motionPreset="slideInBottom"
       onOverlayClick={onClose}
       isCentered={true}
       scrollBehavior="inside"
+      size="4xl"
     >
       <ModalOverlay />
       <ModalContent>
@@ -160,7 +160,7 @@ const ConnectPopup = ({
                   </Flex>
                   <UndrawSelectPlayer
                     width="100%"
-                    style={{ maxWidth: '400px' }}
+                    style={{ maxWidth: '380px' }}
                   />
                 </Flex>
               )}
