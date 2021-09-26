@@ -28,6 +28,8 @@ class CSMsgCiphers {
   readonly NEXT_ISSUE = 'NEXT_ISSUE';
 
   readonly END_GAME = 'END_GAME';
+
+  readonly NEW_CONNECTION_REPSONSE = 'NEW_CONNECTION_REPSONSE';
 }
 
 export const CSMSG_CIPHERS = OBJ_PROCESSOR.deepFreeze(new CSMsgCiphers());

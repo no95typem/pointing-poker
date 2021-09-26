@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stack, Text } from '@chakra-ui/react';
+import { Stack, Heading } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 import { ICardData } from '../../../../shared/types/session/card';
@@ -36,7 +36,15 @@ const GameCardStatistics = (props: IGameCardStatistics): JSX.Element => {
   return (
     <Stack direction="column" spacing="1rem">
       <GameCard {...cardData} />
-      <Text textAlign="center">{`${percent}%`}</Text>
+      <Heading
+        size="md"
+        as="h4"
+        w="100%"
+        textAlign="center"
+        fontFamily="handwrite"
+      >
+        {`${percent}%`}
+      </Heading>
     </Stack>
   );
 };

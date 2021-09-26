@@ -17,15 +17,81 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { ImGithub } from 'react-icons/im';
-import { BellIcon, CloseIcon, InfoOutlineIcon } from '@chakra-ui/icons';
+import {
+  BellIcon,
+  CheckIcon,
+  CloseIcon,
+  InfoOutlineIcon,
+  NotAllowedIcon,
+} from '@chakra-ui/icons';
 import { FaGithub } from 'react-icons/fa';
 import { ChakraLogo } from '../../components/ChakraLogo/ChakraLogo';
 import { ReactComponent as UndrawImageFocus } from '../../assets/images/undraw/image-focus.svg';
 import { ReactComponent as RSSLogo } from '../../assets/images/shared/rss-logo.svg';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
-import { notifSlice } from '../../redux/slices/notifications';
+import { INotification, notifSlice } from '../../redux/slices/notifications';
 import { GenericAlert } from '../../components/GenericAlert/GenericAlert';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
+import UserCard from '../../components/UserCard/UserCard';
+import { Member } from '../../../../shared/types/session/member';
+
+const renderNotification = (
+  n: INotification,
+  onDismiss: () => void,
+): JSX.Element => {
+  switch (n.specialType) {
+    case 'new-connection':
+      const newMemeber = n.addData as Member;
+
+      return (
+        <>
+          <Box px={1}>
+            <Text>Allow new member to connect?</Text>
+            <UserCard
+              member={newMemeber}
+              isItYou={false}
+              isRoundStarted={true}
+              size="sm"
+            />
+          </Box>
+          <IconButton
+            aria-label="allow connection"
+            icon={<CheckIcon />}
+            onClick={() => {
+              SERVER_ADAPTER.respondToNewConnection(
+                newMemeber.userSessionPublicId,
+                true,
+              );
+              onDismiss();
+            }}
+          />
+          <IconButton
+            aria-label="reject connection"
+            icon={<NotAllowedIcon />}
+            onClick={() => {
+              SERVER_ADAPTER.respondToNewConnection(
+                newMemeber.userSessionPublicId,
+                false,
+              );
+              onDismiss();
+            }}
+          />
+        </>
+      );
+    default:
+      return (
+        <>
+          <GenericAlert {...n} />
+          <IconButton
+            aria-label="dismiss"
+            icon={<CloseIcon />}
+            onClick={onDismiss}
+          />
+        </>
+      );
+  }
+};
 
 export const Footer = (): JSX.Element => {
   const cMode = useColorMode();
@@ -40,7 +106,13 @@ export const Footer = (): JSX.Element => {
     if (needToShow) {
       onOpen();
       // Timeout is needed here because an another popover can steal focus without it!
-      setTimeout(() => dispatch(notifSlice.actions.resetEssentials()));
+      setTimeout(() => {
+        dispatch(notifSlice.actions.resetEssentials());
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'smooth',
+        });
+      });
     }
   });
 
@@ -107,17 +179,15 @@ export const Footer = (): JSX.Element => {
               <PopoverBody display="flex" flexDirection="column" gridGap="1">
                 {alertsEntries.length === 0 && 'There are no new notifications'}
                 {alertsEntries.map(([key, val]) => {
+                  const onDismiss = () => {
+                    dispatch(notifSlice.actions.removeAlertRec(+key));
+                    ref.current?.focus();
+                  };
+                  const content = renderNotification(val, onDismiss);
+
                   return (
                     <Flex key={key} align="center" gridGap="1">
-                      <GenericAlert {...val} />
-                      <IconButton
-                        aria-label="dismiss"
-                        icon={<CloseIcon />}
-                        onClick={() => {
-                          dispatch(notifSlice.actions.removeAlertRec(+key));
-                          ref.current?.focus();
-                        }}
-                      />
+                      {content}
                     </Flex>
                   );
                 })}

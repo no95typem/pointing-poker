@@ -14,6 +14,8 @@ class knownErrorsKeys {
   readonly SESSION_DOES_NOT_EXIST = 'SESSION_DOES_NOT_EXIST';
 
   readonly UNKNOWN_ERROR = 'UNKNOWN_ERROR';
+
+  readonly YOU_WERE_KICKED = 'YOU_WERE_KICKED';
 }
 
 export const KNOWN_ERRORS_KEYS = OBJ_PROCESSOR.deepFreeze(

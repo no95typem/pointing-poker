@@ -1,6 +1,7 @@
 import { CardData } from './session/card';
 
 export interface ISettings {
+  autoAdmit: boolean;
   isDealerPlayer: boolean;
   isPlayerCanReselectCard: boolean;
   isCardShownOnRoundEnd: boolean;
