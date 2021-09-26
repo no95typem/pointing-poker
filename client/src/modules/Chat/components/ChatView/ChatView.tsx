@@ -6,6 +6,7 @@ import {
   IMemberData,
   Member,
 } from '../../../../../../shared/types/session/member';
+import { MAX_CHAT_ENTRIES } from '../../../../../../shared/const';
 
 export const ChatView = () => {
   const sessionData = useTypedSelector(state => state.session);
@@ -68,7 +69,7 @@ export const ChatView = () => {
       overflow="auto"
     >
       {/* {msgEntries.length === 0 && <Text>No messages</Text>} */}
-      {msgEntries.slice(-50).map(([key, msg]) => {
+      {msgEntries.slice(-MAX_CHAT_ENTRIES).map(([key, msg]) => {
         const memberData = setMemberData(sessionData.members[msg.memberId]);
 
         return (
