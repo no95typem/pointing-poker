@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stack } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 
 import {
   IMemberData,
@@ -29,14 +29,14 @@ const UserCards = (props: IUserCards): JSX.Element => {
 
     responsive: [
       {
-        breakpoint: 1200,
+        breakpoint: 1000,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 700,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -62,15 +62,8 @@ const UserCards = (props: IUserCards): JSX.Element => {
   };
 
   return (
-    // <Box maxW="100%" w="100%" overflow="hidden">
-    <div
-      style={{
-        maxWidth: '100%',
-        width: '100%',
-        overflow: 'hidden',
-      }}
-    >
-      <Slider variableWidth={true} {...settings}>
+    <Box>
+      <Slider {...settings}>
         {Object.entries(members).map(([id, member]) => {
           if (isIgnoredUser(id, member.userRole)) return null;
 
@@ -91,8 +84,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
           );
         })}
       </Slider>
-    </div>
-    // </Box>
+    </Box>
   );
 };
 

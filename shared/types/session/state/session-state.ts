@@ -56,8 +56,12 @@ export interface IGameStateData {
 }
 
 export interface IConfirmation {
-  action: () => void;
-  onClose: () => void;
-  description: string;
   isOpen: boolean;
+  onClose: () => void;
+  confirmData: IConfirmData;
+}
+
+export interface IConfirmData {
+  action: () => void;
+  description: string;
 }

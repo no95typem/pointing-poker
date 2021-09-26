@@ -21,7 +21,7 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
 
   return (
     <Tabs w="66%" isManual variant="enclosed">
-      <TabList>
+      <TabList display="flex" justifyContent="flex-start" flexWrap="wrap">
         <Tab>Common Settings</Tab>
         {isTimerNeeded && <Tab>Timer</Tab>}
         <Tab>Game Cards</Tab>

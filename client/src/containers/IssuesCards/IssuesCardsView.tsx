@@ -15,6 +15,7 @@ import {
   Issue,
 } from '../../../../shared/types/session/issue/issue';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
+import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
 
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
@@ -169,6 +170,17 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
     return <NewIssueButton description="Create issue" openModal={openModal} />;
   };
 
+  const renderUploadIssueButton = (): JSX.Element => {
+    if (!isPlayerDealer || !isSynced) return <></>;
+
+    return (
+      <NewIssueButton
+        description="Upload issues"
+        openModal={showIssueImportDialog}
+      />
+    );
+  };
+
   return (
     <DragDropContext onDragEnd={handleDnd}>
       <Box mb="50px" position="relative">
@@ -176,6 +188,8 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
 
         <Stack spacing="3">
           <Stack {...IssueStackStyle}>
+            {renderUploadIssueButton()}
+
             {renderNewIssueButton()}
 
             {list

@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 
-import {
-  Button,
-  Stack,
-  useControllableState,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Button, Stack, useDisclosure } from '@chakra-ui/react';
 
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import {
@@ -21,21 +16,36 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [confirmData, setConfirmData] = useState({
+    description: '',
+    action: () => {},
+  });
+
+  const confirmModalData: IConfirmation = {
+    isOpen,
+    onClose,
+    confirmData,
+  };
+
   const changeGameModeConfirmation = (): void => {
-    setTempConfirmData({
-      ...tempConfirmData,
-      description: gameData.isGameStage ? 'Finish Game' : 'Start Game',
-      action: gameData.isGameStage ? finishGame : initiateGame,
+    setConfirmData(prevState => {
+      return {
+        ...prevState,
+        description: gameData.isGameStage ? 'Finish Game' : 'Start Game',
+        action: gameData.isGameStage ? finishGame : initiateGame,
+      };
     });
 
     onOpen();
   };
 
   const leaveGameConfirmation = (): void => {
-    setTempConfirmData({
-      ...tempConfirmData,
-      description: isPlayerDealer ? 'Cancel Game' : 'Leave Game',
-      action: SERVER_ADAPTER.exitGame,
+    setConfirmData(prevState => {
+      return {
+        ...prevState,
+        description: isPlayerDealer ? 'Cancel Game' : 'Leave Game',
+        action: SERVER_ADAPTER.exitGame,
+      };
     });
 
     onOpen();
@@ -52,31 +62,6 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
 
     SERVER_ADAPTER.send(endGame);
   };
-
-  const [confirmData, setConfirmData] = useState({
-    description: '',
-    action: initiateGame,
-    isOpen,
-    onClose,
-  });
-
-  const [tempConfirmData, setTempConfirmData] =
-    useControllableState<IConfirmation>({
-      value: confirmData,
-      onChange: setConfirmData,
-    });
-
-  // useEffect(() => {
-  //   console.log(1);
-
-  //   if (isFirstRender.current) {
-  //     isFirstRender.current = false;
-
-  //     return;
-  //   }
-
-  //   onOpen();
-  // }, [confirmData.action, onOpen]);
 
   return (
     <Stack direction="row" align="center" justify="space-between">
@@ -99,7 +84,7 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
           {gameData.isGameStage ? 'Finish Game' : 'Start Game'}
         </Button>
       )}
-      <ConfirmationModal {...tempConfirmData} />
+      <ConfirmationModal {...confirmModalData} />
     </Stack>
   );
 };

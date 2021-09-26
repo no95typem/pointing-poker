@@ -15,7 +15,9 @@ import {
 import { IConfirmation } from '../../../../shared/types/session/state/session-state';
 
 const ConfirmationModal = (props: IConfirmation): JSX.Element => {
-  const { description, action, isOpen, onClose } = props;
+  const { confirmData, isOpen, onClose } = props;
+
+  const { description, action } = confirmData;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -24,7 +26,7 @@ const ConfirmationModal = (props: IConfirmation): JSX.Element => {
         <ModalHeader>Confirm Action:</ModalHeader>
 
         <ModalBody mb="20px">
-          <Text>`Do you really want to {description}?`</Text>
+          <Text>{`Do you really want to ${description}?`}</Text>
         </ModalBody>
 
         <ModalFooter>
