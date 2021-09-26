@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Stack } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/react';
 
 import {
   IMemberData,
@@ -13,23 +13,38 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
 
-// import { Swiper, SwiperSlide } from 'swiper/react/';
-
-// import SwiperCore, {
-//   EffectCoverflow,
-//   Pagination,
-//   Navigation,
-// } from 'swiper/core';
-
-// import 'swiper/swiper.scss';
-// import 'swiper/components/effect-coverflow/effect-coverflow.scss';
-// import 'swiper/components/pagination/pagination.scss';
-// import 'swiper/components/navigation/navigation.scss';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const UserCards = (props: IUserCards): JSX.Element => {
-  // SwiperCore.use([EffectCoverflow, Pagination, Navigation]);
-
   const { members, isItYou, isVotersView, isDealerPlaying } = props;
+
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+        },
+      },
+    ],
+  };
 
   const setMemberData = (member: Member): IMemberData => {
     return {
@@ -47,37 +62,37 @@ const UserCards = (props: IUserCards): JSX.Element => {
   };
 
   return (
-    <Box maxW="300px">
-      {/* <Swiper
-        slidesPerView={1}
-        loop={true}
-        pagination={{
-          clickable: true,
-        }}
-        autoplay={true}
-        onSlideChange={() => console.log('slide change')}
-        onSwiper={swiper => console.log(swiper)}
-      > */}
-      {Object.entries(members).map(([id, member]) => {
-        if (isIgnoredUser(id, member.userRole)) return null;
+    // <Box maxW="100%" w="100%" overflow="hidden">
+    <div
+      style={{
+        maxWidth: '100%',
+        width: '100%',
+        overflow: 'hidden',
+      }}
+    >
+      <Slider variableWidth={true} {...settings}>
+        {Object.entries(members).map(([id, member]) => {
+          if (isIgnoredUser(id, member.userRole)) return null;
 
-        return (
-          // <SwiperSlide key={`${id}-slide`}>
-          <Stack
-            direction="row"
-            justify="center"
-            align="center"
-            key={`${id}-box`}
-            border={isVotersView ? '1px solid black' : 'none'}
-          >
-            <UserCard {...setMemberData(member)} key={id} />;
-            {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
-          </Stack>
-          // {/* </SwiperSlide> */}
-        );
-      })}
-      {/* </Swiper> */}
-    </Box>
+          return (
+            <Stack maxW="400px" key={`${id}-box`}>
+              <Stack
+                direction="row"
+                justify="center"
+                align="center"
+                border={isVotersView ? '1px solid black' : 'none'}
+                key={`${id}-wrap`}
+                mr="20px"
+              >
+                <UserCard {...setMemberData(member)} key={id} />
+                {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
+              </Stack>
+            </Stack>
+          );
+        })}
+      </Slider>
+    </div>
+    // </Box>
   );
 };
 

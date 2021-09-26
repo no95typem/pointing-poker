@@ -12,7 +12,7 @@ const UserCardsTabs = (props: IUserCards): JSX.Element => {
         <Tab>Players only</Tab>
         <Tab>All Users</Tab>
       </TabList>
-      <TabPanels>
+      <TabPanels maxW="90vw">
         <TabPanel>
           <UserCards {...{ ...props, isVotersView: true }} />
         </TabPanel>
