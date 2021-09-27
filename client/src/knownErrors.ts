@@ -35,6 +35,10 @@ export const KNOWN_ERRORS: Record<KnownErrorsKey, AppError> = {
     type: 'communication',
     description: `Session doesn't exist`,
   },
+  YOU_WERE_KICKED: {
+    type: 'communication',
+    description: `You were kicked!`,
+  },
   UNKNOWN_ERROR: {
     type: 'unknown',
     description: `Unknown error, try to reload the page`,

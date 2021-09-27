@@ -17,7 +17,7 @@ export const loadsSlice = createSlice({
       state,
       action: PayloadAction<{
         key: KnownLoadKey;
-        timeout: NodeJS.Timeout;
+        timeout?: NodeJS.Timeout;
       }>,
     ) {
       state[action.payload.key] = action.payload.timeout;
@@ -30,21 +30,26 @@ export const loadsSlice = createSlice({
 
 export interface ISetGLoadByKeyArgs {
   loadKey: KnownLoadKey;
+  disableWatchdog?: true;
   errorKey?: KnownErrorsKey;
 }
 
 export const setGLoadByKey = createAsyncThunk(
   'loads/setGLoadByKey',
   async (args: ISetGLoadByKeyArgs, thunkAPI) => {
-    const timeout = setTimeout(() => {
-      const state = thunkAPI.getState() as RootState;
+    let timeout: NodeJS.Timeout | undefined;
 
-      if (state.loads[args.loadKey] === timeout) {
-        thunkAPI.dispatch(
-          setErrorByKey(args.errorKey || KNOWN_ERRORS_KEYS.UNKNOWN_ERROR),
-        );
-      }
-    }, 30_000);
+    if (args.disableWatchdog !== true) {
+      timeout = setTimeout(() => {
+        const state = thunkAPI.getState() as RootState;
+
+        if (state.loads[args.loadKey] === timeout) {
+          thunkAPI.dispatch(
+            setErrorByKey(args.errorKey || KNOWN_ERRORS_KEYS.UNKNOWN_ERROR),
+          );
+        }
+      }, 30_000);
+    }
 
     thunkAPI.dispatch(
       loadsSlice.actions.setLoadByKey({ key: args.loadKey, timeout }),

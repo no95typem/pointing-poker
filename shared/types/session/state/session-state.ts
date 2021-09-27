@@ -52,8 +52,16 @@ export interface IGameStateData {
   isPlayerDealer: boolean;
   gameState?: ISessionGameState;
   gameData: ICardsGame;
+  localSettings?: ISettings;
 }
 
-export interface ILobbyGameStateData extends IGameStateData {
-  localSettings?: ISettings;
+export interface IConfirmation {
+  isOpen: boolean;
+  onClose: () => void;
+  confirmData: IConfirmData;
+}
+
+export interface IConfirmData {
+  action: () => void;
+  description: string;
 }

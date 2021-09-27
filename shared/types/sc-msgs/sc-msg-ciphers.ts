@@ -16,6 +16,10 @@ class SCMsgCiphers {
   readonly VOTEKICK_RESULT = 'VOTEKICK_RESULT';
 
   readonly FORCE_KICK = 'FORCE_KICK';
+
+  readonly YOU_WERE_KICKED = 'YOU_WERE_KICKED';
+
+  readonly NEW_CONNECTION = 'NEW_CONNECTION';
 }
 
 export const SCMSG_CIPHERS = OBJ_PROCESSOR.deepFreeze(new SCMsgCiphers());

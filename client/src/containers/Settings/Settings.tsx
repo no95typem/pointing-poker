@@ -8,40 +8,42 @@ import {
 } from '../../../../shared/types/settings';
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
-import PassiveTimer from '../PassiveTimer/PassiveTimer';
-import GameCards from '../GameCards/GameCards';
-import { ICardsData } from '../../../../shared/types/session/card';
 
 const Settings = (props: ISettingsData): JSX.Element => {
   const { localSettings, setLocalSettings } = props;
 
   const {
-    dealerAsPlayer,
-    changingCardInRoundEnd,
+    isDealerPlayer,
+    isCardShownOnRoundEnd,
+    isPlayerCanReselectCard,
     isTimerNeeded,
     scoreType,
     scoreTypeShort,
-    roundTime,
-    cards,
   } = localSettings;
 
   const switchersData: ISettingsComponent[] = [
     {
-      name: 'dealerAsPlayer',
+      name: 'isDealerPlayer',
       label: LOCALE_US.SETTINGS_IS_DEALER_PLAYER,
-      value: dealerAsPlayer,
+      value: isDealerPlayer,
       onChange: setLocalSettings,
     },
     {
-      name: 'changingCardInRoundEnd',
-      label: LOCALE_US.SETTINGS_OPEN_CARDS_ON_ROUND_END,
-      value: changingCardInRoundEnd,
+      name: 'isPlayerCanReselectCard',
+      label: LOCALE_US.SETTINGS_IS_PLAYER_CAN_RESELECT_CARD,
+      value: isPlayerCanReselectCard,
       onChange: setLocalSettings,
     },
     {
       name: 'isTimerNeeded',
       label: LOCALE_US.SETTINGS_IS_TIMER_ON,
       value: isTimerNeeded,
+      onChange: setLocalSettings,
+    },
+    {
+      name: 'isCardShownOnRoundEnd',
+      label: LOCALE_US.SETTINGS_IS_CARD_SHOWN_ON_ROUND_END,
+      value: isCardShownOnRoundEnd,
       onChange: setLocalSettings,
     },
   ];
@@ -61,12 +63,6 @@ const Settings = (props: ISettingsData): JSX.Element => {
     },
   ];
 
-  const cardsData: ICardsData = {
-    cards,
-    units: scoreTypeShort,
-    setLocalSettings,
-  };
-
   return (
     <Box>
       <Stack direction="column" spacing={5} w="100%" mb="30px">
@@ -85,11 +81,7 @@ const Settings = (props: ISettingsData): JSX.Element => {
 
           return <InputText data={inputData} key={name} />;
         })}
-
-        {isTimerNeeded && <PassiveTimer time={roundTime || 0} />}
       </Stack>
-
-      <GameCards {...cardsData} />
     </Box>
   );
 };

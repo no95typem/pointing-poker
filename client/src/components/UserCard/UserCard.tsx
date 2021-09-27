@@ -8,6 +8,8 @@ import {
   AvatarBadge,
   StatNumber,
   StatHelpText,
+  StackProps,
+  ButtonProps,
 } from '@chakra-ui/react';
 
 import { ImBlocked } from 'react-icons/im';
@@ -19,6 +21,7 @@ import { showKickDialog } from '../../helpers/showKickDialog';
 
 export interface IUserCard extends IMemberData {
   size?: 'sm' | 'md';
+  w?: string;
   flexDirection?: 'row' | 'row-reverse';
 }
 
@@ -80,11 +83,12 @@ const UserCard = (props: IUserCard): JSX.Element => {
 
   return (
     <Stack
-      {...(stackStyles as any)}
+      {...(stackStyles as StackProps)}
       overflow="hidden"
       position="relative"
       borderRadius="md"
       flexDirection={props.flexDirection}
+      w={props.w}
     >
       <Avatar
         color="white"
@@ -125,7 +129,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
           size="lg"
           icon={<ImBlocked />}
           onClick={() => showKickDialog(id)}
-          {...(kickBtnStyles as any)}
+          {...(kickBtnStyles as ButtonProps)}
         />
       )}
     </Stack>
