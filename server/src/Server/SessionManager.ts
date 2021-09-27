@@ -167,7 +167,7 @@ export class SessionManager {
     if (
       role === USER_ROLES.DEALER ||
       !newId ||
-      this.sessionState.gSettings.autoAdmit
+      this.sessionState.gSettings.isAutoAdmit
     ) {
       this.admitPlayer(ws, member);
     } else {

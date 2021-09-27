@@ -64,7 +64,13 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
   };
 
   return (
-    <Stack direction="row" align="center" justify="space-between">
+    <Stack
+      direction="row"
+      align="center"
+      justify="space-between"
+      wrap="wrap"
+      style={{ gap: '20px', marginBottom: '10px' }}
+    >
       <Button
         colorScheme="facebook"
         w="130px"
@@ -78,6 +84,7 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
           colorScheme="facebook"
           w="130px"
           variant="solid"
+          style={{ marginInlineStart: '0' }}
           visibility={isPlayerDealer ? 'visible' : 'hidden'}
           onClick={changeGameModeConfirmation}
         >

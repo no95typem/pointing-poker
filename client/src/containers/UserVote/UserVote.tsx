@@ -37,6 +37,7 @@ const UserVote = (props: IVote): JSX.Element => {
       align="center"
       p="10px 10px"
       boxShadow="lg"
+      style={{ marginInlineStart: '0' }}
     >
       {card ? (
         <GameCard card={card} units={scoreTypeShort} isGameStage={true} />

@@ -24,7 +24,7 @@ const NewElementButton = (props: IIssueButtonData): JSX.Element => {
       h="70px"
     >
       <Stat>
-        <StatNumber>{description}</StatNumber>
+        <StatNumber fontSize="lg">{description}</StatNumber>
       </Stat>
 
       <IconButton

@@ -1,11 +1,13 @@
 import React from 'react';
 
-import { Stack, Heading, Box } from '@chakra-ui/react';
+import { Stack, Box } from '@chakra-ui/react';
+
 import { LOCALE_US } from '../../locales/locale-us';
 import {
   ISettingsComponent,
   ISettingsData,
 } from '../../../../shared/types/settings';
+
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
 
@@ -17,6 +19,7 @@ const Settings = (props: ISettingsData): JSX.Element => {
     isCardShownOnRoundEnd,
     isPlayerCanReselectCard,
     isTimerNeeded,
+    isAutoAdmit,
     scoreType,
     scoreTypeShort,
   } = localSettings;
@@ -46,6 +49,12 @@ const Settings = (props: ISettingsData): JSX.Element => {
       value: isCardShownOnRoundEnd,
       onChange: setLocalSettings,
     },
+    {
+      name: 'isAutoAdmit',
+      label: LOCALE_US.SETTINGS_IS_AUTO_ADMIT,
+      value: isAutoAdmit,
+      onChange: setLocalSettings,
+    },
   ];
 
   const inputsData: ISettingsComponent[] = [
@@ -66,10 +75,6 @@ const Settings = (props: ISettingsData): JSX.Element => {
   return (
     <Box>
       <Stack direction="column" spacing={5} w="100%" mb="30px">
-        <Heading size="md" textAlign="center">
-          Game settings:
-        </Heading>
-
         {switchersData.map(switcherData => {
           const { name } = switcherData;
 

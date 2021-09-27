@@ -10,7 +10,7 @@ interface ISetSettings {
   ) => void;
 }
 
-const UseLocalSettings = (localSettings: ISettings): ISetSettings => {
+const useLocalSettings = (localSettings: ISettings): ISetSettings => {
   const dispatch = useAppDispatch();
 
   const setLocalSettings = (
@@ -25,4 +25,4 @@ const UseLocalSettings = (localSettings: ISettings): ISetSettings => {
   };
 };
 
-export default UseLocalSettings;
+export default useLocalSettings;
