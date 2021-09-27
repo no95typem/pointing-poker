@@ -33,13 +33,13 @@ const JoinGameLink = (props: ILink) => {
 
   return (
     <Box mb="20px" position="relative">
-      <Heading position="absolute" top="-20px" fontWeight="medium" size="md">
+      <Heading position="absolute" top="-20px" fontWeight="medium" size="sm">
         Link to lobby:
       </Heading>
 
       <Stack
-        w="100%"
-        maxW="280px"
+        maxW="240px"
+        // w="100%"
         direction="row"
         justify="flex-start"
         align="center"
@@ -48,8 +48,7 @@ const JoinGameLink = (props: ILink) => {
         <Heading
           fontWeight="medium"
           boxShadow="lg"
-          size="md"
-          maxW="300px"
+          size="sm"
           m="0"
           padding="10px 0 10px 5px"
           mr="-10px"

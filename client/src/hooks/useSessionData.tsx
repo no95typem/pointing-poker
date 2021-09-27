@@ -33,7 +33,7 @@ interface ILobbyData {
   isPlayerDealer: boolean;
 }
 
-const UseSessionData = (
+const useSessionData = (
   sessionData: ISessionStateClient,
 ): ILobbyData | undefined => {
   const dispatch = useAppDispatch();
@@ -203,4 +203,4 @@ const UseSessionData = (
   };
 };
 
-export default UseSessionData;
+export default useSessionData;

@@ -183,10 +183,10 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
 
   return (
     <DragDropContext onDragEnd={handleDnd}>
-      <Box mb="50px" position="relative">
+      <Box mb="50px" maxH="440px" overflowY="hidden" position="relative">
         {renderRoundControlButtons()}
 
-        <Stack spacing="3">
+        <Stack spacing="3" p="5px" maxH={['250px', '380px']} overflowY="scroll">
           <Stack {...IssueStackStyle}>
             {renderUploadIssueButton()}
 
@@ -208,11 +208,10 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
               </Stack>
             )}
           </Droppable>
-
-          <IssueModal issue={modal} />
-
-          {statisticModal && <IssueStatisticModal {...statisticModal} />}
         </Stack>
+        <IssueModal issue={modal} />
+
+        {statisticModal && <IssueStatisticModal {...statisticModal} />}
         {!isSynced && <ChakraLoader />}
       </Box>
     </DragDropContext>

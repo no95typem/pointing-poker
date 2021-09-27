@@ -47,7 +47,7 @@ const EditableHeader = (props: ISessionNameHandling) => {
       p="10px"
       opacity={isSynced ? 1 : 0.5}
     >
-      <Heading size="lg" maxW="300px" isTruncated>
+      <Heading size="md" maxW="300px" isTruncated>
         {value}
       </Heading>
 
@@ -57,7 +57,7 @@ const EditableHeader = (props: ISessionNameHandling) => {
         aria-label="edit"
         background="transparent"
         visibility={isPlayerDealer && isSynced ? 'visible' : 'hidden'}
-        size="lg"
+        size="md"
         icon={<ImPencil />}
         onClick={onOpen}
       />
