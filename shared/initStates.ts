@@ -5,6 +5,7 @@ import {
   ISessionStateClient,
   SessionState,
 } from './types/session/state/session-state';
+import { SESSION_STAGES } from './types/session/state/stages';
 import { ISettings } from './types/settings';
 import { USER_ROLES } from './types/user/user-role';
 
@@ -72,7 +73,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
   clientId: 0,
   name: { value: 'Session 12345', isSynced: false },
-  stage: 'LOBBY',
+  stage: SESSION_STAGES.STATS,
   members: {
     0: sampleMember,
     1: {
@@ -113,7 +114,59 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
     },
   },
   issues: {
-    list: [],
+    list: [
+      {
+        id: 0,
+        title: 'title 1',
+        link: 'link 1',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+      },
+      {
+        id: 1,
+        title: 'title 2',
+        link: 'link 2',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+      },
+      {
+        id: 2,
+        title: 'title 3',
+        link: 'link 3',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+      },
+      {
+        id: 3,
+        title: 'title 4',
+        link: 'link 4',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+      },
+      {
+        id: 4,
+        title: 'title 5',
+        link: 'link 5',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+        stat: {
+          pct: {
+            '1': { count: 2, ids: [0, 1] },
+            '2': { count: 1, ids: [2] },
+          },
+          votes: {
+            0: '1',
+            1: '1',
+            2: '2',
+          },
+        },
+      },
+    ],
     isSynced: true,
   },
 };

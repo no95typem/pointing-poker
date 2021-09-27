@@ -7,6 +7,7 @@ export class SCMsgConnToSessStatus implements SCMsg {
   readonly cipher = SCMSG_CIPHERS.CONN_TO_SESS_STATUS;
 
   constructor(
+    readonly sessionId: string,
     readonly response: {
       readonly success?: {
         readonly yourId: number;
@@ -14,6 +15,7 @@ export class SCMsgConnToSessStatus implements SCMsg {
       };
       readonly wait?: {
         readonly token: string;
+        readonly sessId: string;
       };
       readonly fail?: {
         readonly reason?: KnownErrorsKey;

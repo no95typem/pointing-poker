@@ -7,12 +7,11 @@ import {
   IConfirmation,
   IGameStateData,
 } from '../../../../shared/types/session/state/session-state';
-import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
 
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 
 const GameControlButtons = (props: IGameStateData): JSX.Element => {
-  const { isPlayerDealer, setGameSettings, localSettings, gameData } = props;
+  const { isPlayerDealer, gameData } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -32,7 +31,9 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
       return {
         ...prevState,
         description: gameData.isGameStage ? 'Finish Game' : 'Start Game',
-        action: gameData.isGameStage ? finishGame : initiateGame,
+        action: gameData.isGameStage
+          ? SERVER_ADAPTER.endGame
+          : SERVER_ADAPTER.startGame,
       };
     });
 
@@ -49,18 +50,6 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
     });
 
     onOpen();
-  };
-
-  const initiateGame = (): void => {
-    localSettings && setGameSettings(localSettings);
-
-    SERVER_ADAPTER.startGame();
-  };
-
-  const finishGame = (): void => {
-    const endGame = new CSMsgEndGame();
-
-    SERVER_ADAPTER.send(endGame);
   };
 
   return (

@@ -8,6 +8,8 @@ class knownLoadsKeys {
   readonly SESSION_STAGE_CHANGE = 'SESSION_STAGE_CHANGE';
 
   readonly CONNECTING_TO_LOBBY = 'CONNECTING_TO_LOBBY';
+
+  readonly AWAITING_ADMISSION = 'AWAITING_ADMISSION';
 }
 
 export const KNOWN_LOADS_KEYS = OBJ_PROCESSOR.deepFreeze(new knownLoadsKeys());

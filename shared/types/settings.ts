@@ -10,7 +10,7 @@ export interface ISettings {
   scoreTypeShort: string;
   roundTime: number;
   cards: CardData[];
-  cardBackType: ''; // TODO (no95typem)
+  cardBackType: string; // TODO (no95typem)
 }
 
 export interface ISettingsComponent {

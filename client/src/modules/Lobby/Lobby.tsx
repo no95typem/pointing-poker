@@ -3,8 +3,8 @@ import { Box, Stack } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
-import UseSessionData from '../../hooks/useSessionData';
-import UseLocalSettings from '../../hooks/useLocalSettings';
+import useSessionData from '../../hooks/useSessionData';
+import useLocalSettings from '../../hooks/useLocalSettings';
 
 import { IGameStateData } from '../../../../shared/types/session/state/session-state';
 import { ISettingsData } from '../../../../shared/types/settings';
@@ -20,11 +20,9 @@ import SettingsTabs from '../../components/SettingsTabs/SettingsTabs';
 const Lobby = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
 
-  const localSettings = useTypedSelector(state => state.settings);
+  const sessionData = useSessionData(session);
 
-  const sessionData = UseSessionData(session);
-
-  const { setLocalSettings } = UseLocalSettings(localSettings);
+  const { localSettings, setLocalSettings } = useLocalSettings();
 
   if (!sessionData) return <></>;
 

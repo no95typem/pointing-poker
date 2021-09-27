@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Button, Flex, Textarea } from '@chakra-ui/react';
 import { useTypedSelector, useAppDispatch } from '../../../../redux/store';
-import { sendChatMessage } from '../../../../redux/slices/session';
 import { chatSlice } from '../../../../redux/slices/chat';
+import { SERVER_ADAPTER } from '../../../ServerAdapter/serverAdapter';
 
 const { setChatTypedText } = chatSlice.actions;
 
@@ -26,7 +26,7 @@ export const MessageInputBox = () => {
   const dispatch = useAppDispatch();
 
   const handleSend = () => {
-    dispatch(sendChatMessage(typedText));
+    SERVER_ADAPTER.sendChatMsg(typedText);
     dispatch(setChatTypedText(''));
   };
 

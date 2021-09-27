@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { theme } from '../theme';
 import KickModal, { IKickModalProps } from '../components/KickModal/KickModal';
 import { RootState, store } from '../redux/store';
-import { kick } from '../redux/slices/session';
 import { Member } from '../../../shared/types/session/member';
+import { SERVER_ADAPTER } from '../modules/ServerAdapter/serverAdapter';
 
 const calcNameStrFromMember = (m: Member) => {
   const { name, surname } = m.userInfo;
@@ -35,24 +35,20 @@ export const showKickDialog = (targetId: number, initId?: number) => {
   const modalData: IKickModalProps = {
     onClose: () => {
       if (initId) {
-        store.dispatch(
-          kick({
-            targetId,
-            decision: false,
-            initId,
-          }),
-        );
+        SERVER_ADAPTER.tryKick({
+          targetId,
+          decision: false,
+          initId,
+        });
       }
       remove();
     },
     onConfirm: () => {
-      store.dispatch(
-        kick({
-          targetId,
-          decision: true,
-          initId,
-        }),
-      );
+      SERVER_ADAPTER.tryKick({
+        targetId,
+        decision: true,
+        initId,
+      });
       remove();
     },
     targetMame: targetMemeberName,
