@@ -11,8 +11,12 @@ import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
 export const App = () => {
   useEffect(() => {
+    const html = document.getElementsByTagName('html')[0];
+
     document.body.style.width = '100%';
     document.body.style.overflowX = 'hidden';
+    html.style.overflowX = 'hidden';
+    html.style.width = '100vw';
   });
 
   return (

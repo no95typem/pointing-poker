@@ -60,7 +60,12 @@ export const Routes = (): JSX.Element => {
 
                 return (
                   <Route key={key} path={path} exact={isExact}>
-                    <div ref={nodeRef}>
+                    <div
+                      style={
+                        key === 'routeLobby' ? { alignSelf: 'flex-start' } : {}
+                      }
+                      ref={nodeRef}
+                    >
                       <Component />
                     </div>
                   </Route>

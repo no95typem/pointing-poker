@@ -14,7 +14,7 @@ const useLocalSettings = () => {
     const newSettings = { ...localSettings, [name]: value };
     dispatch(setSettings(newSettings));
 
-    if (name === 'autoAdmit') SERVER_ADAPTER.sendSettings(true, newSettings);
+    if (name === 'isAutoAdmit') SERVER_ADAPTER.sendSettings(true, newSettings);
   };
 
   return {

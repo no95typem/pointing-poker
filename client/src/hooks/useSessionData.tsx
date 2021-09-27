@@ -31,7 +31,7 @@ interface ILobbyData {
   isPlayerDealer: boolean;
 }
 
-const UseSessionData = (
+const useSessionData = (
   sessionData: ISessionStateClient,
 ): ILobbyData | undefined => {
   const list = sessionData.issues.list;
@@ -204,4 +204,4 @@ const UseSessionData = (
   };
 };
 
-export default UseSessionData;
+export default useSessionData;

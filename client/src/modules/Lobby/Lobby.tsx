@@ -47,11 +47,11 @@ const Lobby = (): JSX.Element => {
   };
 
   return (
-    <Box maxW="1200px" w="90%" m="0 auto" p="5px" overflow="hidden">
+    <Box maxW="1200px" w={['100vw', '90%']} m="0 auto" p="5px">
       <EditableHeader {...sessionNameData} />
       <Stack
         direction="row"
-        justify="space-between"
+        justify={['center', 'space-between']}
         align="center"
         wrap="wrap"
         style={{ gap: '15px' }}
@@ -61,7 +61,7 @@ const Lobby = (): JSX.Element => {
         <GameControlButtons {...gameStateLobby} />
       </Stack>
       <UserCardsTabs {...membersData} />
-      <Stack direction="row" wrap="wrap" justify="space-between">
+      <Stack direction="row" wrap="wrap" justify={['center', 'space-between']}>
         <IssueCards {...issuesData} />
         {isPlayerDealer && <SettingsTabs {...settingsData} />}
       </Stack>

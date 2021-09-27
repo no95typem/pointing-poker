@@ -46,8 +46,12 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       onClick={showIssueStatistic}
     >
       <Stat>
-        <StatNumber isTruncated={true}>{title}</StatNumber>
-        <StatHelpText mb="0">{priority}</StatHelpText>
+        <StatNumber fontSize="lg" isTruncated={true}>
+          {title}
+        </StatNumber>
+        <StatHelpText fontSize="xs" mb="0">
+          {priority}
+        </StatHelpText>
       </Stat>
 
       <IconButton

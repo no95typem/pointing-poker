@@ -20,7 +20,6 @@ const InputText = (props: ISettingsComponentData): JSX.Element => {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      flexWrap="wrap"
     >
       <FormLabel htmlFor={name} mb="0">
         {label}
