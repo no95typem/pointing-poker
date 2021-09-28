@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Stack } from '@chakra-ui/react';
+import { Box, Button, Select, Stack } from '@chakra-ui/react';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.scss';
@@ -10,17 +10,18 @@ import { ICardData, ICardsView } from '../../../../shared/types/session/card';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
-import NewGameCardButton from '../../components/NewElementButton/NewElementButton';
+import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
 
 const GameCardsView = (props: ICardsView): JSX.Element => {
   const { cards, modal, units, deleteCard } = props;
 
   const settings = {
-    dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
+    nextArrow: <SliderCustomArrow />,
+    prevArrow: <SliderCustomArrow />,
 
     responsive: [
       {
@@ -50,8 +51,29 @@ const GameCardsView = (props: ICardsView): JSX.Element => {
 
   return (
     <Box maxW="100%">
-      <Stack direction="row" w="100%" justify={'center'}>
-        <NewGameCardButton openModal={modal.openModal} description="Add card" />
+      <Stack
+        direction={['column', 'column', 'row']}
+        spacing="4"
+        w={['100%', '100%', '100%', '80%']}
+        justify="space-around"
+        mb="10px"
+        wrap="wrap"
+      >
+        <Select placeholder="Choose a card's set" maxW="300px">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+        </Select>
+        <Button
+          colorScheme="facebook"
+          w="130px"
+          variant="solid"
+          style={{ marginInlineStart: '0' }}
+          onClick={() => modal.openModal()}
+        >
+          Add card
+        </Button>
       </Stack>
       <Box maxW="100vw" m="0 auto" p="0 20px">
         <Slider {...settings}>

@@ -10,7 +10,6 @@ import { ISettings } from './types/settings';
 import { USER_ROLES } from './types/user/user-role';
 
 const testCardsData: CardData[] = [
-  //тестовый объект, отладка
   { value: '1' },
   { value: '2' },
   { value: '3' },

@@ -1,8 +1,6 @@
 //  Kaesid - Дефолтный дизайн карт мне не нравится, свой я еще не придумал. Так что, пока заглушка.
 
-import React from 'react';
-
-import { Stack, IconButton, Heading, Text } from '@chakra-ui/react';
+import { Stack, IconButton, Text, Image } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
 import { CloseIcon } from '@chakra-ui/icons';
@@ -84,10 +82,7 @@ const GameCard = (props: ICardData): JSX.Element => {
         {value}
       </Text>
       {base64 ? (
-        // img src={base64}
-        <Heading fontStyle="italic" {...unitsSizeStyles}>
-          {base64}
-        </Heading>
+        <Image src={base64} />
       ) : props.isUnitsShown ? (
         <Text
           fontStyle="italic"
