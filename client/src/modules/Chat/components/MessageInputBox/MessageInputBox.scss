@@ -1,0 +1,17 @@
+
+.message-input::-webkit-scrollbar {
+  width: 0.5rem;
+  background-color: inherit;
+  opacity: 0;
+}
+
+.message-input::-webkit-scrollbar-thumb {
+  width: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #CBD5E0;
+  opacity: 0.2;
+}
+
+.message-input::-webkit-scrollbar-track {
+  opacity: 0;
+}

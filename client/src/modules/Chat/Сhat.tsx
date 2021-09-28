@@ -1,11 +1,19 @@
 import { Rnd } from 'react-rnd';
-import { Flex, Portal, useColorMode, IconButton } from '@chakra-ui/react';
+import {
+  Flex,
+  Portal,
+  useColorMode,
+  IconButton,
+  Heading,
+} from '@chakra-ui/react';
 import { ChatView } from './components/ChatView/ChatView';
 import { MessageInputBox } from './components/MessageInputBox/MessageInputBox';
 
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { chatSlice } from '../../redux/slices/chat';
 import { CloseIcon } from '@chakra-ui/icons';
+import { BsArrowsMove } from 'react-icons/bs';
+import './Chat.scss';
 
 const Chat = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -31,6 +39,7 @@ const Chat = (): JSX.Element => {
         minWidth={320}
         minHeight={Math.min(window.innerHeight * 0.9, 520)}
         bounds="body"
+        dragHandleClassName="dragHandle"
       >
         <Flex
           w="95%"
@@ -43,14 +52,32 @@ const Chat = (): JSX.Element => {
           gridGap="2"
           overflow="hidden"
         >
-          <IconButton
-            aria-label="close-chat"
-            icon={<CloseIcon style={{ transform: 'scale(1.2)' }} />}
-            size="xs"
-            variant="ghost"
-            color="white"
-            onClick={toggleChat}
-          />
+          <Flex width="100%" alignItems="flex-end" gridGap="2">
+            <Flex
+              width="100%"
+              height="100%"
+              className="dragHandle"
+              border="1px"
+              borderRadius="md"
+              borderColor="gray.300"
+              bg="gray.300"
+              justifyContent="space-around"
+              alignItems="center"
+            >
+              <BsArrowsMove />
+              <Heading as="h2" size="sm" fontFamily="handwrite">
+                For drag and drop take here
+              </Heading>
+            </Flex>
+            <IconButton
+              aria-label="close-chat"
+              icon={<CloseIcon style={{ transform: 'scale(1.2)' }} />}
+              size="xs"
+              variant="ghost"
+              color="white"
+              onClick={toggleChat}
+            />
+          </Flex>
 
           <ChatView />
 

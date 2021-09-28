@@ -26,7 +26,7 @@ import UserInfoInputStack from '../../containers/UserInfoInputStack/UserInfoInpu
 import AvatarForm from '../../containers/AvatarForm/AvatarForm';
 import UserRoleRadioButtons from '../../containers/UserRoleRadioButtons/UserRoleRadioButtons';
 
-interface ConnectPopupProps {
+interface IConnectPopupProps {
   isOpen: boolean;
   onClose: () => void;
   forDealer: boolean;
@@ -36,7 +36,7 @@ const ConnectPopup = ({
   isOpen,
   onClose,
   forDealer,
-}: ConnectPopupProps): JSX.Element => {
+}: IConnectPopupProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const userInfo = useTypedSelector(state => state.userInfo);

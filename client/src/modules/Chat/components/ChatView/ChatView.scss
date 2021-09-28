@@ -1,0 +1,17 @@
+
+.chat-view::-webkit-scrollbar {
+  width: 0.5rem;
+  background-color: inherit;
+  opacity: 0;
+}
+
+.chat-view::-webkit-scrollbar-thumb {
+  width: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #CBD5E0;
+  opacity: 0.2;
+}
+
+.chat-view::-webkit-scrollbar-track {
+  opacity: 0;
+}

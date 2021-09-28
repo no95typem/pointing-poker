@@ -5,6 +5,7 @@ import { SessionStage } from '../../../shared/types/session/state/stages';
 import { homePageSlice } from '../redux/slices/home-page';
 import { useAppDispatch, useTypedSelector } from '../redux/store';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
+import { sessionIdPathParser } from '../helpers/sessionIdParser';
 
 const usePathParser = (params: {
   stage: SessionStage;
@@ -18,10 +19,14 @@ const usePathParser = (params: {
   const loads = useTypedSelector(state => state.loads);
 
   useEffect(() => {
-    if (path.startsWith('/session/')) {
-      const lobbyId = path.split('/')[2];
-      dispatch(homePageSlice.actions.setLobbyURL(lobbyId));
+    if (path.includes('/session/')) {
+      dispatch(homePageSlice.actions.setLobbyURL(sessionIdPathParser(path)));
     }
+
+    // if (path.startsWith('/session/')) {
+    //   const lobbyId = path.split('/')[2];
+    //   dispatch(homePageSlice.actions.setLobbyURL(lobbyId));
+    // }
   });
 
   if (Object.keys(errors).length > 0) {

@@ -4,6 +4,8 @@ import { UserRole } from '../../../../shared/types/user/user-role';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { homePageSlice } from '../../redux/slices/home-page';
+import { sessionIdPathParser } from '../../helpers/sessionIdParser';
+import { ChangeEvent } from 'react';
 
 import { MAX_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
 
@@ -12,16 +14,28 @@ import { ReactComponent as UndrawScrumBoard } from '../../assets/images/undraw/s
 import { ReactComponent as UndrawNewIdeas } from '../../assets/images/undraw/new-ideas.svg';
 import { ReactComponent as UndrawLogin } from '../../assets/images/undraw/login.svg';
 
-interface MainPageProps {
+interface IStartPageContentProps {
   onPopupCalled: (forRole: UserRole) => void;
 }
 
-const StartPageContent = ({ onPopupCalled }: MainPageProps): JSX.Element => {
+const StartPageContent = ({
+  onPopupCalled,
+}: IStartPageContentProps): JSX.Element => {
   const lobbyURL = useTypedSelector(state => state.homePage.lobbyURL);
   const dispatch = useAppDispatch();
   const { setLobbyURL } = homePageSlice.actions;
 
   const [isLargerThan860] = useMediaQuery('(min-width: 860px)');
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const path = e.target.value;
+
+    if (path.includes('/session/')) {
+      dispatch(setLobbyURL(sessionIdPathParser(path)));
+    } else {
+      dispatch(setLobbyURL(path || ''));
+    }
+  };
 
   return (
     <Flex align="center" justify="center" padding="2">
@@ -76,7 +90,8 @@ const StartPageContent = ({ onPopupCalled }: MainPageProps): JSX.Element => {
                 maxW="280px"
                 placeholder="Session ID"
                 value={lobbyURL}
-                onChange={e => dispatch(setLobbyURL(e.target.value || ''))}
+                onChange={handleChange}
+                // onChange={e => dispatch(setLobbyURL(e.target.value || ''))}
               />
               {isLargerThan860 && (
                 <Button onClick={() => onPopupCalled(USER_ROLES.PLAYER)}>
