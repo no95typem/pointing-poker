@@ -17,17 +17,17 @@ import {
 
 import { ICardModalData } from '../../../../shared/types/session/card';
 
-import AvatarForm from '../../containers/AvatarForm/AvatarForm';
 import { LOCALE_US } from '../../locales/locale-us';
+import LoadImgForm, {
+  ILoadImgParams,
+} from '../../containers/LoadImgForm/LoadImgForm';
 
 const GameCardModal = (props: ICardModalData): JSX.Element => {
   const { modal } = props;
 
   const { isOpen, onClose, activeCard, changeCardValue, setCard } = modal;
 
-  const { value, base64 } = activeCard;
-
-  console.log(base64); //! если загружено изображение, засетать его в base64, иначе =undefined
+  const { value } = activeCard;
 
   const setCardData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target;
@@ -35,48 +35,53 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
     changeCardValue({ ...activeCard, [input.name]: input.value });
   };
 
+  const loadImgData: ILoadImgParams = {
+    imgParams: {
+      width: 100,
+      height: 100,
+    },
+    activeCard,
+    changeCardValue,
+  };
+
   return (
-    <>
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Card Data:</ModalHeader>
+    <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Card Data:</ModalHeader>
 
-          <ModalBody mb="20px">
-            <Stack d="flex" justify="space-around" align="stretch">
-              <FormControl mb="10px" id="title" isRequired>
-                <Stack spacing={2} direction="row" align="center">
-                  <FormLabel>Card Value:</FormLabel>
-                  <Input value={value} onChange={setCardData} name="value" />
-                </Stack>
-              </FormControl>
-              <Stack spacing={2} direction="column" align="center">
-                <FormLabel>{LOCALE_US.SETTINGS_CARDS_MODAL_CUSTOM}</FormLabel>
-                <AvatarForm />
-                {/* Требуется слегка изменненная версия данного компонента:
-                без дефолтной аватары, кнопка ресет - отсутствие изображения. */}
+        <ModalBody mb="20px">
+          <Stack d="flex" justify="space-around" align="stretch">
+            <FormControl mb="10px" id="title" isRequired>
+              <Stack spacing={2} direction="row" align="center">
+                <FormLabel>Card Value:</FormLabel>
+                <Input value={value} onChange={setCardData} name="value" />
               </Stack>
+            </FormControl>
+            <Stack spacing={2} direction="column" align="center">
+              <FormLabel>{LOCALE_US.SETTINGS_CARDS_MODAL_CUSTOM}</FormLabel>
+              <LoadImgForm {...loadImgData} />
             </Stack>
-          </ModalBody>
+          </Stack>
+        </ModalBody>
 
-          <ModalFooter>
-            <ButtonGroup
-              colorScheme="facebook"
-              width="100%"
-              display="flex"
-              justifyContent="space-between"
-            >
-              <Button padding="0 50px" variant="outline" onClick={onClose}>
-                No
-              </Button>
-              <Button padding="0 50px" onClick={setCard}>
-                Yes
-              </Button>
-            </ButtonGroup>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+        <ModalFooter>
+          <ButtonGroup
+            colorScheme="facebook"
+            width="100%"
+            display="flex"
+            justifyContent="space-between"
+          >
+            <Button padding="0 50px" variant="outline" onClick={onClose}>
+              No
+            </Button>
+            <Button padding="0 50px" onClick={setCard}>
+              Yes
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

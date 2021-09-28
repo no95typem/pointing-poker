@@ -16,16 +16,19 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
 import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
+import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
 
 const UserCards = (props: IUserCards): JSX.Element => {
   const { members, isItYou, isVotersView, isDealerPlaying } = props;
 
   const settings = {
-    dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
+    initialSlide: 1,
+    nextArrow: <SliderCustomArrow />,
+    prevArrow: <SliderCustomArrow />,
 
     responsive: [
       {
@@ -68,16 +71,20 @@ const UserCards = (props: IUserCards): JSX.Element => {
           if (isIgnoredUser(id, member.userRole)) return null;
 
           return (
-            <Box maxW="400px" key={`${id}-box`}>
+            <Box maxW="320px" key={`${id}-box`}>
               <Stack
                 ml="10px"
                 direction="row"
-                justify="space-between"
+                justify="center"
                 align="center"
                 border={isVotersView ? '1px solid black' : 'none'}
                 key={`${id}-wrap`}
               >
-                <UserCard {...setMemberData(member)} key={id} />
+                <UserCard
+                  {...setMemberData(member)}
+                  w={isVotersView ? '210px' : '300px'}
+                  key={id}
+                />
                 {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
               </Stack>
             </Box>

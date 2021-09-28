@@ -21,6 +21,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
 
   const newGameCard: CardData = {
     value: '',
+    base64: '',
   };
 
   const [editedCardIndex, setEditedCardIndex] = useState(-1);

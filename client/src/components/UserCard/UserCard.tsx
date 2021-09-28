@@ -10,6 +10,7 @@ import {
   StatHelpText,
   StackProps,
   ButtonProps,
+  Tooltip,
 } from '@chakra-ui/react';
 
 import { ImBlocked } from 'react-icons/im';
@@ -82,57 +83,59 @@ const UserCard = (props: IUserCard): JSX.Element => {
       : {};
 
   return (
-    <Stack
-      {...(stackStyles as StackProps)}
-      overflow="hidden"
-      position="relative"
-      borderRadius="md"
-      flexDirection={props.flexDirection}
-      w={props.w}
-    >
-      <Avatar
-        color="white"
-        bg={avatarBgColor}
-        name={fullName}
-        src={avatarBase64}
-        size={props.size === 'sm' ? 'sm' : undefined}
+    <Tooltip label={fullName} placement="top" openDelay={500}>
+      <Stack
+        {...(stackStyles as StackProps)}
+        overflow="hidden"
+        position="relative"
+        borderRadius="md"
+        flexDirection={props.flexDirection}
+        w={props.w}
       >
-        <AvatarBadge borderColor="papayawhip" bg={bageColor} boxSize="1em" />
-      </Avatar>
-
-      <Stat overflow="hidden" isTruncated={true}>
-        <StatNumber
-          as={userState === USER_STATES.KICKED ? 'del' : 'abbr'}
-          fontSize={props.size === 'sm' ? 'sm' : undefined}
-          lineHeight={props.size === 'sm' ? '1em' : undefined}
-          display="flex"
-          whiteSpace="nowrap"
-          overflow="hidden"
-          textOverflow="ellipsis"
+        <Avatar
+          color="white"
+          bg={avatarBgColor}
+          name={fullName}
+          src={avatarBase64}
+          size={props.size === 'sm' ? 'sm' : undefined}
         >
-          {fullName}
-        </StatNumber>
-        <StatHelpText
-          mb="0"
-          whiteSpace="nowrap"
-          overflow="hidden"
-          textOverflow="ellipsis"
-        >
-          {jobPosition}
-        </StatHelpText>
-      </Stat>
+          <AvatarBadge borderColor="papayawhip" bg={bageColor} boxSize="1em" />
+        </Avatar>
 
-      {isKickAvailable && (
-        <IconButton
-          aria-label="Kick player"
-          background="transparent"
-          size="lg"
-          icon={<ImBlocked />}
-          onClick={() => showKickDialog(id)}
-          {...(kickBtnStyles as ButtonProps)}
-        />
-      )}
-    </Stack>
+        <Stat overflow="hidden" isTruncated={true}>
+          <StatNumber
+            as={userState === USER_STATES.KICKED ? 'del' : 'abbr'}
+            fontSize={props.size === 'sm' ? 'sm' : undefined}
+            lineHeight={props.size === 'sm' ? '1em' : undefined}
+            display="flex"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
+            {fullName}
+          </StatNumber>
+          <StatHelpText
+            mb="0"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
+            {jobPosition}
+          </StatHelpText>
+        </Stat>
+
+        {isKickAvailable && (
+          <IconButton
+            aria-label="Kick player"
+            background="transparent"
+            size="lg"
+            icon={<ImBlocked />}
+            onClick={() => showKickDialog(id)}
+            {...(kickBtnStyles as ButtonProps)}
+          />
+        )}
+      </Stack>
+    </Tooltip>
   );
 };
 
