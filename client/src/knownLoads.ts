@@ -1,11 +1,12 @@
 import { OBJ_PROCESSOR } from '../../shared/helpers/processors/obj-processor';
 import { KnownLoadKey } from '../../shared/knownLoadsKeys';
+import { AdmitAwaitPage } from './containers/LoadsMUX/LoadsPages/AdmitAwaitPage/AdmitAwaitPage';
 
 export interface AppLoad {
   type: 'unknown' | 'communication';
   description: string;
   more?: string;
-  Component?: () => JSX.Element;
+  Component?: React.ReactNode;
 }
 
 export const KNOWN_LOADS: Record<KnownLoadKey, AppLoad> = {
@@ -24,6 +25,11 @@ export const KNOWN_LOADS: Record<KnownLoadKey, AppLoad> = {
   CONNECTING_TO_LOBBY: {
     type: 'communication',
     description: `Connecting to lobby...`,
+  },
+  AWAITING_ADMISSION: {
+    type: 'communication',
+    description: 'Awaiting admission',
+    Component: AdmitAwaitPage,
   },
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
 
 import { LOCALE_US } from '../../locales/locale-us';
@@ -8,7 +8,6 @@ import {
   ICardData,
   ICardsGame,
 } from '../../../../shared/types/session/card';
-import { CSMsgPick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-pick';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import GameCard from '../../components/GameCard/GameCard';
 
@@ -21,10 +20,7 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
 
   const changeIssue = (value: string) => {
     setSelectedRadioValue(value);
-
-    const msg = new CSMsgPick(value);
-
-    SERVER_ADAPTER.send(msg);
+    SERVER_ADAPTER.pickCard(value);
   };
 
   const { getRadioProps } = useRadioGroup({

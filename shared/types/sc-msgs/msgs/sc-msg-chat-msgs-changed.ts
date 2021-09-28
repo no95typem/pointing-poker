@@ -6,7 +6,10 @@ export class SCMsgChatMsgsChanged implements SCMsg {
   readonly cipher = SCMSG_CIPHERS.CHAT_MSG;
 
   constructor(
-    readonly command: 'A' | 'D', // A - assign, D - delete
-    readonly update: Record<string, ChatMsg>, // if A - ChatMsg, if D - {} as ChatMsg
+    readonly sessionId: string,
+    readonly body: {
+      readonly command: 'A' | 'D'; // A - assign, D - delete
+      readonly update: Record<string, ChatMsg>; // if A - ChatMsg, if D - {} as ChatMsg
+    },
   ) {}
 }

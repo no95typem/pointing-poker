@@ -1,6 +1,3 @@
-import { useAppDispatch } from '../redux/store';
-import { updSessState } from '../redux/slices/session';
-
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { IIssuesData, Issue } from '../../../shared/types/session/issue/issue';
 import { ISessionNameHandling } from '../../../shared/types/session/name';
@@ -22,6 +19,7 @@ import { SESSION_STAGES } from '../../../shared/types/session/state/stages';
 import { ICardsGame } from '../../../shared/types/session/card';
 import { calcNextIssueId } from '../helpers/calcNextIssueId';
 import { useMemo } from 'react';
+import { SERVER_ADAPTER } from '../modules/ServerAdapter/serverAdapter';
 
 interface ILobbyData {
   sessionNameData: ISessionNameHandling;
@@ -36,8 +34,6 @@ interface ILobbyData {
 const useSessionData = (
   sessionData: ISessionStateClient,
 ): ILobbyData | undefined => {
-  const dispatch = useAppDispatch();
-
   const list = sessionData.issues.list;
 
   const newIssueId = useMemo(() => calcNextIssueId(list), [list]);
@@ -47,7 +43,7 @@ const useSessionData = (
   const dealerInfo = sessionData.members[DEALER_ID] as Member | undefined;
 
   const setNewSessionName = (newName: string): void => {
-    dispatch(updSessState({ name: { value: newName, isSynced: false } }));
+    SERVER_ADAPTER.updSessState({ name: { value: newName, isSynced: false } });
   };
 
   const isPlayerDealer =
@@ -62,8 +58,9 @@ const useSessionData = (
 
   const setActiveIssueId = (id: string): void => {
     if (!sessionData.game) return;
-
-    dispatch(updSessState({ game: { ...sessionData.game, currIssueId: +id } }));
+    SERVER_ADAPTER.updSessState({
+      game: { ...sessionData.game, currIssueId: +id },
+    });
   };
 
   const findIssueIndex = (id: number): number | null => {
@@ -97,7 +94,9 @@ const useSessionData = (
       issues.push(issue);
     }
 
-    dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));
+    SERVER_ADAPTER.updSessState({
+      issues: { list: [...issues], isSynced: false },
+    });
 
     issues.some(activeIssue);
   };
@@ -109,7 +108,9 @@ const useSessionData = (
 
     issues.splice(to, 0, issue);
 
-    dispatch(updSessState({ issues: { list: [...issues], isSynced: false } }));
+    SERVER_ADAPTER.updSessState({
+      issues: { list: [...issues], isSynced: false },
+    });
 
     issues.some(activeIssue);
   };
@@ -122,9 +123,9 @@ const useSessionData = (
     if (issueIndex !== null) {
       issues.splice(issueIndex, 1);
 
-      dispatch(
-        updSessState({ issues: { list: [...issues], isSynced: false } }),
-      );
+      SERVER_ADAPTER.updSessState({
+        issues: { list: [...issues], isSynced: false },
+      });
     }
   };
 
@@ -142,7 +143,7 @@ const useSessionData = (
   const setGameSettings = (settings: ISettings): void => {
     const newSettings = OBJ_PROCESSOR.deepClone(settings);
 
-    dispatch(updSessState({ gSettings: newSettings }));
+    SERVER_ADAPTER.updSessState({ gSettings: newSettings });
   };
 
   const isGameStage = sessionData.stage === SESSION_STAGES.GAME;

@@ -77,7 +77,9 @@ export class KicksManager {
       msg.target === DEALER_ID ||
       this.api.checkMemberState(msg.target) !== USER_STATES.CONNECTED
     ) {
-      const rMsg = new SCMsgVotekickResponse();
+      const rMsg = new SCMsgVotekickResponse(
+        this.api.getSessionState().state.sessionId,
+      );
       this.api.send(ws, JSON.stringify(rMsg));
     } else {
       this.handlePlayerVotekick({
@@ -91,16 +93,20 @@ export class KicksManager {
 
   handleDealerForceKick(targetId: number) {
     const rec = this.kicksInProcess[targetId];
+    const { state } = this.api.getSessionState();
 
     if (rec) {
       clearTimeout(rec.timeout);
       delete this.kicksInProcess[targetId];
 
-      const msg = new SCMsgVotekickResult({ targetId, result: false });
+      const msg = new SCMsgVotekickResult(state.sessionId, {
+        targetId,
+        result: false,
+      });
       this.api.broadcast(msg, USER_ROLES.SPECTATOR);
     }
 
-    const msg = new SCMsgForceKick(targetId);
+    const msg = new SCMsgForceKick(state.sessionId, targetId);
     this.api.broadcast(msg, USER_ROLES.SPECTATOR);
 
     this.api.kick(targetId);
@@ -143,10 +149,15 @@ export class KicksManager {
       votersThreshold,
     };
 
-    const rMsg = new SCMsgVotekickResponse(startTime);
+    const rMsg = new SCMsgVotekickResponse(state.sessionId, {
+      startTime,
+    });
     this.api.send(ws, JSON.stringify(rMsg));
 
-    const bMsg = new SCMsgVotekick(targetId, initId);
+    const bMsg = new SCMsgVotekick(state.sessionId, {
+      targetId,
+      initId,
+    });
     this.api.broadcast(bMsg, USER_ROLES.PLAYER, [initId, targetId]);
   }
 
@@ -162,7 +173,9 @@ export class KicksManager {
 
       if (result) this.api.kick(targetId);
 
-      const msg = new SCMsgVotekickResult({
+      const { state } = this.api.getSessionState();
+
+      const msg = new SCMsgVotekickResult(state.sessionId, {
         targetId,
         result,
         votes: rec.votes,

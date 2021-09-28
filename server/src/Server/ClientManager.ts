@@ -69,7 +69,7 @@ export class ClientManager {
     const data = this.clients.get(ws);
 
     if (!data || data.sessId) {
-      const msg = new SCMsgConnToSessStatus({
+      const msg = new SCMsgConnToSessStatus(initMsg.query.controlKey, {
         fail: {
           reason: data?.sessId
             ? KNOWN_ERRORS_KEYS.SC_ALREADY_CONNECTED_TO_SESSION
@@ -98,7 +98,7 @@ export class ClientManager {
     const data = this.clients.get(ws);
 
     if (!data || data.sessId) {
-      const msg = new SCMsgConnToSessStatus({
+      const msg = new SCMsgConnToSessStatus(initMsg.query.sessId, {
         fail: {
           reason: data?.sessId
             ? KNOWN_ERRORS_KEYS.SC_ALREADY_CONNECTED_TO_SESSION
@@ -110,7 +110,7 @@ export class ClientManager {
       const session = this.sessionManagers[initMsg.query.sessId];
 
       if (!session) {
-        const msg = new SCMsgConnToSessStatus({
+        const msg = new SCMsgConnToSessStatus(initMsg.query.sessId, {
           fail: {
             reason: KNOWN_ERRORS_KEYS.SESSION_DOES_NOT_EXIST,
           },

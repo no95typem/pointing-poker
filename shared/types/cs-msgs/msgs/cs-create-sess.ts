@@ -8,6 +8,7 @@ export class CSMsgCreateSession implements CSMsg {
 
   constructor(
     readonly query: {
+      readonly controlKey: string;
       readonly userInfo: UserInfo;
       readonly settings: ISettings;
     },

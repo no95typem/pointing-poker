@@ -20,7 +20,7 @@ const LocaleUS: Record<LocaleKey, string> = {
   SETTINGS_IS_PLAYER_CAN_RESELECT_CARD:
     'Can player reselect card during round:',
 
-  SETTINGS_IS_AUTO_ADMIT: `Do new player need's dealer approval:`,
+  SETTINGS_IS_AUTO_ADMIT: `Auto admit new connections:`,
 
   SETTINGS_IS_TIMER_ON: 'Is timer enabled:',
 
