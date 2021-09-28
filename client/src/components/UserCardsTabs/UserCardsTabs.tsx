@@ -7,7 +7,7 @@ import { IUserCards } from '../../../../shared/types/session/member';
 
 const UserCardsTabs = (props: IUserCards): JSX.Element => {
   return (
-    <Tabs isManual variant="enclosed" mb="40px">
+    <Tabs isManual variant="enclosed" mb="10px">
       <TabList>
         <Tab>Players only</Tab>
         <Tab>All Users</Tab>

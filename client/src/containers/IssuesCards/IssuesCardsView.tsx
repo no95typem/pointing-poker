@@ -1,13 +1,8 @@
 import React from 'react';
 
-import { Box, ChakraProps, Stack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Stack, useRadioGroup } from '@chakra-ui/react';
 
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 
 import {
   IIssueData,
@@ -15,15 +10,15 @@ import {
   Issue,
 } from '../../../../shared/types/session/issue/issue';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
-import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
 
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
-import NewIssueButton from '../../components/NewElementButton/NewElementButton';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 import IssueStatisticModal from '../../components/IssueStatisticModal/IssueStatisticModal';
 import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
+import NewIssuesButtons from './Components/NewIssuesButtons/NewIssuesButtons';
+import IssuesTabs, { IIssuesTabs } from './Components/IssuesTabs/IssuesTabs';
 
 const IssueCardsView = (props: IIssues): JSX.Element => {
   const { issues, modal } = props;
@@ -38,13 +33,6 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
     statisticModal,
     issuesDndChange,
   } = modal;
-
-  const IssueStackStyle: ChakraProps = {
-    w: '280px',
-    alignItems: 'center',
-    flexDirection: 'column',
-    opacity: isSynced ? 1 : 0.5,
-  };
 
   const { getRadioProps } = useRadioGroup({
     name: 'issues',
@@ -90,7 +78,8 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
         bg={issue.closed ? 'gray.400' : 'unset'}
         w="280px"
         style={{
-          marginTop: '0',
+          marginTop: '5px',
+          marginBottom: '5px',
         }}
         key={`${id}-wrap`}
       >
@@ -164,55 +153,21 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
     }
   };
 
-  const renderNewIssueButton = (): JSX.Element => {
-    if (!isPlayerDealer || !isSynced) return <></>;
-
-    return <NewIssueButton description="Create issue" openModal={openModal} />;
-  };
-
-  const renderUploadIssueButton = (): JSX.Element => {
-    if (!isPlayerDealer || !isSynced) return <></>;
-
-    return (
-      <NewIssueButton
-        description="Upload issues"
-        openModal={showIssueImportDialog}
-      />
-    );
+  const issueTabsData: IIssuesTabs = {
+    isSynced,
+    list,
+    renderBasicIssueCard,
+    renderIssueCard,
   };
 
   return (
     <DragDropContext onDragEnd={handleDnd}>
-      <Box mb="50px" position="relative">
+      <Box mb="20px" position="relative">
         {renderRoundControlButtons()}
-
-        <Stack spacing="3">
-          <Stack {...IssueStackStyle}>
-            {renderUploadIssueButton()}
-
-            {renderNewIssueButton()}
-
-            {list
-              .filter(issue => issue.closed)
-              .map(issue => renderBasicIssueCard(issue))}
-          </Stack>
-
-          <Droppable droppableId="issues">
-            {({ droppableProps, innerRef, placeholder }) => (
-              <Stack {...droppableProps} ref={innerRef} {...IssueStackStyle}>
-                {list
-                  .filter(issue => !issue.closed)
-                  .map(issue => renderIssueCard(issue))}
-
-                {placeholder}
-              </Stack>
-            )}
-          </Droppable>
-
-          <IssueModal issue={modal} />
-
-          {statisticModal && <IssueStatisticModal {...statisticModal} />}
-        </Stack>
+        {isPlayerDealer && isSynced && <NewIssuesButtons modal={openModal} />}
+        {<IssuesTabs {...issueTabsData} />}
+        <IssueModal issue={modal} />
+        {statisticModal && <IssueStatisticModal {...statisticModal} />}
         {!isSynced && <ChakraLoader />}
       </Box>
     </DragDropContext>

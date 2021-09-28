@@ -1,7 +1,7 @@
 import { CardData } from './session/card';
 
 export interface ISettings {
-  autoAdmit: boolean;
+  isAutoAdmit: boolean;
   isDealerPlayer: boolean;
   isPlayerCanReselectCard: boolean;
   isCardShownOnRoundEnd: boolean;
@@ -10,7 +10,7 @@ export interface ISettings {
   scoreTypeShort: string;
   roundTime: number;
   cards: CardData[];
-  cardBackType: ''; // TODO (no95typem)
+  cardBackType: string; // TODO (no95typem)
 }
 
 export interface ISettingsComponent {

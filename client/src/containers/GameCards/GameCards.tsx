@@ -8,9 +8,9 @@ import {
   ICardsData,
   ICardsView,
 } from '../../../../shared/types/session/card';
+import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
 import GameCardsView from './GameCardsView';
-import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
 const GameCards = (props: ICardsData): JSX.Element => {
   const toast = useToast();
@@ -21,6 +21,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
 
   const newGameCard: CardData = {
     value: '',
+    base64: '',
   };
 
   const [editedCardIndex, setEditedCardIndex] = useState(-1);

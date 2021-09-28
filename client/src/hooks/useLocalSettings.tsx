@@ -1,28 +1,26 @@
 import { CardData } from '../../../shared/types/session/card';
-import { ISettings } from '../../../shared/types/settings';
+import { SERVER_ADAPTER } from '../modules/ServerAdapter/serverAdapter';
 import { setSettings } from '../redux/slices/settings';
-import { useAppDispatch } from '../redux/store';
+import { useAppDispatch, useTypedSelector } from '../redux/store';
 
-interface ISetSettings {
-  setLocalSettings: (
-    name: string,
-    value: string | boolean | CardData[],
-  ) => void;
-}
-
-const UseLocalSettings = (localSettings: ISettings): ISetSettings => {
+const useLocalSettings = () => {
   const dispatch = useAppDispatch();
+  const localSettings = useTypedSelector(state => state.settings);
 
   const setLocalSettings = (
     name: string,
     value: string | boolean | CardData[],
   ): void => {
-    dispatch(setSettings({ ...localSettings, [name]: value }));
+    const newSettings = { ...localSettings, [name]: value };
+    dispatch(setSettings(newSettings));
+
+    if (name === 'isAutoAdmit') SERVER_ADAPTER.sendSettings(true, newSettings);
   };
 
   return {
+    localSettings,
     setLocalSettings,
   };
 };
 
-export default UseLocalSettings;
+export default useLocalSettings;

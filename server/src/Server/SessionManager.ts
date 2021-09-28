@@ -105,7 +105,7 @@ export class SessionManager {
     }
 
     const fakeConnMsg = new CSMsgConnToSess({
-      sessId: this.sessionState.sessionId,
+      sessId: init.initMsg.query.controlKey,
       info: init.initMsg.query.userInfo,
       role: USER_ROLES.DEALER,
     });
@@ -156,18 +156,23 @@ export class SessionManager {
 
     this.tokens[token] = member.userSessionPublicId;
 
-    const rMsg = new SCMsgConnToSessStatus({
+    const rMsg = new SCMsgConnToSessStatus(initMsg.query.sessId, {
       wait: {
+        sessId: this.sessionState.sessionId,
         token,
       },
     });
 
     this.api.send(ws, JSON.stringify(rMsg));
 
+    const sessMemberRec = this.sessionState.members[tokenId as number];
+
     if (
       role === USER_ROLES.DEALER ||
-      !newId ||
-      this.sessionState.gSettings.autoAdmit
+      (!newId &&
+        sessMemberRec &&
+        sessMemberRec.userState !== USER_STATES.KICKED) ||
+      this.sessionState.gSettings.isAutoAdmit
     ) {
       this.admitPlayer(ws, member);
     } else {
@@ -175,7 +180,7 @@ export class SessionManager {
         member,
         ws,
       };
-      const msg = new SCMsgNewConnection(member);
+      const msg = new SCMsgNewConnection(this.sessionState.sessionId, member);
       this.broadcast(msg, USER_ROLES.DEALER);
     }
   }
@@ -185,8 +190,15 @@ export class SessionManager {
       if (allow) {
         this.admitPlayer(this.incubator[id].ws, this.incubator[id].member);
       } else {
+        const msg = new SCMsgConnToSessStatus(this.sessionState.sessionId, {
+          fail: {
+            reason: KNOWN_ERRORS_KEYS.YOU_WERE_KICKED,
+          },
+        });
+        this.api.send(this.incubator[id].ws, JSON.stringify(msg));
         this.kick(id, this.incubator[id].ws, true);
       }
+      delete this.incubator[id];
     }
   };
 
@@ -195,7 +207,7 @@ export class SessionManager {
     update[member.userSessionPublicId] = member;
     Object.assign(this.sessionState.members, update);
 
-    const bMsg = new SCMsgMembersChanged(update);
+    const bMsg = new SCMsgMembersChanged(this.sessionState.sessionId, update);
     this.broadcast(bMsg, USER_ROLES.SPECTATOR);
 
     /* eslint-disable no-fallthrough */
@@ -208,7 +220,7 @@ export class SessionManager {
         this.spectatorsManager.addMember(ws, member.userSessionPublicId);
     }
     /* eslint-enable no-fallthrough */
-    const rMsg = new SCMsgConnToSessStatus({
+    const rMsg = new SCMsgConnToSessStatus(this.sessionState.sessionId, {
       success: {
         yourId: member.userSessionPublicId,
         state: this.sessionState,
@@ -228,18 +240,10 @@ export class SessionManager {
     if (id !== undefined) {
       this.webSocketsMap.delete(ws);
 
-      if (id in this.incubator) {
-        delete this.incubator[id];
-        const msg = new SCMsgConnToSessStatus({
-          fail: {
-            reason: KNOWN_ERRORS_KEYS.YOU_WERE_KICKED,
-          },
-        });
-        this.api.send(ws, JSON.stringify(msg));
-      }
+      if (id in this.incubator) delete this.incubator[id];
 
       if (kick) {
-        const msg = new SCMsgYouWereKicked();
+        const msg = new SCMsgYouWereKicked(this.sessionState.sessionId);
         this.api.send(ws, JSON.stringify(msg));
       }
 
@@ -257,7 +261,10 @@ export class SessionManager {
         const update: Record<number, Partial<Member>> = {};
         update[id] = { userState: newState, isSynced: true };
 
-        const msg = new SCMsgMembersChanged(update);
+        const msg = new SCMsgMembersChanged(
+          this.sessionState.sessionId,
+          update,
+        );
         this.broadcast(msg, USER_ROLES.SPECTATOR);
 
         if (id === DEALER_ID) this.endSession();
@@ -277,7 +284,10 @@ export class SessionManager {
   private updateState = (update: Partial<SessionState>) => {
     Object.assign(this.sessionState, update);
 
-    const msg = new SCMsgUpdateSessionState(update);
+    const msg = new SCMsgUpdateSessionState(
+      this.sessionState.sessionId,
+      update,
+    );
     this.broadcast(msg, USER_ROLES.SPECTATOR);
 
     this.tryToEndRound();

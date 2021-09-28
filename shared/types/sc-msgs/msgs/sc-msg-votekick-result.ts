@@ -7,6 +7,7 @@ export class SCMsgVotekickResult implements SCMsg {
   readonly cipher = SCMSG_CIPHERS.VOTEKICK_RESULT;
 
   constructor(
+    readonly sessionId: string,
     readonly data: {
       readonly targetId: number;
       readonly result: boolean;

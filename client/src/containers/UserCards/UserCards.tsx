@@ -2,6 +2,10 @@ import React from 'react';
 
 import { Box, Stack } from '@chakra-ui/react';
 
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import {
   IMemberData,
   IUserCards,
@@ -12,20 +16,19 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
 import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
-
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
 
 const UserCards = (props: IUserCards): JSX.Element => {
   const { members, isItYou, isVotersView, isDealerPlaying } = props;
 
   const settings = {
-    dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
+    initialSlide: 1,
+    nextArrow: <SliderCustomArrow />,
+    prevArrow: <SliderCustomArrow />,
 
     responsive: [
       {
@@ -68,19 +71,23 @@ const UserCards = (props: IUserCards): JSX.Element => {
           if (isIgnoredUser(id, member.userRole)) return null;
 
           return (
-            <Stack maxW="400px" key={`${id}-box`}>
+            <Box maxW="320px" key={`${id}-box`}>
               <Stack
+                ml="10px"
                 direction="row"
                 justify="center"
                 align="center"
                 border={isVotersView ? '1px solid black' : 'none'}
                 key={`${id}-wrap`}
-                mr="20px"
               >
-                <UserCard {...setMemberData(member)} key={id} />
+                <UserCard
+                  {...setMemberData(member)}
+                  w={isVotersView ? '210px' : '300px'}
+                  key={id}
+                />
                 {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
               </Stack>
-            </Stack>
+            </Box>
           );
         })}
       </Slider>

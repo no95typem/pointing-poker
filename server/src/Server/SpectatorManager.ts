@@ -29,7 +29,11 @@ export class SpectatorManager extends RoleManager {
 
     if (dirtyMsg.msg.memberId !== id || typeof dirtyMsg.msg.time !== 'number') {
       update[`${dirtyMsg.msg.time}-${dirtyMsg.msg.memberId}`] = {} as ChatMsg;
-      const msg = new SCMsgChatMsgsChanged('D', update);
+      const { state } = this.api.getSessionState();
+      const msg = new SCMsgChatMsgsChanged(state.sessionId, {
+        command: 'D',
+        update,
+      });
       this.api.send(ws, JSON.stringify(msg));
     } else {
       const purifiedMsg = purify(dirtyMsg);
@@ -53,7 +57,10 @@ export class SpectatorManager extends RoleManager {
         delete state.chat.msgs[key];
       });
 
-      const bMsg = new SCMsgChatMsgsChanged('A', update);
+      const bMsg = new SCMsgChatMsgsChanged(state.sessionId, {
+        command: 'A',
+        update,
+      });
       this.api.broadcast(bMsg, USER_ROLES.SPECTATOR, [id]);
 
       update[key] = {
@@ -61,7 +68,10 @@ export class SpectatorManager extends RoleManager {
         clientTime: purifiedMsg.msg.time,
       };
 
-      const rMsg = new SCMsgChatMsgsChanged('A', update);
+      const rMsg = new SCMsgChatMsgsChanged(state.sessionId, {
+        command: 'A',
+        update,
+      });
       this.api.send(ws, JSON.stringify(rMsg));
     }
   }

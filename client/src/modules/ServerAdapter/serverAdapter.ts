@@ -19,7 +19,7 @@ import { KNOWN_LOADS_KEYS } from '../../../../shared/knownLoadsKeys';
 import { removeError, setErrorByKey } from '../../redux/slices/errors';
 import { removeLoad, setGLoadByKey } from '../../redux/slices/loads';
 import { store } from '../../redux/store';
-import { sessionSlice, updSessState } from '../../redux/slices/session';
+import { sessionSlice, setSynced } from '../../redux/slices/session';
 import { SessionState } from '../../../../shared/types/session/state/session-state';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
@@ -31,6 +31,26 @@ import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-cre
 import { SCMsgNewConnection } from '../../../../shared/types/sc-msgs/msgs/sc-msg-new-connection';
 import { INotification, notifSlice } from '../../redux/slices/notifications';
 import { CSMSGNewConnectionResponse } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-new-connection-response';
+import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
+import { ISettings } from '../../../../shared/types/settings';
+import { CSMsgForceKick } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-force-kick';
+import { CSMsgVotekick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
+import { DEALER_ID } from '../../../../shared/const';
+import { USER_STATES } from '../../../../shared/types/user/user-state';
+import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/spectator/cs-msg-chat-msg';
+import { ChatMsg } from '../../../../shared/types/session/chat/chat-msg';
+import { CSMsgPick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-pick';
+import { CSMsgStartRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-start-round';
+import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-stop-round';
+import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
+import { dang_APP_SOFT_RESET } from '../../redux/store-soft-reset';
+import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
+
+export interface IKickArgs {
+  targetId: number;
+  decision: boolean;
+  initId?: number;
+}
 
 class ServerAdapter {
   private apiUrl = IS_PROD
@@ -41,187 +61,13 @@ class ServerAdapter {
 
   private lastToken: string | undefined;
 
-  private obeyTheServer = (e: MessageEvent) => {
-    try {
-      // console.log(e.data);
-      const parsed = JSON.parse(e.data);
-      const purified = purify(parsed);
+  private controlKey: string | undefined;
 
-      console.log(`received msg, cipher: ${purified.cipher}`);
+  /* MAINTAIN CONNECTION */
 
-      if ('cipher' in purified) {
-        switch ((purified as SCMsg).cipher) {
-          case SCMSG_CIPHERS.CONN_TO_SESS_STATUS:
-            this.handleConnToSessStatus(purified as SCMsgConnToSessStatus);
-
-            return;
-          case CSMSG_CIPHERS.CHAT_MSG:
-            this.handleChatMsg(purified as SCMsgChatMsgsChanged);
-
-            return;
-
-          case SCMSG_CIPHERS.UPDATE_SESSION_STATE:
-            this.takeoffLoadBySessStateUpdate(
-              (purified as CSMsgUpdateState).update,
-            );
-            store.dispatch(
-              sessionSlice.actions.dang_updSessStateFromServer(
-                (purified as CSMsgUpdateState).update,
-              ),
-            );
-
-            return;
-
-          case SCMSG_CIPHERS.NEW_CONNECTION:
-            this.handleNewConnection(purified as SCMsgNewConnection);
-
-            return;
-
-          case SCMSG_CIPHERS.MEMBERS_CHANGED:
-            this.handleMembersChanged(purified as SCMsgMembersChanged);
-
-            return;
-
-          case SCMSG_CIPHERS.FORCE_KICK:
-            // TODO showToast?
-            return;
-
-          case SCMSG_CIPHERS.VOTEKICK:
-            showKickDialog(
-              (purified as SCMsgVotekick).targetId,
-              (purified as SCMsgVotekick).initId,
-            );
-
-            return;
-
-          case SCMSG_CIPHERS.YOU_WERE_KICKED:
-            this.handleKicked();
-
-            return;
-
-          default:
-            // just ignore
-            return;
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      // TODO (no95typem)
-    }
-  };
-
-  private handleKicked() {
-    const { stage } = store.getState().session;
-
-    if (stage === SESSION_STAGES.GAME || stage === SESSION_STAGES.LOBBY) {
-      store.dispatch(updSessState({ stage: SESSION_STAGES.STATS }));
-    }
-
-    const notification: INotification = {
-      status: 'error',
-      text: 'You were kicked!',
-      needToShow: true,
-    };
-
-    store.dispatch(notifSlice.actions.addNotifRec(notification));
-  }
-
-  respondToNewConnection = (id: number, allow: boolean) => {
-    const msg = new CSMSGNewConnectionResponse(id, allow);
-    this.send(msg);
-  };
-
-  private handleNewConnection(msg: SCMsgNewConnection) {
-    const notification: INotification = {
-      specialType: 'new-connection',
-      status: 'info',
-      text: '',
-      needToShow: true,
-      addData: msg.m,
-    };
-    store.dispatch(notifSlice.actions.addNotifRec(notification));
-  }
-
-  private takeoffLoadBySessStateUpdate(update: Partial<SessionState>) {
-    if (update.stage) {
-      store.dispatch(removeLoad(KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE));
-    }
-  }
-
-  private handleConnToSessStatus(msg: SCMsgConnToSessStatus) {
-    store.dispatch(removeLoad('CONNECTING_TO_SERVER'));
-
-    if (msg.response.wait) {
-      document.cookie = `lastToken=${msg.response.wait.token}; Path=/;`; // ! TODO (no95typem) expires ?
-      this.lastToken = msg.response.wait.token;
-      // TODO add text dealer should deceide...
-      store.dispatch(
-        setGLoadByKey({
-          loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER,
-          disableWatchdog: true,
-        }),
-      );
-    }
-
-    if (msg.response.fail) {
-      const errorKey: KnownErrorsKey =
-        msg.response.fail.reason || KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR;
-      store.dispatch(setErrorByKey(errorKey));
-    }
-
-    if (msg.response.success) {
-      store.dispatch(
-        sessionSlice.actions.dang_updSessStateFromServer({
-          ...msg.response.success.state,
-          clientId: msg.response.success.yourId,
-        }),
-      );
-    }
-  }
-
-  private handleMembersChanged(msg: SCMsgMembersChanged) {
-    const members = OBJ_PROCESSOR.deepClone(store.getState().session.members);
-
-    Object.entries(msg.update).forEach(([id, member]) => {
-      if (members[+id]) {
-        Object.assign(members[+id], member);
-      } else {
-        members[+id] = member as Member;
-      }
-    });
-
-    const newMembers: Record<number, Member> = {};
-    Object.assign(newMembers, members);
-
-    store.dispatch(
-      sessionSlice.actions.dang_updSessStateFromServer({ members: newMembers }),
-    );
-  }
-
-  private handleChatMsg(msg: SCMsgChatMsgsChanged) {
-    const state = store.getState();
-    const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
-
-    switch (msg.command) {
-      case 'A':
-        Object.values(msg.update).forEach(chatMsg => {
-          if (
-            chatMsg.clientTime &&
-            state.session.clientId === chatMsg.memberId
-          ) {
-            delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
-          }
-        });
-        Object.assign(chat.msgs, msg.update);
-        break;
-      case 'D':
-        Object.keys(msg.update).forEach(key => delete chat.msgs[key]);
-        break;
-      default:
-        break;
-    }
-
-    store.dispatch(sessionSlice.actions.dang_updSessStateFromServer({ chat }));
+  private handleWSOpen() {
+    (this.ws as WebSocket).addEventListener('message', this.obeyTheServer);
+    store.dispatch(connectSlice.actions.setServerConnectionStatus('connected'));
   }
 
   private handleWSErrorOrClose() {
@@ -237,10 +83,22 @@ class ServerAdapter {
     }
   }
 
-  private handleWSOpen() {
-    (this.ws as WebSocket).addEventListener('message', this.obeyTheServer);
-    store.dispatch(connectSlice.actions.setServerConnectionStatus('connected'));
-  }
+  private handleSendError = FE_ALONE
+    ? () => console.warn('front end in standalone mode')
+    : () => {
+        store.dispatch(
+          setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),
+        );
+      };
+
+  private send = (msg: CSMsg) => {
+    try {
+      (this.ws as WebSocket).send(JSON.stringify(msg));
+    } catch (err) {
+      console.log(err);
+      this.handleSendError();
+    }
+  };
 
   connect(): Promise<boolean> {
     store.dispatch(sessionSlice.actions.dang_reset());
@@ -281,27 +139,208 @@ class ServerAdapter {
     });
   }
 
-  private handleSendError = FE_ALONE
-    ? () => console.warn('front end in standalone mode')
-    : () => {
-        store.dispatch(
-          setErrorByKey(KNOWN_ERRORS_KEYS.FAILED_TO_SEND_MSG_TO_SERVER),
-        );
-      };
+  /* / MAINTAIN CONNECTION */
 
-  send = (msg: CSMsg) => {
-    console.log(msg);
+  /* OBEY THE SERVER */
+  private obeyTheServer = (e: MessageEvent) => {
     try {
-      (this.ws as WebSocket).send(JSON.stringify(msg));
-      console.log('msg sent');
+      // console.log(e.data);
+      const parsed = JSON.parse(e.data);
+      const purified = purify(parsed);
+
+      console.log(`received msg, cipher:`, purified);
+
+      if ('cipher' in purified) {
+        if (
+          !this.controlKey ||
+          (purified as SCMsg).sessionId !== this.controlKey
+        ) {
+          throw new Error('msg session Id !== controlKey!');
+        }
+        switch ((purified as SCMsg).cipher) {
+          case SCMSG_CIPHERS.CONN_TO_SESS_STATUS:
+            this.handleSCMsgConnToSessStatus(purified as SCMsgConnToSessStatus);
+
+            return;
+          case CSMSG_CIPHERS.CHAT_MSG:
+            this.handleSCMsgChatMsg(purified as SCMsgChatMsgsChanged);
+
+            return;
+
+          case SCMSG_CIPHERS.UPDATE_SESSION_STATE:
+            this.handleSCMsgUpdateState(purified as CSMsgUpdateState);
+
+            return;
+
+          case SCMSG_CIPHERS.NEW_CONNECTION:
+            this.handleSCMsgNewConnection(purified as SCMsgNewConnection);
+
+            return;
+
+          case SCMSG_CIPHERS.MEMBERS_CHANGED:
+            this.handleSCMsgMembersChanged(purified as SCMsgMembersChanged);
+
+            return;
+
+          case SCMSG_CIPHERS.FORCE_KICK:
+            // TODO (no95typem) showToast?
+            return;
+
+          case SCMSG_CIPHERS.VOTEKICK:
+            this.handleVotekick(purified as SCMsgVotekick);
+
+            return;
+
+          case SCMSG_CIPHERS.YOU_WERE_KICKED:
+            this.handleCSMsgYouWereKicked();
+
+            return;
+
+          default:
+            // just ignore
+            return;
+        }
+      }
     } catch (err) {
       console.log(err);
-      this.handleSendError();
+      // TODO (no95typem)
     }
   };
 
+  private handleVotekick = (msg: SCMsgVotekick) => {
+    const { targetId, initId } = msg.body;
+    showKickDialog(targetId, initId);
+  };
+
+  private handleCSMsgYouWereKicked() {
+    const { stage } = store.getState().session;
+
+    if (stage === SESSION_STAGES.GAME || stage === SESSION_STAGES.LOBBY) {
+      this.updSessState({ stage: SESSION_STAGES.STATS });
+    }
+
+    const notification: INotification = {
+      status: 'error',
+      text: 'You were kicked!',
+      needToShow: true,
+    };
+
+    store.dispatch(notifSlice.actions.addNotifRec(notification));
+  }
+
+  private handleSCMsgNewConnection(msg: SCMsgNewConnection) {
+    const state = store.getState();
+    const isExist = Object.values(state.alerts).some(
+      val =>
+        val.specialType === 'new-connection' &&
+        val.addData?.userSessionPublicId === msg.m.userSessionPublicId,
+    );
+
+    if (isExist) return;
+
+    const notification: INotification = {
+      specialType: 'new-connection',
+      status: 'info',
+      text: '',
+      needToShow: true,
+      addData: msg.m,
+    };
+    store.dispatch(notifSlice.actions.addNotifRec(notification));
+  }
+
+  private handleSCMsgUpdateState(msg: CSMsgUpdateState) {
+    if (msg.update.stage) {
+      store.dispatch(removeLoad(KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE));
+    }
+    store.dispatch(
+      sessionSlice.actions.dang_updSessStateFromServer(msg.update),
+    );
+  }
+
+  private handleSCMsgConnToSessStatus(msg: SCMsgConnToSessStatus) {
+    store.dispatch(removeLoad(KNOWN_LOADS_KEYS.CONNECTING_TO_LOBBY));
+    store.dispatch(removeLoad(KNOWN_LOADS_KEYS.AWAITING_ADMISSION));
+
+    if (msg.response.wait) {
+      this.controlKey = msg.response.wait.sessId;
+      document.cookie = `lastToken=${msg.response.wait.token}; Path=/;`; // ! TODO (no95typem) expires ?
+      this.lastToken = msg.response.wait.token;
+
+      store.dispatch(
+        setGLoadByKey({
+          loadKey: KNOWN_LOADS_KEYS.AWAITING_ADMISSION,
+          disableWatchdog: true,
+        }),
+      );
+    }
+
+    if (msg.response.fail) {
+      const errorKey: KnownErrorsKey =
+        msg.response.fail.reason || KNOWN_ERRORS_KEYS.SC_PROTOCOL_ERROR;
+      store.dispatch(setErrorByKey(errorKey));
+    }
+
+    if (msg.response.success) {
+      store.dispatch(
+        sessionSlice.actions.dang_updSessStateFromServer({
+          ...msg.response.success.state,
+          clientId: msg.response.success.yourId,
+        }),
+      );
+    }
+  }
+
+  private handleSCMsgMembersChanged(msg: SCMsgMembersChanged) {
+    const members = OBJ_PROCESSOR.deepClone(store.getState().session.members);
+
+    Object.entries(msg.update).forEach(([id, member]) => {
+      if (members[+id]) {
+        Object.assign(members[+id], member);
+      } else {
+        members[+id] = member as Member;
+      }
+    });
+
+    const newMembers: Record<number, Member> = {};
+    Object.assign(newMembers, members);
+
+    store.dispatch(
+      sessionSlice.actions.dang_updSessStateFromServer({ members: newMembers }),
+    );
+  }
+
+  private handleSCMsgChatMsg(msg: SCMsgChatMsgsChanged) {
+    const state = store.getState();
+    const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+    const { command, update } = msg.body;
+
+    switch (command) {
+      case 'A':
+        Object.values(update).forEach(chatMsg => {
+          if (
+            chatMsg.clientTime &&
+            state.session.clientId === chatMsg.memberId
+          ) {
+            delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
+          }
+        });
+        Object.assign(chat.msgs, update);
+        break;
+      case 'D':
+        Object.keys(update).forEach(key => delete chat.msgs[key]);
+        break;
+      default:
+        break;
+    }
+
+    store.dispatch(sessionSlice.actions.dang_updSessStateFromServer({ chat }));
+  }
+  /* / OBEY THE SERVER */
+
+  /* ACTIONS */
   connToLobby = () => {
     const state = store.getState();
+    this.controlKey = state.homePage.lobbyURL;
     const token = this.lastToken || getCookieValByName('lastToken');
     const msg = new CSMsgConnToSess({
       info: state.userInfo,
@@ -309,10 +348,10 @@ class ServerAdapter {
       sessId: state.homePage.lobbyURL,
       token,
     });
-    SERVER_ADAPTER.send(msg);
+    this.send(msg);
     store.dispatch(
       setGLoadByKey({
-        loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER,
+        loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_LOBBY,
         errorKey: KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER,
       }),
     );
@@ -320,30 +359,44 @@ class ServerAdapter {
 
   createSess = () => {
     const state = store.getState();
+    this.controlKey = genUniqId();
     const msg = new CSMsgCreateSession({
+      controlKey: this.controlKey,
       userInfo: state.userInfo,
       settings: state.session.gSettings,
     });
-    SERVER_ADAPTER.send(msg);
+    this.send(msg);
     store.dispatch(
       setGLoadByKey({
-        loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_SERVER,
+        loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_LOBBY,
         errorKey: KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER,
       }),
     );
   };
 
-  exitGame = () => {
-    store.dispatch(
-      sessionSlice.actions.dang_updSessStateFromServer({
-        stage: SESSION_STAGES.EMPTY,
-      }),
-    );
-    const msg = new CSMsgDisconFromSess();
+  dang_reset = () => {
+    this.exitGame();
+    dang_APP_SOFT_RESET();
+
+    // if (this.ws) {
+    //   try {
+    //     this.ws.close();
+    //   } catch {
+    //     //
+    //   }
+
+    //   this.connect();
+    // }
+  };
+
+  respondToNewConnection = (id: number, allow: boolean) => {
+    const msg = new CSMSGNewConnectionResponse(id, allow);
     this.send(msg);
   };
 
   startGame = () => {
+    const settings = store.getState().settings;
+    this.updSessState({ gSettings: settings });
     store.dispatch(
       setGLoadByKey({
         loadKey: KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE,
@@ -352,6 +405,121 @@ class ServerAdapter {
     const msg = new CSMsgStartGame();
     this.send(msg);
   };
+
+  exitGame = (skipDispatch?: true) => {
+    if (skipDispatch !== true) {
+      console.log('dispatch');
+      store.dispatch(
+        sessionSlice.actions.dang_updSessStateFromServer({
+          stage: SESSION_STAGES.STATS,
+        }),
+      );
+    }
+
+    this.controlKey = undefined;
+    const msg = new CSMsgDisconFromSess();
+    this.send(msg);
+  };
+
+  endGame = () => {
+    const endGame = new CSMsgEndGame();
+    this.send(endGame);
+  };
+
+  sendSettings = (onlyAdmit?: true, specSettings?: ISettings) => {
+    const settings = specSettings || store.getState().settings;
+    // we should send this flag on the server
+    // but it will be good if we
+    // remove unnecesarry things on this satge
+
+    const settingsToSend: ISettings = onlyAdmit
+      ? {
+          ...settings,
+          cards: [],
+          cardBackType: '',
+        }
+      : OBJ_PROCESSOR.deepClone(settings);
+
+    this.updSessState({ gSettings: settingsToSend });
+  };
+
+  tryKick = (args: IKickArgs) => {
+    const { targetId, decision, initId } = args;
+    const state = store.getState();
+
+    if (targetId === state.session.clientId || targetId === DEALER_ID) return;
+
+    const isUserDealer = state.session.clientId === DEALER_ID;
+
+    const msg =
+      !initId && isUserDealer
+        ? new CSMsgForceKick(targetId)
+        : new CSMsgVotekick(targetId, decision);
+
+    const members = OBJ_PROCESSOR.deepClone(state.session.members);
+
+    if (decision === true) {
+      if (isUserDealer) members[targetId].userState = USER_STATES.KICKED;
+
+      members[targetId].isSynced = false;
+
+      store.dispatch(
+        sessionSlice.actions.dang_updSessStateFromClient({ members }),
+      );
+    }
+
+    this.send(msg);
+  };
+
+  sendChatMsg = (text: string) => {
+    const state = store.getState();
+    const memberId = state.session.clientId;
+
+    if (memberId === undefined) return false;
+
+    const time = Date.now();
+    const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+
+    const chatMsg: ChatMsg = { memberId, text, time, isSynced: false };
+
+    const msg = new CSMsgChatMsg(chatMsg);
+    this.send(msg);
+
+    chat.msgs[`${time}-${memberId}`] = chatMsg;
+
+    store.dispatch(sessionSlice.actions.dang_updSessStateFromClient({ chat }));
+  };
+
+  updSessState = (update: Partial<SessionState>) => {
+    const synced = setSynced(update, false);
+
+    const msg = new CSMsgUpdateState(update);
+    this.send(msg);
+
+    store.dispatch(sessionSlice.actions.dang_updSessStateFromClient(synced));
+  };
+
+  pickCard = (val: string | undefined) => {
+    const msg = new CSMsgPick(val);
+    this.send(msg);
+  };
+
+  startRound = () => {
+    const msg = new CSMsgStartRound();
+    this.send(msg);
+  };
+
+  stopRound = () => {
+    const msg = new CSMsgStopRound();
+    this.send(msg);
+  };
+
+  nextIssue = () => {
+    const msg = new CSMsgNextIssue();
+    this.send(msg);
+  };
+
+  /* / ACTIONS */
 }
 
 export const SERVER_ADAPTER = new ServerAdapter();

@@ -5,5 +5,8 @@ import { SCMSG_CIPHERS } from '../sc-msg-ciphers';
 export class SCMsgMembersChanged implements SCMsg {
   readonly cipher = SCMSG_CIPHERS.MEMBERS_CHANGED;
 
-  constructor(readonly update: Record<number, Partial<Member>>) {}
+  constructor(
+    readonly sessionId: string,
+    readonly update: Record<number, Partial<Member>>,
+  ) {}
 }

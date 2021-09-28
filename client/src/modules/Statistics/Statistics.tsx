@@ -20,7 +20,7 @@ const Statistics = (): JSX.Element => {
   const issuesList = session.issues.list;
 
   return (
-    <Box minH="100vh" maxW={MAX_CONTENT_WIDTH} w="100%" m="0 auto" p="5px">
+    <Box maxW={MAX_CONTENT_WIDTH} w="100%" maxH="100%" m="0 auto" p="5px">
       <EditableHeader {...sessionNameData} />
 
       <Stack

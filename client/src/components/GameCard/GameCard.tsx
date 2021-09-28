@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Stack, IconButton, Heading, Text } from '@chakra-ui/react';
+import { Stack, IconButton, Heading, Text, Image } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
 import { CloseIcon } from '@chakra-ui/icons';
@@ -24,6 +24,7 @@ const GameCard = (props: ICardData): JSX.Element => {
       align="center"
       p="10px 10px"
       boxShadow="lg"
+      pt="30px"
     >
       <Text
         fontSize="2xl"
@@ -31,15 +32,11 @@ const GameCard = (props: ICardData): JSX.Element => {
         fontStyle="italic"
         fontWeight="bold"
         isTruncated
-        mb="20px"
       >
         {value}
       </Text>
       {base64 ? (
-        // img src={base64}
-        <Heading fontStyle="italic" size="lg">
-          {base64}
-        </Heading>
+        <Image src={base64} />
       ) : (
         <Heading fontStyle="italic" size="lg">
           {units}

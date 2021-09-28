@@ -3,8 +3,8 @@ import { Box, Stack } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
-import UseSessionData from '../../hooks/useSessionData';
-import UseLocalSettings from '../../hooks/useLocalSettings';
+import useSessionData from '../../hooks/useSessionData';
+import useLocalSettings from '../../hooks/useLocalSettings';
 
 import { IGameStateData } from '../../../../shared/types/session/state/session-state';
 import { ISettingsData } from '../../../../shared/types/settings';
@@ -20,11 +20,9 @@ import SettingsTabs from '../../components/SettingsTabs/SettingsTabs';
 const Lobby = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
 
-  const localSettings = useTypedSelector(state => state.settings);
+  const sessionData = useSessionData(session);
 
-  const sessionData = UseSessionData(session);
-
-  const { setLocalSettings } = UseLocalSettings(localSettings);
+  const { localSettings, setLocalSettings } = useLocalSettings();
 
   if (!sessionData) return <></>;
 
@@ -49,11 +47,11 @@ const Lobby = (): JSX.Element => {
   };
 
   return (
-    <Box maxW="1200px" w="90%" m="0 auto" p="5px" overflow="hidden">
+    <Box maxW="1200px" w={['100vw', '90%']} m="0 auto" p="5px">
       <EditableHeader {...sessionNameData} />
       <Stack
         direction="row"
-        justify="space-between"
+        justify={['center', 'space-between']}
         align="center"
         wrap="wrap"
         style={{ gap: '15px' }}
@@ -63,7 +61,7 @@ const Lobby = (): JSX.Element => {
         <GameControlButtons {...gameStateLobby} />
       </Stack>
       <UserCardsTabs {...membersData} />
-      <Stack direction="row" wrap="wrap" justify="space-between">
+      <Stack direction="row" wrap="wrap" justify={['center', 'space-between']}>
         <IssueCards {...issuesData} />
         {isPlayerDealer && <SettingsTabs {...settingsData} />}
       </Stack>

@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { connectSlice } from './slices/connect';
 import { errorsSlice } from './slices/errors';
@@ -11,23 +11,30 @@ import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
 import { chatSlice } from './slices/chat';
 import { notifSlice } from './slices/notifications';
+import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
+
+export const DEFAULT_REDUCER = combineReducers({
+  homePage: homePageSlice.reducer,
+  locale: localeSlice.reducer,
+  errors: errorsSlice.reducer,
+  loads: loadsSlice.reducer,
+  connect: connectSlice.reducer,
+  session: sessionSlice.reducer,
+  userInfo: userInfoSlice.reducer,
+  chat: chatSlice.reducer,
+  mockSession: mockSessionSlice.reducer,
+  settings: settingsSlice.reducer,
+  alerts: notifSlice.reducer,
+});
 
 export const store = configureStore({
-  reducer: {
-    homePage: homePageSlice.reducer,
-    locale: localeSlice.reducer,
-    errors: errorsSlice.reducer,
-    loads: loadsSlice.reducer,
-    connect: connectSlice.reducer,
-    session: sessionSlice.reducer,
-    userInfo: userInfoSlice.reducer,
-    chat: chatSlice.reducer,
-    mockSession: mockSessionSlice.reducer,
-    settings: settingsSlice.reducer,
-    alerts: notifSlice.reducer,
-  },
+  reducer: DEFAULT_REDUCER,
   devTools: process.env.NODE_ENV === 'development',
 });
+
+export const STORE_INIT_STATE = OBJ_PROCESSOR.deepFreeze(
+  OBJ_PROCESSOR.deepClone(store.getState()),
+);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
