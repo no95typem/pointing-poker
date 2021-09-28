@@ -395,7 +395,7 @@ class ServerAdapter {
   };
 
   startGame = () => {
-    const settings = store.getState().settings;
+    const settings = OBJ_PROCESSOR.deepClone(store.getState().settings);
     this.updSessState({ gSettings: settings });
     store.dispatch(
       setGLoadByKey({
