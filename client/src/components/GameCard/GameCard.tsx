@@ -14,59 +14,93 @@ const GameCard = (props: ICardData): JSX.Element => {
 
   const { value, base64 } = card;
 
+  const stackStyles =
+    props.size === 'xs'
+      ? {
+          w: '40px',
+          height: '56px',
+          p: '2px 2px',
+          boxShadow: 'sm',
+          borderRadius: 'md',
+        }
+      : {
+          w: '150px',
+          height: '210px',
+          p: '10px 10px',
+          boxShadow: 'lg',
+          borderRadius: 'md',
+        };
+
+  const isNumber = !Number.isNaN(Number.parseFloat(value));
+
+  const valueStyles =
+    props.size === 'xs'
+      ? { fontSize: 'md', mb: '0px' }
+      : { fontSize: isNumber ? '4xl' : 'xl', maxW: '130px', mb: '20px' };
+
+  const unitsSizeStyles =
+    props.size === 'xs' ? { fontSize: 'xs', mt: '0' } : { size: 'lg' };
+
   return (
     <Stack
       position="relative"
-      w="150px"
-      height="210px"
       direction="column"
       justify="center"
       align="center"
-      p="10px 10px"
-      boxShadow="lg"
+      {...stackStyles}
     >
+      {!isGameStage && (
+        <>
+          <IconButton
+            position="absolute"
+            aria-label="edit"
+            background="transparent"
+            top="0"
+            left="0"
+            size="lg"
+            icon={<ImPencil />}
+            onClick={edit && (() => edit(value))}
+          />
+          <IconButton
+            position="absolute"
+            aria-label="delete"
+            background="transparent"
+            top="0"
+            right="0"
+            size="lg"
+            icon={<CloseIcon />}
+            onClick={deleteCard && (() => deleteCard(value))}
+          />
+        </>
+      )}
+
       <Text
-        fontSize="2xl"
-        maxW="130px"
         fontStyle="italic"
         fontWeight="bold"
+        maxW="90%"
         isTruncated
-        mb="20px"
+        {...valueStyles}
       >
         {value}
       </Text>
       {base64 ? (
         // img src={base64}
-        <Heading fontStyle="italic" size="lg">
+        <Heading fontStyle="italic" {...unitsSizeStyles}>
           {base64}
         </Heading>
-      ) : (
-        <Heading fontStyle="italic" size="lg">
+      ) : props.isUnitsShown ? (
+        <Text
+          fontStyle="italic"
+          pos="absolute"
+          bottom="10px"
+          maxW="90%"
+          h="1rem"
+          isTruncated
+          {...unitsSizeStyles}
+        >
           {units}
-        </Heading>
-      )}
-      <IconButton
-        position="absolute"
-        aria-label="edit"
-        background="transparent"
-        visibility={isGameStage ? 'hidden' : 'visible'}
-        top="0"
-        left="0"
-        size="lg"
-        icon={<ImPencil />}
-        onClick={edit && (() => edit(value))}
-      />
-      <IconButton
-        position="absolute"
-        aria-label="delete"
-        background="transparent"
-        visibility={isGameStage ? 'hidden' : 'visible'}
-        top="0"
-        right="0"
-        size="lg"
-        icon={<CloseIcon />}
-        onClick={deleteCard && (() => deleteCard(value))}
-      />
+        </Text>
+      ) : undefined}
     </Stack>
   );
 };

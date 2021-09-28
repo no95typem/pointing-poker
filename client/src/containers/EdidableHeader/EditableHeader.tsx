@@ -16,11 +16,13 @@ import {
   Stack,
   Heading,
   ButtonGroup,
+  Box,
 } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
 import { ISessionNameHandling } from '../../../../shared/types/session/name';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
+import { LockIcon } from '@chakra-ui/icons';
 
 const EditableHeader = (props: ISessionNameHandling) => {
   const { name, changeValue, isPlayerDealer } = props;
@@ -47,20 +49,29 @@ const EditableHeader = (props: ISessionNameHandling) => {
       p="10px"
       opacity={isSynced ? 1 : 0.5}
     >
-      <Heading size="md" maxW="300px" isTruncated>
-        {value}
-      </Heading>
+      <Box position="relative" maxW="80%" h="40px">
+        <Heading size="md" w="100%" h="100%" lineHeight="40px" isTruncated>
+          {value}
+        </Heading>
+        {isPlayerDealer && (
+          <IconButton
+            aria-label="edit"
+            background="transparent"
+            position="absolute"
+            right="-40px"
+            top="50%"
+            style={{ transform: 'translateY(-50%)' }}
+            size="sm"
+            icon={isSynced ? <ImPencil /> : <LockIcon />}
+            onClick={onOpen}
+            opacity="0.6"
+            _hover={{
+              opacity: 1,
+            }}
+          />
+        )}
+      </Box>
 
-      <IconButton
-        top="0"
-        right="0"
-        aria-label="edit"
-        background="transparent"
-        visibility={isPlayerDealer && isSynced ? 'visible' : 'hidden'}
-        size="md"
-        icon={<ImPencil />}
-        onClick={onOpen}
-      />
       {!isSynced && <ChakraLoader />}
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -75,7 +86,7 @@ const EditableHeader = (props: ISessionNameHandling) => {
               onChange={setTopicView}
             >
               <EditablePreview />
-              <EditableInput />
+              <EditableInput maxLength={30} />
             </Editable>
           </ModalBody>
 
