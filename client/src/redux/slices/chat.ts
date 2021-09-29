@@ -6,6 +6,7 @@ import { notifSlice } from './notifications';
 const initialState = {
   isVisible: false,
   typedText: '',
+  unreadCount: 0,
 } as Chat;
 
 export const chatSlice = createSlice({
@@ -17,6 +18,18 @@ export const chatSlice = createSlice({
     },
     setChatTypedText(state, action) {
       state.typedText = action.payload;
+    },
+    increaseUnreadCount(state) {
+      return {
+        ...state,
+        unreadCount: state.unreadCount + 1,
+      };
+    },
+    resetUnreadCount(state) {
+      return {
+        ...state,
+        unreadCount: 0,
+      };
     },
   },
 });
@@ -34,6 +47,9 @@ export const tryToToggleChatState = createAsyncThunk(
           needToShow: true,
         }),
       );
-    } else thunkAPI.dispatch(chatSlice.actions.toggleChatState());
+    } else {
+      thunkAPI.dispatch(chatSlice.actions.toggleChatState());
+      thunkAPI.dispatch(chatSlice.actions.resetUnreadCount());
+    }
   },
 );

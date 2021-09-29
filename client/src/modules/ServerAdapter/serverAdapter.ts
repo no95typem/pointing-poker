@@ -20,6 +20,7 @@ import { removeError, setErrorByKey } from '../../redux/slices/errors';
 import { removeLoad, setGLoadByKey } from '../../redux/slices/loads';
 import { store } from '../../redux/store';
 import { sessionSlice, setSynced } from '../../redux/slices/session';
+import { chatSlice } from '../../redux/slices/chat';
 import { SessionState } from '../../../../shared/types/session/state/session-state';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
@@ -313,6 +314,7 @@ class ServerAdapter {
     const state = store.getState();
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
     const { command, update } = msg.body;
+    const { isVisible } = state.chat;
 
     switch (command) {
       case 'A':
@@ -324,6 +326,13 @@ class ServerAdapter {
             delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
           }
         });
+
+        if (isVisible) {
+          Object.assign(chat.msgs, update);
+        } else {
+          store.dispatch(chatSlice.actions.increaseUnreadCount());
+          Object.assign(chat.msgs, update);
+        }
         Object.assign(chat.msgs, update);
         break;
       case 'D':

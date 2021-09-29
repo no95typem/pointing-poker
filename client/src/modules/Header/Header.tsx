@@ -17,6 +17,8 @@ import {
   PopoverContent,
   PopoverBody,
   Button,
+  Badge,
+  Box,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
@@ -35,6 +37,7 @@ export const Header = (): JSX.Element => {
   };
 
   const sessionState = useTypedSelector(state => state.session);
+  const { unreadCount } = useTypedSelector(state => state.chat);
 
   return (
     <Flex
@@ -56,12 +59,24 @@ export const Header = (): JSX.Element => {
         <Spacer />
         <ColorModeSwitcher justifySelf="flex-end" />
         <Spacer />
-        <IconButton
-          style={{ marginInlineStart: '0px' }}
-          aria-label="chat"
-          icon={<ChatIcon />}
-          onClick={toggleChat}
-        />
+        <Box position="relative">
+          <IconButton
+            style={{ marginInlineStart: '0px' }}
+            aria-label="chat"
+            icon={<ChatIcon />}
+            onClick={toggleChat}
+          />
+          <Badge
+            pos="absolute"
+            right="0px"
+            top="0px"
+            borderRadius="base"
+            colorScheme={unreadCount > 0 ? 'orange' : undefined}
+            fontSize="x-small"
+          >
+            {unreadCount}
+          </Badge>
+        </Box>
         <Spacer />
 
         <Popover>
