@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import '@fontsource/architects-daughter';
 
-import { ChakraProvider, Grid, ColorModeScript } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, Box, Flex } from '@chakra-ui/react';
 import { Header } from '../Header/Header';
 import { Routes } from '../Routes/Routes';
 import { Footer } from '../Footer/Footer';
@@ -16,7 +16,7 @@ export const App = () => {
     document.body.style.width = '100%';
     document.body.style.overflowX = 'hidden';
     html.style.overflowX = 'hidden';
-    html.style.width = '100vw';
+    html.style.width = '100%';
   });
 
   return (
@@ -24,17 +24,24 @@ export const App = () => {
       <ColorModeScript />
       <ChakraProvider theme={theme}>
         <ServerBoundary>
-          <Grid
-            minH="100vh"
-            maxW="100%"
-            templateRows="50px 1fr 50px"
+          <Flex
+            h="100vh"
+            w="100%"
+            overflow="hidden"
             alignItems="center"
+            direction="column"
           >
-            <Header />
-            <Routes />
-            <Footer />
+            <Box h="50px" w="100%">
+              <Header />
+            </Box>
+            <Box h="calc(100% - 100px)" w="100%">
+              <Routes />
+            </Box>
+            <Box h="50px" w="100%">
+              <Footer />
+            </Box>
             <Chat />
-          </Grid>
+          </Flex>
         </ServerBoundary>
       </ChakraProvider>
     </>

@@ -42,8 +42,8 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
       position="relative"
       direction="row"
       align="center"
-      justify="space-between"
-      maxW="280px"
+      justify={['space-evenly', 'space-between']}
+      maxW="320px"
       mb="20px"
     >
       <Button
@@ -67,6 +67,7 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
         colorScheme="facebook"
         w="130px"
         p="0 10px"
+        style={{ marginInlineStart: '0' }}
         variant="solid"
         visibility={
           roundState === ROUND_STATES.AWAIT_START || isLoading
@@ -75,7 +76,7 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
         }
         onClick={changeRoundState}
       >
-        {roundState === ROUND_STATES.ENDED ? ' Next Issue' : 'End Round'}
+        {roundState === ROUND_STATES.ENDED ? 'Close Issue' : 'Finish Round'}
       </Button>
       ){isLoading && <ChakraLoader />}
     </Stack>

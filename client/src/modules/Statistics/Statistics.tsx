@@ -1,48 +1,151 @@
-import React from 'react';
-import { Box, Stack, StackDivider } from '@chakra-ui/react';
-import RoundStatistics from '../../components/RoundStatistics/RoundStatistics';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useMediaQuery,
+} from '@chakra-ui/react';
 import { useTypedSelector } from '../../redux/store';
-import { IRoundStatistics } from '../../components/RoundStatistics/RoundStatistics';
 import EditableHeader from '../../containers/EdidableHeader/EditableHeader';
-import UseSessionData from '../../hooks/useSessionData';
+import useSessionData from '../../hooks/useSessionData';
 
-import { MAX_CONTENT_WIDTH } from '../../constants';
+import { FIXED_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
+import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
+import { FaSave } from 'react-icons/fa';
+import { ImExit } from 'react-icons/im';
+import { useEffect } from 'react';
+import { useRedirectionToError } from '../../hooks/useRedirectionToError';
+import { ReactComponent as UndrawEmpty } from '../../assets/images/undraw/empty.svg';
+import { ReactComponent as UndrawStatistics } from '../../assets/images/undraw/statistics.svg';
+import { ReactComponent as UndrawProgressData } from '../../assets/images/undraw/progress-data.svg';
+import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
+import { saveObjToWb } from '../../helpers/saveState';
 
 const Statistics = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
+  const sessionData = useSessionData(session);
+  const throwError = useRedirectionToError();
+  const [isLargerThan575] = useMediaQuery('(min-width: 575px)');
 
-  const sessionData = UseSessionData(session);
+  useEffect(() => {
+    if (!sessionData) throwError();
+  });
 
   if (!sessionData) return <></>;
 
   const { sessionNameData } = sessionData;
-
   const issuesList = session.issues.list;
+  const isIssueWithStat = issuesList.some(iss => iss.stat);
 
   return (
-    <Box maxW={MAX_CONTENT_WIDTH} w="100%" maxH="100%" m="0 auto" p="5px">
+    <Flex
+      maxW={MAX_CONTENT_WIDTH}
+      w="100%"
+      h="100%"
+      direction="column"
+      justifyContent="flex-start"
+      align="center"
+      position="relative"
+    >
+      <Box
+        position="absolute"
+        bottom="10px"
+        right="10px"
+        height="auto"
+        w="230px"
+        // width="calc(30% - 10px)"
+        zIndex="1"
+        opacity="0.9"
+      >
+        <UndrawProgressData></UndrawProgressData>
+      </Box>
+
       <EditableHeader {...sessionNameData} />
 
-      <Stack
-        mt="20px"
-        spacing={1}
-        justify="center"
-        divider={<StackDivider borderColor="gray.400" />}
+      <Flex
+        gridGap="4"
+        p={4}
+        w="90%"
+        justify={isLargerThan575 ? 'flex-end' : 'center'}
+        position="relative"
       >
-        {issuesList.map(issue => {
-          if (issue.stat) {
-            const issueData: IRoundStatistics = {
-              issueTitle: issue.title,
-              votes: issue.stat.votes,
-            };
+        {isLargerThan575 && (
+          <Box position="absolute" left="0%" top="0%">
+            <UndrawStatistics height="100px" />
+          </Box>
+        )}
 
-            return <RoundStatistics {...issueData} key={issue.title} />;
-          }
+        <Flex gridGap="4">
+          {isIssueWithStat && (
+            <Button
+              w={FIXED_BUTTON_WIDTH}
+              rightIcon={
+                <FaSave style={{ position: 'relative', top: '1px' }} />
+              }
+              onClick={() => {
+                saveObjToWb(
+                  session as unknown as Record<string, unknown>,
+                  `pp-${session.name.value}.xslx`,
+                );
+              }}
+            >
+              Save
+            </Button>
+          )}
+          <Button
+            w={FIXED_BUTTON_WIDTH}
+            rightIcon={<ImExit style={{ position: 'relative', top: '2px' }} />}
+            onClick={SERVER_ADAPTER.dang_reset}
+          >
+            Exit
+          </Button>
+        </Flex>
+      </Flex>
 
-          return null;
-        })}
-      </Stack>
-    </Box>
+      <Flex
+        h="80%"
+        direction="column"
+        align="center"
+        justify="center"
+        gridGap={4}
+      >
+        {isIssueWithStat ? (
+          <>
+            <Heading as="h3" fontFamily="handwrite">
+              Results:
+            </Heading>
+            <Box
+              borderWidth="2px"
+              borderRadius="md"
+              boxShadow="xl"
+              padding="4"
+              maxW="90%"
+              maxH="90%"
+            >
+              <StatisticsTable
+                issues={issuesList}
+                cards={session.gSettings.cards}
+                units={session.gSettings.scoreTypeShort}
+              />
+            </Box>
+          </>
+        ) : (
+          <>
+            <Text
+              fontFamily="handwrite"
+              fontWeight="bold"
+              fontSize="xl"
+              p="10"
+              textAlign="center"
+            >
+              Unfortunelly your team not voted for any issue.
+            </Text>
+            <UndrawEmpty width="70%" />
+          </>
+        )}
+      </Flex>
+    </Flex>
   );
 };
 
