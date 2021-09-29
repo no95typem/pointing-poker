@@ -13,7 +13,8 @@ const testCardsData: CardData[] = [
   { value: '1' },
   { value: '2' },
   { value: '3' },
-  { value: '4' },
+  { value: 'Unknown', base64: '<img>' },
+  { value: 'Unknown longgggggggggggggggggggggg', base64: '<img>' },
 ];
 
 export const defaultSettings: ISettings = {
@@ -23,7 +24,7 @@ export const defaultSettings: ISettings = {
   isPlayerCanReselectCard: true,
   isTimerNeeded: true,
   scoreType: 'story points',
-  scoreTypeShort: 'SP',
+  scoreTypeShort: 'SPxxxxxxxxxxxxxxxxxxxxxxx',
   roundTime: 15000,
   cards: testCardsData, //placeholder
   cardBackType: '',
@@ -71,7 +72,7 @@ const sampleMember: Member = {
 export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
   clientId: 0,
-  name: { value: 'Session 12345', isSynced: false },
+  name: { value: 'Session 12345', isSynced: true },
   stage: SESSION_STAGES.STATS,
   members: {
     0: sampleMember,
@@ -116,7 +117,8 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
     list: [
       {
         id: 0,
-        title: 'title 1',
+        title:
+          'title 1dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
         link: 'link 1',
         closed: true,
         isSynced: true,
@@ -148,7 +150,8 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
       },
       {
         id: 4,
-        title: 'title 5',
+        title: `title 5fffffffffffffffffffffffffffffffffffffffffff
+          ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
         link: 'link 5',
         closed: true,
         isSynced: true,
@@ -165,7 +168,68 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
           },
         },
       },
+      {
+        id: 5,
+        title: `title 6ffffffffffffffffffffffffffffffffffffffffffffff
+          fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
+        link: 'link 6',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+        stat: {
+          pct: {
+            '1': { count: 2, ids: [0, 1] },
+            '2': { count: 1, ids: [2] },
+          },
+          votes: {
+            0: '1',
+            1: '1',
+            2: '2',
+          },
+        },
+      },
+      {
+        id: 6,
+        title: `title 7ffffffffffffffffffffffffffffffffffffffffffffffff
+          fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
+        link: 'link 7',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+        stat: {
+          pct: {
+            '1': { count: 2, ids: [0, 1] },
+            '2': { count: 1, ids: [2] },
+          },
+          votes: {
+            0: '1',
+            1: '1',
+            2: '2',
+          },
+        },
+      },
+      {
+        id: 7,
+        title: `title 8fffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+        ffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
+        link: 'link 8',
+        closed: true,
+        isSynced: true,
+        priority: 'MEDIUM',
+        stat: {
+          pct: {
+            '1': { count: 2, ids: [0, 1] },
+            '2': { count: 1, ids: [2] },
+          },
+          votes: {
+            0: '1',
+            1: '1',
+            2: '2',
+          },
+        },
+      },
     ],
+    // list: [],
     isSynced: true,
   },
 };
