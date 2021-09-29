@@ -1,12 +1,14 @@
 /* eslint max-params: ["warn", 3] */
 
 import WebSocket from 'ws';
+import { calcPercentage } from '../../../shared/helpers/calcs/game-calcs';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
 import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
 import { CSMSG_CIPHERS } from '../../../shared/types/cs-msgs/cs-msg-ciphers';
 import { CSMsgForceKick } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-force-kick';
 import { CSMSGNewConnectionResponse } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-new-connection-response';
+import { CSMSgToggleResultsVisibility } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
 import { CSMsgUpdateState } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
 import { ISessionGameState } from '../../../shared/types/session/state/session-state';
@@ -38,6 +40,7 @@ export class DealerManager extends RoleManager {
         this.handleNewIssue();
         break;
       case CSMSG_CIPHERS.END_GAME:
+        this.handleNewIssue();
         this.api.endSession();
         break;
       case CSMSG_CIPHERS.NEW_CONNECTION_REPSONSE:
@@ -46,10 +49,26 @@ export class DealerManager extends RoleManager {
           (msg as CSMSGNewConnectionResponse).allow,
         );
         break;
+      case CSMSG_CIPHERS.TOGGLE_RESULTS_VISIBILITY:
+        this.handleToggleResultsVisibility(msg as CSMSgToggleResultsVisibility);
+        break;
       default:
         break;
     }
   };
+
+  private handleToggleResultsVisibility(msg: CSMSgToggleResultsVisibility) {
+    const { state } = this.api.getSessionState();
+
+    if (state.game && msg.setIsVisible !== state.game.isResultsVisible) {
+      const game: ISessionGameState = {
+        ...state.game,
+        isResultsVisible: msg.setIsVisible,
+      };
+
+      this.api.updateState({ game });
+    }
+  }
 
   private handleStartRestartRound() {
     const { state } = this.api.getSessionState();
@@ -139,7 +158,13 @@ export class DealerManager extends RoleManager {
         iss => iss.id === state.game?.currIssueId,
       );
 
-      if (oldIssue) oldIssue.closed = true;
+      if (oldIssue) {
+        oldIssue.closed = true;
+        oldIssue.stat = {
+          votes: state.game.votes,
+          pct: calcPercentage(state.game.votes),
+        };
+      }
     }
 
     const nextIssue = issues.list.find(iss => !iss.closed);
@@ -147,6 +172,7 @@ export class DealerManager extends RoleManager {
     const game: ISessionGameState = {
       roundState: ROUND_STATES.AWAIT_START,
       currIssueId: nextIssue?.id,
+      isResultsVisible: false,
       votes: {},
     };
 

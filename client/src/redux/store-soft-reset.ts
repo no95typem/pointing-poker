@@ -8,11 +8,10 @@ const softResetReducer = () => {
 
 const dang_STORE_SOFT_RESET = () => {
   store.replaceReducer(softResetReducer);
-  store.dispatch({ type: 'reset' });
   store.replaceReducer(DEFAULT_REDUCER);
 };
 
 export const dang_APP_SOFT_RESET = () => {
-  SERVER_ADAPTER.exitGame();
+  SERVER_ADAPTER.exitGame(true);
   dang_STORE_SOFT_RESET();
 };

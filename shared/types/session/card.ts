@@ -46,4 +46,5 @@ export interface ICardsData extends ISharedCardData {
 export interface ICardsGame extends ISharedCardData {
   cards: CardData[];
   isPlayerDealer: boolean;
+  isResultsVisible: boolean;
 }

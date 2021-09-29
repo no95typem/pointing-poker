@@ -14,27 +14,17 @@ import { FIXED_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
 import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
 import { FaSave } from 'react-icons/fa';
 import { ImExit } from 'react-icons/im';
-import { useEffect } from 'react';
-import { useRedirectionToError } from '../../hooks/useRedirectionToError';
 import { ReactComponent as UndrawEmpty } from '../../assets/images/undraw/empty.svg';
 import { ReactComponent as UndrawStatistics } from '../../assets/images/undraw/statistics.svg';
 import { ReactComponent as UndrawProgressData } from '../../assets/images/undraw/progress-data.svg';
-import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 import { saveObjToWb } from '../../helpers/saveState';
+import { dang_APP_SOFT_RESET } from '../../redux/store-soft-reset';
 
 const Statistics = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
-  const sessionData = useSessionData(session);
-  const throwError = useRedirectionToError();
   const [isLargerThan575] = useMediaQuery('(min-width: 575px)');
+  const sessionNameData = useSessionData(session)?.sessionNameData;
 
-  useEffect(() => {
-    if (!sessionData) throwError();
-  });
-
-  if (!sessionData) return <></>;
-
-  const { sessionNameData } = sessionData;
   const issuesList = session.issues.list;
   const isIssueWithStat = issuesList.some(iss => iss.stat);
 
@@ -48,20 +38,22 @@ const Statistics = (): JSX.Element => {
       align="center"
       position="relative"
     >
-      <Box
-        position="absolute"
-        bottom="10px"
-        right="10px"
-        height="auto"
-        w="230px"
-        // width="calc(30% - 10px)"
-        zIndex="1"
-        opacity="0.9"
-      >
-        <UndrawProgressData></UndrawProgressData>
-      </Box>
+      {isIssueWithStat && (
+        <Box
+          position="absolute"
+          bottom="10px"
+          right="10px"
+          height="auto"
+          w="230px"
+          // width="calc(30% - 10px)"
+          zIndex="1"
+          opacity="0.9"
+        >
+          <UndrawProgressData></UndrawProgressData>
+        </Box>
+      )}
 
-      <EditableHeader {...sessionNameData} />
+      {sessionNameData ? <EditableHeader {...sessionNameData} /> : <Box />}
 
       <Flex
         gridGap="4"
@@ -70,7 +62,7 @@ const Statistics = (): JSX.Element => {
         justify={isLargerThan575 ? 'flex-end' : 'center'}
         position="relative"
       >
-        {isLargerThan575 && (
+        {isLargerThan575 && isIssueWithStat && (
           <Box position="absolute" left="0%" top="0%">
             <UndrawStatistics height="100px" />
           </Box>
@@ -96,7 +88,7 @@ const Statistics = (): JSX.Element => {
           <Button
             w={FIXED_BUTTON_WIDTH}
             rightIcon={<ImExit style={{ position: 'relative', top: '2px' }} />}
-            onClick={SERVER_ADAPTER.dang_reset}
+            onClick={dang_APP_SOFT_RESET}
           >
             Exit
           </Button>
