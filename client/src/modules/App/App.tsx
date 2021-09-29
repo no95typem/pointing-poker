@@ -28,6 +28,7 @@ export const App = () => {
             h="100vh"
             w="100%"
             overflow="hidden"
+            templateRows="50px 1fr 50px"
             alignItems="center"
             direction="column"
           >
