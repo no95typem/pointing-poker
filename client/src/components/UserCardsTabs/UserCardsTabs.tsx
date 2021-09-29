@@ -8,7 +8,9 @@ import { IUserCards } from '../../../../shared/types/session/member';
 const UserCardsTabs = (props: IUserCards): JSX.Element => {
   return (
     <Tabs isManual variant="enclosed" mb="10px">
-      <TabList>
+      <TabList
+        justifyContent={['center', 'center', 'center', 'center', 'flex-start']}
+      >
         <Tab>Players only</Tab>
         <Tab>All Users</Tab>
       </TabList>

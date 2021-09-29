@@ -177,6 +177,7 @@ const useSessionData = (
     isPlayerDealer,
     gameState: sessionData.game,
     issuesDndChange,
+    settings: sessionData.gSettings,
   };
 
   const gameData: ICardsGame = {

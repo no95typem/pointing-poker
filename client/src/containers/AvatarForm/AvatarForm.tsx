@@ -64,7 +64,7 @@ const AvatarForm = () => {
           style={{ marginInlineStart: '0px' }}
         />
         <IconButton
-          aria-label="delete an avatar"
+          aria-label="upload an avatar"
           icon={<FaTrash />}
           onClick={deleteAvatar}
           disabled={avatarBase64 === ''}

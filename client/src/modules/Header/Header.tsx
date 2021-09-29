@@ -1,4 +1,3 @@
-import XLSX from 'xlsx';
 import { ChatIcon, HamburgerIcon } from '@chakra-ui/icons';
 
 import logo from '../../assets/images/shared/logo.svg';
@@ -24,9 +23,9 @@ import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeS
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
 import { loadFiles } from '../../helpers/loadFiles';
-import { deepObjToWorkbook } from '../../helpers/deep-obj-wb-converters';
 import { tryLoadSessionFromFile } from '../../redux/slices/session';
 import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
+import { saveObjToWb } from '../../helpers/saveState';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -104,12 +103,10 @@ export const Header = (): JSX.Element => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const wb = deepObjToWorkbook({
-                      obj: sessionState as unknown as Record<string, unknown>,
-                      name: '',
-                      copy: true,
-                    });
-                    XLSX.writeFile(wb, 'pp-session.xlsx');
+                    saveObjToWb(
+                      sessionState as unknown as Record<string, unknown>,
+                      `pp-${sessionState.name.value}.xslx`,
+                    );
                   }}
                 >
                   save xlsx

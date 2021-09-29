@@ -9,6 +9,7 @@ import {
   Tabs,
 } from '@chakra-ui/react';
 import { Droppable } from 'react-beautiful-dnd';
+
 import { Issue } from '../../../../../../shared/types/session/issue/issue';
 
 export interface IIssuesTabs {
@@ -28,7 +29,7 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
 
   const IssueStackWrapStyle: ChakraProps = {
     maxH: '280px',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     p: '10px 0 20px',
   };
 
@@ -40,8 +41,8 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
   };
 
   return (
-    <Tabs isManual variant="enclosed" mb="10px">
-      <TabList>
+    <Tabs variant="enclosed" colorScheme="facebook" mb="10px">
+      <TabList justifyContent={['center', 'center', 'center', 'flex-start']}>
         <Tab>Active Issues</Tab>
         <Tab>Closed Issues</Tab>
       </TabList>

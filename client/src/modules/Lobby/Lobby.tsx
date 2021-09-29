@@ -51,17 +51,22 @@ const Lobby = (): JSX.Element => {
       <EditableHeader {...sessionNameData} />
       <Stack
         direction="row"
-        justify={['center', 'space-between']}
+        justify={['center', 'center', 'center', 'space-between']}
         align="center"
         wrap="wrap"
-        style={{ gap: '15px' }}
+        style={{ gap: '2vw' }}
       >
         <DealerPlate dealerMemberData={dealerData} />
         <JoinGameLink link={`${window.location}`} />
         <GameControlButtons {...gameStateLobby} />
       </Stack>
       <UserCardsTabs {...membersData} />
-      <Stack direction="row" wrap="wrap" justify={['center', 'space-between']}>
+      <Stack
+        direction="row"
+        wrap="wrap"
+        style={{ gap: '1vw' }}
+        justify={['center', 'center', 'center', 'center', 'space-between']}
+      >
         <IssueCards {...issuesData} />
         {isPlayerDealer && <SettingsTabs {...settingsData} />}
       </Stack>

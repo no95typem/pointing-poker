@@ -21,6 +21,7 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     newIssueId,
     isPlayerDealer,
     gameState,
+    settings,
   } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,7 +56,6 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
   };
 
   const openStatisticModal = (issueId: number): void => {
-    console.log('hellllo', issueId);
     findIssue(issueId);
 
     openStatistic();
@@ -76,6 +76,9 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     isOpen: isStaticticOpen,
     onClose: closeStatistic,
     activeIssue,
+    settings,
+    changeIssue,
+    addNewIssue: setNewIssue,
   };
 
   const modalData: IIssueModal = {
@@ -91,6 +94,8 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     statisticModal,
     issuesDndChange,
   };
+
+  console.log(issues);
 
   return <IssueCardsView issues={issues} modal={modalData} />;
 };

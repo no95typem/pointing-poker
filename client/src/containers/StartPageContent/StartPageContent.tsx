@@ -38,7 +38,7 @@ const StartPageContent = ({
   };
 
   return (
-    <Flex align="center" justify="center" padding="2">
+    <Flex align="center" justify="center" padding="2" h="100%" w="100%">
       <Flex
         maxW={MAX_CONTENT_WIDTH}
         w="100%"

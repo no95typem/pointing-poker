@@ -44,7 +44,12 @@ const Game = (): JSX.Element => {
     <Box maxW="1440px" w="90%" m="0 auto" p="5px" alignSelf="flex-start">
       <EditableHeader {...sessionNameData} />
 
-      <Stack direction="row" justify="space-between" align="center">
+      <Stack
+        direction="row"
+        justify={['center', 'center', 'center', 'space-between']}
+        align="center"
+        wrap="wrap"
+      >
         <DealerPlate dealerMemberData={dealerData} />
         {isRoundStarted && <GameTimer />}
         <GameControlButtons {...gameStateData} />

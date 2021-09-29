@@ -2,6 +2,7 @@ import { IssuePriority } from './issue-priority';
 import { RoundStat } from '../round/round-stat';
 import { Synchronized } from '../../syncable';
 import { ISessionGameState, ISessionIssues } from '../state/session-state';
+import { ISettings } from '../../settings';
 
 export interface Issue extends Synchronized {
   [key: string]:
@@ -14,6 +15,7 @@ export interface Issue extends Synchronized {
   id: number;
   title: string;
   link: string;
+  value?: string;
   priority: IssuePriority;
   closed: boolean;
   stat?: RoundStat;
@@ -33,6 +35,7 @@ export interface IIssuesData {
   addNewIssue: (issue: Issue) => void;
   removeIssue: (id: number) => void;
   issuesDndChange: (from: number, to: number) => void;
+  settings: ISettings;
   newIssueId: number;
   isPlayerDealer: boolean;
 }
@@ -40,10 +43,10 @@ export interface IIssuesData {
 export interface IIssueModal {
   gameState?: ISessionGameState;
   openModal: (id?: number) => void;
+  removeIssue: (id: number) => void;
   onClose: () => void;
   changeIssue: (issue: Issue) => void;
   addNewIssue: (issue: Issue) => void;
-  removeIssue: (id: number) => void;
   issuesDndChange: (from: number, to: number) => void;
   activeIssue: Issue;
   isOpen: boolean;
@@ -61,8 +64,11 @@ export interface IIssueModalData {
 }
 
 export interface IStatisticModal {
-  onOpen: (issueId: number) => void;
-  isOpen: boolean;
-  onClose: () => void;
   activeIssue: Issue;
+  settings: ISettings;
+  onOpen: (issueId: number) => void;
+  onClose: () => void;
+  changeIssue: (issue: Issue) => void;
+  addNewIssue: (issue: Issue) => void;
+  isOpen: boolean;
 }

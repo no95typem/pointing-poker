@@ -140,11 +140,19 @@ const ConnectPopup = ({
                 3. Check your role for this session:
               </FormLabel>
               {forDealer ? (
-                <Flex alignItems="center">
-                  <Text fontFamily="handwrite" fontWeight="bold">
+                <Flex alignItems="center" justify="space-between" gridGap={8}>
+                  <Text
+                    fontFamily="handwrite"
+                    fontWeight="bold"
+                    fontSize="lg"
+                    textDecor="underline"
+                  >
                     You will be a dealer!
                   </Text>
-                  <UndrawBusinessDecisions width="70%" />
+                  <UndrawBusinessDecisions
+                    width="100%"
+                    style={{ maxWidth: '380px' }}
+                  />
                 </Flex>
               ) : (
                 <Flex alignItems="center" wrap="wrap" position="relative">
