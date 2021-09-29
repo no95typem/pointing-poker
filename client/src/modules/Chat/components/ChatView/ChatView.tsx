@@ -7,6 +7,7 @@ import {
   Member,
 } from '../../../../../../shared/types/session/member';
 import { MAX_CHAT_ENTRIES } from '../../../../../../shared/const';
+import './ChatView.scss';
 
 export const ChatView = () => {
   const sessionData = useTypedSelector(state => state.session);
@@ -67,6 +68,7 @@ export const ChatView = () => {
       width="100%"
       height="100%"
       overflow="auto"
+      className="chat-view"
     >
       {/* {msgEntries.length === 0 && <Text>No messages</Text>} */}
       {msgEntries.slice(-MAX_CHAT_ENTRIES).map(([key, msg]) => {
@@ -75,7 +77,7 @@ export const ChatView = () => {
         return (
           <Flex
             key={key}
-            direction={memberData.isItYou ? 'row-reverse' : 'row'}
+            direction={memberData.isItYou ? 'row' : 'row-reverse'}
             width="100%"
             gridGap="2"
           >
@@ -87,6 +89,7 @@ export const ChatView = () => {
               maxW="100%"
               borderRadius="md"
               position="relative"
+              backgroundColor={memberData.isItYou ? 'gray.300' : 'inherit'}
             >
               <Text fontSize="x-small">{convertTime(msg.time)}</Text>
               <Text>{msg.text}</Text>

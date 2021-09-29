@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Button, Flex, Textarea } from '@chakra-ui/react';
 import { useTypedSelector, useAppDispatch } from '../../../../redux/store';
 import { chatSlice } from '../../../../redux/slices/chat';
+import './MessageInputBox.scss';
 import { SERVER_ADAPTER } from '../../../ServerAdapter/serverAdapter';
 
 const { setChatTypedText } = chatSlice.actions;
@@ -9,13 +10,13 @@ const { setChatTypedText } = chatSlice.actions;
 const autoGrow = (textarea: HTMLTextAreaElement) => {
   if (textarea.scrollHeight > textarea.clientHeight) {
     if (textarea.clientHeight < 120) {
-      textarea.style.overflow = 'hidden';
+      textarea.style.overflowY = 'scroll';
       textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
     } else {
       textarea.style.removeProperty('overflow');
     }
   } else {
-    textarea.style.removeProperty('overflow');
+    textarea.style.removeProperty('overflowY');
     textarea.style.removeProperty('height');
     setTimeout(() => autoGrow(textarea));
   }
@@ -26,19 +27,23 @@ export const MessageInputBox = () => {
   const dispatch = useAppDispatch();
 
   const handleSend = () => {
-    SERVER_ADAPTER.sendChatMsg(typedText);
+    if (typedText.trim()) {
+      SERVER_ADAPTER.sendChatMsg(typedText);
+    }
     dispatch(setChatTypedText(''));
+    ref.current.focus();
   };
 
   const ref = useRef<HTMLTextAreaElement>(null!);
 
   useEffect(() => {
     const textarea = ref.current;
-    textarea.style.overflow = 'hidden';
+    textarea.style.overflowY = 'scroll';
 
     const listener = () => autoGrow(textarea);
 
     textarea.addEventListener('keyup', listener);
+    // ref.current.focus();
 
     return () => {
       textarea.removeEventListener('keyup', listener);
@@ -54,9 +59,10 @@ export const MessageInputBox = () => {
         height="40px"
         value={typedText}
         onChange={e => dispatch(setChatTypedText(e.target.value))}
-        overflow="hidden"
+        overflow-y="scroll"
         resize="none"
         borderColor="gray.300"
+        className="message-input"
         onKeyPress={e => {
           if (e.key === 'Enter' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
             e.preventDefault();
