@@ -74,7 +74,6 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
 
     return (
       <Stack
-        opacity={issue.closed ? '0.5' : '1'}
         bg={issue.closed ? 'gray.400' : 'unset'}
         w="280px"
         style={{

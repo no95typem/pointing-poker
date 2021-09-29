@@ -1,6 +1,5 @@
-//  Kaesid - Дефолтный дизайн карт мне не нравится, свой я еще не придумал. Так что, пока заглушка.
-
-import { Stack, IconButton, Text, Image } from '@chakra-ui/react';
+import React from 'react';
+import { Stack, IconButton, Text, Image, Tooltip } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
 import { CloseIcon } from '@chakra-ui/icons';
@@ -8,7 +7,7 @@ import { CloseIcon } from '@chakra-ui/icons';
 import { ICardData } from '../../../../shared/types/session/card';
 
 const GameCard = (props: ICardData): JSX.Element => {
-  const { card, edit, units, deleteCard, isGameStage } = props;
+  const { card, edit, units, deleteCard, isGameStage, isUnitsHidden } = props;
 
   const { value, base64 } = card;
 
@@ -40,63 +39,66 @@ const GameCard = (props: ICardData): JSX.Element => {
     props.size === 'xs' ? { fontSize: 'xs', mt: '0' } : { size: 'lg' };
 
   return (
-    <Stack
-      position="relative"
-      direction="column"
-      justify="center"
-      align="center"
-      {...stackStyles}
-    >
-      {!isGameStage && (
-        <>
-          <IconButton
-            position="absolute"
-            aria-label="edit"
-            background="transparent"
-            top="0"
-            left="0"
-            size="lg"
-            icon={<ImPencil />}
-            onClick={edit && (() => edit(value))}
-          />
-          <IconButton
-            position="absolute"
-            aria-label="delete"
-            background="transparent"
-            top="0"
-            right="0"
-            size="lg"
-            icon={<CloseIcon />}
-            onClick={deleteCard && (() => deleteCard(value))}
-          />
-        </>
-      )}
-
-      <Text
-        fontStyle="italic"
-        fontWeight="bold"
-        maxW="90%"
-        isTruncated
-        {...valueStyles}
+    <Tooltip label={value} aria-label="Card value" openDelay={500}>
+      <Stack
+        position="relative"
+        direction="column"
+        justify="center"
+        align="center"
+        {...stackStyles}
       >
-        {value}
-      </Text>
-      {base64 ? (
-        <Image src={base64} />
-      ) : props.isUnitsShown ? (
+        {!isGameStage && (
+          <>
+            <IconButton
+              position="absolute"
+              aria-label="edit"
+              background="transparent"
+              top="0"
+              left="0"
+              size="lg"
+              icon={<ImPencil />}
+              onClick={edit && (() => edit(value))}
+            />
+            <IconButton
+              position="absolute"
+              aria-label="delete"
+              background="transparent"
+              top="0"
+              right="0"
+              size="lg"
+              icon={<CloseIcon />}
+              onClick={deleteCard && (() => deleteCard(value))}
+            />
+          </>
+        )}
+
         <Text
           fontStyle="italic"
-          pos="absolute"
-          bottom="10px"
+          fontWeight="bold"
           maxW="90%"
-          h="1rem"
           isTruncated
-          {...unitsSizeStyles}
+          {...valueStyles}
         >
-          {units}
+          {value}
         </Text>
-      ) : undefined}
-    </Stack>
+        {base64 ? (
+          <Image style={{ marginTop: '0' }} src={base64} />
+        ) : isUnitsHidden ? undefined : (
+          <Text
+            fontStyle="italic"
+            pos="absolute"
+            bottom="10%"
+            maxW="90%"
+            h="2rem"
+            style={{ marginTop: '0' }}
+            isTruncated
+            {...unitsSizeStyles}
+          >
+            {units}
+          </Text>
+        )}
+      </Stack>
+    </Tooltip>
   );
 };
 

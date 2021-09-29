@@ -6,7 +6,7 @@ import { QuestionIcon } from '@chakra-ui/icons';
 import { useTypedSelector } from '../../redux/store';
 import GameCard from '../../components/GameCard/GameCard';
 import { ISettings } from '../../../../shared/types/settings';
-import { CardData } from '../../../../shared/types/session/card';
+import { ICardData } from '../../../../shared/types/session/card';
 
 interface IVote {
   id: number;
@@ -23,11 +23,24 @@ const UserVote = (props: IVote): JSX.Element => {
 
   const { cards, scoreTypeShort } = settings;
 
-  let card: CardData | undefined;
+  const renderVotingResults = (): JSX.Element => {
+    const card =
+      game && game.votes
+        ? cards.find(card => card.value === game.votes[id])
+        : undefined;
 
-  !game || !game.votes
-    ? (card = undefined)
-    : (card = cards.find(card => card.value === game.votes[id]));
+    if (!card) return <QuestionIcon color="facebook.300" w={6} h={6} />;
+
+    const cardData: ICardData = {
+      card,
+      units: scoreTypeShort,
+      isGameStage: true,
+      isUnitsHidden: true,
+      size: 'xs',
+    };
+
+    return <GameCard {...cardData} />;
+  };
 
   return (
     <Stack
@@ -39,11 +52,7 @@ const UserVote = (props: IVote): JSX.Element => {
       boxShadow="lg"
       style={{ marginInlineStart: '0' }}
     >
-      {card ? (
-        <GameCard card={card} units={scoreTypeShort} isGameStage={true} />
-      ) : (
-        <QuestionIcon color="facebook.300" w={6} h={6} />
-      )}
+      {renderVotingResults()}
     </Stack>
   );
 };

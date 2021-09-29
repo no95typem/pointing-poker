@@ -31,6 +31,7 @@ const GameCardStatistics = (props: IGameCardStatistics): JSX.Element => {
     card: currentCard,
     units: scoreTypeShort,
     isGameStage: true,
+    isUnitsHidden: true,
   };
 
   return (

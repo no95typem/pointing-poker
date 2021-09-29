@@ -12,23 +12,27 @@ const NewIssuesButtons = (props: INewIssueModal): JSX.Element => {
 
   return (
     <Stack
+      position="relative"
       direction="row"
       align="center"
-      justify="space-between"
-      wrap="wrap"
-      style={{ gap: '20px', marginBottom: '10px' }}
+      justify={['space-evenly', 'space-between']}
+      maxW="320px"
+      mb="20px"
     >
       <Button
         colorScheme="facebook"
         w="130px"
+        p="0 10px"
         variant="outline"
         onClick={showIssueImportDialog}
       >
         Upload issues
       </Button>
+
       <Button
         colorScheme="facebook"
         w="130px"
+        p="0 10px"
         variant="solid"
         style={{ marginInlineStart: '0' }}
         onClick={modal}

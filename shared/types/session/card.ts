@@ -30,7 +30,7 @@ export interface ICardModalData {
 export interface ICardData extends ISharedCardData {
   card: CardData;
   size?: 'xs' | 'xl';
-  isUnitsShown?: boolean;
+  isUnitsHidden?: boolean;
   deleteCard?: (value: string) => void;
   edit?: (id?: string) => void;
 }

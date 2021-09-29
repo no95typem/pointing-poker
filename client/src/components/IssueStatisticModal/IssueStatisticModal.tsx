@@ -9,19 +9,50 @@ import {
   ModalCloseButton,
   Link,
   Text,
+  Select,
+  Stack,
 } from '@chakra-ui/react';
-import { IStatisticModal } from '../../../../shared/types/session/issue/issue';
-import RoundStatistics from '../RoundStatistics/RoundStatistics';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
-const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
-  const { isOpen, onClose, activeIssue } = props;
+import { IStatisticModal } from '../../../../shared/types/session/issue/issue';
 
-  const { link, stat, title } = activeIssue;
+import RoundStatistics from '../RoundStatistics/RoundStatistics';
+import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
+
+const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
+  const { isOpen, onClose, activeIssue, settings, changeIssue, addNewIssue } =
+    props;
+
+  const { link, stat, title, value } = activeIssue;
+
+  console.log(settings);
+
+  console.log(activeIssue);
+
+  // if(!activeIssue.)
+
+  // const card = gameCards.find(
+  //   card => card.value === activeIssue.stat?.votes[0],
+  // );
+
+  const setIssueValue = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const select = e.target;
+
+    const issue = OBJ_PROCESSOR.deepClone({
+      ...activeIssue,
+      [select.name]: select.value,
+    });
+
+    changeIssue(issue);
+
+    addNewIssue(issue);
+  };
+
+  const votes = activeIssue.stat ? Object.values(activeIssue.stat.votes) : [];
 
   const renderStatistic = (): JSX.Element => {
     return stat ? (
-      <RoundStatistics issueTitle={title} votes={stat.votes} />
+      <RoundStatistics issueTitle={title} votes={stat.votes} /> //TODO Kaesid: прокинуть  settings в GameCardStatistics
     ) : (
       <Text textAlign="center">Voting has not concluded. </Text>
     );
@@ -40,7 +71,30 @@ const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
               Issue description: <ExternalLinkIcon mx="2px" />
             </Link>
           )}
-
+          {!!votes.length && (
+            <Stack
+              direction="row"
+              justify="center"
+              spacing={5}
+              align="center"
+              wrap="wrap"
+              mb="20px"
+            >
+              <Text>Select issue`s value:</Text>
+              <Select
+                maxW="200px"
+                value={value}
+                name="value"
+                onChange={setIssueValue}
+              >
+                {votes.map(vote => (
+                  <option key={vote} value={vote}>
+                    {vote}
+                  </option>
+                ))}
+              </Select>
+            </Stack>
+          )}
           {renderStatistic()}
         </ModalBody>
       </ModalContent>

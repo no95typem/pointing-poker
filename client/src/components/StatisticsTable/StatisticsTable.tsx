@@ -19,7 +19,9 @@ const renderStat = (props: {
   units: string;
 }) => {
   const { stat, cards, units } = props;
+
   const votesCount = Object.keys(stat.votes).length;
+
   const pctEntries = Object.entries(stat.pct);
 
   return (
@@ -27,7 +29,8 @@ const renderStat = (props: {
       {pctEntries
         .sort((a, b) => b[1].count - a[1].count)
         .map(([cardVal, rec]) => {
-          const cardData = cards[+cardVal];
+          const cardData = cards.find(card => card.value === cardVal);
+
           const percent = ((rec.count / votesCount) * 100).toFixed(0);
 
           return (
@@ -40,7 +43,13 @@ const renderStat = (props: {
               gridGap="1"
             >
               {cardData ? (
-                <GameCard card={cardData} units={units} size="xs" isGameStage />
+                <GameCard
+                  card={cardData}
+                  units={units}
+                  isGameStage
+                  size="xs"
+                  isUnitsHidden
+                />
               ) : (
                 <QuestionOutlineIcon />
               )}

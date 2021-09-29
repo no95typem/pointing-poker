@@ -12,8 +12,8 @@ import {
   Select,
   Stack,
   Input,
-  FormControl,
-  FormLabel,
+  Text,
+  ChakraProps,
 } from '@chakra-ui/react';
 
 import { IIssueModalData } from '../../../../shared/types/session/issue/issue';
@@ -33,35 +33,55 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
     changeIssue({ ...activeIssue, [input.name]: input.value });
   };
 
+  const inputStackStyles: ChakraProps = {
+    letterSpacing: 2,
+    flexDirection: ['column', 'row'],
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  };
+
+  const inputLabelStyles: ChakraProps = {
+    w: ['100%', '20%'],
+    textAlign: ['center', 'start'],
+  };
+
+  const inputStyles: ChakraProps = {
+    w: ['100%', '60%'],
+  };
+
   return (
     <>
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create Issue</ModalHeader>
+          <ModalHeader textAlign="center">Create Issue</ModalHeader>
 
           <ModalBody mb="20px">
-            <Stack d="flex" justify="space-around" align="stretch">
-              <FormControl id="title" isRequired>
-                <Stack spacing={2} direction="row" align="center">
-                  <FormLabel>Title:</FormLabel>
-                  <Input
-                    name="title"
-                    placeholder="Issue name"
-                    value={title}
-                    onChange={setIssueData}
-                  />
-                </Stack>
-              </FormControl>
-              <FormControl id="link">
-                <Stack spacing={2} direction="row" align="center">
-                  <FormLabel htmlFor="link">Link:</FormLabel>
-                  <Input name="link" value={link} onChange={setIssueData} />
-                </Stack>
-              </FormControl>
-              <Stack spacing={2} direction="row" align="center">
-                <FormLabel>Priority:</FormLabel>
+            <Stack justify="space-around" align="stretch">
+              <Stack {...inputStackStyles}>
+                <Text {...inputLabelStyles}>Title:</Text>
+                <Input
+                  {...inputStyles}
+                  name="title"
+                  placeholder="Issue name"
+                  value={title}
+                  onChange={setIssueData}
+                />
+              </Stack>
+              <Stack {...inputStackStyles}>
+                <Text {...inputLabelStyles}>Link:</Text>
+
+                <Input
+                  {...inputStyles}
+                  name="link"
+                  value={link}
+                  onChange={setIssueData}
+                />
+              </Stack>
+              <Stack {...inputStackStyles}>
+                <Text {...inputLabelStyles}>Priority:</Text>
                 <Select
+                  {...inputStyles}
                   value={priority}
                   onChange={setIssueData}
                   name="priority"

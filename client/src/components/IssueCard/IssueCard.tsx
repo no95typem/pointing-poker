@@ -6,6 +6,7 @@ import {
   Stat,
   StatNumber,
   StatHelpText,
+  Text,
 } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
@@ -20,7 +21,9 @@ const IssueCard = (props: IIssueData): JSX.Element => {
   const { issue, openModal, removeIssue, isPlayerDealer, openStatisticModal } =
     props;
 
-  const { id, title, priority, isSynced, closed } = issue as Issue;
+  const { id, title, priority, isSynced, closed, value } = issue as Issue;
+
+  const isEditable = isPlayerDealer && isSynced && !closed;
 
   const showIssueStatistic = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (!openStatisticModal) return;
@@ -30,7 +33,6 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       .some(el => el instanceof HTMLButtonElement);
 
     if (!isButton) {
-      console.log('hello world', id);
       openStatisticModal(id);
     }
   };
@@ -45,35 +47,46 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       cursor={openStatisticModal ? 'pointer' : 'unset'}
       onClick={showIssueStatistic}
     >
-      <Stat>
-        <StatNumber fontSize="lg" isTruncated={true}>
-          {title}
-        </StatNumber>
-        <StatHelpText fontSize="xs" mb="0">
-          {priority}
-        </StatHelpText>
-      </Stat>
+      <Stack w="100%" direction="row" justify="space-between" align="center">
+        <Stat>
+          <StatNumber fontSize="lg" isTruncated={true}>
+            {title}
+          </StatNumber>
+          <StatHelpText fontSize="xs" mb="0">
+            {priority}
+          </StatHelpText>
+        </Stat>
+        {closed && value && (
+          <Text
+            maxW="100px"
+            isTruncated
+            fontSize="xl"
+            fontFamily="fantasy"
+            p="0 5px"
+          >
+            {value}
+          </Text>
+        )}
+      </Stack>
 
-      <IconButton
-        aria-label="edit"
-        background="transparent"
-        visibility={
-          isPlayerDealer && isSynced && !closed ? 'visible' : 'hidden'
-        }
-        size="lg"
-        icon={<ImPencil />}
-        onClick={() => openModal(id)}
-      />
-      <IconButton
-        aria-label="delete"
-        background="transparent"
-        visibility={
-          isPlayerDealer && isSynced && !closed ? 'visible' : 'hidden'
-        }
-        size="lg"
-        icon={<CloseIcon />}
-        onClick={() => removeIssue(id)}
-      />
+      {isEditable && (
+        <IconButton
+          aria-label="edit"
+          background="transparent"
+          size="lg"
+          icon={<ImPencil />}
+          onClick={() => openModal(id)}
+        />
+      )}
+      {isEditable && (
+        <IconButton
+          aria-label="delete"
+          background="transparent"
+          size="lg"
+          icon={<CloseIcon />}
+          onClick={() => removeIssue(id)}
+        />
+      )}
     </Stack>
   );
 };
