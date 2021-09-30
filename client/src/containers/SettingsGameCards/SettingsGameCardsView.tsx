@@ -10,7 +10,7 @@ import { ICardData, ICardsView } from '../../../../shared/types/session/card';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
-import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
+import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
 
 const GameCardsView = (props: ICardsView): JSX.Element => {
   const { cards, modal, units, deleteCard } = props;

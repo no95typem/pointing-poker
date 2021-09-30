@@ -20,6 +20,7 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
 
   const changeIssue = (value: string) => {
     setSelectedRadioValue(value);
+
     SERVER_ADAPTER.pickCard(value);
   };
 

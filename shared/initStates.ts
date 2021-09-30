@@ -27,7 +27,7 @@ export const defaultSettings: ISettings = {
   scoreTypeShort: 'SPxxxxxxxxxxxxxxxxxxxxxxx',
   roundTime: 15000,
   cards: testCardsData, //placeholder
-  cardBackType: '',
+  activeCardbackBase64: '',
 };
 
 const SESSION_INIT_STATE: SessionState = {
