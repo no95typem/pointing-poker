@@ -1,4 +1,4 @@
-import { ChatIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { ChatIcon } from '@chakra-ui/icons';
 
 import logo from '../../assets/images/shared/logo.svg';
 
@@ -10,20 +10,11 @@ import {
   HStack,
   Image,
   useColorMode,
-  Popover,
-  PopoverTrigger,
-  Portal,
-  PopoverContent,
-  PopoverBody,
-  Button,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
-import { useAppDispatch, useTypedSelector } from '../../redux/store';
+import { useAppDispatch } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
-import { loadFiles } from '../../helpers/loadFiles';
-import { tryLoadSessionFromFile } from '../../redux/slices/session';
-import { saveObjToWb } from '../../helpers/saveState';
-import { FaFileImport } from 'react-icons/fa';
+import { AppMenu } from '../../containers/AppMenu/AppMenu';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -32,8 +23,6 @@ export const Header = (): JSX.Element => {
   const toggleChat = (): void => {
     dispatch(tryToToggleChatState());
   };
-
-  const sessionState = useTypedSelector(state => state.session);
 
   return (
     <Flex
@@ -54,7 +43,6 @@ export const Header = (): JSX.Element => {
       <HStack justifySelf="end">
         <Spacer />
         <ColorModeSwitcher justifySelf="flex-end" />
-
         <Spacer />
         <IconButton
           style={{ marginInlineStart: '0px' }}
@@ -63,47 +51,7 @@ export const Header = (): JSX.Element => {
           onClick={toggleChat}
         />
         <Spacer />
-
-        <Popover>
-          <PopoverTrigger>
-            <IconButton
-              style={{ marginInlineStart: '0px' }}
-              aria-label="menu"
-              icon={<HamburgerIcon />}
-              // onClick={toggleChat}
-            />
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent width="fit-content">
-              <PopoverBody>
-                <Flex direction="column" gridGap={2}>
-                  <Button
-                    onClick={() => {
-                      loadFiles().then(fileList => {
-                        if (fileList[0]) {
-                          dispatch(tryLoadSessionFromFile(fileList[0]));
-                        }
-                      });
-                    }}
-                    leftIcon={<FaFileImport />}
-                  >
-                    Import results
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      saveObjToWb(
-                        sessionState as unknown as Record<string, unknown>,
-                        `pp-${sessionState.name.value}.xslx`,
-                      );
-                    }}
-                  >
-                    Export results
-                  </Button>
-                </Flex>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
+        <AppMenu />
       </HStack>
     </Flex>
   );

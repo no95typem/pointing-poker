@@ -26,6 +26,7 @@ export const App = () => {
       <ColorModeScript />
       <ChakraProvider theme={theme}>
         <ServerBoundary>
+          <Chat />
           <Grid
             h="100vh"
             w="100%"
@@ -37,7 +38,6 @@ export const App = () => {
               <Routes />
             </Box>
             <Footer />
-            <Chat />
           </Grid>
         </ServerBoundary>
       </ChakraProvider>

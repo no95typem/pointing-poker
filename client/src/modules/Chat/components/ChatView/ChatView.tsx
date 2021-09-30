@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Box, Container, Flex, Spinner, Text } from '@chakra-ui/react';
 import UserCard from '../../../../components/UserCard/UserCard';
 import { store, useTypedSelector } from '../../../../redux/store';
@@ -72,15 +72,6 @@ export const ChatView = () => {
       overflow="auto"
       position="relative"
     >
-      {/* <Box
-        position="absolute"
-        top={`calc(100% + ${scrollTop || 0}px)`}
-        left="0px"
-        w="100%"
-        style={{ transform: 'translateY(-101%)' }}
-      >
-        <UndrawBeginChat />
-      </Box> */}
       {msgEntries.length === 0 && <Text>No messages</Text>}
       {msgEntries.slice(-MAX_CHAT_ENTRIES).map(([key, msg]) => {
         const memberData = setMemberData(sessionData.members[msg.memberId]);
@@ -100,17 +91,16 @@ export const ChatView = () => {
               maxW="100%"
               borderRadius="md"
               position="relative"
-              backgroundColor={memberData.isItYou ? 'gray.300' : 'inherit'}
             >
               <Text fontSize="x-small">{convertTime(msg.time)}</Text>
-              <Text>{msg.text}</Text>
+              <Text whiteSpace="pre">{msg.text}</Text>
               {!msg.isSynced && (
                 <Box position="absolute" top="2px" right="2px" zIndex="1">
                   <Spinner size="xs" speed="1.5s" />
                 </Box>
               )}
             </Container>
-            <Box flexShrink={1}>
+            <Box flexShrink={1} maxW="40%">
               <UserCard
                 {...memberData}
                 size="sm"

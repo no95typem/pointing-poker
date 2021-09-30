@@ -17,8 +17,9 @@ import { ImExit } from 'react-icons/im';
 import { ReactComponent as UndrawEmpty } from '../../assets/images/undraw/empty.svg';
 import { ReactComponent as UndrawStatistics } from '../../assets/images/undraw/statistics.svg';
 import { ReactComponent as UndrawProgressData } from '../../assets/images/undraw/progress-data.svg';
-import { saveObjToWb } from '../../helpers/saveState';
 import { dang_APP_SOFT_RESET } from '../../redux/store-soft-reset';
+import { renderSelfRemovingElement } from '../../helpers/renderSelfRemovingElement';
+import { ImportExportResultsModal } from '../../containers/ImportExportResultsModal/ImportExportResultsModal';
 
 const Statistics = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -75,12 +76,9 @@ const Statistics = (): JSX.Element => {
               rightIcon={
                 <FaSave style={{ position: 'relative', top: '1px' }} />
               }
-              onClick={() => {
-                saveObjToWb(
-                  session as unknown as Record<string, unknown>,
-                  `pp-${session.name.value}.xslx`,
-                );
-              }}
+              onClick={() =>
+                renderSelfRemovingElement(ImportExportResultsModal)
+              }
             >
               Save
             </Button>

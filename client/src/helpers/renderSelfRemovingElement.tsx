@@ -1,11 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { IssueImportModal } from '../containers/IssueImportModal/IssueImportModal';
 import { store } from '../redux/store';
 import { theme } from '../theme';
+import { SelfRemovingReactElement } from '../types/SelfRemoving';
 
-export const showIssueImportDialog = () => {
+export const renderSelfRemovingElement = (Elem: SelfRemovingReactElement) => {
   const div = document.createElement('div');
 
   const removeSelf = () => {
@@ -16,7 +16,7 @@ export const showIssueImportDialog = () => {
   ReactDOM.render(
     <ChakraProvider theme={theme}>
       <Provider store={store}>
-        <IssueImportModal removeSelf={removeSelf} />
+        <Elem removeSelf={removeSelf} />
       </Provider>
     </ChakraProvider>,
     div,

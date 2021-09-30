@@ -1,7 +1,7 @@
-import React from 'react';
 import { Button, Stack } from '@chakra-ui/react';
 
-import { showIssueImportDialog } from '../../../../helpers/showIssueUploadDialog';
+import { renderSelfRemovingElement } from '../../../../helpers/renderSelfRemovingElement';
+import { IssueImportModal } from '../../../IssueImportModal/IssueImportModal';
 
 interface INewIssueModal {
   modal: () => void;
@@ -24,7 +24,7 @@ const NewIssuesButtons = (props: INewIssueModal): JSX.Element => {
         w="130px"
         p="0 10px"
         variant="outline"
-        onClick={showIssueImportDialog}
+        onClick={() => renderSelfRemovingElement(IssueImportModal)}
       >
         Upload issues
       </Button>
