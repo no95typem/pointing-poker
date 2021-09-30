@@ -15,6 +15,7 @@ export interface ISessionGameState {
   roundState: RoundState;
   roundStartTime?: number;
   currIssueId?: number;
+  isResultsVisible: boolean;
   // key number - userPublicId, val number - value of card
   votes: Record<number, string | undefined>;
 }

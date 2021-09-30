@@ -2,7 +2,6 @@
 
 import WebSocket from 'ws';
 import { DEALER_ID } from '../../../shared/const';
-import { calcPercentage } from '../../../shared/helpers/calcs/game-calcs';
 import { genUniqIdWithCrypto } from '../../../shared/helpers/generators/node-specific';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
@@ -223,7 +222,10 @@ export class SessionManager {
     const rMsg = new SCMsgConnToSessStatus(this.sessionState.sessionId, {
       success: {
         yourId: member.userSessionPublicId,
-        state: this.sessionState,
+        state:
+          member.userRole === USER_ROLES.DEALER
+            ? this.sessionState
+            : (this.filterSessUpdate(this.sessionState) as SessionState),
       },
     });
 
@@ -281,14 +283,36 @@ export class SessionManager {
     }
   }
 
-  private updateState = (update: Partial<SessionState>) => {
+  private filterSessUpdate = (update: Partial<SessionState>) => {
+    const mod = OBJ_PROCESSOR.deepClone(update);
+
+    if (mod.game && !mod.game.isResultsVisible) {
+      mod.game.votes = {};
+    }
+
+    return mod;
+  };
+
+  private updateState = (update: Partial<SessionState>, noSend?: true) => {
     Object.assign(this.sessionState, update);
 
-    const msg = new SCMsgUpdateSessionState(
-      this.sessionState.sessionId,
-      update,
-    );
-    this.broadcast(msg, USER_ROLES.SPECTATOR);
+    if (!noSend) {
+      const msgForDealer = new SCMsgUpdateSessionState(
+        this.sessionState.sessionId,
+        update,
+      );
+
+      this.broadcast(msgForDealer, USER_ROLES.DEALER);
+
+      const filtered = this.filterSessUpdate(update);
+
+      const msgForAll = new SCMsgUpdateSessionState(
+        this.sessionState.sessionId,
+        filtered,
+      );
+
+      this.broadcast(msgForAll, USER_ROLES.SPECTATOR, [DEALER_ID]);
+    }
 
     this.tryToEndRound();
   };
@@ -357,21 +381,14 @@ export class SessionManager {
 
       if (!isNotEnd) {
         const game = OBJ_PROCESSOR.deepClone(this.sessionState.game);
-        const issues = OBJ_PROCESSOR.deepClone(this.sessionState.issues);
-
-        const currIssue = issues.list.find(
-          iss => iss.id === this.sessionState.game?.currIssueId,
-        );
-
-        if (currIssue) {
-          currIssue.stat = {
-            votes: game.votes,
-            pct: calcPercentage(game.votes),
-          };
-        }
 
         game.roundState = ROUND_STATES.ENDED;
-        this.updateState({ game, issues });
+
+        if (this.sessionState.gSettings.isCardShownOnRoundEnd) {
+          game.isResultsVisible = true;
+        }
+
+        this.updateState({ game });
       }
     }
   };

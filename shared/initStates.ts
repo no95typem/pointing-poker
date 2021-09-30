@@ -13,7 +13,7 @@ const testCardsData: CardData[] = [
   { value: '1' },
   { value: '2' },
   { value: '3' },
-  { value: '4' },
+  { value: 'Unknown', base64: '<img>' },
   { value: 'Unknown longgggggggggggggggggggggg', base64: '<img>' },
 ];
 
@@ -73,7 +73,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
   clientId: 0,
   name: { value: 'Session 12345', isSynced: true },
-  stage: SESSION_STAGES.STATS,
+  stage: SESSION_STAGES.LOBBY,
   members: {
     0: sampleMember,
     1: {
