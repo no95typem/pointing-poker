@@ -10,7 +10,8 @@ export interface ISettings {
   scoreTypeShort: string;
   roundTime: number;
   cards: CardData[];
-  cardBackType: string; // TODO (no95typem)
+  activeCardbackBase64: string;
+  cardbacksBase64?: string[];
 }
 
 export interface ISettingsComponent {
@@ -24,11 +25,15 @@ export interface ISettingsComponentData {
   data: ISettingsComponent;
 }
 
+// export interface ISettingsValue {
+//   value: string | boolean | CardData[] | string[] | string[];
+// }
+
 export interface ISettingsData {
   localSettings: ISettings;
   setLocalSettings: (
     name: string,
-    value: string | boolean | CardData[],
+    value: string | boolean | CardData[] | string[],
   ) => void;
   isGameStage?: boolean;
 }

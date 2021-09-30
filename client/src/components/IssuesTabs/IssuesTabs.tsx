@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { Droppable } from 'react-beautiful-dnd';
 
-import { Issue } from '../../../../../../shared/types/session/issue/issue';
+import { Issue } from '../../../../shared/types/session/issue/issue';
 
 export interface IIssuesTabs {
   isSynced: boolean;

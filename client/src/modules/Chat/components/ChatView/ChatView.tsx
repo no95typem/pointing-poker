@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Box, Container, Flex, Spinner, Text } from '@chakra-ui/react';
 import UserCard from '../../../../components/UserCard/UserCard';
 import { store, useTypedSelector } from '../../../../redux/store';

@@ -5,13 +5,18 @@ import { useAppDispatch, useTypedSelector } from '../redux/store';
 
 const useLocalSettings = () => {
   const dispatch = useAppDispatch();
+
   const localSettings = useTypedSelector(state => state.settings);
 
   const setLocalSettings = (
     name: string,
-    value: string | boolean | CardData[],
+    value: string | boolean | CardData[] | string[],
   ): void => {
+    console.log(name);
+    console.log(value);
+
     const newSettings = { ...localSettings, [name]: value };
+
     dispatch(setSettings(newSettings));
 
     if (name === 'isAutoAdmit') SERVER_ADAPTER.sendSettings(true, newSettings);

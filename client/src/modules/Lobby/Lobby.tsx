@@ -39,6 +39,7 @@ const Lobby = (): JSX.Element => {
     ...gameStateData,
     localSettings,
   };
+
   const settingsData: ISettingsData = {
     ...{
       localSettings,
