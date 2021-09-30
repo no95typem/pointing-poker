@@ -36,7 +36,8 @@ export const Header = (): JSX.Element => {
   };
 
   const sessionState = useTypedSelector(state => state.session);
-  const { unreadCount } = useTypedSelector(state => state.chat);
+  const { msgs } = sessionState.chat;
+  const unreadMsgs = Object.entries(msgs).filter(([key, msg]) => !msg.isViewed);
 
   return (
     <Flex
@@ -70,10 +71,10 @@ export const Header = (): JSX.Element => {
             right="0px"
             top="0px"
             borderRadius="base"
-            colorScheme={unreadCount > 0 ? 'orange' : undefined}
+            colorScheme={unreadMsgs.length > 0 ? 'orange' : undefined}
             fontSize="x-small"
           >
-            {unreadCount}
+            {unreadMsgs.length}
           </Badge>
         </Box>
         <Spacer />
