@@ -5,18 +5,33 @@ import { ISettingsData } from '../../../../shared/types/settings';
 import { ICardsData } from '../../../../shared/types/session/card';
 
 import Settings from '../../containers/Settings/Settings';
-import GameCards from '../../containers/GameCards/GameCards';
+import GameCards from '../../containers/SettingsGameCards/SettingsGameCards';
 import PassiveTimer from '../../containers/PassiveTimer/PassiveTimer';
-import GameCardBacks from '../../containers/GameCardBacks/GameCardBacks';
+import GameCardBacks, {
+  ICardbacksData,
+} from '../../containers/SettingsCardBacks/SettingsCardBacks';
 
 const SettingsTabs = (props: ISettingsData): JSX.Element => {
   const { localSettings, setLocalSettings } = props;
 
-  const { scoreTypeShort, cards, isTimerNeeded, roundTime } = localSettings;
+  const {
+    scoreTypeShort,
+    cards,
+    isTimerNeeded,
+    roundTime,
+    cardbacksBase64,
+    activeCardbackBase64,
+  } = localSettings;
 
   const cardsData: ICardsData = {
     cards,
     units: scoreTypeShort,
+    setLocalSettings,
+  };
+
+  const cardbackData: ICardbacksData = {
+    cardbacksBase64,
+    activeCardbackBase64,
     setLocalSettings,
   };
 
@@ -46,7 +61,7 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
           <GameCards {...cardsData} />
         </TabPanel>
         <TabPanel>
-          <GameCardBacks />
+          <GameCardBacks {...cardbackData} />
         </TabPanel>
       </TabPanels>
     </Tabs>

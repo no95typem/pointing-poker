@@ -17,8 +17,10 @@ import ChakraLoader from '../../components/Loader/ChakraLoader';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 import IssueStatisticModal from '../../components/IssueStatisticModal/IssueStatisticModal';
 import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
-import NewIssuesButtons from './Components/NewIssuesButtons/NewIssuesButtons';
-import IssuesTabs, { IIssuesTabs } from './Components/IssuesTabs/IssuesTabs';
+import NewIssuesButtons from '../NewIssuesButtons/NewIssuesButtons';
+import IssuesTabs, {
+  IIssuesTabs,
+} from '../../components/IssuesTabs/IssuesTabs';
 
 const IssueCardsView = (props: IIssues): JSX.Element => {
   const { issues, modal } = props;

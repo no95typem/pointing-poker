@@ -435,7 +435,7 @@ class ServerAdapter {
       ? {
           ...settings,
           cards: [],
-          cardBackType: '',
+          activeCardbackBase64: '',
         }
       : OBJ_PROCESSOR.deepClone(settings);
 

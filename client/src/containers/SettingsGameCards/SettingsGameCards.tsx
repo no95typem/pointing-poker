@@ -10,7 +10,7 @@ import {
 } from '../../../../shared/types/session/card';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
-import GameCardsView from './GameCardsView';
+import GameCardsView from './SettingsGameCardsView';
 
 const GameCards = (props: ICardsData): JSX.Element => {
   const toast = useToast();
@@ -65,8 +65,6 @@ const GameCards = (props: ICardsData): JSX.Element => {
 
         cardsCopy.sort((s, t) => s.value.localeCompare(t.value));
 
-        console.log(cardsCopy);
-
         setLocalSettings('cards', cardsCopy);
 
         onClose();
@@ -87,8 +85,6 @@ const GameCards = (props: ICardsData): JSX.Element => {
 
       cardsCopy.sort((s, t) => s.value.localeCompare(t.value));
 
-      console.log(cardsCopy);
-
       setLocalSettings('cards', cardsCopy);
 
       onClose();
@@ -98,14 +94,10 @@ const GameCards = (props: ICardsData): JSX.Element => {
   const deleteCard = (value: string): void => {
     const card = findEditedCard(value);
 
-    console.log(card);
-
     if (card) {
       const cardIndex = cards.indexOf(card);
 
       const cardsCopy = OBJ_PROCESSOR.deepClone(cards);
-
-      console.log(cardIndex);
 
       cardsCopy.splice(cardIndex, 1);
 

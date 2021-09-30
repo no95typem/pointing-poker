@@ -34,7 +34,6 @@ export const MessageInputBox = () => {
     dispatch(setChatTypedText(''));
     ref.current.focus();
   };
-  
 
   useEffect(() => {
     const textarea = ref.current;
