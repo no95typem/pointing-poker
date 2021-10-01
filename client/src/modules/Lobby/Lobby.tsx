@@ -48,7 +48,7 @@ const Lobby = (): JSX.Element => {
   };
 
   return (
-    <Box maxW="1200px" w={['100vw', '90%']} m="0 auto" p="5px">
+    <Box maxW="1200px" w={['100vw', '90%']} h="100%" m="0 auto" p="5px">
       <EditableHeader {...sessionNameData} />
       <Stack
         direction="row"

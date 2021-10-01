@@ -17,6 +17,7 @@ import { notifSlice } from './notifications';
 import { loadFiles } from '../../helpers/loadFiles';
 import { importIssuesFromWorkbook } from '../../helpers/read-issues-from-wb';
 import { calcNextIssueId } from '../../helpers/calcNextIssueId';
+import { saveObjToWb } from '../../helpers/saveState';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -175,5 +176,29 @@ export const tryImportIssues = createAsyncThunk(
           });
       }
     });
+  },
+);
+
+export interface ISaveArgs {
+  filename?: string;
+  ext?: 'xlsx' | 'csv';
+}
+
+export const trySaveSessionToFile = createAsyncThunk(
+  'session/trySaveSessionToFile',
+  async ({ filename, ext }: ISaveArgs, thunkAPI) => {
+    try {
+      const session = (thunkAPI.getState() as RootState).session;
+      const name = filename
+        ? `${filename}.${ext}`
+        : `pp-${session.name.value}.${ext}`;
+
+      saveObjToWb(session as unknown as Record<string, unknown>, {
+        fileName: name,
+        bookType: ext || 'xlsx',
+      });
+    } catch {
+      // TODO
+    }
   },
 );

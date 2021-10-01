@@ -1,11 +1,9 @@
-import React from 'react';
-
-import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
-
 import ButtonsSet, {
   IButtonData,
   IButtonsSetData,
 } from '../../components/ButtonsSet/ButtonsSet';
+import { renderSelfRemovingElement } from '../../helpers/renderSelfRemovingElement';
+import { IssueImportModal } from '../IssueImportModal/IssueImportModal';
 
 interface INewIssueModal {
   modal: () => void;
@@ -15,7 +13,7 @@ const NewIssuesButtons = (props: INewIssueModal): JSX.Element => {
   const { modal } = props;
 
   const first: IButtonData = {
-    onClick: showIssueImportDialog,
+    onClick: () => renderSelfRemovingElement(IssueImportModal),
     text: 'Upload issues',
     variant: 'outline',
   };

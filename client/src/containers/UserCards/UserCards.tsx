@@ -73,7 +73,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
           return (
             <Box maxW="320px" key={`${id}-box`}>
               <Stack
-                ml="10px"
+                mx="5px"
                 direction="row"
                 justify="center"
                 align="center"

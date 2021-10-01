@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import {
   Avatar,
@@ -11,6 +11,7 @@ import {
   StackProps,
   ButtonProps,
   Tooltip,
+  Flex,
 } from '@chakra-ui/react';
 
 import { ImBlocked } from 'react-icons/im';
@@ -44,6 +45,8 @@ const UserCard = (props: IUserCard): JSX.Element => {
   const bageColor =
     userState === USER_STATES.CONNECTED ? 'green.400' : 'red.400';
 
+  const [hover, setHover] = useState(false);
+
   const stackStyles =
     props.size === 'sm'
       ? {
@@ -70,7 +73,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
           // bottom: '0px',
           right: '50%',
           style: { transform: 'translate(50%, -50%) scale(1.5)' },
-          opacity: '0',
+          opacity: hover ? '0.3' : '0.03',
           _hover: {
             opacity: '1',
           },
@@ -80,7 +83,22 @@ const UserCard = (props: IUserCard): JSX.Element => {
           borderRadius: '50%',
           zIndex: '1',
         }
-      : {};
+      : {
+          position: 'absolute',
+          top: '10px',
+          // bottom: '0px',
+          right: '10px',
+          // style: { transform: 'translate(50%, -50%) scale(1.5)' },
+          opacity: hover ? '0.3' : '0.03',
+          _hover: {
+            opacity: '1',
+          },
+          minW: 'fit-content',
+          height: 'fit-content',
+          // backgroundColor: '#ffAAAAA0',
+          borderRadius: '50%',
+          zIndex: '1',
+        };
 
   return (
     <Tooltip label={fullName} placement="top" openDelay={500}>
@@ -91,6 +109,11 @@ const UserCard = (props: IUserCard): JSX.Element => {
         borderRadius="md"
         flexDirection={props.flexDirection}
         w={props.w}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        onTouchStart={() => setHover(true)}
+        onTouchEnd={() => setHover(false)}
+        onTouchCancel={() => setHover(false)}
       >
         <Avatar
           color="white"
@@ -103,17 +126,20 @@ const UserCard = (props: IUserCard): JSX.Element => {
         </Avatar>
 
         <Stat overflow="hidden" isTruncated={true}>
-          <StatNumber
-            as={userState === USER_STATES.KICKED ? 'del' : 'abbr'}
-            fontSize={props.size === 'sm' ? 'sm' : undefined}
-            lineHeight={props.size === 'sm' ? '1em' : undefined}
-            display="flex"
-            whiteSpace="nowrap"
-            overflow="hidden"
-            textOverflow="ellipsis"
-          >
-            {fullName}
-          </StatNumber>
+          <Flex direction="column">
+            <StatNumber
+              fontSize={props.size === 'sm' ? 'sm' : 'lg'}
+              lineHeight={props.size === 'sm' ? '1em' : undefined}
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+              textDecoration={
+                userState === USER_STATES.KICKED ? 'line-through' : undefined
+              }
+            >
+              {fullName}
+            </StatNumber>
+          </Flex>
           <StatHelpText
             mb="0"
             whiteSpace="nowrap"

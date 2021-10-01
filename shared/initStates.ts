@@ -52,6 +52,9 @@ export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
   ...SESSION_INIT_STATE,
   clientId: undefined,
   stage: 'EMPTY',
+  gSettings: {
+    ...SESSION_INIT_STATE.gSettings,
+  },
 };
 
 //Временные переменые, исключительно для отладки.
@@ -73,7 +76,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
   clientId: 0,
   name: { value: 'Session 12345', isSynced: true },
-  stage: SESSION_STAGES.LOBBY,
+  stage: SESSION_STAGES.STATS,
   members: {
     0: sampleMember,
     1: {
