@@ -45,7 +45,7 @@ import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
 import { dang_APP_SOFT_RESET } from '../../redux/store-soft-reset';
 import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
-
+import { addMsgVisibility } from '../../helpers/addMsgVisibility';
 export interface IKickArgs {
   targetId: number;
   decision: boolean;
@@ -312,6 +312,7 @@ class ServerAdapter {
   private handleSCMsgChatMsg(msg: SCMsgChatMsgsChanged) {
     const state = store.getState();
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+    const { isVisible } = state.chat;
     const { command, update } = msg.body;
 
     switch (command) {
@@ -324,6 +325,9 @@ class ServerAdapter {
             delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
           }
         });
+
+        addMsgVisibility(update, isVisible);
+
         Object.assign(chat.msgs, update);
         break;
       case 'D':
@@ -485,11 +489,12 @@ class ServerAdapter {
       text,
       time,
       isSynced: false,
-      isViewed: false,
     };
 
     const msg = new CSMsgChatMsg(chatMsg);
     this.send(msg);
+
+    chatMsg.isViewed = true;
 
     chat.msgs[`${time}-${memberId}`] = chatMsg;
 

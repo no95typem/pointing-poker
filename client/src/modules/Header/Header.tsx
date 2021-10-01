@@ -26,6 +26,7 @@ import { loadFiles } from '../../helpers/loadFiles';
 import { tryLoadSessionFromFile } from '../../redux/slices/session';
 import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
 import { saveObjToWb } from '../../helpers/saveState';
+import { readMsgs } from '../../helpers/readMsgs';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -33,10 +34,12 @@ export const Header = (): JSX.Element => {
 
   const toggleChat = (): void => {
     dispatch(tryToToggleChatState());
+    readMsgs();
   };
 
   const sessionState = useTypedSelector(state => state.session);
   const { msgs } = sessionState.chat;
+  console.log(msgs);
   const unreadMsgs = Object.entries(msgs).filter(([key, msg]) => !msg.isViewed);
 
   return (

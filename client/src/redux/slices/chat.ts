@@ -34,8 +34,6 @@ export const tryToToggleChatState = createAsyncThunk(
           needToShow: true,
         }),
       );
-    } else {
-      thunkAPI.dispatch(chatSlice.actions.toggleChatState());
-    }
+    } else thunkAPI.dispatch(chatSlice.actions.toggleChatState());
   },
 );
