@@ -23,7 +23,7 @@ export interface SessionManagerAPI extends ClientManagerAPI {
   broadcast: (msg: SCMsg, level: UserRole, skipIds?: number[]) => void;
   checkMemberState: (id: number) => UserState;
   getSessionState: () => { readonly state: Readonly<SessionState> };
-  updateState: (update: Partial<SessionState>) => void;
+  updateState: (update: Partial<SessionState>, noSend?: true) => void;
   dang_getSessState: () => SessionState;
   votekick: (ws: WebSocket, id: number, msg: CSMsgVotekick) => void;
   forcekick: (targetId: number) => void;

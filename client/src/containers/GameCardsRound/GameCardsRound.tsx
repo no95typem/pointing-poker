@@ -14,12 +14,13 @@ import GameCard from '../../components/GameCard/GameCard';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
 const GameCardsRound = (props: ICardsGame): JSX.Element => {
-  const { cards, isGameStage, units, isPlayerDealer } = props;
+  const { cards, isGameStage, units, isPlayerDealer, isResultsVisible } = props;
 
   const [selectedRadioValue, setSelectedRadioValue] = useState('');
 
   const changeIssue = (value: string) => {
     setSelectedRadioValue(value);
+
     SERVER_ADAPTER.pickCard(value);
   };
 
@@ -46,7 +47,9 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
       )}
       {isGameStage && isPlayerDealer && (
         <Stack w="100%" mb="30px" align="center" justify="center" p="5px 20px">
-          <Button colorScheme="facebook">Open Cards</Button>
+          <Button onClick={SERVER_ADAPTER.toggleResultsVisibility}>
+            {isResultsVisible ? 'Hide results' : 'Show results'}
+          </Button>
         </Stack>
       )}
 

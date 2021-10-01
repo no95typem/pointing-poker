@@ -25,7 +25,7 @@ import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
 import { showKickDialog } from '../../helpers/showKickDialog';
 import { connectSlice } from '../../redux/slices/connect';
-import { getCookieValByName } from '../../helpers/getCookie';
+// import { getCookieValByName } from '../../helpers/getCookie';
 import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { SCMsgNewConnection } from '../../../../shared/types/sc-msgs/msgs/sc-msg-new-connection';
@@ -43,9 +43,10 @@ import { CSMsgPick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-p
 import { CSMsgStartRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-start-round';
 import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-stop-round';
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
-import { dang_APP_SOFT_RESET } from '../../redux/store-soft-reset';
 import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
 import { addMsgVisibility } from '../../helpers/addMsgVisibility';
+import { CSMSgToggleResultsVisibility } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
+
 export interface IKickArgs {
   targetId: number;
   decision: boolean;
@@ -263,7 +264,7 @@ class ServerAdapter {
 
     if (msg.response.wait) {
       this.controlKey = msg.response.wait.sessId;
-      document.cookie = `lastToken=${msg.response.wait.token}; Path=/;`; // ! TODO (no95typem) expires ?
+      // document.cookie = `lastToken=${msg.response.wait.token}; Path=/;`; // ! TODO (no95typem) expires ?
       this.lastToken = msg.response.wait.token;
 
       store.dispatch(
@@ -345,7 +346,7 @@ class ServerAdapter {
   connToLobby = () => {
     const state = store.getState();
     this.controlKey = state.homePage.lobbyURL;
-    const token = this.lastToken || getCookieValByName('lastToken');
+    const token = this.lastToken; //|| getCookieValByName('lastToken');
     const msg = new CSMsgConnToSess({
       info: state.userInfo,
       role: state.homePage.lastUserRole,
@@ -378,20 +379,20 @@ class ServerAdapter {
     );
   };
 
-  dang_reset = () => {
-    this.exitGame();
-    dang_APP_SOFT_RESET();
+  // dang_reset = () => {
+  //   this.exitGame();
+  //   dang_APP_SOFT_RESET();
 
-    // if (this.ws) {
-    //   try {
-    //     this.ws.close();
-    //   } catch {
-    //     //
-    //   }
+  //   // if (this.ws) {
+  //   //   try {
+  //   //     this.ws.close();
+  //   //   } catch {
+  //   //     //
+  //   //   }
 
-    //   this.connect();
-    // }
-  };
+  //   //   this.connect();
+  //   // }
+  // };
 
   respondToNewConnection = (id: number, allow: boolean) => {
     const msg = new CSMSGNewConnectionResponse(id, allow);
@@ -412,7 +413,6 @@ class ServerAdapter {
 
   exitGame = (skipDispatch?: true) => {
     if (skipDispatch !== true) {
-      console.log('dispatch');
       store.dispatch(
         sessionSlice.actions.dang_updSessStateFromServer({
           stage: SESSION_STAGES.STATS,
@@ -440,7 +440,7 @@ class ServerAdapter {
       ? {
           ...settings,
           cards: [],
-          cardBackType: '',
+          activeCardbackBase64: '',
         }
       : OBJ_PROCESSOR.deepClone(settings);
 
@@ -528,6 +528,17 @@ class ServerAdapter {
   nextIssue = () => {
     const msg = new CSMsgNextIssue();
     this.send(msg);
+  };
+
+  toggleResultsVisibility = () => {
+    const state = store.getState();
+
+    if (state.session.game) {
+      const msg = new CSMSgToggleResultsVisibility(
+        !state.session.game.isResultsVisible,
+      );
+      this.send(msg);
+    }
   };
 
   /* / ACTIONS */

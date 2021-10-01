@@ -185,6 +185,7 @@ const useSessionData = (
     isGameStage,
     units: sessionData.gSettings.scoreTypeShort,
     isPlayerDealer,
+    isResultsVisible: !!sessionData.game?.isResultsVisible,
   };
 
   const gameStateData: IGameStateData = {

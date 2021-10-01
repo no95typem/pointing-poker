@@ -18,9 +18,9 @@ import {
 import { ICardModalData } from '../../../../shared/types/session/card';
 
 import { LOCALE_US } from '../../locales/locale-us';
-import LoadImgForm, {
-  ILoadImgParams,
-} from '../../containers/LoadImgForm/LoadImgForm';
+import LoadCardCustomImage, {
+  ILoadCardImgParams,
+} from '../../containers/LoadCardCustomImage/LoadCardCustomImage';
 
 const GameCardModal = (props: ICardModalData): JSX.Element => {
   const { modal } = props;
@@ -35,13 +35,12 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
     changeCardValue({ ...activeCard, [input.name]: input.value });
   };
 
-  const loadImgData: ILoadImgParams = {
+  const loadImgData: ILoadCardImgParams = {
     imgParams: {
       width: 100,
       height: 100,
     },
-    activeCard,
-    changeCardValue,
+    card: { activeCard, changeCardValue },
   };
 
   return (
@@ -60,7 +59,7 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
             </FormControl>
             <Stack spacing={2} direction="column" align="center">
               <FormLabel>{LOCALE_US.SETTINGS_CARDS_MODAL_CUSTOM}</FormLabel>
-              <LoadImgForm {...loadImgData} />
+              <LoadCardCustomImage {...loadImgData} />
             </Stack>
           </Stack>
         </ModalBody>

@@ -3,12 +3,15 @@ export interface CardData {
   readonly base64?: string;
 }
 
-export interface ICardModal {
+export interface IActiveCard {
+  activeCard: CardData;
+  changeCardValue: (card: CardData) => void;
+}
+
+export interface ICardModal extends IActiveCard {
   openModal: (id?: string) => void;
   onClose: () => void;
   isOpen: boolean;
-  activeCard: CardData;
-  changeCardValue: (card: CardData) => void;
   setCard: () => void;
 }
 
@@ -39,11 +42,12 @@ export interface ICardsData extends ISharedCardData {
   cards: CardData[];
   setLocalSettings: (
     name: string,
-    value: string | boolean | CardData[],
+    value: string | boolean | CardData[] | string[],
   ) => void;
 }
 
 export interface ICardsGame extends ISharedCardData {
   cards: CardData[];
   isPlayerDealer: boolean;
+  isResultsVisible: boolean;
 }

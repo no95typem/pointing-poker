@@ -13,7 +13,7 @@ const testCardsData: CardData[] = [
   { value: '1' },
   { value: '2' },
   { value: '3' },
-  { value: '4' },
+  { value: 'Unknown', base64: '<img>' },
   { value: 'Unknown longgggggggggggggggggggggg', base64: '<img>' },
 ];
 
@@ -27,7 +27,7 @@ export const defaultSettings: ISettings = {
   scoreTypeShort: 'SPxxxxxxxxxxxxxxxxxxxxxxx',
   roundTime: 15000,
   cards: testCardsData, //placeholder
-  cardBackType: '',
+  activeCardbackBase64: '',
 };
 
 const SESSION_INIT_STATE: SessionState = {
@@ -52,6 +52,9 @@ export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
   ...SESSION_INIT_STATE,
   clientId: undefined,
   stage: 'EMPTY',
+  gSettings: {
+    ...SESSION_INIT_STATE.gSettings,
+  },
 };
 
 //Временные переменые, исключительно для отладки.

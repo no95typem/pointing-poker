@@ -16,6 +16,7 @@ const SessionItemRadioCard = (props: any): JSX.Element => {
         cursor="pointer"
         borderRadius="md"
         _checked={{
+          // boxShadow: 'inset 0 0 10px 15px greenyellow',
           bg: 'teal.600',
           color: 'white',
         }}

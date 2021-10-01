@@ -1,4 +1,4 @@
-import { ChatIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { ChatIcon } from '@chakra-ui/icons';
 
 import logo from '../../assets/images/shared/logo.svg';
 
@@ -10,22 +10,13 @@ import {
   HStack,
   Image,
   useColorMode,
-  Popover,
-  PopoverTrigger,
-  Portal,
-  PopoverContent,
-  PopoverBody,
-  Button,
-  Badge,
   Box,
+  Badge,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
-import { loadFiles } from '../../helpers/loadFiles';
-import { tryLoadSessionFromFile } from '../../redux/slices/session';
-import { showIssueImportDialog } from '../../helpers/showIssueUploadDialog';
-import { saveObjToWb } from '../../helpers/saveState';
+import { AppMenu } from '../../containers/AppMenu/AppMenu';
 import { readMsgs } from '../../helpers/readMsgs';
 
 export const Header = (): JSX.Element => {
@@ -81,47 +72,7 @@ export const Header = (): JSX.Element => {
           </Badge>
         </Box>
         <Spacer />
-
-        <Popover>
-          <PopoverTrigger>
-            <IconButton
-              style={{ marginInlineStart: '0px' }}
-              aria-label="menu"
-              icon={<HamburgerIcon />}
-              // onClick={toggleChat}
-            />
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent width="fit-content">
-              <PopoverBody>
-                <Button
-                  onClick={() => {
-                    loadFiles().then(fileList => {
-                      if (fileList[0]) {
-                        dispatch(tryLoadSessionFromFile(fileList[0]));
-                      }
-                    });
-                  }}
-                >
-                  load xlsx
-                </Button>
-                <Button
-                  onClick={() => {
-                    saveObjToWb(
-                      sessionState as unknown as Record<string, unknown>,
-                      `pp-${sessionState.name.value}.xslx`,
-                    );
-                  }}
-                >
-                  save xlsx
-                </Button>
-                <Button onClick={showIssueImportDialog}>
-                  Show Import Issues Dialog
-                </Button>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
+        <AppMenu />
       </HStack>
     </Flex>
   );

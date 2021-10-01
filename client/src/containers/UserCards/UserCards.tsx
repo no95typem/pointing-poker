@@ -16,7 +16,7 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
 import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
-import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
+import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
 
 const UserCards = (props: IUserCards): JSX.Element => {
   const { members, isItYou, isVotersView, isDealerPlaying } = props;
@@ -73,7 +73,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
           return (
             <Box maxW="320px" key={`${id}-box`}>
               <Stack
-                ml="10px"
+                mx="5px"
                 direction="row"
                 justify="center"
                 align="center"

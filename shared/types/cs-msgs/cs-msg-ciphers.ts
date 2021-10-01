@@ -30,6 +30,8 @@ class CSMsgCiphers {
   readonly END_GAME = 'END_GAME';
 
   readonly NEW_CONNECTION_REPSONSE = 'NEW_CONNECTION_REPSONSE';
+
+  readonly TOGGLE_RESULTS_VISIBILITY = 'TOGGLE_RESULTS_VISIBILITY';
 }
 
 export const CSMSG_CIPHERS = OBJ_PROCESSOR.deepFreeze(new CSMsgCiphers());
