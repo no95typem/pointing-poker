@@ -6,14 +6,14 @@ import {
   useDisclosure,
   useRadioGroup,
 } from '@chakra-ui/react';
+import Slider from 'react-slick';
 
 import { CardData } from '../../../../shared/types/session/card';
+import { gameCardsSettings } from '../../helpers/swiperSettings';
 
 import CardbackModal, {
   ICardBackModal,
 } from '../../components/CardbackModal/CardbackModal';
-import Slider from 'react-slick';
-import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
 import Cardback from '../../components/Cardback/Cardback';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
@@ -22,7 +22,7 @@ export interface ICardbacksData {
   activeCardbackBase64: string;
   setLocalSettings: (
     name: string,
-    value: string | boolean | CardData[] | string[],
+    value: string | boolean | CardData[] | string[] | number,
   ) => void;
 }
 
@@ -34,42 +34,6 @@ const SettingsCardBacks = (props: ICardbacksData): JSX.Element => {
   const { activeCardbackBase64, cardbacksBase64, setLocalSettings } = props;
 
   const currentId = cardbacksBase64?.indexOf(activeCardbackBase64);
-
-  console.log(currentId);
-
-  const settings = {
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    nextArrow: <SliderCustomArrow />,
-    prevArrow: <SliderCustomArrow />,
-
-    responsive: [
-      {
-        breakpoint: 1400,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 800,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 400,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-    ],
-  };
 
   const setCardback = (id: string) => {
     if (cardbacksBase64 && +id !== -1) {
@@ -107,7 +71,7 @@ const SettingsCardBacks = (props: ICardbacksData): JSX.Element => {
 
       {cardbacksBase64 && (
         <Box maxW="100%" m="0 auto" p="0 20px">
-          <Slider {...settings}>
+          <Slider {...gameCardsSettings}>
             {cardbacksBase64.map((src, id) => {
               const radio = (getRadioProps as (obj: { value: string }) => any)({
                 value: String(id),

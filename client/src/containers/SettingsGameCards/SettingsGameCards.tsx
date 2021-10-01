@@ -15,7 +15,7 @@ import GameCardsView from './SettingsGameCardsView';
 const GameCards = (props: ICardsData): JSX.Element => {
   const toast = useToast();
 
-  const { cards, units, setLocalSettings } = props;
+  const { cards, units, setLocalSettings, isGameStage } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -114,7 +114,13 @@ const GameCards = (props: ICardsData): JSX.Element => {
     setCard: setCard,
   };
 
-  const data: ICardsView = { cards, modal: modalData, units, deleteCard };
+  const data: ICardsView = {
+    cards,
+    modal: modalData,
+    units,
+    deleteCard,
+    isGameStage,
+  };
 
   return <GameCardsView {...data} />;
 };

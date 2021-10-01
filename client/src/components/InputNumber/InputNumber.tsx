@@ -10,10 +10,15 @@ import {
 export interface INumberInput {
   units: string;
   value: number;
+  setTime: (name: string, value: number) => void;
 }
 
 const InputNumber = (props: INumberInput): JSX.Element => {
-  const { value, units } = props;
+  const { value, units, setTime } = props;
+
+  const changeTime = (value: string): void => {
+    setTime(units, +value);
+  };
 
   return (
     <FormControl>
@@ -29,6 +34,7 @@ const InputNumber = (props: INumberInput): JSX.Element => {
         position="relative"
         w="55px"
         value={value}
+        onChange={changeTime}
         min={0}
         max={59}
         id={units}

@@ -11,8 +11,8 @@ const UserCardsTabs = (props: IUserCards): JSX.Element => {
       <TabList
         justifyContent={['center', 'center', 'center', 'center', 'flex-start']}
       >
-        <Tab>Players only</Tab>
-        <Tab>All Users</Tab>
+        <Tab>Players</Tab>
+        <Tab>Spectators</Tab>
       </TabList>
       <TabPanels maxW="100vw">
         <TabPanel>

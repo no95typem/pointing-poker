@@ -10,11 +10,8 @@ const useLocalSettings = () => {
 
   const setLocalSettings = (
     name: string,
-    value: string | boolean | CardData[] | string[],
+    value: string | boolean | CardData[] | string[] | number,
   ): void => {
-    console.log(name);
-    console.log(value);
-
     const newSettings = { ...localSettings, [name]: value };
 
     dispatch(setSettings(newSettings));

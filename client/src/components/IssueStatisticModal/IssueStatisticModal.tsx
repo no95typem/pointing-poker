@@ -25,16 +25,6 @@ const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
 
   const { link, stat, title, value } = activeIssue;
 
-  console.log(settings);
-
-  console.log(activeIssue);
-
-  // if(!activeIssue.)
-
-  // const card = gameCards.find(
-  //   card => card.value === activeIssue.stat?.votes[0],
-  // );
-
   const setIssueValue = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const select = e.target;
 
@@ -51,6 +41,8 @@ const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
   const votes = activeIssue.stat ? Object.values(activeIssue.stat.votes) : [];
 
   const renderStatistic = (): JSX.Element => {
+    console.log(settings);
+
     return stat ? (
       <RoundStatistics issueTitle={title} votes={stat.votes} /> //TODO Kaesid: прокинуть  settings в GameCardStatistics
     ) : (

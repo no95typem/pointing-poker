@@ -23,6 +23,7 @@ export interface Issue extends Synchronized {
 
 export interface IIssueData {
   issue: Issue;
+  settings: ISettings;
   isPlayerDealer: boolean;
   openModal: (id?: number) => void;
   removeIssue: (id: number) => void;
@@ -51,7 +52,7 @@ export interface IIssueModal {
   activeIssue: Issue;
   isOpen: boolean;
   isPlayerDealer: boolean;
-  statisticModal?: IStatisticModal;
+  statisticModal: IStatisticModal;
 }
 
 export interface IIssues {
