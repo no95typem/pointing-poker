@@ -1,7 +1,9 @@
-import { Box, Heading, Stack } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 
 import GameCardStatistics from '../GameCardStatistics/GameCardStatistics';
 import { calcPercentage } from '../../../../shared/helpers/calcs/game-calcs';
+import Slider from 'react-slick';
+import { gameCardsSettings } from '../../helpers/swiperSettings';
 
 export interface IRoundStatistics {
   issueTitle: string;
@@ -25,19 +27,22 @@ const RoundStatistics = (props: IRoundStatistics): JSX.Element => {
       >
         {props.issueTitle ? props.issueTitle : 'Statistics:'}
       </Heading>
-
-      <Stack w="100%" wrap="wrap" direction="row" justify="center">
-        {Object.entries(calcPercentage(votes)).map(([cardValue, pctRec]) => {
-          return (
-            <GameCardStatistics
-              cardValue={cardValue}
-              pct={pctRec}
-              allPlayersCount={allPlayersCount}
-              key={cardValue}
-            />
-          );
-        })}
-      </Stack>
+      <Box p="5px">
+        <Slider {...gameCardsSettings}>
+          {Object.entries(calcPercentage(votes)).map(([cardValue, pctRec]) => {
+            return (
+              <Box maxW="320px" key={`${cardValue}-box`}>
+                <GameCardStatistics
+                  cardValue={cardValue}
+                  pct={pctRec}
+                  allPlayersCount={allPlayersCount}
+                  key={cardValue}
+                />
+              </Box>
+            );
+          })}
+        </Slider>
+      </Box>
     </Box>
   );
 };

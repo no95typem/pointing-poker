@@ -19,7 +19,8 @@ import UserVote from '../UserVote/UserVote';
 import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
 
 const UserCards = (props: IUserCards): JSX.Element => {
-  const { members, isItYou, isVotersView, isDealerPlaying } = props;
+  const { members, isItYou, isVotersView, isDealerPlaying, isGameStage } =
+    props;
 
   const settings = {
     infinite: false,
@@ -62,7 +63,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
 
     return isVotersView
       ? (isDealer && isDealerPlaying) || role === USER_ROLES.PLAYER
-      : (isDealer && !isDealerPlaying) || role === USER_ROLES.SPECTATOR;
+      : role === USER_ROLES.SPECTATOR;
   };
 
   return (
@@ -78,15 +79,19 @@ const UserCards = (props: IUserCards): JSX.Element => {
                   direction="row"
                   justify="center"
                   align="center"
-                  border={isVotersView ? '1px solid black' : 'none'}
+                  border={
+                    isVotersView && isGameStage ? '1px solid black' : 'none'
+                  }
                   key={`${id}-wrap`}
                 >
                   <UserCard
                     {...setMemberData(member)}
-                    w={isVotersView ? '210px' : '300px'}
+                    w={isVotersView && isGameStage ? '210px' : '300px'}
                     key={id}
                   />
-                  {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
+                  {isVotersView && isGameStage && (
+                    <UserVote id={+id} key={`${id}-vote`} />
+                  )}
                 </Stack>
               </Box>
             );

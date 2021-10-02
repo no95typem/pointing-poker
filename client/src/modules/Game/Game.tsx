@@ -44,6 +44,7 @@ const Game = (): JSX.Element => {
     gameData,
     isPlayerSpectator,
     gameState,
+    issues: issuesData.issues.list,
   };
 
   return (

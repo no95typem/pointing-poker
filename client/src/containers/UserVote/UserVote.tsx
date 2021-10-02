@@ -7,6 +7,7 @@ import { useTypedSelector } from '../../redux/store';
 import GameCard from '../../components/GameCard/GameCard';
 import { ISettings } from '../../../../shared/types/settings';
 import { ICardData } from '../../../../shared/types/session/card';
+import Cardback from '../../components/Cardback/Cardback';
 
 interface IVote {
   id: number;
@@ -21,7 +22,7 @@ const UserVote = (props: IVote): JSX.Element => {
     state => state.session.gSettings,
   );
 
-  const { cards, scoreTypeShort } = settings;
+  const { cards, scoreTypeShort, activeCardbackBase64 } = settings;
 
   const renderVotingResults = (): JSX.Element => {
     const card =
@@ -29,7 +30,12 @@ const UserVote = (props: IVote): JSX.Element => {
         ? cards.find(card => card.value === game.votes[id])
         : undefined;
 
-    if (!card) return <QuestionIcon color="facebook.300" w={6} h={6} />;
+    if (!card)
+      return activeCardbackBase64 ? (
+        <Cardback src={activeCardbackBase64} size="xs" />
+      ) : (
+        <QuestionIcon color="facebook.300" w={6} h={6} />
+      );
 
     const cardData: ICardData = {
       card,
