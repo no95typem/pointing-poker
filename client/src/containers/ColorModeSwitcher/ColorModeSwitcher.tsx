@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   useColorMode,
   useColorModeValue,
@@ -9,9 +9,13 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, 'aria-label'>;
 
-export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps> = props => {
+export const ColorModeSwitcher = (
+  props: ColorModeSwitcherProps,
+): JSX.Element => {
   const { toggleColorMode } = useColorMode();
+
   const text = useColorModeValue('dark', 'light');
+
   const SwitchIcon = useColorModeValue(FaMoon, FaSun);
 
   return (

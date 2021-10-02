@@ -34,7 +34,6 @@ const UserVote = (props: IVote): JSX.Element => {
     const cardData: ICardData = {
       card,
       units: scoreTypeShort,
-      isGameStage: true,
       isUnitsHidden: true,
       size: 'xs',
     };

@@ -6,7 +6,7 @@ import { ICardsData } from '../../../../shared/types/session/card';
 
 import Settings from '../../containers/Settings/Settings';
 import GameCards from '../../containers/SettingsGameCards/SettingsGameCards';
-import PassiveTimer from '../../containers/PassiveTimer/PassiveTimer';
+import InputTimer, { ITimer } from '../../containers/InputTimer/InputTimer';
 import GameCardBacks, {
   ICardbacksData,
 } from '../../containers/SettingsCardBacks/SettingsCardBacks';
@@ -18,7 +18,6 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
     scoreTypeShort,
     cards,
     isTimerNeeded,
-    roundTime,
     cardbacksBase64,
     activeCardbackBase64,
   } = localSettings;
@@ -34,6 +33,8 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
     activeCardbackBase64,
     setLocalSettings,
   };
+
+  const timerData: ITimer = { settings: localSettings, setLocalSettings };
 
   return (
     <Tabs
@@ -54,7 +55,7 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
         </TabPanel>
         {isTimerNeeded && (
           <TabPanel>
-            <PassiveTimer time={roundTime || 0} />
+            <InputTimer {...timerData} />
           </TabPanel>
         )}
         <TabPanel>

@@ -7,17 +7,15 @@ const GameTimer = (): JSX.Element => {
     state => state.session.game?.roundStartTime,
   );
 
-  const roundTime = useTypedSelector(
-    state => state.session.gSettings.roundTime,
-  );
+  const settings = useTypedSelector(state => state.session.gSettings);
 
-  const isTimerNeeded = useTypedSelector(
-    state => state.session.gSettings.isTimerNeeded,
-  );
+  const { roundTime, isTimerNeeded } = settings;
 
   if (!roundStartTime || !isTimerNeeded) return <></>;
 
-  return <ActiveTimer endTime={roundStartTime + roundTime} />;
+  return (
+    <ActiveTimer settings={settings} endTime={roundStartTime + roundTime} />
+  );
 };
 
 export default GameTimer;

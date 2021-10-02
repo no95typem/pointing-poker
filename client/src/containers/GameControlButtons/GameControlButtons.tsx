@@ -13,6 +13,8 @@ import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationMo
 const GameControlButtons = (props: IGameStateData): JSX.Element => {
   const { isPlayerDealer, gameData } = props;
 
+  const { isGameStage } = gameData;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [confirmData, setConfirmData] = useState({
@@ -30,10 +32,8 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
     setConfirmData(prevState => {
       return {
         ...prevState,
-        description: gameData.isGameStage ? 'Finish Game' : 'Start Game',
-        action: gameData.isGameStage
-          ? SERVER_ADAPTER.endGame
-          : SERVER_ADAPTER.startGame,
+        description: isGameStage ? 'Finish Game' : 'Start Game',
+        action: isGameStage ? SERVER_ADAPTER.endGame : SERVER_ADAPTER.startGame,
       };
     });
 
@@ -77,7 +77,7 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
           visibility={isPlayerDealer ? 'visible' : 'hidden'}
           onClick={changeGameModeConfirmation}
         >
-          {gameData.isGameStage ? 'Finish Game' : 'Start Game'}
+          {isGameStage ? 'Finish Game' : 'Start Game'}
         </Button>
       )}
       <ConfirmationModal {...confirmModalData} />
