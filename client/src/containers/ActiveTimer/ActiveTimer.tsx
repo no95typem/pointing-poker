@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import PassiveTimer from '../PassiveTimer/PassiveTimer';
+import { ISettings } from '../../../../shared/types/settings';
+import PassiveTimer from '../InputTimer/InputTimer';
 
 export interface IGameTimerProps {
   endTime: number;
+  settings: ISettings;
 }
 
 export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
-  const [estTime, setEstTime] = useState(
-    Math.max(props.endTime - Date.now(), 0),
-  );
+  const { endTime, settings } = props;
+
+  const [estTime, setEstTime] = useState(Math.max(endTime - Date.now(), 0));
 
   useEffect(() => {
     let timeout: NodeJS.Timeout | undefined;
 
     const planTick = (delay: number) => {
       timeout = setTimeout(() => {
-        const realEstTimeInS = (props.endTime - Date.now()) / 1000;
+        const realEstTimeInS = (endTime - Date.now()) / 1000;
 
         const showedEstTimeInMS = Math.ceil(realEstTimeInS) * 1000;
 
@@ -28,7 +30,7 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
           const shortedDelay =
             1000 - (showedEstTimeInMS - realEstTimeInS * 1000);
 
-          console.log(showedEstTimeInMS, realEstTimeInS, shortedDelay);
+          // console.log(showedEstTimeInMS, realEstTimeInS, shortedDelay);
 
           planTick(shortedDelay);
         }
@@ -45,7 +47,7 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
     };
   });
 
-  console.log(estTime);
+  // console.log(estTime);
 
-  return <PassiveTimer time={estTime} />;
+  return <PassiveTimer settings={settings} time={estTime} />;
 };

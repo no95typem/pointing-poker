@@ -12,16 +12,22 @@ import {
 import { ImPencil } from 'react-icons/im';
 import { CloseIcon } from '@chakra-ui/icons';
 
-import {
-  IIssueData,
-  Issue,
-} from '../../../../shared/types/session/issue/issue';
+import { IIssueData } from '../../../../shared/types/session/issue/issue';
+import GameCard from '../GameCard/GameCard';
 
 const IssueCard = (props: IIssueData): JSX.Element => {
-  const { issue, openModal, removeIssue, isPlayerDealer, openStatisticModal } =
-    props;
+  const {
+    issue,
+    openModal,
+    removeIssue,
+    isPlayerDealer,
+    openStatisticModal,
+    settings,
+  } = props;
 
-  const { id, title, priority, isSynced, closed, value } = issue as Issue;
+  const { cards, scoreTypeShort } = settings;
+
+  const { id, title, priority, isSynced, closed, value } = issue;
 
   const isEditable = isPlayerDealer && isSynced && !closed;
 
@@ -35,6 +41,21 @@ const IssueCard = (props: IIssueData): JSX.Element => {
     if (!isButton) {
       openStatisticModal(id);
     }
+  };
+
+  const renderVotingCard = (): JSX.Element => {
+    const votingCard = cards.find(card => card.value === value);
+
+    if (!votingCard) return <></>;
+
+    return (
+      <GameCard
+        card={votingCard}
+        size="xs"
+        units={scoreTypeShort}
+        isUnitsHidden={true}
+      />
+    );
   };
 
   return (
@@ -56,7 +77,9 @@ const IssueCard = (props: IIssueData): JSX.Element => {
             {priority}
           </StatHelpText>
         </Stat>
-        {closed && value && (
+        {value ? (
+          renderVotingCard()
+        ) : (
           <Text
             maxW="100px"
             isTruncated
@@ -64,7 +87,7 @@ const IssueCard = (props: IIssueData): JSX.Element => {
             fontFamily="fantasy"
             p="0 5px"
           >
-            {value}
+            -
           </Text>
         )}
       </Stack>

@@ -57,39 +57,40 @@ const UserCards = (props: IUserCards): JSX.Element => {
     };
   };
 
-  const isIgnoredUser = (id: string, role: string): boolean => {
-    return !!(
-      (+id === DEALER_ID && (!isVotersView || !isDealerPlaying)) ||
-      (isVotersView && role === USER_ROLES.SPECTATOR)
-    );
+  const isCorrectMember = (id: string, role: string): boolean => {
+    const isDealer = +id === DEALER_ID;
+
+    return isVotersView
+      ? (isDealer && isDealerPlaying) || role === USER_ROLES.PLAYER
+      : (isDealer && !isDealerPlaying) || role === USER_ROLES.SPECTATOR;
   };
 
   return (
     <Box>
       <Slider {...settings}>
-        {Object.entries(members).map(([id, member]) => {
-          if (isIgnoredUser(id, member.userRole)) return null;
-
-          return (
-            <Box maxW="320px" key={`${id}-box`}>
-              <Stack
-                mx="5px"
-                direction="row"
-                justify="center"
-                align="center"
-                border={isVotersView ? '1px solid black' : 'none'}
-                key={`${id}-wrap`}
-              >
-                <UserCard
-                  {...setMemberData(member)}
-                  w={isVotersView ? '210px' : '300px'}
-                  key={id}
-                />
-                {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
-              </Stack>
-            </Box>
-          );
-        })}
+        {Object.entries(members)
+          .filter(([id, member]) => isCorrectMember(id, member.userRole))
+          .map(([id, member]) => {
+            return (
+              <Box maxW="320px" key={`${id}-box`}>
+                <Stack
+                  mx="5px"
+                  direction="row"
+                  justify="center"
+                  align="center"
+                  border={isVotersView ? '1px solid black' : 'none'}
+                  key={`${id}-wrap`}
+                >
+                  <UserCard
+                    {...setMemberData(member)}
+                    w={isVotersView ? '210px' : '300px'}
+                    key={id}
+                  />
+                  {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
+                </Stack>
+              </Box>
+            );
+          })}
       </Slider>
     </Box>
   );

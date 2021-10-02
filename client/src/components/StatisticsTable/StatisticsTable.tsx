@@ -46,7 +46,6 @@ const renderStat = (props: {
                 <GameCard
                   card={cardData}
                   units={units}
-                  isGameStage
                   size="xs"
                   isUnitsHidden
                 />

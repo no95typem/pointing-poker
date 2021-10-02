@@ -55,6 +55,7 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
       openModal,
       removeIssue,
       issue,
+      settings: statisticModal.settings,
     };
 
     if (gameState && statisticModal) {

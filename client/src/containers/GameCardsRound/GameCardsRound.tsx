@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
+import Slider from 'react-slick';
 
 import { LOCALE_US } from '../../locales/locale-us';
 
@@ -8,9 +9,10 @@ import {
   ICardData,
   ICardsGame,
 } from '../../../../shared/types/session/card';
+import { gameCardsSettings } from '../../helpers/swiperSettings';
+
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import GameCard from '../../components/GameCard/GameCard';
-
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
 const GameCardsRound = (props: ICardsGame): JSX.Element => {
@@ -33,13 +35,12 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
   const setCardData = (card: CardData): ICardData => {
     return {
       card,
-      isGameStage,
       units,
     };
   };
 
   return (
-    <Box w="100%" mb="30px">
+    <Box w="66%" maxW="100%" mb="30px">
       {!isGameStage && (
         <Heading mb="20px" size="md">
           {LOCALE_US.SETTINGS_CARDS_HEADER}
@@ -52,34 +53,31 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
           </Button>
         </Stack>
       )}
+      <Box Box maxW="100vw" m="0 auto" p="0 20px">
+        <Slider {...gameCardsSettings}>
+          {cards.map(cardData => {
+            const id = cardData.value;
 
-      <Stack
-        w="100%"
-        wrap="wrap"
-        direction="row"
-        justify="center"
-        alignItems="center"
-      >
-        {cards.map(cardData => {
-          const id = cardData.value;
+            const card = (
+              <Stack key={`${id}-wrap`}>
+                <GameCard {...setCardData(cardData)} key={id} />;
+              </Stack>
+            );
 
-          const card = (
-            <Stack key={`${id}-wrap`}>
-              <GameCard {...setCardData(cardData)} key={id} />;
-            </Stack>
-          );
+            const radio = (getRadioProps as (obj: { value: string }) => any)({
+              value: String(cardData.value),
+            });
 
-          const radio = (getRadioProps as (obj: { value: string }) => any)({
-            value: String(cardData.value),
-          });
-
-          return (
-            <SessionItemRadioCard key={`${id}-radio`} {...radio}>
-              {card}
-            </SessionItemRadioCard>
-          );
-        })}
-      </Stack>
+            return (
+              <Box key={`${id}-box`}>
+                <SessionItemRadioCard key={`${id}-radio`} {...radio}>
+                  {card}
+                </SessionItemRadioCard>
+              </Box>
+            );
+          })}
+        </Slider>
+      </Box>
     </Box>
   );
 };

@@ -7,47 +7,13 @@ import 'slick-carousel/slick/slick.scss';
 import 'slick-carousel/slick/slick-theme.scss';
 
 import { ICardData, ICardsView } from '../../../../shared/types/session/card';
+import { gameCardsSettings } from '../../helpers/swiperSettings';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
-import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
 
 const GameCardsView = (props: ICardsView): JSX.Element => {
-  const { cards, modal, units, deleteCard } = props;
-
-  const settings = {
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    nextArrow: <SliderCustomArrow />,
-    prevArrow: <SliderCustomArrow />,
-
-    responsive: [
-      {
-        breakpoint: 1400,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 800,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 400,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-    ],
-  };
+  const { cards, modal, units, deleteCard, isGameStage } = props;
 
   return (
     <Box maxW="100%">
@@ -76,7 +42,7 @@ const GameCardsView = (props: ICardsView): JSX.Element => {
         </Button>
       </Stack>
       <Box maxW="100vw" m="0 auto" p="0 20px">
-        <Slider {...settings}>
+        <Slider {...gameCardsSettings}>
           {cards.map(card => {
             const id = card.value;
 
@@ -85,6 +51,7 @@ const GameCardsView = (props: ICardsView): JSX.Element => {
               edit: modal.openModal,
               units,
               deleteCard,
+              isControlShown: !isGameStage,
             };
 
             return (

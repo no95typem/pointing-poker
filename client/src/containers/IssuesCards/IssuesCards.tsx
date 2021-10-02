@@ -95,8 +95,6 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     issuesDndChange,
   };
 
-  console.log(issues);
-
   return <IssueCardsView issues={issues} modal={modalData} />;
 };
 

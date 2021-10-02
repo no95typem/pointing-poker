@@ -7,7 +7,8 @@ import { CloseIcon } from '@chakra-ui/icons';
 import { ICardData } from '../../../../shared/types/session/card';
 
 const GameCard = (props: ICardData): JSX.Element => {
-  const { card, edit, units, deleteCard, isGameStage, isUnitsHidden } = props;
+  const { card, edit, units, deleteCard, isUnitsHidden, isControlShown } =
+    props;
 
   const { value, base64 } = card;
 
@@ -47,7 +48,7 @@ const GameCard = (props: ICardData): JSX.Element => {
         align="center"
         {...stackStyles}
       >
-        {!isGameStage && (
+        {isControlShown && (
           <>
             <IconButton
               position="absolute"

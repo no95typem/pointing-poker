@@ -26,7 +26,7 @@ export interface ICardBackModal {
   back: ICardBackData;
   setLocalSettings: (
     name: string,
-    value: string | boolean | CardData[] | string[],
+    value: string | boolean | CardData[] | string[] | number,
   ) => void;
   cardbacksBase64: string[];
 }
