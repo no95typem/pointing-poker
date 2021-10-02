@@ -102,6 +102,30 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
       userRole: 'PLAYER',
       userSessionPublicId: 2,
     },
+    3: {
+      ...sampleMember,
+      userInfo: {
+        ...sampleMember.userInfo,
+        name: 'Vasya',
+        surname: 'dddddddddddddddRRRRRRRRRRRRRRRRR',
+        jobPosition: 'ZZzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+        avatarBgColor: 'black',
+      },
+      userRole: 'PLAYER',
+      userSessionPublicId: 2,
+    },
+    4: {
+      ...sampleMember,
+      userInfo: {
+        ...sampleMember.userInfo,
+        name: 'Vzzzzasya',
+        surname: 'dddzzzzzzddddddddddddRRRRRRRRRRRRRRRRR',
+        jobPosition: 'ZxxxZzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+        avatarBgColor: 'black',
+      },
+      userRole: 'PLAYER',
+      userSessionPublicId: 2,
+    },
   },
   gSettings: defaultSettings,
   chat: {

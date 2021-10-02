@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import UserCards from '../../containers/UserCards/UserCards';
@@ -7,18 +6,18 @@ import { IUserCards } from '../../../../shared/types/session/member';
 
 const UserCardsTabs = (props: IUserCards): JSX.Element => {
   return (
-    <Tabs isManual variant="enclosed" mb="10px">
+    <Tabs isManual variant="enclosed" w="100%">
       <TabList
         justifyContent={['center', 'center', 'center', 'center', 'flex-start']}
       >
         <Tab>Players</Tab>
         <Tab>Spectators</Tab>
       </TabList>
-      <TabPanels maxW="100vw">
-        <TabPanel>
+      <TabPanels w="100%">
+        <TabPanel w="100%" display="flex" justifyContent="center">
           <UserCards {...{ ...props, isVotersView: true }} />
         </TabPanel>
-        <TabPanel>
+        <TabPanel w="100%" display="flex" justifyContent="center">
           <UserCards {...props} />
         </TabPanel>
       </TabPanels>

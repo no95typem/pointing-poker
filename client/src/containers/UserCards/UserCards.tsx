@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { Box, Stack } from '@chakra-ui/react';
+import { Box, Stack, useColorMode, useMediaQuery } from '@chakra-ui/react';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -18,36 +16,57 @@ import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
 import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
 
+const settings = {
+  infinite: false,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 4,
+  initialSlide: 1,
+  nextArrow: <SliderCustomArrow />,
+  prevArrow: <SliderCustomArrow />,
+
+  responsive: [
+    {
+      breakpoint: 1400,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      },
+    },
+    {
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+      },
+    },
+    {
+      breakpoint: 780,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        initialSlide: 1,
+      },
+    },
+    {
+      breakpoint: 370,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        initialSlide: 1,
+        dots: true,
+        arrows: false,
+        // dotsClass: null, // TODO!
+      },
+    },
+  ],
+};
+
 const UserCards = (props: IUserCards): JSX.Element => {
   const { members, isItYou, isVotersView, isDealerPlaying } = props;
-
-  const settings = {
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    initialSlide: 1,
-    nextArrow: <SliderCustomArrow />,
-    prevArrow: <SliderCustomArrow />,
-
-    responsive: [
-      {
-        breakpoint: 1000,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 700,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-    ],
-  };
+  const [isLargerThen780] = useMediaQuery('(min-width: 780px)');
+  const [isLargerThen1200] = useMediaQuery('(min-width: 1200px)');
+  const [isLargerThen1400] = useMediaQuery('(min-width: 1400px)');
 
   const setMemberData = (member: Member): IMemberData => {
     return {
@@ -65,8 +84,20 @@ const UserCards = (props: IUserCards): JSX.Element => {
       : (isDealer && !isDealerPlaying) || role === USER_ROLES.SPECTATOR;
   };
 
+  const w = isLargerThen780
+    ? isLargerThen1200
+      ? isLargerThen1400
+        ? '98%'
+        : '980px'
+      : '640px'
+    : '320px';
+
+  const isUserVoteVisible = isVotersView && props.isGameStage;
+
+  const cMode = useColorMode();
+
   return (
-    <Box>
+    <Box w={w}>
       <Slider {...settings}>
         {Object.entries(members)
           .filter(([id, member]) => isCorrectMember(id, member.userRole))
@@ -78,15 +109,21 @@ const UserCards = (props: IUserCards): JSX.Element => {
                   direction="row"
                   justify="center"
                   align="center"
-                  border={isVotersView ? '1px solid black' : 'none'}
+                  border="1px solid"
+                  borderRadius="sm"
+                  borderColor={
+                    cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'
+                  }
                   key={`${id}-wrap`}
                 >
                   <UserCard
                     {...setMemberData(member)}
-                    w={isVotersView ? '210px' : '300px'}
+                    w={isVotersView ? '210px' : '100%'}
                     key={id}
                   />
-                  {isVotersView && <UserVote id={+id} key={`${id}-vote`} />}
+                  {isUserVoteVisible && (
+                    <UserVote id={+id} key={`${id}-vote`} />
+                  )}
                 </Stack>
               </Box>
             );

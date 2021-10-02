@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { ISettingsData } from '../../../../shared/types/settings';
@@ -38,12 +37,12 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
 
   return (
     <Tabs
-      w={['100%', '100%', '66%']}
+      w="100%"
       isManual
       variant="enclosed"
       style={{ marginBottom: '10px', marginInlineStart: '0' }}
     >
-      <TabList display="flex" justifyContent="flex-start">
+      <TabList display="flex" justifyContent="flex-start" w="100%">
         <Tab>Common Settings</Tab>
         {isTimerNeeded && <Tab>Timer</Tab>}
         <Tab>Game Cards</Tab>
@@ -58,7 +57,7 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
             <InputTimer {...timerData} />
           </TabPanel>
         )}
-        <TabPanel>
+        <TabPanel w="100%">
           <GameCards {...cardsData} />
         </TabPanel>
         <TabPanel>

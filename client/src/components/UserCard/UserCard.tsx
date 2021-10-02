@@ -2,16 +2,17 @@ import { useState } from 'react';
 
 import {
   Avatar,
-  Stack,
   IconButton,
   Stat,
   AvatarBadge,
   StatNumber,
   StatHelpText,
-  StackProps,
-  ButtonProps,
   Tooltip,
   Flex,
+  FlexProps,
+  Grid,
+  Box,
+  Text,
 } from '@chakra-ui/react';
 
 import { ImBlocked } from 'react-icons/im';
@@ -20,11 +21,13 @@ import { IMemberData } from '../../../../shared/types/session/member';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
 import { showKickDialog } from '../../helpers/showKickDialog';
+import { FaGlasses, FaUserGraduate, FaUserTie } from 'react-icons/fa';
 
 export interface IUserCard extends IMemberData {
   size?: 'sm' | 'md';
   w?: string;
   flexDirection?: 'row' | 'row-reverse';
+  isInfoStatic?: true;
 }
 
 const UserCard = (props: IUserCard): JSX.Element => {
@@ -47,7 +50,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
 
   const [hover, setHover] = useState(false);
 
-  const stackStyles =
+  const boxStyles =
     props.size === 'sm'
       ? {
           w: '140px',
@@ -61,59 +64,25 @@ const UserCard = (props: IUserCard): JSX.Element => {
           h: '70px',
           direction: 'row',
           align: 'center',
-          p: '10px 10px',
+          p: '10px 20px 10px 10px',
           boxShadow: 'lg',
-        };
-
-  const kickBtnStyles =
-    props.size === 'sm'
-      ? {
-          position: 'absolute',
-          top: '50%',
-          // bottom: '0px',
-          right: '50%',
-          style: { transform: 'translate(50%, -50%) scale(1.5)' },
-          opacity: hover ? '0.3' : '0.03',
-          _hover: {
-            opacity: '1',
-          },
-          minW: 'fit-content',
-          height: 'fit-content',
-          backgroundColor: '#ffAAAAA0',
-          borderRadius: '50%',
-          zIndex: '1',
-        }
-      : {
-          position: 'absolute',
-          top: '10px',
-          // bottom: '0px',
-          right: '10px',
-          // style: { transform: 'translate(50%, -50%) scale(1.5)' },
-          opacity: hover ? '0.3' : '0.03',
-          _hover: {
-            opacity: '1',
-          },
-          minW: 'fit-content',
-          height: 'fit-content',
-          // backgroundColor: '#ffAAAAA0',
-          borderRadius: '50%',
-          zIndex: '1',
         };
 
   return (
     <Tooltip label={fullName} placement="top" openDelay={500}>
-      <Stack
-        {...(stackStyles as StackProps)}
+      <Grid
+        {...(boxStyles as FlexProps)}
         overflow="hidden"
         position="relative"
-        borderRadius="md"
-        flexDirection={props.flexDirection}
-        w={props.w}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         onTouchStart={() => setHover(true)}
         onTouchEnd={() => setHover(false)}
         onTouchCancel={() => setHover(false)}
+        w={props.w}
+        gridTemplateColumns="auto minmax(6ch, 1fr) auto"
+        gridGap={4}
+        alignItems="center"
       >
         <Avatar
           color="white"
@@ -150,17 +119,42 @@ const UserCard = (props: IUserCard): JSX.Element => {
           </StatHelpText>
         </Stat>
 
-        {isKickAvailable && (
-          <IconButton
-            aria-label="Kick player"
-            background="transparent"
-            size="lg"
-            icon={<ImBlocked />}
-            onClick={() => showKickDialog(id)}
-            {...(kickBtnStyles as ButtonProps)}
-          />
-        )}
-      </Stack>
+        <Flex
+          h="100%"
+          w="fit-content"
+          position={props.isInfoStatic ? 'static' : 'absolute'}
+          right="0px"
+          top="0px"
+          p={props.size === 'sm' ? 0 : 2}
+          direction="column"
+          justifyContent={isKickAvailable ? 'space-between' : 'flex-end'}
+          opacity={hover ? '0.3' : '0.1'}
+          gridGap={0.25}
+          _hover={{
+            opacity: '1',
+          }}
+        >
+          {isKickAvailable && (
+            <IconButton
+              aria-label="Kick player"
+              // background="transparent"
+              // size="lg"
+              icon={<ImBlocked />}
+              onClick={() => showKickDialog(id)}
+              minW="fit-content"
+              h="fit-content"
+            />
+          )}
+
+          {isItYou && <Text fontWeight="bold">YOU</Text>}
+
+          <Box justifySelf="flex-end">
+            {userRole === USER_ROLES.DEALER && <FaUserGraduate />}
+            {userRole === USER_ROLES.PLAYER && <FaUserTie />}
+            {userRole === USER_ROLES.SPECTATOR && <FaGlasses />}
+          </Box>
+        </Flex>
+      </Grid>
     </Tooltip>
   );
 };

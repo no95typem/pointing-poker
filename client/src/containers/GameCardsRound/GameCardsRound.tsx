@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
 import Slider from 'react-slick';
 
@@ -40,7 +40,7 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
   };
 
   return (
-    <Box w="66%" maxW="100%" mb="30px">
+    <Box w="100%" mb="30px">
       {!isGameStage && (
         <Heading mb="20px" size="md">
           {LOCALE_US.SETTINGS_CARDS_HEADER}

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Box, Stack } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
@@ -14,6 +12,7 @@ import IssueCards from '../../containers/IssuesCards/IssuesCards';
 
 import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
+import { MAX_CONTENT_WIDTH } from '../../constants';
 import GameInfo, { IGameInfo } from '../../containers/GameInfo/GameInfo';
 
 const Game = (): JSX.Element => {
@@ -45,9 +44,15 @@ const Game = (): JSX.Element => {
     isPlayerSpectator,
     gameState,
   };
-
+  
   return (
-    <Box maxW="1200px" w={['100vw', '90%']} h="100%" m="0 auto" p="5px">
+    <Box
+      maxW={MAX_CONTENT_WIDTH}
+      w="90%"
+      m="0 auto"
+      p="5px"
+      alignSelf="flex-start"
+    >
       <EditableHeader {...sessionNameData} />
 
       <Stack
@@ -61,12 +66,7 @@ const Game = (): JSX.Element => {
         <GameControlButtons {...gameStateData} />
       </Stack>
       <UserCardsTabs {...membersData} />
-      <Stack
-        direction="row"
-        wrap="wrap"
-        style={{ gap: '1vw' }}
-        justify={['center', 'center', 'center', 'center', 'space-between']}
-      >
+      <Stack direction="row" justify="space-between" align="center">
         <IssueCards {...issuesData} />
         <GameInfo {...gameInfo} />
       </Stack>

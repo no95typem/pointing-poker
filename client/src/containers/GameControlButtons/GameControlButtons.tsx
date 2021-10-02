@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-import { Button, Stack, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, useDisclosure } from '@chakra-ui/react';
 
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import {
@@ -53,24 +53,12 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
   };
 
   return (
-    <Stack
-      direction="row"
-      align="center"
-      justify="space-between"
-      wrap="wrap"
-      style={{ gap: '20px', marginBottom: '10px' }}
-    >
-      <Button
-        colorScheme="facebook"
-        w="130px"
-        variant="outline"
-        onClick={leaveGameConfirmation}
-      >
+    <Flex align="center" justify="space-between" wrap="wrap" gridGap={2}>
+      <Button w="130px" variant="outline" onClick={leaveGameConfirmation}>
         {isPlayerDealer ? 'Cancel Game' : 'Leave Game'}
       </Button>
       {isPlayerDealer && (
         <Button
-          colorScheme="facebook"
           w="130px"
           variant="solid"
           style={{ marginInlineStart: '0' }}
@@ -81,7 +69,7 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
         </Button>
       )}
       <ConfirmationModal {...confirmModalData} />
-    </Stack>
+    </Flex>
   );
 };
 
