@@ -11,6 +11,7 @@ import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
 import { chatSlice } from './slices/chat';
 import { notifSlice } from './slices/notifications';
+import { soundSlice } from './slices/sound';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 
 export const DEFAULT_REDUCER = combineReducers({
@@ -25,6 +26,7 @@ export const DEFAULT_REDUCER = combineReducers({
   mockSession: mockSessionSlice.reducer,
   settings: settingsSlice.reducer,
   alerts: notifSlice.reducer,
+  sound: soundSlice.reducer,
 });
 
 export const store = configureStore({

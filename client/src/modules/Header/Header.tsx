@@ -1,4 +1,6 @@
 import { ChatIcon } from '@chakra-ui/icons';
+import { BsFillVolumeUpFill, BsFillVolumeMuteFill } from 'react-icons/bs';
+import { tryToToggleSound } from '../../redux/slices/sound';
 
 import logo from '../../assets/images/shared/logo.svg';
 
@@ -12,16 +14,23 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
-import { useAppDispatch } from '../../redux/store';
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
 import { AppMenu } from '../../containers/AppMenu/AppMenu';
+import { notifSound } from '../../helpers/notifSound';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const cMode = useColorMode();
+  const { isMute } = useTypedSelector(state => state.sound);
 
   const toggleChat = (): void => {
     dispatch(tryToToggleChatState());
+  };
+
+  const toggleSound = (): void => {
+    dispatch(tryToToggleSound());
+    notifSound('info');
   };
 
   return (
@@ -52,6 +61,13 @@ export const Header = (): JSX.Element => {
         />
         <Spacer />
         <AppMenu />
+        <Spacer />
+        <IconButton
+          style={{ marginInlineStart: '0px' }}
+          aria-label="sound toggle"
+          icon={isMute ? <BsFillVolumeMuteFill /> : <BsFillVolumeUpFill />}
+          onClick={toggleSound}
+        />
       </HStack>
     </Flex>
   );
