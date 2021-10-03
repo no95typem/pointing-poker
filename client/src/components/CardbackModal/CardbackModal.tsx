@@ -101,7 +101,6 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
         </ModalBody>
         <ModalFooter>
           <ButtonGroup
-            colorScheme="facebook"
             width="100%"
             display="flex"
             justifyContent="space-between"

@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { Stack, Text } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
 import { IMemberData } from '../../../../shared/types/session/member';
 
@@ -13,16 +11,13 @@ export interface IDealerPlateProps {
 
 const DealerPlate = (props: IDealerPlateProps): JSX.Element => {
   return (
-    <Stack w="100%" maxW="280px" mb="30px">
-      <Text mb="-10px" padding="0 10px">
-        Dealer:
-      </Text>
+    <Flex w="100%" maxW="280px" direction="column" gridGap={2}>
       {props.dealerMemberData ? (
         <UserCard {...props.dealerMemberData} />
       ) : (
         <QuestionIcon />
       )}
-    </Stack>
+    </Flex>
   );
 };
 

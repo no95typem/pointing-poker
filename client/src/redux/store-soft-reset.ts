@@ -1,14 +1,8 @@
-import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { SERVER_ADAPTER } from '../modules/ServerAdapter/serverAdapter';
-import { DEFAULT_REDUCER, store, STORE_INIT_STATE } from './store';
-
-const softResetReducer = () => {
-  return OBJ_PROCESSOR.deepClone(STORE_INIT_STATE);
-};
+import { store } from './store';
 
 const dang_STORE_SOFT_RESET = () => {
-  store.replaceReducer(softResetReducer);
-  store.replaceReducer(DEFAULT_REDUCER);
+  store.dispatch({ type: 'DANG_APP_SOFT_RESET' });
 };
 
 export const dang_APP_SOFT_RESET = () => {

@@ -438,12 +438,13 @@ class ServerAdapter {
     // remove unnecesarry things on this satge
 
     const settingsToSend: ISettings = onlyAdmit
-      ? {
+      ? OBJ_PROCESSOR.deepClone({
           ...settings,
+          cardbacksBase64: undefined,
           cards: [],
           activeCardbackBase64: '',
-        }
-      : OBJ_PROCESSOR.deepClone(settings);
+        })
+      : OBJ_PROCESSOR.deepClone({ ...settings, cardbacksBase64: undefined });
 
     this.updSessState({ gSettings: settingsToSend });
   };

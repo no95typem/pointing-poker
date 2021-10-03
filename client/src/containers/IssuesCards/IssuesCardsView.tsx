@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Stack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Flex, Stack, useRadioGroup } from '@chakra-ui/react';
 
 import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 
@@ -22,7 +22,9 @@ import IssuesTabs, {
   IIssuesTabs,
 } from '../../components/IssuesTabs/IssuesTabs';
 
-const IssueCardsView = (props: IIssues): JSX.Element => {
+const IssueCardsView = (
+  props: IIssues & { justifyTabs?: 'start' | 'center' },
+): JSX.Element => {
   const { issues, modal } = props;
 
   const { list, isSynced } = issues;
@@ -75,19 +77,7 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
   const renderBasicIssueCard = (issue: Issue): JSX.Element => {
     const id = issue.id;
 
-    return (
-      <Stack
-        bg={issue.closed ? 'gray.400' : 'unset'}
-        w="280px"
-        style={{
-          marginTop: '5px',
-          marginBottom: '5px',
-        }}
-        key={`${id}-wrap`}
-      >
-        <IssueCard {...setIssueData(issue)} key={id} />
-      </Stack>
-    );
+    return <IssueCard {...setIssueData(issue)} key={id} />;
   };
 
   const renderDealerDraggableCard = (issue: Issue): JSX.Element => {
@@ -158,20 +148,27 @@ const IssueCardsView = (props: IIssues): JSX.Element => {
   const issueTabsData: IIssuesTabs = {
     isSynced,
     list,
+    justifyTabs: props.justifyTabs,
     renderBasicIssueCard,
     renderIssueCard,
   };
 
   return (
     <DragDropContext onDragEnd={handleDnd}>
-      <Box mb="20px" position="relative">
+      <Flex
+        position="relative"
+        direction="column"
+        gridGap={4}
+        h="100%"
+        w="100%"
+      >
         {renderRoundControlButtons()}
         {isPlayerDealer && isSynced && <NewIssuesButtons modal={openModal} />}
         {<IssuesTabs {...issueTabsData} />}
         <IssueModal issue={modal} />
         {statisticModal && <IssueStatisticModal {...statisticModal} />}
         {!isSynced && <ChakraLoader />}
-      </Box>
+      </Flex>
     </DragDropContext>
   );
 };

@@ -32,7 +32,6 @@ const GameCardsView = (props: ICardsView): JSX.Element => {
           <option>4</option>
         </Select>
         <Button
-          colorScheme="facebook"
           w="130px"
           variant="solid"
           style={{ marginInlineStart: '0' }}

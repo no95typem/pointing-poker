@@ -26,11 +26,12 @@ const Switcher = (props: ISettingsComponentData): JSX.Element => {
         {label}
       </FormLabel>
       <Switch
-        colorScheme="facebook"
+        colorScheme="green"
         id={name}
         name={name}
         isChecked={value as boolean}
         onChange={setData}
+        opacity="0.9"
       />
     </FormControl>
   );
