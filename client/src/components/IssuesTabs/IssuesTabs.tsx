@@ -10,17 +10,20 @@ import {
 import { Droppable } from 'react-beautiful-dnd';
 
 import { Issue } from '../../../../shared/types/session/issue/issue';
+import { ISessionGameState } from '../../../../shared/types/session/state/session-state';
 
 export interface IIssuesTabs {
-  isSynced: boolean;
   list: Issue[];
+  gameState?: ISessionGameState;
   renderIssueCard: (issue: Issue) => JSX.Element;
   renderBasicIssueCard: (issue: Issue) => JSX.Element;
   justifyTabs?: 'start' | 'center';
+  isSynced: boolean;
 }
 
 const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
-  const { isSynced, list, renderIssueCard, renderBasicIssueCard } = props;
+  const { isSynced, list, renderIssueCard, renderBasicIssueCard, gameState } =
+    props;
 
   const cMode = useColorMode();
 
@@ -36,7 +39,7 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
     >
       <TabList justifyContent={props.justifyTabs || 'start'}>
         <Tab>Active Issues</Tab>
-        <Tab>Closed Issues</Tab>
+        {gameState && <Tab>Closed Issues</Tab>}
       </TabList>
       <TabPanels
         w="100%"

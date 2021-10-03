@@ -31,7 +31,7 @@ export interface IUserCard extends IMemberData {
 }
 
 const UserCard = (props: IUserCard): JSX.Element => {
-  const { member, isItYou, isRoundStarted } = props;
+  const { member, isItYou, isRoundStarted, w: width } = props;
 
   const { userInfo, userState, userRole, userSessionPublicId: id } = member;
 
@@ -79,7 +79,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
         onTouchStart={() => setHover(true)}
         onTouchEnd={() => setHover(false)}
         onTouchCancel={() => setHover(false)}
-        w={props.w}
+        w={width}
         gridTemplateColumns="auto minmax(6ch, 1fr) auto"
         gridGap={4}
         alignItems="center"

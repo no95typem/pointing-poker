@@ -6,6 +6,8 @@ import { ISettings } from '../../../../shared/types/settings';
 import { CardData } from '../../../../shared/types/session/card';
 
 import InputNumber from '../../components/InputNumber/InputNumber';
+import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { store } from '../../redux/store';
 
 export interface ITimer {
   settings: ISettings;
@@ -40,9 +42,61 @@ const InputTimer = (props: ITimer): JSX.Element => {
     return (timer.minutes * 60 + timer.seconds) * 1000;
   };
 
+  const tenSecondsWarning = (): void => {
+    const warn: INotification = {
+      status: 'warning',
+      text: `Timer should be at least 10 seconds.`,
+      needToShow: true,
+    };
+
+    store.dispatch(notifSlice.actions.addNotifRec(warn));
+  };
+
   const setTime = (name: string, value: number): void => {
     if (!setLocalSettings) return;
 
+    switch (true) {
+      case Number.isNaN(value):
+        const notification: INotification = {
+          status: 'warning',
+          text: `Numbers only, please!`,
+          needToShow: true,
+        };
+
+        store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+        return;
+
+      case value > 59:
+        value = 59;
+
+        const maxTime: INotification = {
+          status: 'warning',
+          text: `59 is upper limit.`,
+          needToShow: true,
+        };
+
+        store.dispatch(notifSlice.actions.addNotifRec(maxTime));
+
+        break;
+
+      case name === 'seconds' && timer.minutes === 0 && value < 10:
+        value = 10;
+
+        tenSecondsWarning();
+
+        break;
+
+      case name === 'minutes' && timer.seconds < 10 && value === 0:
+        tenSecondsWarning();
+        setTimer({ ...timer, [name]: value, seconds: 10 });
+
+        setLocalSettings('roundTime', getTimeInMs());
+
+        return;
+
+      default:
+    }
     setTimer({ ...timer, [name]: value });
 
     setLocalSettings('roundTime', getTimeInMs());

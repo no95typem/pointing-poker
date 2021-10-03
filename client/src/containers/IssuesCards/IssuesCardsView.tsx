@@ -11,13 +11,12 @@ import {
 } from '../../../../shared/types/session/issue/issue';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 
+import NewIssuesButtons from '../NewIssuesButtons/NewIssuesButtons';
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueModal from '../../components/IssueModal/IssueModal';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 import IssueStatisticModal from '../../components/IssueStatisticModal/IssueStatisticModal';
-import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
-import NewIssuesButtons from '../NewIssuesButtons/NewIssuesButtons';
 import IssuesTabs, {
   IIssuesTabs,
 } from '../../components/IssuesTabs/IssuesTabs';
@@ -65,13 +64,6 @@ const IssueCardsView = (
     }
 
     return issueData;
-  };
-
-  const renderRoundControlButtons = (): JSX.Element => {
-    if (!gameState || !isPlayerDealer || !gameState.currIssueId || !isSynced)
-      return <></>;
-
-    return <RoundControlButtons {...gameState} />;
   };
 
   const renderBasicIssueCard = (issue: Issue): JSX.Element => {
@@ -151,6 +143,7 @@ const IssueCardsView = (
     justifyTabs: props.justifyTabs,
     renderBasicIssueCard,
     renderIssueCard,
+    gameState,
   };
 
   return (
@@ -162,7 +155,6 @@ const IssueCardsView = (
         h="100%"
         w="100%"
       >
-        {renderRoundControlButtons()}
         {isPlayerDealer && isSynced && <NewIssuesButtons modal={openModal} />}
         {<IssuesTabs {...issueTabsData} />}
         <IssueModal issue={modal} />
