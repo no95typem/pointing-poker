@@ -12,7 +12,9 @@ import {
 import IssueCardsView from './IssuesCardsView';
 import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
 
-const IssuesCards = (props: IIssuesData): JSX.Element => {
+const IssuesCards = (
+  props: IIssuesData & { justifyTabs?: 'start' | 'center' },
+): JSX.Element => {
   const {
     issues,
     addNewIssue,
@@ -95,7 +97,13 @@ const IssuesCards = (props: IIssuesData): JSX.Element => {
     issuesDndChange,
   };
 
-  return <IssueCardsView issues={issues} modal={modalData} />;
+  return (
+    <IssueCardsView
+      issues={issues}
+      modal={modalData}
+      justifyTabs={props.justifyTabs}
+    />
+  );
 };
 
 export default IssuesCards;

@@ -438,7 +438,7 @@ class ServerAdapter {
           cards: [],
           activeCardbackBase64: '',
         })
-      : OBJ_PROCESSOR.deepClone({...settings, cardbacksBase64: undefined});
+      : OBJ_PROCESSOR.deepClone({ ...settings, cardbacksBase64: undefined });
 
     this.updSessState({ gSettings: settingsToSend });
   };

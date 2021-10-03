@@ -49,7 +49,6 @@ const KickModal = (props: IKickModalProps): JSX.Element => {
 
           <ModalFooter>
             <ButtonGroup
-              colorScheme="facebook"
               width="100%"
               display="flex"
               justifyContent="space-between"

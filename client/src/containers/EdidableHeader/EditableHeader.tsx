@@ -92,20 +92,10 @@ const EditableHeader = (props: ISessionNameHandling) => {
 
           <ModalFooter>
             <ButtonGroup w="100%" d="flex" justifyContent="space-between">
-              <Button
-                colorScheme="facebook"
-                w="100px"
-                variant="outline"
-                onClick={onClose}
-              >
+              <Button w="100px" variant="outline" onClick={onClose}>
                 Close
               </Button>
-              <Button
-                colorScheme="facebook"
-                w="100px"
-                variant="solid"
-                onClick={updateTopic}
-              >
+              <Button w="100px" variant="solid" onClick={updateTopic}>
                 Change
               </Button>
             </ButtonGroup>

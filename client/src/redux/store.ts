@@ -5,7 +5,6 @@ import { errorsSlice } from './slices/errors';
 import { homePageSlice } from './slices/home-page';
 import { loadsSlice } from './slices/loads';
 import { localeSlice } from './slices/locale';
-import { mockSessionSlice } from './slices/mockSession';
 import { sessionSlice } from './slices/session';
 import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
@@ -34,6 +33,7 @@ const rootReducer = (state: RootState = INIT_STATE, action: Action) => {
   if (action.type === 'DANG_APP_SOFT_RESET') {
     return OBJ_PROCESSOR.deepClone(INIT_STATE);
   }
+
   return COMBINED_REDUCER(state, action);
 };
 

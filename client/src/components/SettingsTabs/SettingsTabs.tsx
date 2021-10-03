@@ -1,4 +1,11 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import {
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useMediaQuery,
+} from '@chakra-ui/react';
 
 import { ISettingsData } from '../../../../shared/types/settings';
 import { ICardsData } from '../../../../shared/types/session/card';
@@ -36,19 +43,19 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
   const timerData: ITimer = { settings: localSettings, setLocalSettings };
 
   return (
-    <Tabs
-      w="100%"
-      isManual
-      variant="enclosed"
-      style={{ marginBottom: '10px', marginInlineStart: '0' }}
-    >
-      <TabList display="flex" justifyContent="flex-start" w="100%">
+    <Tabs w="100%" isManual variant="enclosed">
+      <TabList
+        display="flex"
+        justifyContent="flex-start"
+        w="100%"
+        flexWrap="wrap"
+      >
         <Tab>Common Settings</Tab>
         {isTimerNeeded && <Tab>Timer</Tab>}
         <Tab>Game Cards</Tab>
         <Tab>Card Backs</Tab>
       </TabList>
-      <TabPanels>
+      <TabPanels minH="330px">
         <TabPanel>
           <Settings {...props} />
         </TabPanel>

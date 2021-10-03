@@ -1,4 +1,4 @@
-import { Box, Stack } from '@chakra-ui/react';
+import { Box, Divider, Flex, useMediaQuery } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
@@ -14,11 +14,14 @@ import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
 import { MAX_CONTENT_WIDTH } from '../../constants';
 import GameInfo, { IGameInfo } from '../../containers/GameInfo/GameInfo';
+import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 
 const Game = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
 
   const sessionData = UseSessionData(session);
+
+  const [isLargerThen900] = useMediaQuery('(min-width: 900px)');
 
   if (!sessionData) return <></>;
 
@@ -44,33 +47,69 @@ const Game = (): JSX.Element => {
     isPlayerSpectator,
     gameState,
   };
-  
+
   return (
-    <Box
+    <Flex
       maxW={MAX_CONTENT_WIDTH}
-      w="90%"
+      w="100%"
+      h="100%"
       m="0 auto"
-      p="5px"
-      alignSelf="flex-start"
+      px="25px"
+      // gridTemplateRows="auto auto auto 1fr"
+      // gridTemplateColumns="100%"
+      alignItems="center"
+      direction="column"
+      gridGap={4}
     >
       <EditableHeader {...sessionNameData} />
-
-      <Stack
-        direction="row"
-        justify={['center', 'center', 'center', 'space-between']}
-        align="center"
-        wrap="wrap"
+      <Flex
+        w="100%"
+        direction={isLargerThen900 ? 'row' : 'column'}
+        justify="space-between"
+        alignItems={isLargerThen900 ? 'flex-end' : 'flex-start'}
+        gridGap={4}
       >
         <DealerPlate dealerMemberData={dealerData} />
-        {isRoundStarted && <GameTimer />}
+        {isRoundStarted ? (
+          <GameTimer />
+        ) : (
+          <JoinGameLink link={`${window.location}`} />
+        )}
         <GameControlButtons {...gameStateData} />
-      </Stack>
-      <UserCardsTabs {...membersData} />
-      <Stack direction="row" justify="space-between" align="center">
-        <IssueCards {...issuesData} />
-        <GameInfo {...gameInfo} />
-      </Stack>
-    </Box>
+      </Flex>
+
+      <Box w="100%">
+        <UserCardsTabs {...membersData} />
+        <Divider orientation="horizontal" />
+      </Box>
+
+      <Flex
+        w="100%"
+        flexGrow={1}
+        gridGap="4"
+        alignItems="start"
+        justify="space-between"
+        direction={isLargerThen900 ? 'row' : 'column'}
+      >
+        <Box
+          alignSelf={isLargerThen900 ? 'start' : 'center'}
+          w="320px"
+          // h="100%"
+          h="400px"
+          flexShrink={0}
+        >
+          <IssueCards
+            {...issuesData}
+            justifyTabs={isLargerThen900 ? 'start' : 'center'}
+          />
+        </Box>
+        <Divider orientation="vertical" w="1px" />
+        <Box w={isLargerThen900 ? 'calc(100% - 321px)' : '100%'}>
+          <GameInfo {...gameInfo} />
+        </Box>
+      </Flex>
+      <Box />
+    </Flex>
   );
 };
 

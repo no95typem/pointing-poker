@@ -1,4 +1,11 @@
-import { Box, Stack, useColorMode, useMediaQuery } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Stack,
+  Text,
+  useColorMode,
+  useMediaQuery,
+} from '@chakra-ui/react';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -15,6 +22,7 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
 import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
+import { ReactComponent as UndrawTreeSwing } from '../../assets/images/undraw/tree-swing.svg';
 
 const settings = {
   infinite: false,
@@ -96,38 +104,46 @@ const UserCards = (props: IUserCards): JSX.Element => {
 
   const cMode = useColorMode();
 
+  const selectedMemebers = Object.entries(members).filter(([id, member]) =>
+    isCorrectMember(id, member.userRole),
+  );
+
+  if (selectedMemebers.length === 0)
+    return (
+      <Flex w="100%" h="100%" justify="center" align="center" gridGap={4}>
+        <UndrawTreeSwing style={{ height: '100%' }} />
+        <Text>There are no members with this role yet :(</Text>
+      </Flex>
+    );
+
   return (
     <Box w={w}>
       <Slider {...settings}>
-        {Object.entries(members)
-          .filter(([id, member]) => isCorrectMember(id, member.userRole))
-          .map(([id, member]) => {
-            return (
-              <Box maxW="320px" key={`${id}-box`}>
-                <Stack
-                  mx="5px"
-                  direction="row"
-                  justify="center"
-                  align="center"
-                  border="1px solid"
-                  borderRadius="sm"
-                  borderColor={
-                    cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'
-                  }
-                  key={`${id}-wrap`}
-                >
-                  <UserCard
-                    {...setMemberData(member)}
-                    w={isVotersView ? '210px' : '100%'}
-                    key={id}
-                  />
-                  {isUserVoteVisible && (
-                    <UserVote id={+id} key={`${id}-vote`} />
-                  )}
-                </Stack>
-              </Box>
-            );
-          })}
+        {selectedMemebers.map(([id, member]) => {
+          return (
+            <Box maxW="320px" key={`${id}-box`}>
+              <Stack
+                mx="5px"
+                direction="row"
+                justify="center"
+                align="center"
+                border="1px solid"
+                borderRadius="sm"
+                borderColor={
+                  cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'
+                }
+                key={`${id}-wrap`}
+              >
+                <UserCard
+                  {...setMemberData(member)}
+                  w={isUserVoteVisible ? '210px' : '100%'}
+                  key={id}
+                />
+                {isUserVoteVisible && <UserVote id={+id} key={`${id}-vote`} />}
+              </Stack>
+            </Box>
+          );
+        })}
       </Slider>
     </Box>
   );

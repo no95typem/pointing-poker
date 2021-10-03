@@ -76,7 +76,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
   clientId: 0,
   name: { value: 'Session 12345', isSynced: true },
-  stage: SESSION_STAGES.STATS,
+  stage: SESSION_STAGES.GAME,
   members: {
     0: sampleMember,
     1: {
@@ -147,7 +147,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         title:
           'title 1dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
         link: 'link 1',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
       },

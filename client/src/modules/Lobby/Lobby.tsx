@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Grid, useMediaQuery } from '@chakra-ui/react';
+import { Box, Divider, Flex, useMediaQuery } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
@@ -50,15 +50,16 @@ const Lobby = (): JSX.Element => {
   };
 
   return (
-    <Grid
+    <Flex
       maxW={MAX_CONTENT_WIDTH}
       w="100%"
       h="100%"
       m="0 auto"
       px="25px"
-      gridTemplateRows="auto auto auto 1fr"
-      gridTemplateColumns="100%"
+      // gridTemplateRows="auto auto auto 1fr"
+      // gridTemplateColumns="100%"
       alignItems="center"
+      direction="column"
       gridGap={4}
     >
       <EditableHeader {...sessionNameData} />
@@ -78,8 +79,8 @@ const Lobby = (): JSX.Element => {
         <Divider orientation="horizontal" />
       </Box>
       <Flex
-        h="100%"
         w="100%"
+        flexGrow={1}
         gridGap="4"
         alignItems="start"
         justify="space-between"
@@ -87,17 +88,23 @@ const Lobby = (): JSX.Element => {
       >
         <Box
           alignSelf={isLargerThen900 ? 'start' : 'center'}
-          h="100%"
           w="320px"
+          // h="100%"
+          h="400px"
+          flexShrink={0}
         >
-          <IssueCards {...issuesData} />
+          <IssueCards
+            {...issuesData}
+            justifyTabs={isLargerThen900 ? 'start' : 'center'}
+          />
         </Box>
         <Divider orientation="vertical" w="1px" />
         <Box w={isLargerThen900 ? 'calc(100% - 321px)' : '100%'}>
           {isPlayerDealer && <SettingsTabs {...settingsData} />}
         </Box>
       </Flex>
-    </Grid>
+      <Box />
+    </Flex>
   );
 };
 
