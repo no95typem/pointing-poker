@@ -391,18 +391,22 @@ class ServerAdapter {
 
   respondToNewConnection = (id: number, allow: boolean) => {
     const msg = new CSMSGNewConnectionResponse(id, allow);
+
     this.send(msg);
   };
 
   startGame = () => {
     const settings = OBJ_PROCESSOR.deepClone(store.getState().settings);
+
     this.updSessState({ gSettings: settings });
     store.dispatch(
       setGLoadByKey({
         loadKey: KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE,
       }),
     );
+
     const msg = new CSMsgStartGame();
+
     this.send(msg);
   };
 
@@ -417,11 +421,13 @@ class ServerAdapter {
 
     this.controlKey = undefined;
     const msg = new CSMsgDisconFromSess();
+
     this.send(msg);
   };
 
   endGame = () => {
     const endGame = new CSMsgEndGame();
+
     this.send(endGame);
   };
 
@@ -432,12 +438,13 @@ class ServerAdapter {
     // remove unnecesarry things on this satge
 
     const settingsToSend: ISettings = onlyAdmit
-      ? {
+      ? OBJ_PROCESSOR.deepClone({
           ...settings,
+          cardbacksBase64: undefined,
           cards: [],
           activeCardbackBase64: '',
-        }
-      : OBJ_PROCESSOR.deepClone(settings);
+        })
+      : OBJ_PROCESSOR.deepClone({ ...settings, cardbacksBase64: undefined });
 
     this.updSessState({ gSettings: settingsToSend });
   };

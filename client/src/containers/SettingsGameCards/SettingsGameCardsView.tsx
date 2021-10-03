@@ -1,19 +1,31 @@
-import React from 'react';
-
 import { Box, Button, Select, Stack } from '@chakra-ui/react';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.scss';
 import 'slick-carousel/slick/slick-theme.scss';
 
-import { ICardData, ICardsView } from '../../../../shared/types/session/card';
+import {
+  CardData,
+  ICardData,
+  ICardModal,
+  ISharedCardData,
+} from '../../../../shared/types/session/card';
 import { gameCardsSettings } from '../../helpers/swiperSettings';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
+import { CARDS_DECKS } from '../../presets';
 
-const GameCardsView = (props: ICardsView): JSX.Element => {
-  const { cards, modal, units, deleteCard, isGameStage } = props;
+export interface IGameCardsViewProps extends ISharedCardData {
+  cards: CardData[];
+  modal: ICardModal;
+  deleteCard: (value: string) => void;
+  isGameStage?: boolean;
+  onDeckSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
+  const { cards, modal, units, deleteCard, isGameStage, onDeckSelect } = props;
 
   return (
     <Box maxW="100%">
@@ -25,14 +37,14 @@ const GameCardsView = (props: ICardsView): JSX.Element => {
         mb="10px"
         wrap="wrap"
       >
-        <Select placeholder="Choose a card's set" maxW="300px">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
+        <Select placeholder="Choose a deck" w="200px" onChange={onDeckSelect}>
+          {Object.keys(CARDS_DECKS).map(key => (
+            <option key={key} value={key}>
+              {key}
+            </option>
+          ))}
         </Select>
         <Button
-          colorScheme="facebook"
           w="130px"
           variant="solid"
           style={{ marginInlineStart: '0' }}
@@ -74,5 +86,3 @@ const GameCardsView = (props: ICardsView): JSX.Element => {
     </Box>
   );
 };
-
-export default GameCardsView;

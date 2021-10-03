@@ -6,27 +6,31 @@ import {
   Text,
   useMediaQuery,
 } from '@chakra-ui/react';
-import { useTypedSelector } from '../../redux/store';
-import EditableHeader from '../../containers/EdidableHeader/EditableHeader';
-import useSessionData from '../../hooks/useSessionData';
-
-import { FIXED_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
-import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
 import { FaSave } from 'react-icons/fa';
 import { ImExit } from 'react-icons/im';
 import { ReactComponent as UndrawEmpty } from '../../assets/images/undraw/empty.svg';
 import { ReactComponent as UndrawStatistics } from '../../assets/images/undraw/statistics.svg';
-import { ReactComponent as UndrawProgressData } from '../../assets/images/undraw/progress-data.svg';
+import { ReactComponent as UndrawProgressDataMod } from '../../assets/images/undraw/progress-data-mod.svg';
+
+import { FIXED_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
+import { useTypedSelector } from '../../redux/store';
 import { dang_APP_SOFT_RESET } from '../../redux/store-soft-reset';
+import useSessionData from '../../hooks/useSessionData';
 import { renderSelfRemovingElement } from '../../helpers/renderSelfRemovingElement';
+
 import { ImportExportResultsModal } from '../../containers/ImportExportResultsModal/ImportExportResultsModal';
+import EditableHeader from '../../containers/EdidableHeader/EditableHeader';
+import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
 
 const Statistics = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
+
   const [isLargerThan575] = useMediaQuery('(min-width: 575px)');
+
   const sessionNameData = useSessionData(session)?.sessionNameData;
 
   const issuesList = session.issues.list;
+
   const isIssueWithStat = issuesList.some(iss => iss.stat);
 
   return (
@@ -42,15 +46,15 @@ const Statistics = (): JSX.Element => {
       {isIssueWithStat && (
         <Box
           position="absolute"
-          bottom="10px"
+          bottom="0px"
           right="10px"
           height="auto"
-          w="230px"
+          w="100px"
           // width="calc(30% - 10px)"
           zIndex="1"
           opacity="0.9"
         >
-          <UndrawProgressData></UndrawProgressData>
+          <UndrawProgressDataMod />
         </Box>
       )}
 

@@ -81,8 +81,9 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
 
   const loadImgData: ILoadCardbackParams = {
     imgParams: {
-      width: 100,
-      height: 100,
+      // TODO remove, not needed anymore
+      width: 200,
+      height: 300,
     },
     cardback: { activeCardback, setActiveCardback },
   };
@@ -101,7 +102,6 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
         </ModalBody>
         <ModalFooter>
           <ButtonGroup
-            colorScheme="facebook"
             width="100%"
             display="flex"
             justifyContent="space-between"

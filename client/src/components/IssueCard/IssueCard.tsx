@@ -1,12 +1,13 @@
 import React from 'react';
 
 import {
-  Stack,
   IconButton,
   Stat,
   StatNumber,
   StatHelpText,
   Text,
+  Flex,
+  useColorMode,
 } from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
@@ -58,59 +59,66 @@ const IssueCard = (props: IIssueData): JSX.Element => {
     );
   };
 
+  const cMode = useColorMode();
+
   return (
-    <Stack
-      direction="row"
+    <Flex
+      w="100%"
+      justify="space-between"
       align="center"
-      p="10px"
       h="70px"
       boxShadow="lg"
       cursor={openStatisticModal ? 'pointer' : 'unset'}
       onClick={showIssueStatistic}
+      border="1px solid"
+      borderRadius="md"
+      borderColor={cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'}
+      opacity={issue.closed ? '0.7' : '1'}
+      _hover={{ opacity: '1' }}
     >
-      <Stack w="100%" direction="row" justify="space-between" align="center">
-        <Stat>
-          <StatNumber fontSize="lg" isTruncated={true}>
-            {title}
-          </StatNumber>
-          <StatHelpText fontSize="xs" mb="0">
-            {priority}
-          </StatHelpText>
-        </Stat>
+      <Stat w="calc(100% - 90px)" textAlign="start" p="5px 5px 5px 10px">
+        <StatNumber fontSize="lg" w="100%" isTruncated={true}>
+          {title}
+        </StatNumber>
+        <StatHelpText fontSize="xs" mb="0">
+          {priority}
+        </StatHelpText>
+      </Stat>
+      <Flex w="40px">
         {value ? (
           renderVotingCard()
         ) : (
-          <Text
-            maxW="100px"
-            isTruncated
-            fontSize="xl"
-            fontFamily="fantasy"
-            p="0 5px"
-          >
+          <Text w="50px" isTruncated fontSize="xl" fontFamily="fantasy">
             -
           </Text>
         )}
-      </Stack>
-
+      </Flex>
       {isEditable && (
-        <IconButton
-          aria-label="edit"
-          background="transparent"
-          size="lg"
-          icon={<ImPencil />}
-          onClick={() => openModal(id)}
-        />
+        <Flex
+          h="100%"
+          w="fit-content"
+          direction="column"
+          justifyContent="space-between"
+          p={2}
+          gridGap={0.25}
+        >
+          <IconButton
+            aria-label="edit"
+            background="transparent"
+            size="xs"
+            icon={<ImPencil />}
+            onClick={() => openModal(id)}
+          />{' '}
+          <IconButton
+            aria-label="delete"
+            background="transparent"
+            size="xs"
+            icon={<CloseIcon />}
+            onClick={() => removeIssue(id)}
+          />
+        </Flex>
       )}
-      {isEditable && (
-        <IconButton
-          aria-label="delete"
-          background="transparent"
-          size="lg"
-          icon={<CloseIcon />}
-          onClick={() => removeIssue(id)}
-        />
-      )}
-    </Stack>
+    </Flex>
   );
 };
 

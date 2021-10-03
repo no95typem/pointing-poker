@@ -39,6 +39,49 @@ const GameCard = (props: ICardData): JSX.Element => {
   const unitsSizeStyles =
     props.size === 'xs' ? { fontSize: 'xs', mt: '0' } : { size: 'lg' };
 
+  let content: JSX.Element;
+
+  if (base64) {
+    content = (
+      <Image
+        // style={{ marginTop: '0' }}
+        src={base64}
+        maxW="80%"
+        maxH="50%"
+        objectFit="contain"
+        alt={value}
+      />
+    );
+  } else {
+    content = (
+      <>
+        <Text
+          fontStyle="italic"
+          fontWeight="bold"
+          maxW="90%"
+          isTruncated
+          {...valueStyles}
+        >
+          {value}
+        </Text>
+        {!isUnitsHidden && (
+          <Text
+            fontStyle="italic"
+            pos="absolute"
+            bottom="10%"
+            maxW="90%"
+            h="2rem"
+            style={{ marginTop: '0' }}
+            isTruncated
+            {...unitsSizeStyles}
+          >
+            {units}
+          </Text>
+        )}
+      </>
+    );
+  }
+
   return (
     <Tooltip label={value} aria-label="Card value" openDelay={500}>
       <Stack
@@ -73,31 +116,7 @@ const GameCard = (props: ICardData): JSX.Element => {
           </>
         )}
 
-        <Text
-          fontStyle="italic"
-          fontWeight="bold"
-          maxW="90%"
-          isTruncated
-          {...valueStyles}
-        >
-          {value}
-        </Text>
-        {base64 ? (
-          <Image style={{ marginTop: '0' }} src={base64} />
-        ) : isUnitsHidden ? undefined : (
-          <Text
-            fontStyle="italic"
-            pos="absolute"
-            bottom="10%"
-            maxW="90%"
-            h="2rem"
-            style={{ marginTop: '0' }}
-            isTruncated
-            {...unitsSizeStyles}
-          >
-            {units}
-          </Text>
-        )}
+        {content}
       </Stack>
     </Tooltip>
   );

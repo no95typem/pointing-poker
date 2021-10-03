@@ -1,6 +1,6 @@
 import { IconButton } from '@chakra-ui/button';
 import { CheckIcon, CloseIcon, NotAllowedIcon } from '@chakra-ui/icons';
-import { Box, Text } from '@chakra-ui/layout';
+import { Flex, Text } from '@chakra-ui/layout';
 import { Member } from '../../../../shared/types/session/member';
 import { GenericAlert } from '../../components/GenericAlert/GenericAlert';
 import UserCard from '../../components/UserCard/UserCard';
@@ -19,39 +19,41 @@ export const Notification = (props: INotificationProps): JSX.Element => {
       const newMemeber = n.addData as Member;
 
       return (
-        <>
-          <Box px={1}>
-            <Text>Allow new member to connect?</Text>
+        <Flex direction="column" gridGap={1} w="100%">
+          <Text>Allow new member to connect?</Text>
+          <Flex gridGap={1} w="100%" justify="space-between">
             <UserCard
               member={newMemeber}
               isItYou={false}
               isRoundStarted={true}
               size="sm"
             />
-          </Box>
-          <IconButton
-            aria-label="allow connection"
-            icon={<CheckIcon />}
-            onClick={() => {
-              SERVER_ADAPTER.respondToNewConnection(
-                newMemeber.userSessionPublicId,
-                true,
-              );
-              onDismiss();
-            }}
-          />
-          <IconButton
-            aria-label="reject connection"
-            icon={<NotAllowedIcon />}
-            onClick={() => {
-              SERVER_ADAPTER.respondToNewConnection(
-                newMemeber.userSessionPublicId,
-                false,
-              );
-              onDismiss();
-            }}
-          />
-        </>
+            <Flex gridGap={1}>
+              <IconButton
+                aria-label="allow connection"
+                icon={<CheckIcon />}
+                onClick={() => {
+                  SERVER_ADAPTER.respondToNewConnection(
+                    newMemeber.userSessionPublicId,
+                    true,
+                  );
+                  onDismiss();
+                }}
+              />
+              <IconButton
+                aria-label="reject connection"
+                icon={<NotAllowedIcon />}
+                onClick={() => {
+                  SERVER_ADAPTER.respondToNewConnection(
+                    newMemeber.userSessionPublicId,
+                    false,
+                  );
+                  onDismiss();
+                }}
+              />
+            </Flex>
+          </Flex>
+        </Flex>
       );
     default:
       return (

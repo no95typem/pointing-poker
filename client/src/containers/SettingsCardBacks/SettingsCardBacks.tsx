@@ -59,7 +59,6 @@ const SettingsCardBacks = (props: ICardbacksData): JSX.Element => {
     <Box w="100%">
       <Stack justify="center" align="center" mb="20px">
         <Button
-          colorScheme="facebook"
           w="130px"
           variant="solid"
           style={{ marginInlineStart: '0' }}

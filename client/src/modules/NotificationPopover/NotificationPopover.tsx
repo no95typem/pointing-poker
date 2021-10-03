@@ -28,7 +28,7 @@ export const NotificationPopover = (): JSX.Element => {
       // Timeout is needed here because an another popover can steal focus without it!
       setTimeout(() => {
         dispatch(notifSlice.actions.resetEssentials());
-      });
+      }, 200); // real timeout is needed because popover will be closed after any click if there is no real timeout
     }
   });
 
@@ -52,6 +52,7 @@ export const NotificationPopover = (): JSX.Element => {
       <Portal>
         <PopoverContent
           width="fit-content"
+          maxW="100vw"
           maxH="80vh"
           overflow="auto"
           ref={ref}
