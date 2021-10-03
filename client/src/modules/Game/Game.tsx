@@ -96,8 +96,10 @@ const Game = (): JSX.Element => {
           alignSelf={isLargerThen900 ? 'start' : 'center'}
           w="320px"
           // h="100%"
-          h="400px"
+          h="380px"
           flexShrink={0}
+          overflowY="hidden"
+          paddingTop={2}
         >
           <IssueCards
             {...issuesData}
