@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 
-import { useDisclosure, useToast } from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react';
 
+import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { store } from '../../redux/store';
 import {
   CardData,
   ICardModal,
   ICardsData,
-  ICardsView,
 } from '../../../../shared/types/session/card';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
-import GameCardsView from './SettingsGameCardsView';
+import { GameCardsView, IGameCardsViewProps } from './SettingsGameCardsView';
+import { CARDS_DECKS } from '../../presets';
 
 const GameCards = (props: ICardsData): JSX.Element => {
-  const toast = useToast();
-
   const { cards, units, setLocalSettings, isGameStage } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,6 +53,17 @@ const GameCards = (props: ICardsData): JSX.Element => {
   };
 
   const setCard = (): void => {
+    if (!activeCard.value) {
+      const notification: INotification = {
+        status: 'warning',
+        text: `Value can't be empty!`,
+        needToShow: true,
+      };
+
+      store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
     const CardWithSameValue = findEditedCard(activeCard.value);
 
     const cardsCopy = OBJ_PROCESSOR.deepClone(cards);
@@ -69,12 +80,15 @@ const GameCards = (props: ICardsData): JSX.Element => {
 
         onClose();
       } else {
-        toast({
-          title: 'Value must be unique!',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        });
+        const notification: INotification = {
+          status: 'warning',
+          text: `Value must be unique!`,
+          needToShow: true,
+        };
+
+        store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+        return;
       }
     } else {
       if (editedCardIndex !== -1) {
@@ -92,6 +106,18 @@ const GameCards = (props: ICardsData): JSX.Element => {
   };
 
   const deleteCard = (value: string): void => {
+    if (cards.length <= 2) {
+      const notification: INotification = {
+        status: 'warning',
+        text: `Can't be less than a two cards!`,
+        needToShow: true,
+      };
+
+      store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
+
     const card = findEditedCard(value);
 
     if (card) {
@@ -105,6 +131,14 @@ const GameCards = (props: ICardsData): JSX.Element => {
     }
   };
 
+  const handleDeckSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const key = e.target.value;
+
+    if (key in CARDS_DECKS) {
+      setLocalSettings('cards', OBJ_PROCESSOR.deepClone(CARDS_DECKS[key]));
+    }
+  };
+
   const modalData: ICardModal = {
     onClose: onClose,
     isOpen: isOpen,
@@ -114,12 +148,13 @@ const GameCards = (props: ICardsData): JSX.Element => {
     setCard: setCard,
   };
 
-  const data: ICardsView = {
+  const data: IGameCardsViewProps = {
     cards,
     modal: modalData,
     units,
     deleteCard,
     isGameStage,
+    onDeckSelect: handleDeckSelect,
   };
 
   return <GameCardsView {...data} />;

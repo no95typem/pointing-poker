@@ -88,23 +88,26 @@ export const ChatView = () => {
               fontSize="sm"
               wordBreak="break-word"
               width="100%"
-              maxW="100%"
               borderRadius="md"
               position="relative"
+              maxW="100%"
             >
               <Text fontSize="x-small">{convertTime(msg.time)}</Text>
-              <Text whiteSpace="pre">{msg.text}</Text>
+              <Text whiteSpace="pre-wrap" w="100%">
+                {msg.text}
+              </Text>
               {!msg.isSynced && (
                 <Box position="absolute" top="2px" right="2px" zIndex="1">
                   <Spinner size="xs" speed="1.5s" />
                 </Box>
               )}
             </Container>
-            <Box flexShrink={1} maxW="40%">
+            <Box flexShrink={1} maxW="fit-content" w="100%">
               <UserCard
                 {...memberData}
                 size="sm"
                 flexDirection={memberData.isItYou ? 'row' : 'row-reverse'}
+                isInfoStatic
               />
             </Box>
           </Flex>

@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { Stack, Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
 import { LOCALE_US } from '../../locales/locale-us';
 import {
@@ -73,21 +71,19 @@ const Settings = (props: ISettingsData): JSX.Element => {
   ];
 
   return (
-    <Box>
-      <Stack direction="column" spacing={5} w="100%" mb="30px">
-        {switchersData.map(switcherData => {
-          const { name } = switcherData;
+    <Flex direction="column" gridGap={4} w="100%" h="100%">
+      {switchersData.map(switcherData => {
+        const { name } = switcherData;
 
-          return <Switcher data={switcherData} key={name} />;
-        })}
+        return <Switcher data={switcherData} key={name} />;
+      })}
 
-        {inputsData.map(inputData => {
-          const { name } = inputData;
+      {inputsData.map(inputData => {
+        const { name } = inputData;
 
-          return <InputText data={inputData} key={name} />;
-        })}
-      </Stack>
-    </Box>
+        return <InputText data={inputData} key={name} />;
+      })}
+    </Flex>
   );
 };
 

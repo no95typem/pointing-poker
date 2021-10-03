@@ -17,7 +17,7 @@ const testCardsData: CardData[] = [
   { value: 'Unknown longgggggggggggggggggggggg', base64: '<img>' },
 ];
 
-export const defaultSettings: ISettings = {
+export const DEFAULT_SETTINGS_SHARED: ISettings = {
   isAutoAdmit: false,
   isDealerPlayer: true,
   isCardShownOnRoundEnd: false,
@@ -35,7 +35,7 @@ const SESSION_INIT_STATE: SessionState = {
   stage: 'LOBBY',
   name: { value: 'unnamed pp session', isSynced: true },
   members: {},
-  gSettings: defaultSettings,
+  gSettings: DEFAULT_SETTINGS_SHARED,
   chat: {
     msgs: {},
   },
@@ -76,7 +76,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
   clientId: 0,
   name: { value: 'Session 12345', isSynced: true },
-  stage: SESSION_STAGES.STATS,
+  stage: SESSION_STAGES.LOBBY,
   members: {
     0: sampleMember,
     1: {
@@ -102,8 +102,32 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
       userRole: 'PLAYER',
       userSessionPublicId: 2,
     },
+    3: {
+      ...sampleMember,
+      userInfo: {
+        ...sampleMember.userInfo,
+        name: 'Vasya',
+        surname: 'dddddddddddddddRRRRRRRRRRRRRRRRR',
+        jobPosition: 'ZZzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+        avatarBgColor: 'black',
+      },
+      userRole: 'PLAYER',
+      userSessionPublicId: 2,
+    },
+    4: {
+      ...sampleMember,
+      userInfo: {
+        ...sampleMember.userInfo,
+        name: 'Vzzzzasya',
+        surname: 'dddzzzzzzddddddddddddRRRRRRRRRRRRRRRRR',
+        jobPosition: 'ZxxxZzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+        avatarBgColor: 'black',
+      },
+      userRole: 'PLAYER',
+      userSessionPublicId: 2,
+    },
   },
-  gSettings: defaultSettings,
+  gSettings: DEFAULT_SETTINGS_SHARED,
   chat: {
     msgs: {
       0: {
@@ -123,7 +147,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         title:
           'title 1dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
         link: 'link 1',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
       },

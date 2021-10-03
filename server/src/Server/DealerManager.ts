@@ -1,6 +1,7 @@
 /* eslint max-params: ["warn", 3] */
 
 import WebSocket from 'ws';
+import { UNDEFINED_CARD_VALUE } from '../../../shared/const';
 import { calcPercentage } from '../../../shared/helpers/calcs/game-calcs';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
@@ -10,9 +11,11 @@ import { CSMsgForceKick } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg
 import { CSMSGNewConnectionResponse } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-new-connection-response';
 import { CSMSgToggleResultsVisibility } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
 import { CSMsgUpdateState } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
+import { Member } from '../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
 import { ISessionGameState } from '../../../shared/types/session/state/session-state';
 import { SESSION_STAGES } from '../../../shared/types/session/state/stages';
+import { USER_ROLES } from '../../../shared/types/user/user-role';
 import { RoleManager } from './RoleManager';
 
 export class DealerManager extends RoleManager {
@@ -159,10 +162,25 @@ export class DealerManager extends RoleManager {
       );
 
       if (oldIssue) {
+        const fullfilledVotes = this.fullfillVotes(
+          state.members,
+          state.game,
+          state.gSettings.isDealerPlayer,
+        );
+
+        const pct = calcPercentage(fullfilledVotes);
+
+        const mostPopularEntry = Object.entries(pct).sort(
+          (a, b) => b[1].count - a[1].count,
+        )[0];
+
         oldIssue.closed = true;
+        oldIssue.value = mostPopularEntry
+          ? mostPopularEntry[0]
+          : UNDEFINED_CARD_VALUE;
         oldIssue.stat = {
-          votes: state.game.votes,
-          pct: calcPercentage(state.game.votes),
+          votes: fullfilledVotes,
+          pct,
         };
       }
     }
@@ -177,6 +195,28 @@ export class DealerManager extends RoleManager {
     };
 
     this.api.updateState({ game, issues });
+  }
+
+  private fullfillVotes(
+    members: Record<number, Member>,
+    game: ISessionGameState,
+    isDealerPlayer: boolean,
+  ) {
+    const votes = OBJ_PROCESSOR.deepClone(game.votes);
+
+    Object.entries(members).forEach(([id, m]) => {
+      if (m.userRole === USER_ROLES.SPECTATOR) return;
+
+      if (m.userRole === USER_ROLES.DEALER && !isDealerPlayer) return;
+
+      const key = +id;
+
+      if (key in votes && votes[key] !== undefined) return;
+
+      votes[key] = UNDEFINED_CARD_VALUE;
+    });
+
+    return votes;
   }
 
   private handleStartGame() {

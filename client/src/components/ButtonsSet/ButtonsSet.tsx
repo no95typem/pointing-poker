@@ -1,5 +1,4 @@
-import React from 'react';
-import { Button, Stack } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 
 import ChakraLoader from '../Loader/ChakraLoader';
 
@@ -27,7 +26,7 @@ const ButtonsSet = (props: IButtonsSetData): JSX.Element => {
   }: IButtonData): JSX.Element => {
     return (
       <Button
-        colorScheme="facebook"
+        // colorScheme="gray"
         w="130px"
         p="0 10px"
         variant={variant ? variant : 'solid'}
@@ -40,20 +39,13 @@ const ButtonsSet = (props: IButtonsSetData): JSX.Element => {
   };
 
   return (
-    <Stack
-      position="relative"
-      direction="row"
-      align="center"
-      justify={['space-evenly', 'space-between']}
-      maxW="320px"
-      mb="20px"
-    >
+    <Flex position="relative" align="center" justify="center" gridGap={2}>
       {renderButton(first)}
 
       {renderButton(second)}
 
       {isLoading && <ChakraLoader />}
-    </Stack>
+    </Flex>
   );
 };
 
