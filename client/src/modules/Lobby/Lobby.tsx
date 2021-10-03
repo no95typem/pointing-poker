@@ -89,8 +89,7 @@ const Lobby = (): JSX.Element => {
         <Box
           alignSelf={isLargerThen900 ? 'start' : 'center'}
           w="320px"
-          // h="100%"
-          h="380px"
+          h={['385px', '475px', '475px']}
           flexShrink={0}
           paddingTop={2}
           overflowY="hidden"

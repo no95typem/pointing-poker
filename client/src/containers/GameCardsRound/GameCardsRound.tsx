@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
 import Slider from 'react-slick';
 
 import { LOCALE_US } from '../../locales/locale-us';
@@ -16,7 +16,7 @@ import GameCard from '../../components/GameCard/GameCard';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
 const GameCardsRound = (props: ICardsGame): JSX.Element => {
-  const { cards, isGameStage, units, isPlayerDealer, isResultsVisible } = props;
+  const { cards, isGameStage, units } = props;
 
   const [selectedRadioValue, setSelectedRadioValue] = useState('');
 
@@ -46,14 +46,8 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
           {LOCALE_US.SETTINGS_CARDS_HEADER}
         </Heading>
       )}
-      {isGameStage && isPlayerDealer && (
-        <Stack w="100%" mb="30px" align="center" justify="center" p="5px 20px">
-          <Button onClick={SERVER_ADAPTER.toggleResultsVisibility}>
-            {isResultsVisible ? 'Hide results' : 'Show results'}
-          </Button>
-        </Stack>
-      )}
-      <Box Box maxW="100vw" m="0 auto" p="0 20px">
+
+      <Box maxW="100vw" m="0 auto" p="0 20px">
         <Slider {...gameCardsSettings}>
           {cards.map(cardData => {
             const id = cardData.value;

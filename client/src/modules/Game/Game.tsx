@@ -44,8 +44,11 @@ const Game = (): JSX.Element => {
 
   const gameInfo: IGameInfo = {
     gameData,
-    isPlayerSpectator,
     gameState,
+    issuesData: issuesData.issues,
+    members: membersData.members,
+    isPlayerSpectator,
+    isDealerPlaying: issuesData.settings.isDealerPlayer,
   };
 
   return (

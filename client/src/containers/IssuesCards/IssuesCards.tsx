@@ -11,6 +11,8 @@ import {
 
 import IssueCardsView from './IssuesCardsView';
 import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
+import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { store } from '../../redux/store';
 
 const IssuesCards = (
   props: IIssuesData & { justifyTabs?: 'start' | 'center' },
@@ -64,6 +66,17 @@ const IssuesCards = (
   };
 
   const setNewIssue = (issue: Issue): void => {
+    if (!issue.title) {
+      const notification: INotification = {
+        status: 'warning',
+        text: `Title can't be empty!`,
+        needToShow: true,
+      };
+
+      store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
     addNewIssue(issue);
 
     onClose();

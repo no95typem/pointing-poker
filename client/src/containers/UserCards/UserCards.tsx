@@ -11,6 +11,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+import { ReactComponent as UndrawTreeSwing } from '../../assets/images/undraw/tree-swing.svg';
 import {
   IMemberData,
   IUserCards,
@@ -19,10 +20,9 @@ import {
 import { DEALER_ID } from '../../../../shared/const';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 
-import UserCard from '../../components/UserCard/UserCard';
 import UserVote from '../UserVote/UserVote';
+import UserCard from '../../components/UserCard/UserCard';
 import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
-import { ReactComponent as UndrawTreeSwing } from '../../assets/images/undraw/tree-swing.svg';
 
 const settings = {
   infinite: false,
@@ -72,8 +72,11 @@ const settings = {
 
 const UserCards = (props: IUserCards): JSX.Element => {
   const { members, isItYou, isVotersView, isDealerPlaying } = props;
+
   const [isLargerThen780] = useMediaQuery('(min-width: 780px)');
+
   const [isLargerThen1200] = useMediaQuery('(min-width: 1200px)');
+
   const [isLargerThen1400] = useMediaQuery('(min-width: 1400px)');
 
   const setMemberData = (member: Member): IMemberData => {
@@ -89,7 +92,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
 
     return isVotersView
       ? (isDealer && isDealerPlaying) || role === USER_ROLES.PLAYER
-      : (isDealer && !isDealerPlaying) || role === USER_ROLES.SPECTATOR;
+      : role === USER_ROLES.SPECTATOR;
   };
 
   const w = isLargerThen780
@@ -136,7 +139,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
               >
                 <UserCard
                   {...setMemberData(member)}
-                  w={isUserVoteVisible ? '210px' : '100%'}
+                  w={isUserVoteVisible ? '300px' : '100%'}
                   key={id}
                 />
                 {isUserVoteVisible && <UserVote id={+id} key={`${id}-vote`} />}
