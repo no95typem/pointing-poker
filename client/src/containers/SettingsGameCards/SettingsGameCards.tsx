@@ -6,11 +6,11 @@ import {
   CardData,
   ICardModal,
   ICardsData,
-  ICardsView,
 } from '../../../../shared/types/session/card';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
-import GameCardsView from './SettingsGameCardsView';
+import { GameCardsView, IGameCardsViewProps } from './SettingsGameCardsView';
+import { CARDS_DECKS } from '../../presets';
 
 const GameCards = (props: ICardsData): JSX.Element => {
   const toast = useToast();
@@ -105,6 +105,14 @@ const GameCards = (props: ICardsData): JSX.Element => {
     }
   };
 
+  const handleDeckSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const key = e.target.value;
+
+    if (key in CARDS_DECKS) {
+      setLocalSettings('cards', OBJ_PROCESSOR.deepClone(CARDS_DECKS[key]));
+    }
+  };
+
   const modalData: ICardModal = {
     onClose: onClose,
     isOpen: isOpen,
@@ -114,12 +122,13 @@ const GameCards = (props: ICardsData): JSX.Element => {
     setCard: setCard,
   };
 
-  const data: ICardsView = {
+  const data: IGameCardsViewProps = {
     cards,
     modal: modalData,
     units,
     deleteCard,
     isGameStage,
+    onDeckSelect: handleDeckSelect,
   };
 
   return <GameCardsView {...data} />;

@@ -15,15 +15,8 @@ export interface ICardModal extends IActiveCard {
   setCard: () => void;
 }
 
-interface ISharedCardData {
+export interface ISharedCardData {
   units: string;
-  isGameStage?: boolean;
-}
-
-export interface ICardsView extends ISharedCardData {
-  cards: CardData[];
-  modal: ICardModal;
-  deleteCard: (value: string) => void;
   isGameStage?: boolean;
 }
 

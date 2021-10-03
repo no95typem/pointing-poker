@@ -1,10 +1,10 @@
 import { ISettings } from './../../../../shared/types/settings';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { defaultSettings } from '../../../../shared/initStates';
+import { DEFAULT_SETTINGS_CLIENT } from '../../constants';
 
 export const settingsSlice = createSlice({
   name: 'settings',
-  initialState: defaultSettings,
+  initialState: DEFAULT_SETTINGS_CLIENT,
   reducers: {
     setSettings(state, action: PayloadAction<ISettings>) {
       Object.assign(state, action.payload);

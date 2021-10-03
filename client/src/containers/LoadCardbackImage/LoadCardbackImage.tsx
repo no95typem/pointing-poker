@@ -1,4 +1,3 @@
-import React from 'react';
 import { useImgConvertor } from '../../hooks/useImgConvertor';
 import { loadImg } from '../../helpers/loadImg';
 
@@ -15,41 +14,42 @@ export interface ILoadCardbackParams {
   cardback: ICardBackData;
 }
 
+const notifyError = () => {
+  const notification: INotification = {
+    status: 'error',
+    text: 'Unreadable Format',
+    needToShow: true,
+  };
+
+  store.dispatch(notifSlice.actions.addNotifRec(notification));
+};
+
 const LoadCardbackImage = (props: ILoadCardbackParams) => {
-  const { imgParams, cardback } = props;
+  const { cardback } = props;
 
   const { activeCardback, setActiveCardback } = cardback;
 
   const convert = useImgConvertor();
 
-  const { width, height } = imgParams;
-
   const uploadImage = (): void => {
     loadImg()
       .then(src => {
-        convert({ src, w: width, h: height })
-          .then(base64 => {
-            setActiveCardback(base64);
-          })
-          .catch(() => {
-            const notification: INotification = {
-              status: 'error',
-              text: 'Unreadable Format',
-              needToShow: true,
-            };
+        const image = new Image();
+        image.src = src.slice();
+        document.body.append(image);
+        image.onerror = notifyError;
+        image.onload = () => {
+          const realW = image.width;
 
-            store.dispatch(notifSlice.actions.addNotifRec(notification));
-          });
-      })
-      .catch(() => {
-        const notification: INotification = {
-          status: 'error',
-          text: 'Unreadable Format',
-          needToShow: true,
+          // 150px - max width of the gamecard!
+          convert({ src, w: 0, h: 0, scale: 150 / realW })
+            .then(base64 => {
+              setActiveCardback(base64);
+            })
+            .catch(notifyError);
         };
-
-        store.dispatch(notifSlice.actions.addNotifRec(notification));
-      });
+      })
+      .catch(notifyError);
   };
   const resetImage = (): void => {
     setActiveCardback('');

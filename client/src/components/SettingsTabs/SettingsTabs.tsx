@@ -1,11 +1,4 @@
-import {
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useMediaQuery,
-} from '@chakra-ui/react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { ISettingsData } from '../../../../shared/types/settings';
 import { ICardsData } from '../../../../shared/types/session/card';
