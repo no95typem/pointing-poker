@@ -19,17 +19,11 @@ const LoadUserImageUi = (props: IUploadData): JSX.Element => {
         wrap="wrap"
         style={{ gap: '20px', marginBottom: '10px' }}
       >
-        <Button
-          colorScheme="facebook"
-          w="130px"
-          variant="outline"
-          onClick={resetImage}
-        >
+        <Button w="130px" variant="outline" onClick={resetImage}>
           Remove Image
         </Button>
 
         <Button
-          colorScheme="facebook"
           w="130px"
           variant="solid"
           style={{ marginInlineStart: '0' }}

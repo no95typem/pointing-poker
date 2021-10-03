@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Stack } from '@chakra-ui/react';
+import { Box, Divider, Flex, useMediaQuery } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
@@ -16,6 +15,7 @@ import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
 import SettingsTabs from '../../components/SettingsTabs/SettingsTabs';
+import { MAX_CONTENT_WIDTH } from '../../constants';
 
 const Lobby = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -23,6 +23,8 @@ const Lobby = (): JSX.Element => {
   const sessionData = useSessionData(session);
 
   const { localSettings, setLocalSettings } = useLocalSettings();
+
+  const [isLargerThen900] = useMediaQuery('(min-width: 900px)');
 
   if (!sessionData) return <></>;
 
@@ -48,30 +50,62 @@ const Lobby = (): JSX.Element => {
   };
 
   return (
-    <Box maxW="1200px" w={['100vw', '90%']} h="100%" m="0 auto" p="5px">
+    <Flex
+      maxW={MAX_CONTENT_WIDTH}
+      w="100%"
+      h="100%"
+      m="0 auto"
+      px="25px"
+      // gridTemplateRows="auto auto auto 1fr"
+      // gridTemplateColumns="100%"
+      alignItems="center"
+      direction="column"
+      gridGap={4}
+    >
       <EditableHeader {...sessionNameData} />
-      <Stack
-        direction="row"
-        justify={['center', 'center', 'center', 'space-between']}
-        align="center"
-        wrap="wrap"
-        style={{ gap: '2vw' }}
+      <Flex
+        w="100%"
+        direction={isLargerThen900 ? 'row' : 'column'}
+        justify="space-between"
+        alignItems={isLargerThen900 ? 'flex-end' : 'flex-start'}
+        gridGap={4}
       >
         <DealerPlate dealerMemberData={dealerData} />
         <JoinGameLink link={`${window.location}`} />
         <GameControlButtons {...gameStateLobby} />
-      </Stack>
-      <UserCardsTabs {...membersData} />
-      <Stack
-        direction="row"
-        wrap="wrap"
-        style={{ gap: '1vw' }}
-        justify={['center', 'center', 'center', 'center', 'space-between']}
+      </Flex>
+      <Box w="100%">
+        <UserCardsTabs {...membersData} />
+        <Divider orientation="horizontal" />
+      </Box>
+      <Flex
+        w="100%"
+        flexGrow={1}
+        gridGap="4"
+        alignItems="start"
+        justify="space-between"
+        direction={isLargerThen900 ? 'row' : 'column'}
       >
-        <IssueCards {...issuesData} />
-        {isPlayerDealer && <SettingsTabs {...settingsData} />}
-      </Stack>
-    </Box>
+        <Box
+          alignSelf={isLargerThen900 ? 'start' : 'center'}
+          w="320px"
+          h={['385px', '475px', '475px']}
+          flexShrink={0}
+          paddingTop={2}
+          overflowY="hidden"
+        >
+          <IssueCards
+            {...issuesData}
+            justifyTabs={isLargerThen900 ? 'start' : 'center'}
+          />
+        </Box>
+        <Divider orientation="vertical" w="1px" />
+        <Box w={isLargerThen900 ? 'calc(100% - 321px)' : '100%'}>
+          {isPlayerDealer && <SettingsTabs {...settingsData} />}
+        </Box>
+      </Flex>
+      <Box />
+    </Flex>
   );
 };
 

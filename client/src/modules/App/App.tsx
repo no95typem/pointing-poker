@@ -10,6 +10,7 @@ import Chat from '../Chat/Сhat';
 import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
 import './scrollbar.scss';
+import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 export const App = () => {
   useEffect(() => {
@@ -22,7 +23,7 @@ export const App = () => {
   });
 
   return (
-    <>
+    <ErrorBoundary>
       <ColorModeScript />
       <ChakraProvider theme={theme}>
         <ServerBoundary>
@@ -41,6 +42,6 @@ export const App = () => {
           </Grid>
         </ServerBoundary>
       </ChakraProvider>
-    </>
+    </ErrorBoundary>
   );
 };

@@ -36,7 +36,7 @@ const getBase64 = (canvas: HTMLCanvasElement): Promise<string | null> => {
   });
 };
 
-const calcDrawParams = (
+const calcSquareDrawParams = (
   img: HTMLImageElement,
 ): [number, number, number, number] => {
   let sx: number;
@@ -61,8 +61,11 @@ const calcDrawParams = (
   return [sx, sy, sWidth, sHeight];
 };
 
-const drawImgToCanvas = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
-  const [sx, sy, sWidth, sHeight] = calcDrawParams(img);
+const drawSquaredImgToCanvas = (
+  img: HTMLImageElement,
+  canvas: HTMLCanvasElement,
+) => {
+  const [sx, sy, sWidth, sHeight] = calcSquareDrawParams(img);
   canvas
     .getContext('2d')
     ?.drawImage(
@@ -82,6 +85,7 @@ export interface GetCuttedBase64FromImgSrc {
   src: string;
   w: number;
   h: number;
+  scale?: number;
 }
 
 const convert = (
@@ -94,9 +98,19 @@ const convert = (
         // waiting for rendering in the dom if the image was loaded very fast
         setTimeout(() => {
           const canvas = canvasRef.current;
-          canvas.width = opts.w;
-          canvas.height = opts.h;
-          drawImgToCanvas(img, canvas);
+
+          if (opts.scale) {
+            canvas.width = img.width * opts.scale;
+            canvas.height = img.height * opts.scale;
+            canvas
+              .getContext('2d')
+              ?.drawImage(img, 0, 0, canvas.width, canvas.height);
+          } else {
+            canvas.width = opts.w;
+            canvas.height = opts.h;
+            drawSquaredImgToCanvas(img, canvas);
+          }
+
           getBase64(canvas).then(base64 => {
             if (typeof base64 === 'string') res(base64);
             else rej('convertation to a base64 string failed');

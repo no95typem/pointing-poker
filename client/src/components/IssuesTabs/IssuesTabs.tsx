@@ -1,75 +1,80 @@
-import React from 'react';
 import {
-  ChakraProps,
-  Stack,
+  Flex,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  useColorMode,
 } from '@chakra-ui/react';
 import { Droppable } from 'react-beautiful-dnd';
 
 import { Issue } from '../../../../shared/types/session/issue/issue';
+import { ISessionGameState } from '../../../../shared/types/session/state/session-state';
 
 export interface IIssuesTabs {
-  isSynced: boolean;
   list: Issue[];
+  gameState?: ISessionGameState;
   renderIssueCard: (issue: Issue) => JSX.Element;
   renderBasicIssueCard: (issue: Issue) => JSX.Element;
+  justifyTabs?: 'start' | 'center';
+  isSynced: boolean;
 }
 
 const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
-  const { isSynced, list, renderIssueCard, renderBasicIssueCard } = props;
+  const { isSynced, list, renderIssueCard, renderBasicIssueCard, gameState } =
+    props;
 
-  const TabPanelStyle: ChakraProps = {
-    maxH: '280px',
-    overflowY: 'hidden',
-  };
-
-  const IssueStackWrapStyle: ChakraProps = {
-    maxH: '280px',
-    overflowY: 'auto',
-    p: '10px 0 20px',
-  };
-
-  const IssueStackStyle: ChakraProps = {
-    w: '280px',
-    alignItems: 'center',
-    flexDirection: 'column',
-    opacity: isSynced ? 1 : 0.5,
-  };
+  const cMode = useColorMode();
 
   return (
-    <Tabs variant="enclosed" colorScheme="facebook" mb="10px">
-      <TabList justifyContent={['center', 'center', 'center', 'flex-start']}>
+    <Tabs
+      variant="enclosed"
+      flexGrow={1}
+      w="100%"
+      display="flex"
+      flexDirection="column"
+      overflowY="hidden"
+      p={2}
+    >
+      <TabList justifyContent={props.justifyTabs || 'start'}>
         <Tab>Active Issues</Tab>
-        <Tab>Closed Issues</Tab>
+        {gameState && <Tab>Closed Issues</Tab>}
       </TabList>
-      <TabPanels maxW="100vw">
-        <TabPanel {...TabPanelStyle}>
-          <Stack {...IssueStackWrapStyle}>
-            <Droppable droppableId="issues">
-              {({ droppableProps, innerRef, placeholder }) => (
-                <Stack {...droppableProps} ref={innerRef} {...IssueStackStyle}>
-                  {list
-                    .filter(issue => !issue.closed)
-                    .map(issue => renderIssueCard(issue))}
+      <TabPanels
+        w="100%"
+        border="1px"
+        borderTopRadius="0"
+        borderColor={cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'}
+        flexGrow={1}
+        overflowY="auto"
+        opacity={isSynced ? '1' : '0.5'}
+      >
+        <TabPanel>
+          <Droppable droppableId="issues">
+            {({ droppableProps, innerRef, placeholder }) => (
+              <Flex
+                w="100%"
+                direction="column"
+                gridGap={4}
+                {...droppableProps}
+                ref={innerRef}
+              >
+                {list
+                  .filter(issue => !issue.closed)
+                  .map(issue => renderIssueCard(issue))}
 
-                  {placeholder}
-                </Stack>
-              )}
-            </Droppable>
-          </Stack>
+                {placeholder}
+              </Flex>
+            )}
+          </Droppable>
         </TabPanel>
-        <TabPanel {...TabPanelStyle}>
-          <Stack {...IssueStackWrapStyle}>
-            <Stack {...IssueStackStyle}>
-              {list
-                .filter(issue => issue.closed)
-                .map(issue => renderBasicIssueCard(issue))}
-            </Stack>
-          </Stack>
+        <TabPanel>
+          <Flex w="100%" direction="column" gridGap={2}>
+            {list
+              .filter(issue => issue.closed)
+              .map(issue => renderBasicIssueCard(issue))}
+          </Flex>
         </TabPanel>
       </TabPanels>
     </Tabs>

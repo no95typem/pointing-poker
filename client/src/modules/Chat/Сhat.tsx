@@ -102,7 +102,7 @@ const Chat = (): JSX.Element => {
               />
             </Flex>
 
-            <Box w="100%" h="100%" position="relative">
+            <Box w="100%" h="100%" position="relative" overflow="hidden">
               <UndrawBeginChat
                 style={{
                   maxHeight: '100%',
