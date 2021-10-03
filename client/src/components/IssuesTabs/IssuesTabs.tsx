@@ -32,7 +32,7 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
       display="flex"
       flexDirection="column"
       overflowY="hidden"
-      // colorScheme={cMode.colorMode === 'light' ? 'yellow' : undefined}
+      p={2}
     >
       <TabList justifyContent={props.justifyTabs || 'start'}>
         <Tab>Active Issues</Tab>

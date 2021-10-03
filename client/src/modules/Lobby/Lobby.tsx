@@ -90,8 +90,10 @@ const Lobby = (): JSX.Element => {
           alignSelf={isLargerThen900 ? 'start' : 'center'}
           w="320px"
           // h="100%"
-          h="400px"
+          h="380px"
           flexShrink={0}
+          paddingTop={2}
+          overflowY="hidden"
         >
           <IssueCards
             {...issuesData}
