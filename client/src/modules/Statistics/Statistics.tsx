@@ -10,7 +10,7 @@ import { FaSave } from 'react-icons/fa';
 import { ImExit } from 'react-icons/im';
 import { ReactComponent as UndrawEmpty } from '../../assets/images/undraw/empty.svg';
 import { ReactComponent as UndrawStatistics } from '../../assets/images/undraw/statistics.svg';
-import { ReactComponent as UndrawProgressData } from '../../assets/images/undraw/progress-data.svg';
+import { ReactComponent as UndrawProgressDataMod } from '../../assets/images/undraw/progress-data-mod.svg';
 
 import { FIXED_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
 import { useTypedSelector } from '../../redux/store';
@@ -46,15 +46,15 @@ const Statistics = (): JSX.Element => {
       {isIssueWithStat && (
         <Box
           position="absolute"
-          bottom="10px"
+          bottom="0px"
           right="10px"
           height="auto"
-          w="230px"
+          w="100px"
           // width="calc(30% - 10px)"
           zIndex="1"
           opacity="0.9"
         >
-          <UndrawProgressData></UndrawProgressData>
+          <UndrawProgressDataMod />
         </Box>
       )}
 

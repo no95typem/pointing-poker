@@ -31,36 +31,42 @@ const renderStat = (props: {
   const statCardsSettings = {
     infinite: false,
     speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 5,
+    slidesToShow: 6,
+    slidesToScroll: 6,
     nextArrow: <SliderCustomArrow />,
     prevArrow: <SliderCustomArrow />,
 
     responsive: [
       {
-        breakpoint: 900,
+        breakpoint: 1360,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 5,
+        },
+      },
+      {
+        breakpoint: 1200,
         settings: {
           slidesToShow: 4,
           slidesToScroll: 4,
         },
       },
-
       {
-        breakpoint: 600,
+        breakpoint: 800,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
         },
       },
       {
-        breakpoint: 400,
+        breakpoint: 700,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 350,
+        breakpoint: 450,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -70,7 +76,7 @@ const renderStat = (props: {
   };
 
   return (
-    <Box maxW="28vw" p="5px">
+    <Box w="90%" p="5px">
       <Slider {...statCardsSettings}>
         {pctEntries
           .sort((a, b) => b[1].count - a[1].count)
@@ -80,14 +86,14 @@ const renderStat = (props: {
             const percent = ((rec.count / votesCount) * 100).toFixed(0);
 
             return (
-              <Box key={`${cardVal}-box`}>
+              <Box key={cardVal} px={5}>
                 <Flex
-                  key={cardVal}
                   h="min-content"
                   direction="column"
                   justify="center"
                   align="center"
                   gridGap="1"
+                  w="fit-content"
                 >
                   {cardData ? (
                     <GameCard
@@ -125,7 +131,7 @@ export const StatisticsTable = React.memo(
               <Th display="block" w="40%">
                 Issue:
               </Th>
-              <Th w="10%"></Th>
+              <Th w="2px"></Th>
               <Th display="block" w="50%">
                 Stats:
               </Th>
@@ -148,7 +154,7 @@ export const StatisticsTable = React.memo(
                       {issue.title}
                     </Text>
                   </Td>
-                  <Td w="10%"></Td>
+                  <Td w="2px"></Td>
                   <Td display="flex" alignItems="center" w="50%" p="0px 16px">
                     {issue.stat
                       ? renderStat({
