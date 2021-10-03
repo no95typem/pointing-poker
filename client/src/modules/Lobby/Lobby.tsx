@@ -91,6 +91,7 @@ const Lobby = (): JSX.Element => {
           w="320px"
           // h="100%"
           h="400px"
+          overflowY="hidden"
           flexShrink={0}
         >
           <IssueCards
