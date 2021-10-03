@@ -12,7 +12,7 @@ const UserCardsTabs = (props: IUserCards): JSX.Element => {
         <Tab>Spectators</Tab>
       </TabList>
       <TabPanels w="100%" h="104px">
-        <TabPanel w="100%" display="flex" justifyContent="center">
+        <TabPanel w="100%" display="flex" justifyContent="center" h="104px">
           <UserCards {...{ ...props, isVotersView: true }} />
         </TabPanel>
         <TabPanel w="100%" display="flex" justifyContent="center" h="104px">
