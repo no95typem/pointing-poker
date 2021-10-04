@@ -111,6 +111,7 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
       </Flex>
 
       <GameCardModal modal={modal} />
+      <GameCardsSetModal {...modalSetData} />
     </>
   );
 };
