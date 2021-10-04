@@ -56,8 +56,6 @@ const Lobby = (): JSX.Element => {
       h="100%"
       m="0 auto"
       px="25px"
-      // gridTemplateRows="auto auto auto 1fr"
-      // gridTemplateColumns="100%"
       alignItems="center"
       direction="column"
       gridGap={4}
@@ -89,7 +87,7 @@ const Lobby = (): JSX.Element => {
         <Box
           alignSelf={isLargerThen900 ? 'start' : 'center'}
           w="320px"
-          h={['385px', '475px', '475px']}
+          h={isLargerThen900 ? '100%' : '500px'}
           flexShrink={0}
           paddingTop={2}
           overflowY="hidden"
@@ -99,8 +97,16 @@ const Lobby = (): JSX.Element => {
             justifyTabs={isLargerThen900 ? 'start' : 'center'}
           />
         </Box>
-        <Divider orientation="vertical" w="1px" />
-        <Box w={isLargerThen900 ? 'calc(100% - 321px)' : '100%'}>
+        <Divider orientation="vertical" w="1px" position="relative" />
+        <Box
+          w={
+            isLargerThen900
+              ? 'calc(100% - 321px - var(--chakra-space-4) * 2)'
+              : '100%'
+          }
+          h="100%"
+          paddingBottom={isLargerThen900 ? undefined : '10px'}
+        >
           {isPlayerDealer && <SettingsTabs {...settingsData} />}
         </Box>
       </Flex>

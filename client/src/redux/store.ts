@@ -1,6 +1,5 @@
 import { Action, combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { connectSlice } from './slices/connect';
 import { errorsSlice } from './slices/errors';
 import { homePageSlice } from './slices/home-page';
 import { loadsSlice } from './slices/loads';
@@ -17,7 +16,6 @@ export const COMBINED_REDUCER = combineReducers({
   locale: localeSlice.reducer,
   errors: errorsSlice.reducer,
   loads: loadsSlice.reducer,
-  connect: connectSlice.reducer,
   session: sessionSlice.reducer,
   userInfo: userInfoSlice.reducer,
   chat: chatSlice.reducer,

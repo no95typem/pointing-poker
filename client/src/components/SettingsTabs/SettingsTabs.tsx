@@ -1,4 +1,4 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs, useColorMode } from '@chakra-ui/react';
 
 import { ISettingsData } from '../../../../shared/types/settings';
 import { ICardsData } from '../../../../shared/types/session/card';
@@ -9,6 +9,15 @@ import InputTimer, { ITimer } from '../../containers/InputTimer/InputTimer';
 import GameCardBacks, {
   ICardbacksData,
 } from '../../containers/SettingsCardBacks/SettingsCardBacks';
+import { getBorderStyles } from '../../constants';
+
+const tabStyles = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  w: '100%',
+  h: '100%',
+};
 
 const SettingsTabs = (props: ISettingsData): JSX.Element => {
   const { localSettings, setLocalSettings } = props;
@@ -35,8 +44,18 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
 
   const timerData: ITimer = { settings: localSettings, setLocalSettings };
 
+  const cMode = useColorMode();
+
   return (
-    <Tabs w="100%" isManual variant="enclosed">
+    <Tabs
+      w="100%"
+      h="100%"
+      display="flex"
+      flexDirection="column"
+      isManual
+      variant="enclosed"
+      px={1.5}
+    >
       <TabList
         display="flex"
         justifyContent="flex-start"
@@ -48,19 +67,26 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
         <Tab>Game Cards</Tab>
         <Tab>Card Backs</Tab>
       </TabList>
-      <TabPanels minH="330px">
-        <TabPanel>
+      <TabPanels
+        minH="330px"
+        flexGrow={1}
+        display="flex"
+        w="100%"
+        {...getBorderStyles(cMode.colorMode)}
+        overflowX="hidden"
+      >
+        <TabPanel {...tabStyles}>
           <Settings {...props} />
         </TabPanel>
         {isTimerNeeded && (
-          <TabPanel>
+          <TabPanel {...tabStyles}>
             <InputTimer {...timerData} />
           </TabPanel>
         )}
-        <TabPanel w="100%">
+        <TabPanel {...tabStyles}>
           <GameCards {...cardsData} />
         </TabPanel>
-        <TabPanel>
+        <TabPanel {...tabStyles}>
           <GameCardBacks {...cardbackData} />
         </TabPanel>
       </TabPanels>

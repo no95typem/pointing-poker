@@ -16,7 +16,7 @@ const RoundStatistics = (props: IRoundStatistics): JSX.Element => {
   const allPlayersCount = Object.entries(votes).length;
 
   return (
-    <Box mb="30px">
+    <Box>
       <Heading
         textAlign="center"
         mb="10px"

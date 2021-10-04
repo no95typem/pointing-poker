@@ -90,6 +90,7 @@ const GameCard = (props: ICardData): JSX.Element => {
         justify="center"
         align="center"
         {...stackStyles}
+        className="enlight"
       >
         {isControlShown && (
           <>

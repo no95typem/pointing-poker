@@ -15,6 +15,7 @@ import { CloseIcon } from '@chakra-ui/icons';
 
 import { IIssueData } from '../../../../shared/types/session/issue/issue';
 import GameCard from '../GameCard/GameCard';
+import styles from './styles.module.scss';
 
 const IssueCard = (props: IIssueData): JSX.Element => {
   const {
@@ -72,9 +73,11 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       onClick={showIssueStatistic}
       border="1px solid"
       borderRadius="md"
+      overflow="hidden"
       borderColor={cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'}
       opacity={issue.closed ? '0.7' : '1'}
       _hover={{ opacity: '1' }}
+      className={`enlight ${styles.enlight}`}
     >
       <Stat w="calc(100% - 90px)" textAlign="start" p="5px 5px 5px 10px">
         <StatNumber fontSize="lg" w="100%" isTruncated={true}>

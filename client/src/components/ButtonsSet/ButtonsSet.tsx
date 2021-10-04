@@ -26,11 +26,11 @@ const ButtonsSet = (props: IButtonsSetData): JSX.Element => {
   }: IButtonData): JSX.Element => {
     return (
       <Button
-        // colorScheme="gray"
         w="130px"
         p="0 10px"
         variant={variant ? variant : 'solid'}
-        visibility={isHidden ? 'hidden' : 'visible'}
+        // visibility={isHidden ? 'hidden' : 'visible'}
+        isDisabled={isHidden}
         onClick={onClick}
       >
         {text}

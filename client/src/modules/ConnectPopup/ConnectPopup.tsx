@@ -182,11 +182,13 @@ const ConnectPopup = ({
           </Button>
           <Button
             disabled={isNameInvalid}
-            onClick={() =>
+            onClick={() => {
               forDealer
                 ? SERVER_ADAPTER.createSess()
-                : SERVER_ADAPTER.connToLobby()
-            }
+                : SERVER_ADAPTER.connToLobby();
+
+              onClose();
+            }}
           >
             Confirm
           </Button>

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserInfo } from '../../../../shared/types/user/user-info';
 
 const initialState = {
@@ -23,11 +23,13 @@ export const userInfoSlice = createSlice({
       state.jobPosition = action.payload;
     },
     changeAvatarBase64(state, action) {
-      console.log(action.payload);
       state.avatarBase64 = action.payload;
     },
     changeAvatarBgColor(state, action) {
       state.avatarBgColor = action.payload;
+    },
+    setFullLocalUserInfo(state, action: PayloadAction<UserInfo>) {
+      Object.assign(state, action.payload);
     },
   },
 });
@@ -38,4 +40,5 @@ export const {
   changeJobPosition,
   changeAvatarBase64,
   changeAvatarBgColor,
+  setFullLocalUserInfo,
 } = userInfoSlice.actions;

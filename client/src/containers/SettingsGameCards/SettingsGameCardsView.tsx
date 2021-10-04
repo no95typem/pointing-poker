@@ -1,4 +1,4 @@
-import { Box, Button, Select, Stack } from '@chakra-ui/react';
+import { Box, Button, Flex, Select, Stack } from '@chakra-ui/react';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.scss';
@@ -28,61 +28,71 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
   const { cards, modal, units, deleteCard, isGameStage, onDeckSelect } = props;
 
   return (
-    <Box maxW="100%">
-      <Stack
-        direction={['column', 'column', 'row']}
-        spacing="4"
-        w={['100%', '100%', '100%', '80%']}
-        justify="space-around"
-        mb="10px"
-        wrap="wrap"
+    <>
+      <Flex
+        direction="column"
+        gridGap={4}
+        h="100%"
+        w="100%"
+        justify="space-between"
+        align="flex-end"
       >
-        <Select placeholder="Choose a deck" w="200px" onChange={onDeckSelect}>
-          {Object.keys(CARDS_DECKS).map(key => (
-            <option key={key} value={key}>
-              {key}
-            </option>
-          ))}
-        </Select>
-        <Button
-          w="130px"
-          variant="solid"
-          style={{ marginInlineStart: '0' }}
-          onClick={() => modal.openModal()}
+        <Flex
+          maxW="100%"
+          wrap="wrap"
+          align="center"
+          justify="center"
+          gridGap={2}
         >
-          Add card
-        </Button>
-      </Stack>
-      <Box maxW="100vw" m="0 auto" p="0 20px">
-        <Slider {...gameCardsSettings}>
-          {cards.map(card => {
-            const id = card.value;
+          <Select placeholder="Choose a deck" w="200px" onChange={onDeckSelect}>
+            {Object.keys(CARDS_DECKS).map(key => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
+          </Select>
+          <Button
+            w="130px"
+            variant="solid"
+            style={{ marginInlineStart: '0' }}
+            onClick={() => modal.openModal()}
+          >
+            Add card
+          </Button>
+        </Flex>
 
-            const data: ICardData = {
-              card,
-              edit: modal.openModal,
-              units,
-              deleteCard,
-              isControlShown: !isGameStage,
-            };
+        <Box w="90%" m="0 auto">
+          <Slider {...gameCardsSettings}>
+            {cards.map(card => {
+              const id = card.value;
 
-            return (
-              <Box key={`${id}-box`}>
-                <Stack
-                  key={`${id}-wrap`}
-                  m="5px"
-                  justify="center"
-                  align="center"
-                >
-                  <GameCard {...data} key={id} />;
-                </Stack>
-              </Box>
-            );
-          })}
-        </Slider>
-      </Box>
+              const data: ICardData = {
+                card,
+                edit: modal.openModal,
+                units,
+                deleteCard,
+                isControlShown: true,
+              };
+
+              return (
+                <Box key={`${id}-box`}>
+                  <Stack
+                    key={`${id}-wrap`}
+                    m="5px"
+                    justify="center"
+                    align="center"
+                  >
+                    <GameCard {...data} key={id} />;
+                  </Stack>
+                </Box>
+              );
+            })}
+          </Slider>
+        </Box>
+        <Box></Box>
+      </Flex>
 
       <GameCardModal modal={modal} />
-    </Box>
+    </>
   );
 };

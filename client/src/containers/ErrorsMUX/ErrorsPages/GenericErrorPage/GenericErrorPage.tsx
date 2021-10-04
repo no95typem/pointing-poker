@@ -1,8 +1,7 @@
-import React from 'react';
 import { Alert, AlertIcon, Button, VStack } from '@chakra-ui/react';
 import { AppError } from '../../../../knownErrors';
-import { useHistory } from 'react-router-dom';
 import { KnownErrorsKey } from '../../../../../../shared/knownErrorsKeys';
+import { dang_APP_SOFT_RESET } from '../../../../redux/store-soft-reset';
 
 export interface GenericErrorPageProps {
   key?: KnownErrorsKey;
@@ -10,8 +9,6 @@ export interface GenericErrorPageProps {
 }
 
 export const GenericErrorPage = (props: GenericErrorPageProps) => {
-  const history = useHistory();
-
   return (
     <VStack>
       <Alert status="error" maxW="500px">
@@ -20,8 +17,7 @@ export const GenericErrorPage = (props: GenericErrorPageProps) => {
       </Alert>
       <Button
         onClick={() => {
-          history.push('');
-          window.location.reload();
+          dang_APP_SOFT_RESET();
         }}
       >
         Reload app

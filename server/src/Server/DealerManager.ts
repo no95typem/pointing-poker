@@ -2,7 +2,7 @@
 
 import WebSocket from 'ws';
 import { UNDEFINED_CARD_VALUE } from '../../../shared/const';
-import { calcPercentage } from '../../../shared/helpers/calcs/game-calcs';
+import { calcPercentage, fullfillVotes } from '../../../shared/helpers/calcs/game-calcs';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
 import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
@@ -162,7 +162,7 @@ export class DealerManager extends RoleManager {
       );
 
       if (oldIssue) {
-        const fullfilledVotes = this.fullfillVotes(
+        const fullfilledVotes = fullfillVotes(
           state.members,
           state.game,
           state.gSettings.isDealerPlayer,
@@ -195,28 +195,6 @@ export class DealerManager extends RoleManager {
     };
 
     this.api.updateState({ game, issues });
-  }
-
-  private fullfillVotes(
-    members: Record<number, Member>,
-    game: ISessionGameState,
-    isDealerPlayer: boolean,
-  ) {
-    const votes = OBJ_PROCESSOR.deepClone(game.votes);
-
-    Object.entries(members).forEach(([id, m]) => {
-      if (m.userRole === USER_ROLES.SPECTATOR) return;
-
-      if (m.userRole === USER_ROLES.DEALER && !isDealerPlayer) return;
-
-      const key = +id;
-
-      if (key in votes && votes[key] !== undefined) return;
-
-      votes[key] = UNDEFINED_CARD_VALUE;
-    });
-
-    return votes;
   }
 
   private handleStartGame() {

@@ -24,7 +24,7 @@ import { SessionState } from '../../../../shared/types/session/state/session-sta
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
 import { showKickDialog } from '../../helpers/showKickDialog';
-import { connectSlice } from '../../redux/slices/connect';
+
 // import { getCookieValByName } from '../../helpers/getCookie';
 import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
@@ -67,7 +67,6 @@ class ServerAdapter {
 
   private handleWSOpen() {
     (this.ws as WebSocket).addEventListener('message', this.obeyTheServer);
-    store.dispatch(connectSlice.actions.setServerConnectionStatus('connected'));
   }
 
   private handleWSErrorOrClose() {
@@ -340,7 +339,21 @@ class ServerAdapter {
   /* ACTIONS */
   connToLobby = () => {
     const state = store.getState();
-    this.controlKey = state.homePage.lobbyURL;
+    const url = state.homePage.lobbyURL;
+
+    if (!url) {
+      const notification: INotification = {
+        status: 'error',
+        text: 'Enter lobby id first!',
+        needToShow: true,
+      };
+
+      store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
+
+    this.controlKey = url;
     const token = this.lastToken; //|| getCookieValByName('lastToken');
     const msg = new CSMsgConnToSess({
       info: state.userInfo,
@@ -373,21 +386,6 @@ class ServerAdapter {
       }),
     );
   };
-
-  // dang_reset = () => {
-  //   this.exitGame();
-  //   dang_APP_SOFT_RESET();
-
-  //   // if (this.ws) {
-  //   //   try {
-  //   //     this.ws.close();
-  //   //   } catch {
-  //   //     //
-  //   //   }
-
-  //   //   this.connect();
-  //   // }
-  // };
 
   respondToNewConnection = (id: number, allow: boolean) => {
     const msg = new CSMSGNewConnectionResponse(id, allow);

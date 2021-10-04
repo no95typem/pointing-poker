@@ -13,6 +13,7 @@ import { MAX_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
 import { ReactComponent as UndrawScrumBoard } from '../../assets/images/undraw/scrum-board.svg';
 import { ReactComponent as UndrawNewIdeas } from '../../assets/images/undraw/new-ideas.svg';
 import { ReactComponent as UndrawLogin } from '../../assets/images/undraw/login.svg';
+import { INotification, notifSlice } from '../../redux/slices/notifications';
 
 interface IStartPageContentProps {
   onPopupCalled: (forRole: UserRole) => void;
@@ -94,7 +95,23 @@ const StartPageContent = ({
                 // onChange={e => dispatch(setLobbyURL(e.target.value || ''))}
               />
               {isLargerThan860 && (
-                <Button onClick={() => onPopupCalled(USER_ROLES.PLAYER)}>
+                <Button
+                  onClick={() => {
+                    if (!lobbyURL) {
+                      const notification: INotification = {
+                        status: 'error',
+                        text: 'Enter session id first!',
+                        needToShow: true,
+                      };
+
+                      dispatch(notifSlice.actions.addNotifRec(notification));
+
+                      return;
+                    }
+
+                    onPopupCalled(USER_ROLES.PLAYER);
+                  }}
+                >
                   Connect
                 </Button>
               )}

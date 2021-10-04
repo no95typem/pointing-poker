@@ -32,46 +32,31 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
     onChange: changeIssue,
   });
 
-  const setCardData = (card: CardData): ICardData => {
-    return {
-      card,
-      units,
-    };
-  };
-
   return (
-    <Box w="100%" mb="30px">
-      {!isGameStage && (
-        <Heading mb="20px" size="md">
-          {LOCALE_US.SETTINGS_CARDS_HEADER}
-        </Heading>
-      )}
+    <Box w="90%" m="0 auto">
+      <Slider {...gameCardsSettings}>
+        {cards.map(card => {
+          const id = card.value;
 
-      <Box maxW="100vw" m="0 auto" p="0 20px">
-        <Slider {...gameCardsSettings}>
-          {cards.map(cardData => {
-            const id = cardData.value;
+          const data: ICardData = {
+            card,
+            units,
+            isControlShown: false,
+          };
 
-            const card = (
-              <Stack key={`${id}-wrap`}>
-                <GameCard {...setCardData(cardData)} key={id} />;
+          const radio = (getRadioProps as (obj: { value: string }) => any)({
+            value: String(card.value),
+          });
+
+          return (
+            <SessionItemRadioCard key={`${id}-radio`} {...radio}>
+              <Stack m="5px" justify="center" align="center">
+                <GameCard {...data} />;
               </Stack>
-            );
-
-            const radio = (getRadioProps as (obj: { value: string }) => any)({
-              value: String(cardData.value),
-            });
-
-            return (
-              <Box key={`${id}-box`}>
-                <SessionItemRadioCard key={`${id}-radio`} {...radio}>
-                  {card}
-                </SessionItemRadioCard>
-              </Box>
-            );
-          })}
-        </Slider>
-      </Box>
+            </SessionItemRadioCard>
+          );
+        })}
+      </Slider>
     </Box>
   );
 };
