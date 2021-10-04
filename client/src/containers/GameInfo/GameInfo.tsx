@@ -86,7 +86,10 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
       {isRoundControlVisible && <RoundControlButtons {...gameState} />}
       {isPlayerDealer && !isRoundAwaitStart && (
         <Stack w="100%" m="30px 0" align="center" justify="center" p="5px 20px">
-          <Button onClick={SERVER_ADAPTER.toggleResultsVisibility}>
+          <Button
+            border="1px solid black"
+            onClick={SERVER_ADAPTER.toggleResultsVisibility}
+          >
             {isResultsVisible ? 'Hide results' : 'Show results'}
           </Button>
         </Stack>

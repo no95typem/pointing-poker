@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FormLabel, Stack, Text } from '@chakra-ui/react';
 
 import { ISettings } from '../../../../shared/types/settings';
 import { CardData } from '../../../../shared/types/session/card';
 
-import InputNumber from '../../components/InputNumber/InputNumber';
-import { INotification, notifSlice } from '../../redux/slices/notifications';
-import { store } from '../../redux/store';
+import InputNumber, {
+  INumberInput,
+} from '../../components/InputNumber/InputNumber';
+import timerValidation from '../../helpers/timerValidation';
 
 export interface ITimer {
   settings: ISettings;
@@ -18,7 +19,8 @@ export interface ITimer {
   ) => void;
 }
 
-interface ITimerTabs {
+export interface ITimerTabs {
+  [key: string]: number;
   minutes: number;
   seconds: number;
 }
@@ -38,70 +40,6 @@ const InputTimer = (props: ITimer): JSX.Element => {
     return Math.trunc(timeInS % 60);
   };
 
-  const getTimeInMs = (): number => {
-    return (timer.minutes * 60 + timer.seconds) * 1000;
-  };
-
-  const tenSecondsWarning = (): void => {
-    const warn: INotification = {
-      status: 'warning',
-      text: `Timer should be at least 10 seconds.`,
-      needToShow: true,
-    };
-
-    store.dispatch(notifSlice.actions.addNotifRec(warn));
-  };
-
-  const setTime = (name: string, value: number): void => {
-    if (!setLocalSettings) return;
-
-    switch (true) {
-      case Number.isNaN(value):
-        const notification: INotification = {
-          status: 'warning',
-          text: `Numbers only, please!`,
-          needToShow: true,
-        };
-
-        store.dispatch(notifSlice.actions.addNotifRec(notification));
-
-        return;
-
-      case value > 59:
-        value = 59;
-
-        const maxTime: INotification = {
-          status: 'warning',
-          text: `59 is upper limit.`,
-          needToShow: true,
-        };
-
-        store.dispatch(notifSlice.actions.addNotifRec(maxTime));
-
-        break;
-
-      case name === 'seconds' && timer.minutes === 0 && value < 10:
-        value = 10;
-
-        tenSecondsWarning();
-
-        break;
-
-      case name === 'minutes' && timer.seconds < 10 && value === 0:
-        tenSecondsWarning();
-        setTimer({ ...timer, [name]: value, seconds: 10 });
-
-        setLocalSettings('roundTime', getTimeInMs());
-
-        return;
-
-      default:
-    }
-    setTimer({ ...timer, [name]: value });
-
-    setLocalSettings('roundTime', getTimeInMs());
-  };
-
   const initTimer: ITimerTabs = {
     minutes: getMinutes(),
     seconds: getSeconds(),
@@ -109,9 +47,44 @@ const InputTimer = (props: ITimer): JSX.Element => {
 
   const [timer, setTimer] = useState<ITimerTabs>(initTimer);
 
+  useEffect(() => {
+    if (!setLocalSettings) return;
+
+    setLocalSettings('roundTime', (timer.minutes * 60 + timer.seconds) * 1000);
+  }, [timer, setLocalSettings]);
+
   const minutes = setLocalSettings ? timer.minutes : getMinutes();
 
   const seconds = setLocalSettings ? timer.seconds : getSeconds();
+
+  const setTime = (name: string, value: number): void => {
+    if (!setLocalSettings || Number.isNaN(value)) return;
+
+    setTimer(prev => ({ ...prev, [name]: value }));
+  };
+
+  const validateTime = (units: 'minutes' | 'seconds'): void => {
+    if (!setLocalSettings) return;
+
+    setTimeout(() => {
+      const validTimer = timerValidation(units, timer);
+
+      setTimer(prev => ({ ...prev, ...validTimer }));
+    });
+  };
+
+  const inputMinutes: INumberInput = {
+    setTime,
+    validateTime,
+    units: 'minutes',
+    value: minutes,
+  };
+
+  const inputSeconds: INumberInput = {
+    ...inputMinutes,
+    units: 'seconds',
+    value: seconds,
+  };
 
   return (
     <Stack display="flex" align="center" justify="space-between">
@@ -131,11 +104,11 @@ const InputTimer = (props: ITimer): JSX.Element => {
         w="150px"
         height="75px"
       >
-        <InputNumber value={minutes} units="minutes" setTime={setTime} />
+        <InputNumber {...inputMinutes} />
 
         <Text>:</Text>
 
-        <InputNumber value={seconds} units="seconds" setTime={setTime} />
+        <InputNumber {...inputSeconds} />
       </Stack>
     </Stack>
   );

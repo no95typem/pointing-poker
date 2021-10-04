@@ -109,7 +109,11 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
             <Button padding="0 50px" variant="outline" onClick={closeModal}>
               Cancel
             </Button>
-            <Button padding="0 50px" onClick={setCardbackData}>
+            <Button
+              padding="0 50px"
+              border="1px solid black"
+              onClick={setCardbackData}
+            >
               Save
             </Button>
           </ButtonGroup>

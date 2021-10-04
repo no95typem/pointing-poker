@@ -26,7 +26,7 @@ const ButtonsSet = (props: IButtonsSetData): JSX.Element => {
   }: IButtonData): JSX.Element => {
     return (
       <Button
-        // colorScheme="gray"
+        border={variant ? 'unset' : '1px solid black'}
         w="130px"
         p="0 10px"
         variant={variant ? variant : 'solid'}

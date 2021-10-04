@@ -110,6 +110,7 @@ const GameCard = (props: ICardData): JSX.Element => {
               top="0"
               right="0"
               size="lg"
+              style={{ marginTop: '0' }}
               icon={<CloseIcon />}
               onClick={deleteCard && (() => deleteCard(value))}
             />

@@ -13,6 +13,8 @@ import GameCardBacks, {
 const SettingsTabs = (props: ISettingsData): JSX.Element => {
   const { localSettings, setLocalSettings } = props;
 
+  console.log(localSettings);
+
   const {
     scoreTypeShort,
     cards,

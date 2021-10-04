@@ -19,6 +19,7 @@ export const GenericErrorPage = (props: GenericErrorPageProps) => {
         {props.error.description}
       </Alert>
       <Button
+        border="1px solid black"
         onClick={() => {
           history.push('');
           window.location.reload();

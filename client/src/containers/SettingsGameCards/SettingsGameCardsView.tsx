@@ -8,6 +8,7 @@ import {
   CardData,
   ICardData,
   ICardModal,
+  ICardsSetModal,
   ISharedCardData,
 } from '../../../../shared/types/session/card';
 import { gameCardsSettings } from '../../helpers/swiperSettings';
@@ -15,17 +16,27 @@ import { gameCardsSettings } from '../../helpers/swiperSettings';
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
 import { CARDS_DECKS } from '../../presets';
+import GameCardsSetModal from '../../components/GameCardsSetModal/GameCardsSetModal';
 
 export interface IGameCardsViewProps extends ISharedCardData {
   cards: CardData[];
   modal: ICardModal;
+  modalSetData: ICardsSetModal;
   deleteCard: (value: string) => void;
   isGameStage?: boolean;
   onDeckSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
-  const { cards, modal, units, deleteCard, isGameStage, onDeckSelect } = props;
+  const {
+    cards,
+    modal,
+    units,
+    deleteCard,
+    isGameStage,
+    onDeckSelect,
+    modalSetData,
+  } = props;
 
   return (
     <Box maxW="100%">
@@ -34,6 +45,7 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
         spacing="4"
         w={['100%', '100%', '100%', '80%']}
         justify="space-around"
+        align="center"
         mb="10px"
         wrap="wrap"
       >
@@ -45,12 +57,22 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
           ))}
         </Select>
         <Button
+          border="1px solid black"
           w="130px"
           variant="solid"
           style={{ marginInlineStart: '0' }}
+          onClick={() => modalSetData.onSetModalOpen()}
+        >
+          Add Cards Set
+        </Button>
+        <Button
+          w="130px"
+          variant="solid"
+          border="1px solid black"
+          style={{ marginInlineStart: '0' }}
           onClick={() => modal.openModal()}
         >
-          Add card
+          Add Card
         </Button>
       </Stack>
       <Box maxW="100vw" m="0 auto" p="0 20px">
@@ -83,6 +105,7 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
       </Box>
 
       <GameCardModal modal={modal} />
+      <GameCardsSetModal {...modalSetData} />
     </Box>
   );
 };

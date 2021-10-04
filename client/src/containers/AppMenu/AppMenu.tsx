@@ -26,6 +26,7 @@ export const AppMenu = () => {
           <PopoverBody>
             <Flex direction="column" gridGap={2}>
               <Button
+                border="1px solid black"
                 onClick={() =>
                   renderSelfRemovingElement(ImportExportResultsModal)
                 }
