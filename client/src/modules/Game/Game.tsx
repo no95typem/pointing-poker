@@ -1,8 +1,8 @@
-import { Box, Divider, Flex, useMediaQuery } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, useMediaQuery } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
-import UseSessionData from '../../hooks/useSessionData';
+import useSessionData from '../../hooks/useSessionData';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 
 import GameControlButtons from '../../containers/GameControlButtons/GameControlButtons';
@@ -15,13 +15,17 @@ import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
 import { MAX_CONTENT_WIDTH } from '../../constants';
 import GameInfo, { IGameInfo } from '../../containers/GameInfo/GameInfo';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
+import { ArrowDownIcon } from '@chakra-ui/icons';
+import { useRef } from 'react';
 
 const Game = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
 
-  const sessionData = UseSessionData(session);
+  const sessionData = useSessionData(session);
 
   const [isLargerThen900] = useMediaQuery('(min-width: 900px)');
+
+  const ref = useRef<HTMLDivElement>(null!);
 
   if (!sessionData) return <></>;
 
@@ -49,6 +53,22 @@ const Game = (): JSX.Element => {
     members: membersData.members,
     isPlayerSpectator,
     isDealerPlaying: issuesData.settings.isDealerPlayer,
+    children: (
+      <Flex p={4} w="100%" justify="center" align="center">
+        <Button
+          visibility={isLargerThen900 ? 'hidden' : 'visible'}
+          rightIcon={<ArrowDownIcon />}
+          onClick={() => {
+            ref.current.parentElement?.parentElement?.scroll({
+              top: ref.current.scrollHeight,
+              behavior: 'smooth',
+            });
+          }}
+        >
+          To issues
+        </Button>
+      </Flex>
+    ),
   };
 
   return (
@@ -57,12 +77,11 @@ const Game = (): JSX.Element => {
       w="100%"
       h="100%"
       m="0 auto"
-      px="25px"
-      // gridTemplateRows="auto auto auto 1fr"
-      // gridTemplateColumns="100%"
+      px="15px"
       alignItems="center"
       direction="column"
       gridGap={4}
+      ref={ref}
     >
       <EditableHeader {...sessionNameData} />
       <Flex
@@ -97,23 +116,37 @@ const Game = (): JSX.Element => {
         <Box
           alignSelf={isLargerThen900 ? 'start' : 'center'}
           w="320px"
-          // h="100%"
-          h="380px"
+          h={isLargerThen900 ? '100%' : '500px'}
           flexShrink={0}
-          overflowY="hidden"
           paddingTop={2}
+          overflowY="hidden"
+          order={isLargerThen900 ? 0 : 2}
+          paddingBottom={isLargerThen900 ? undefined : '10px'}
         >
           <IssueCards
             {...issuesData}
             justifyTabs={isLargerThen900 ? 'start' : 'center'}
           />
         </Box>
-        <Divider orientation="vertical" w="1px" />
-        <Box w={isLargerThen900 ? 'calc(100% - 321px)' : '100%'}>
+        {isLargerThen900 ? (
+          <Divider orientation="vertical" w="1px" />
+        ) : (
+          <Divider orientation="horizontal" h="1px" order={1} />
+        )}
+
+        <Box
+          w={
+            isLargerThen900
+              ? 'calc(100% - 321px - var(--chakra-space-4) * 2)'
+              : '100%'
+          }
+          h="100%"
+          // minH="400px"
+        >
           <GameInfo {...gameInfo} />
         </Box>
       </Flex>
-      <Box />
+      {isLargerThen900 && <Box />}
     </Flex>
   );
 };

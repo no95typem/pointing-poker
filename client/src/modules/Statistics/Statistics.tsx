@@ -76,6 +76,7 @@ const Statistics = (): JSX.Element => {
         <Flex gridGap="4">
           {isIssueWithStat && (
             <Button
+              border="1px solid black"
               w={FIXED_BUTTON_WIDTH}
               rightIcon={
                 <FaSave style={{ position: 'relative', top: '1px' }} />

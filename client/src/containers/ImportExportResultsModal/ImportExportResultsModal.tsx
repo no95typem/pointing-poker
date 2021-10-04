@@ -234,6 +234,7 @@ export const ImportExportResultsModal: SelfRemovingReactElement = (
                         <FormLabel m={0}>
                           <Text h="24px" />
                           <Button
+                            border="1px solid black"
                             onClick={() => {
                               dispatch(trySaveSessionToFile(args));
                               props.removeSelf();

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Tbody, Thead, Tr, Th, Td } from '@chakra-ui/table';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
-import Slider from 'react-slick';
+import Slider, { Settings } from 'react-slick';
 
 import { Issue } from '../../../../shared/types/session/issue/issue';
 import { CardData } from '../../../../shared/types/session/card';
@@ -10,17 +10,60 @@ import { RoundStat } from '../../../../shared/types/session/round/round-stat';
 
 import GameCard from '../GameCard/GameCard';
 import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
+import { UNKNOWN_CARD_DATA } from '../../presets';
 
-export interface IStatisticsTableProps {
-  issues: Issue[];
-  cards: CardData[];
-  units: string;
-}
+const statCardsSettings = {
+  infinite: false,
+  speed: 500,
+  slidesToShow: 6,
+  slidesToScroll: 6,
+  nextArrow: <SliderCustomArrow />,
+  prevArrow: <SliderCustomArrow />,
+
+  responsive: [
+    {
+      breakpoint: 1360,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 5,
+      },
+    },
+    {
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 4,
+      },
+    },
+    {
+      breakpoint: 800,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      },
+    },
+    {
+      breakpoint: 700,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+      },
+    },
+    {
+      breakpoint: 450,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
 
 const renderStat = (props: {
   stat: RoundStat;
   cards: CardData[];
   units: string;
+  statCardsSettings?: Settings;
 }) => {
   const { stat, cards, units } = props;
 
@@ -28,56 +71,15 @@ const renderStat = (props: {
 
   const pctEntries = Object.entries(stat.pct);
 
-  const statCardsSettings = {
-    infinite: false,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 6,
-    nextArrow: <SliderCustomArrow />,
-    prevArrow: <SliderCustomArrow />,
-
-    responsive: [
-      {
-        breakpoint: 1360,
-        settings: {
-          slidesToShow: 5,
-          slidesToScroll: 5,
-        },
-      },
-      {
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-        },
-      },
-      {
-        breakpoint: 800,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 700,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 450,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+  const sliderProps = props.statCardsSettings || statCardsSettings;
 
   return (
     <Box w="90%" p="5px">
-      <Slider {...statCardsSettings}>
+      <Slider {...sliderProps}>
+        {/* {Array(10)
+          .fill(null)
+          .map(() => {
+            return  */}
         {pctEntries
           .sort((a, b) => b[1].count - a[1].count)
           .map(([cardVal, rec]) => {
@@ -95,16 +97,12 @@ const renderStat = (props: {
                   gridGap="1"
                   w="fit-content"
                 >
-                  {cardData ? (
-                    <GameCard
-                      card={cardData}
-                      units={units}
-                      size="xs"
-                      isUnitsHidden
-                    />
-                  ) : (
-                    <QuestionOutlineIcon />
-                  )}
+                  <GameCard
+                    card={cardData || UNKNOWN_CARD_DATA}
+                    units={units}
+                    size="xs"
+                    isUnitsHidden
+                  />
                   <Text fontWeight="bold">{`${percent}%`}</Text>
                 </Flex>
               </Box>
@@ -114,6 +112,13 @@ const renderStat = (props: {
     </Box>
   );
 };
+
+export interface IStatisticsTableProps {
+  issues: Issue[];
+  cards: CardData[];
+  units: string;
+  statCardsSettings?: Settings;
+}
 
 export const StatisticsTable = React.memo(
   (props: IStatisticsTableProps): JSX.Element => {
@@ -147,7 +152,7 @@ export const StatisticsTable = React.memo(
                       overflow="hidden"
                       textOverflow="ellipsis"
                       h="min-content"
-                      maxH="100%"
+                      maxH="80px"
                       mt="auto"
                       mb="auto"
                     >
@@ -159,8 +164,7 @@ export const StatisticsTable = React.memo(
                     {issue.stat
                       ? renderStat({
                           stat: issue.stat,
-                          cards: props.cards,
-                          units: props.units,
+                          ...props,
                         })
                       : 'no stat'}
                   </Td>

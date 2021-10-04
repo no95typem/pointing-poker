@@ -1,5 +1,9 @@
 import { UNDEFINED_CARD_VALUE } from '../../const';
+import { Member } from '../../types/session/member';
 import { Percentage } from '../../types/session/round/round-stat';
+import { ISessionGameState } from '../../types/session/state/session-state';
+import { USER_ROLES } from '../../types/user/user-role';
+import { OBJ_PROCESSOR } from '../processors/obj-processor';
 
 export const calcPercentage = (
   votes: Record<number, string | undefined>,
@@ -22,4 +26,27 @@ export const calcPercentage = (
   });
 
   return percentage;
+};
+
+
+export const fullfillVotes = (
+  members: Record<number, Member>,
+  game: ISessionGameState,
+  isDealerPlayer: boolean,
+) => {
+  const votes = OBJ_PROCESSOR.deepClone(game.votes);
+
+  Object.entries(members).forEach(([id, m]) => {
+    if (m.userRole === USER_ROLES.SPECTATOR) return;
+
+    if (m.userRole === USER_ROLES.DEALER && !isDealerPlayer) return;
+
+    const key = +id;
+
+    if (key in votes && votes[key] !== undefined) return;
+
+    votes[key] = UNDEFINED_CARD_VALUE;
+  });
+
+  return votes;
 };

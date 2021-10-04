@@ -15,6 +15,13 @@ export interface ICardModal extends IActiveCard {
   setCard: () => void;
 }
 
+export interface ICardsSetModal {
+  onSetModalOpen: () => void;
+  onSetModalClose: () => void;
+  isSetModalOpen: boolean;
+  setCardsSet: (cards: string) => void;
+}
+
 export interface ISharedCardData {
   units: string;
   isGameStage?: boolean;

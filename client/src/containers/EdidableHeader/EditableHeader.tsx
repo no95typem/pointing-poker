@@ -95,7 +95,12 @@ const EditableHeader = (props: ISessionNameHandling) => {
               <Button w="100px" variant="outline" onClick={onClose}>
                 Close
               </Button>
-              <Button w="100px" variant="solid" onClick={updateTopic}>
+              <Button
+                border="1px solid black"
+                w="100px"
+                variant="solid"
+                onClick={updateTopic}
+              >
                 Change
               </Button>
             </ButtonGroup>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, useRadio } from '@chakra-ui/react';
 
 const SessionItemRadioCard = (props: any): JSX.Element => {
@@ -11,19 +10,8 @@ const SessionItemRadioCard = (props: any): JSX.Element => {
   return (
     <Box as="label">
       <input {...input} />
-      <Box
-        {...checkbox}
-        cursor="pointer"
-        borderRadius="md"
-        _checked={{
-          // boxShadow: 'inset 0 0 10px 15px greenyellow',
-          bg: 'teal.600',
-          color: 'white',
-        }}
-        _focus={{
-          boxShadow: 'outline',
-        }}
-      >
+
+      <Box {...checkbox} _checked={{}} cursor="pointer">
         {props.children}
       </Box>
     </Box>

@@ -71,7 +71,7 @@ const Settings = (props: ISettingsData): JSX.Element => {
   ];
 
   return (
-    <Flex direction="column" gridGap={4} w="100%" h="100%">
+    <Flex direction="column" gridGap={4} w="100%" h="100%" justify="center">
       {switchersData.map(switcherData => {
         const { name } = switcherData;
 

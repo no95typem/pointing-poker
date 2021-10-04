@@ -70,7 +70,7 @@ export const MessageInputBox = () => {
           }
         }}
       ></Textarea>
-      <Button size="md" onClick={handleSend}>
+      <Button border="1px solid black" size="md" onClick={handleSend}>
         Send
       </Button>
     </Flex>

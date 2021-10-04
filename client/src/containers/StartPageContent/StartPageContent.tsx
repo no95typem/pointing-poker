@@ -13,6 +13,7 @@ import { MAX_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
 import { ReactComponent as UndrawScrumBoard } from '../../assets/images/undraw/scrum-board.svg';
 import { ReactComponent as UndrawNewIdeas } from '../../assets/images/undraw/new-ideas.svg';
 import { ReactComponent as UndrawLogin } from '../../assets/images/undraw/login.svg';
+import { INotification, notifSlice } from '../../redux/slices/notifications';
 
 interface IStartPageContentProps {
   onPopupCalled: (forRole: UserRole) => void;
@@ -66,6 +67,7 @@ const StartPageContent = ({
             <Flex justify="center" align="center" gridGap="1rem">
               {!isLargerThan860 && <UndrawNewIdeas style={{ width: '50%' }} />}
               <Button
+                border="1px solid black"
                 maxW={MAX_BUTTON_WIDTH}
                 onClick={() => onPopupCalled(USER_ROLES.DEALER)}
               >
@@ -94,7 +96,24 @@ const StartPageContent = ({
                 // onChange={e => dispatch(setLobbyURL(e.target.value || ''))}
               />
               {isLargerThan860 && (
-                <Button onClick={() => onPopupCalled(USER_ROLES.PLAYER)}>
+                <Button
+                  border="1px solid black"
+                  onClick={() => {
+                    if (!lobbyURL) {
+                      const notification: INotification = {
+                        status: 'error',
+                        text: 'Enter session id first!',
+                        needToShow: true,
+                      };
+
+                      dispatch(notifSlice.actions.addNotifRec(notification));
+
+                      return;
+                    }
+
+                    onPopupCalled(USER_ROLES.PLAYER);
+                  }}
+                >
                   Connect
                 </Button>
               )}
@@ -102,7 +121,10 @@ const StartPageContent = ({
 
             {!isLargerThan860 && (
               <Flex justify="center" align="center" gridGap="1rem">
-                <Button onClick={() => onPopupCalled(USER_ROLES.PLAYER)}>
+                <Button
+                  border="1px solid black"
+                  onClick={() => onPopupCalled(USER_ROLES.PLAYER)}
+                >
                   Connect
                 </Button>
                 <UndrawLogin style={{ width: '50%' }} />

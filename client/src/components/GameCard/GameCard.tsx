@@ -90,6 +90,7 @@ const GameCard = (props: ICardData): JSX.Element => {
         justify="center"
         align="center"
         {...stackStyles}
+        className="enlight"
       >
         {isControlShown && (
           <>
@@ -110,6 +111,7 @@ const GameCard = (props: ICardData): JSX.Element => {
               top="0"
               right="0"
               size="lg"
+              style={{ marginTop: '0' }}
               icon={<CloseIcon />}
               onClick={deleteCard && (() => deleteCard(value))}
             />

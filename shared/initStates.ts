@@ -1,6 +1,7 @@
 import { OBJ_PROCESSOR } from './helpers/processors/obj-processor';
 import { CardData } from './types/session/card';
 import { Member } from './types/session/member';
+import { ROUND_STATES } from './types/session/round/round-state';
 import {
   ISessionStateClient,
   SessionState,
@@ -77,6 +78,12 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   clientId: 0,
   name: { value: 'Session 12345', isSynced: true },
   stage: SESSION_STAGES.LOBBY,
+  game: {
+    currIssueId: 0,
+    roundState: ROUND_STATES.IN_PROCESS,
+    isResultsVisible: false,
+    votes: {}
+  },
   members: {
     0: sampleMember,
     1: {
