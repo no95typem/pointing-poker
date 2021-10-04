@@ -145,34 +145,47 @@ export class ClientManager {
     }
   };
 
+  private pureParse = (ws: WebSocket, parsed: any) => {
+    if ('cipher' in parsed) {
+      switch ((parsed as CSMsg).cipher) {
+        case CSMSG_CIPHERS.CREATE_SESS:
+          this.createSession(ws, parsed as CSMsgCreateSession);
+          break;
+        case CSMSG_CIPHERS.CONN_TO_SESS:
+          this.connectToSession(ws, parsed as CSMsgConnToSess);
+          break;
+        case CSMSG_CIPHERS.DISCONN_FROM_SESS:
+          this.disconnectFromSession(ws);
+          break;
+        default:
+          this.apiListeners.get(ws)?.forEach(listener => {
+            try {
+              listener(parsed as CSMsg);
+            } catch (err) {
+              console.error('error in a api listener:', err);
+            }
+          });
+          break;
+      }
+    }
+  };
+
+  private debugParse = (ws: WebSocket, parsed: any) => {
+    setTimeout(() => {
+      try {
+        this.pureParse(ws, parsed);
+      } catch (err) {
+        console.error('unrecognized error:', err);
+      }
+    }, 2000);
+  };
+
+  private parseFunc = IS_PROD ? this.pureParse : this.debugParse;
+
   private clientListener = (ws: WebSocket, e: WebSocketEvent) => {
     try {
       const parsed = JSON.parse(e.data as string);
-
-      setTimeout(() => {
-        if ('cipher' in parsed) {
-          switch ((parsed as CSMsg).cipher) {
-            case CSMSG_CIPHERS.CREATE_SESS:
-              this.createSession(ws, parsed as CSMsgCreateSession);
-              break;
-            case CSMSG_CIPHERS.CONN_TO_SESS:
-              this.connectToSession(ws, parsed as CSMsgConnToSess);
-              break;
-            case CSMSG_CIPHERS.DISCONN_FROM_SESS:
-              this.disconnectFromSession(ws);
-              break;
-            default:
-              this.apiListeners.get(ws)?.forEach(listener => {
-                try {
-                  listener(parsed as CSMsg);
-                } catch (err) {
-                  console.error('error in a api listener:', err);
-                }
-              });
-              break;
-          }
-        }
-      }, 2000);
+      this.parseFunc(ws, parsed);
     } catch (err) {
       console.error('unrecognized error:', err);
     }
