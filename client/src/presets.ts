@@ -9,6 +9,9 @@ import rssLogo from './assets/images/shared/rss-logo.svg';
 import back01 from './assets/images/card-back-01.png';
 import back02 from './assets/images/card-back-02.png';
 
+const UNSURE_CARD_DATA = { value: 'Unsure', base64: faqMod };
+export const UNKNOWN_CARD_DATA = UNSURE_CARD_DATA; // TODO REPLACE
+
 export const CARDS_DECKS: Record<string, CardData[]> = {
   FIBONACCI: [
     { value: '0' },
@@ -22,7 +25,7 @@ export const CARDS_DECKS: Record<string, CardData[]> = {
     { value: '34' },
     { value: '55' },
     { value: '89' },
-    { value: 'Unsure', base64: faqMod },
+    UNSURE_CARD_DATA,
     { value: 'We need a break', base64: pizzaSharing },
     { value: 'Impossible', base64: missionImpossible },
   ],
@@ -56,6 +59,7 @@ export const CARDS_DECKS: Record<string, CardData[]> = {
     { value: 'I do not know', base64: faqMod },
     { value: 'We need a break', base64: pizzaSharing },
   ],
+  EMPTY: [],
 };
 
 export const CARDS_BACKS = [back01, back02, rssLogo, logo];

@@ -8,13 +8,14 @@ import {
 } from '@chakra-ui/react';
 
 export interface INumberInput {
-  units: string;
-  value: number;
   setTime: (name: string, value: number) => void;
+  validateTime: (units: 'minutes' | 'seconds') => void;
+  units: 'minutes' | 'seconds';
+  value: number;
 }
 
 const InputNumber = (props: INumberInput): JSX.Element => {
-  const { value, units, setTime } = props;
+  const { value, units, setTime, validateTime } = props;
 
   const changeTime = (value: string): void => {
     setTime(units, +value);
@@ -35,6 +36,7 @@ const InputNumber = (props: INumberInput): JSX.Element => {
         w="55px"
         value={value}
         onChange={changeTime}
+        onBlur={() => validateTime(units)}
         min={0}
         max={59}
         id={units}

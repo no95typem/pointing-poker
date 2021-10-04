@@ -1,4 +1,4 @@
-import { Flex, Image, useColorMode } from '@chakra-ui/react';
+import { Box, Flex, Image, useColorMode } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { useState } from 'react';
 
@@ -45,7 +45,6 @@ const Cardback = (props: ICardback): JSX.Element => {
   const boxBorderStyles = isBorder
     ? {
         border: '1px solid',
-        borderRadius: 'xl',
         borderColor: cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200',
         padding: '10%',
         bg: cMode.colorMode === 'light' ? 'gray.200' : 'gray.700',
@@ -56,17 +55,28 @@ const Cardback = (props: ICardback): JSX.Element => {
     <Flex
       justify="center"
       align="center"
+      overflow="hidden"
       {...boxSizeStyles}
+      borderRadius="xl"
       {...boxBorderStyles}
+      className={isBorder ? 'enlight' : undefined}
     >
-      <Image
-        onLoad={recalcStyles}
-        src={src}
-        ref={ref}
+      <Box
         maxH="100%"
         maxW="100%"
-        objectFit="contain"
-      />
+        display="block"
+        className={!isBorder ? 'enlight' : undefined}
+      >
+        <Image
+          onLoad={recalcStyles}
+          src={src}
+          ref={ref}
+          maxH="100%"
+          maxW="100%"
+          objectFit="contain"
+          z-index="0"
+        />
+      </Box>
     </Flex>
   );
 };

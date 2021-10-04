@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
+  Flex,
   Stack,
   useDisclosure,
   useRadioGroup,
@@ -56,45 +57,57 @@ const SettingsCardBacks = (props: ICardbacksData): JSX.Element => {
   };
 
   return (
-    <Box w="100%">
-      <Stack justify="center" align="center" mb="20px">
-        <Button
-          w="130px"
-          variant="solid"
-          style={{ marginInlineStart: '0' }}
-          onClick={onOpen}
+    <>
+      <Flex
+        direction="column"
+        gridGap={4}
+        h="100%"
+        w="100%"
+        justify="space-between"
+        align="flex-end"
+      >
+        <Flex
+          maxW="100%"
+          wrap="wrap"
+          align="center"
+          justify="center"
+          gridGap={2}
         >
-          Add cardback
-        </Button>
-      </Stack>
+          <Button onClick={onOpen} border="1px solid black">Add cardback</Button>
+        </Flex>
 
-      {cardbacksBase64 && (
-        <Box maxW="100%" m="0 auto" p="0 20px">
-          <Slider {...gameCardsSettings}>
-            {cardbacksBase64.map((src, id) => {
-              const radio = (getRadioProps as (obj: { value: string }) => any)({
-                value: String(id),
-              });
+        {cardbacksBase64 && (
+          <Box w="90%" m="0 auto">
+            <Slider {...gameCardsSettings}>
+              {cardbacksBase64.map((src, id) => {
+                const radio = (
+                  getRadioProps as (obj: { value: string }) => any
+                )({
+                  value: String(id),
+                });
 
-              return (
-                <SessionItemRadioCard key={`${id}-radio`} {...radio}>
-                  <Stack
-                    direction="row"
-                    key={`${id}-wrap`}
-                    mx="5px"
-                    justify="center"
-                    align="center"
-                  >
-                    <Cardback src={src} key={id} />
-                  </Stack>
-                </SessionItemRadioCard>
-              );
-            })}
-          </Slider>
-        </Box>
-      )}
+                return (
+                  <SessionItemRadioCard key={`${id}-radio`} {...radio}>
+                    <Stack
+                      direction="row"
+                      mx="5px"
+                      justify="center"
+                      align="center"
+                    >
+                      <Cardback src={src} key={id} />
+                    </Stack>
+                  </SessionItemRadioCard>
+                );
+              })}
+            </Slider>
+          </Box>
+        )}
+
+        <Box></Box>
+      </Flex>
+
       <CardbackModal {...cardbackModalData} />
-    </Box>
+    </>
   );
 };
 

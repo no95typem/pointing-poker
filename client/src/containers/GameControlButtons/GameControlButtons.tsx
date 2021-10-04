@@ -60,6 +60,7 @@ const GameControlButtons = (props: IGameStateData): JSX.Element => {
       {isPlayerDealer && (
         <Button
           w="130px"
+          border="1px solid black"
           variant="solid"
           style={{ marginInlineStart: '0' }}
           visibility={isPlayerDealer ? 'visible' : 'hidden'}

@@ -33,6 +33,7 @@ module.exports = {
     new ESLintPlugin(),
     new webpack.DefinePlugin({
       TARGET_PLATFORM: JSON.stringify('node'),
+      IS_PROD: process.env.NODE_ENV === 'production',
     }),
     !isDev &&
       new CopyPlugin({

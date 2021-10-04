@@ -7,10 +7,12 @@ import {
   Tabs,
   useColorMode,
 } from '@chakra-ui/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 
 import { Issue } from '../../../../shared/types/session/issue/issue';
 import { ISessionGameState } from '../../../../shared/types/session/state/session-state';
+import { getBorderStyles } from '../../constants';
 
 export interface IIssuesTabs {
   list: Issue[];
@@ -27,6 +29,32 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
 
   const cMode = useColorMode();
 
+  const ref = useRef<HTMLDivElement>(null!);
+
+  const [h, setH] = useState('200px');
+
+  const updateH = useCallback(() => {
+    const style = getComputedStyle(ref.current);
+
+    if (style.height !== h) setH(style.height);
+  }, [h, setH, ref]);
+
+  // eslint-disable react-hooks/exhaustive-deps
+  useEffect(() => {
+    updateH();
+    const listner = () => {
+      setH('100px');
+      setTimeout(() => {
+        updateH();
+      });
+    };
+
+    window.addEventListener('resize', listner);
+
+    return () => window.removeEventListener('resize', listner);
+  }, []);
+  // eslint-enable react-hooks/exhaustive-deps
+
   return (
     <Tabs
       variant="enclosed"
@@ -35,7 +63,8 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
       display="flex"
       flexDirection="column"
       overflowY="hidden"
-      p={2}
+      paddingTop={2}
+      px={2}
     >
       <TabList justifyContent={props.justifyTabs || 'start'}>
         <Tab>Active Issues</Tab>
@@ -43,14 +72,13 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
       </TabList>
       <TabPanels
         w="100%"
-        border="1px"
-        borderTopRadius="0"
-        borderColor={cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'}
+        h={h}
+        {...getBorderStyles(cMode.colorMode)}
         flexGrow={1}
-        overflowY="auto"
         opacity={isSynced ? '1' : '0.5'}
+        ref={ref}
       >
-        <TabPanel>
+        <TabPanel overflowY="auto" h={h}>
           <Droppable droppableId="issues">
             {({ droppableProps, innerRef, placeholder }) => (
               <Flex
@@ -69,7 +97,7 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
             )}
           </Droppable>
         </TabPanel>
-        <TabPanel>
+        <TabPanel overflowY="auto" h={h}>
           <Flex w="100%" direction="column" gridGap={2}>
             {list
               .filter(issue => issue.closed)

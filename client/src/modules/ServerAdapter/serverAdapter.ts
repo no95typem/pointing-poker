@@ -24,7 +24,7 @@ import { SessionState } from '../../../../shared/types/session/state/session-sta
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
 import { SCMsgVotekick } from '../../../../shared/types/sc-msgs/msgs/sc-msg-votekick';
 import { showKickDialog } from '../../helpers/showKickDialog';
-import { connectSlice } from '../../redux/slices/connect';
+
 // import { getCookieValByName } from '../../helpers/getCookie';
 import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
@@ -35,7 +35,7 @@ import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-ms
 import { ISettings } from '../../../../shared/types/settings';
 import { CSMsgForceKick } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-force-kick';
 import { CSMsgVotekick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
-import { DEALER_ID } from '../../../../shared/const';
+import { API_URL, DEALER_ID } from '../../../../shared/const';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
 import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/spectator/cs-msg-chat-msg';
 import { ChatMsg } from '../../../../shared/types/session/chat/chat-msg';
@@ -53,10 +53,6 @@ export interface IKickArgs {
 }
 
 class ServerAdapter {
-  private apiUrl = IS_PROD
-    ? 'wss://rss-react-2021q3-pp.herokuapp.com/'
-    : 'ws://localhost:9000';
-
   private ws: WebSocket | undefined;
 
   private lastToken: string | undefined;
@@ -67,7 +63,6 @@ class ServerAdapter {
 
   private handleWSOpen() {
     (this.ws as WebSocket).addEventListener('message', this.obeyTheServer);
-    store.dispatch(connectSlice.actions.setServerConnectionStatus('connected'));
   }
 
   private handleWSErrorOrClose() {
@@ -124,7 +119,7 @@ class ServerAdapter {
       };
 
       try {
-        this.ws = new WebSocket(this.apiUrl);
+        this.ws = new WebSocket(API_URL);
         this.ws.onopen = () => {
           this.handleWSOpen();
           res(true);
@@ -340,7 +335,21 @@ class ServerAdapter {
   /* ACTIONS */
   connToLobby = () => {
     const state = store.getState();
-    this.controlKey = state.homePage.lobbyURL;
+    const url = state.homePage.lobbyURL;
+
+    if (!url) {
+      const notification: INotification = {
+        status: 'error',
+        text: 'Enter lobby id first!',
+        needToShow: true,
+      };
+
+      store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
+
+    this.controlKey = url;
     const token = this.lastToken; //|| getCookieValByName('lastToken');
     const msg = new CSMsgConnToSess({
       info: state.userInfo,
@@ -373,21 +382,6 @@ class ServerAdapter {
       }),
     );
   };
-
-  // dang_reset = () => {
-  //   this.exitGame();
-  //   dang_APP_SOFT_RESET();
-
-  //   // if (this.ws) {
-  //   //   try {
-  //   //     this.ws.close();
-  //   //   } catch {
-  //   //     //
-  //   //   }
-
-  //   //   this.connect();
-  //   // }
-  // };
 
   respondToNewConnection = (id: number, allow: boolean) => {
     const msg = new CSMSGNewConnectionResponse(id, allow);
@@ -426,6 +420,12 @@ class ServerAdapter {
   };
 
   endGame = () => {
+    store.dispatch(
+      setGLoadByKey({
+        loadKey: KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE,
+      }),
+    );
+
     const endGame = new CSMsgEndGame();
 
     this.send(endGame);

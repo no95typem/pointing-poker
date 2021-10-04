@@ -9,7 +9,7 @@ import { theme } from '../../theme';
 import Chat from '../Chat/Сhat';
 import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
-import './scrollbar.scss';
+import './styles.scss';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 
 export const App = () => {

@@ -56,7 +56,11 @@ const KickModal = (props: IKickModalProps): JSX.Element => {
               <Button padding="0 50px" variant="outline" onClick={onClose}>
                 No
               </Button>
-              <Button onClick={onConfirm} padding="0 50px">
+              <Button
+                border="1px solid black"
+                onClick={onConfirm}
+                padding="0 50px"
+              >
                 Yes
               </Button>
             </ButtonGroup>
