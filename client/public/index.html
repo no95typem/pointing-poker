@@ -15,6 +15,7 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <base href="%REACT_APP_BASENAME%"/>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -26,6 +27,10 @@
     -->
     <title>Pointing Poker</title>
 
+    <script>
+      console.log("%REACT_APP_BASENAME%"); // This will change based on development or production
+    </script>
+    
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
