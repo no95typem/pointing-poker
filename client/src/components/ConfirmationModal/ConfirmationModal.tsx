@@ -38,7 +38,7 @@ const ConfirmationModal = (props: IConfirmation): JSX.Element => {
             <Button padding="0 50px" variant="outline" onClick={onClose}>
               No
             </Button>
-            <Button padding="0 50px" onClick={action}>
+            <Button border="1px solid black" padding="0 50px" onClick={action}>
               Yes
             </Button>
           </ButtonGroup>

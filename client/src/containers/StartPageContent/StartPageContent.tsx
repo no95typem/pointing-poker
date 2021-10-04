@@ -67,6 +67,7 @@ const StartPageContent = ({
             <Flex justify="center" align="center" gridGap="1rem">
               {!isLargerThan860 && <UndrawNewIdeas style={{ width: '50%' }} />}
               <Button
+                border="1px solid black"
                 maxW={MAX_BUTTON_WIDTH}
                 onClick={() => onPopupCalled(USER_ROLES.DEALER)}
               >
@@ -96,6 +97,7 @@ const StartPageContent = ({
               />
               {isLargerThan860 && (
                 <Button
+                  border="1px solid black"
                   onClick={() => {
                     if (!lobbyURL) {
                       const notification: INotification = {
@@ -119,7 +121,10 @@ const StartPageContent = ({
 
             {!isLargerThan860 && (
               <Flex justify="center" align="center" gridGap="1rem">
-                <Button onClick={() => onPopupCalled(USER_ROLES.PLAYER)}>
+                <Button
+                  border="1px solid black"
+                  onClick={() => onPopupCalled(USER_ROLES.PLAYER)}
+                >
                   Connect
                 </Button>
                 <UndrawLogin style={{ width: '50%' }} />

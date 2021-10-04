@@ -424,6 +424,12 @@ class ServerAdapter {
   };
 
   endGame = () => {
+    store.dispatch(
+      setGLoadByKey({
+        loadKey: KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE,
+      }),
+    );
+
     const endGame = new CSMsgEndGame();
 
     this.send(endGame);

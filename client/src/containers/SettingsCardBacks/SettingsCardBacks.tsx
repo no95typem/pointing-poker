@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -73,7 +73,7 @@ const SettingsCardBacks = (props: ICardbacksData): JSX.Element => {
           justify="center"
           gridGap={2}
         >
-          <Button onClick={onOpen}>Add cardback</Button>
+          <Button onClick={onOpen} border="1px solid black">Add cardback</Button>
         </Flex>
 
         {cardbacksBase64 && (

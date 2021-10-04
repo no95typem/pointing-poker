@@ -35,7 +35,7 @@ const JoinGameLink = (props: ILink) => {
 
       <Flex maxW="240px" align="center" gridGap={2}>
         <Input boxShadow="lg" value={link} isReadOnly />
-        <Button onClick={saveToClipboard}>
+        <Button border="1px solid black" onClick={saveToClipboard}>
           {hasCopied ? 'Done!' : 'Copy'}
         </Button>
       </Flex>

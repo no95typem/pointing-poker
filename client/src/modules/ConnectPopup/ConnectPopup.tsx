@@ -181,6 +181,7 @@ const ConnectPopup = ({
             Close
           </Button>
           <Button
+            border="1px solid black"
             disabled={isNameInvalid}
             onClick={() => {
               forDealer

@@ -182,7 +182,10 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
           <>
             <RoundControlButtons {...gameState} />
             {!isRoundAwaitStart && (
-              <Button onClick={SERVER_ADAPTER.toggleResultsVisibility}>
+              <Button
+                border="1px solid black"
+                onClick={SERVER_ADAPTER.toggleResultsVisibility}
+              >
                 {isResultsVisible ? 'Hide results' : 'Show results'}
               </Button>
             )}

@@ -3,21 +3,31 @@ import React, { useState } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 
 import { INotification, notifSlice } from '../../redux/slices/notifications';
-import { store } from '../../redux/store';
+import { useAppDispatch } from '../../redux/store';
+import { CARDS_DECKS } from '../../presets';
+
 import {
   CardData,
   ICardModal,
   ICardsData,
+  ICardsSetModal,
 } from '../../../../shared/types/session/card';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
 import { GameCardsView, IGameCardsViewProps } from './SettingsGameCardsView';
-import { CARDS_DECKS } from '../../presets';
 
 const GameCards = (props: ICardsData): JSX.Element => {
   const { cards, units, setLocalSettings, isGameStage } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const dispatch = useAppDispatch();
+
+  const {
+    isOpen: isSetModalOpen,
+    onOpen: onSetModalOpen,
+    onClose: onSetModalClose,
+  } = useDisclosure();
 
   const newGameCard: CardData = {
     value: '',
@@ -60,7 +70,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(notifSlice.actions.addNotifRec(notification));
 
       return;
     }
@@ -86,7 +96,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
           needToShow: true,
         };
 
-        store.dispatch(notifSlice.actions.addNotifRec(notification));
+        dispatch(notifSlice.actions.addNotifRec(notification));
 
         return;
       }
@@ -113,7 +123,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(notifSlice.actions.addNotifRec(notification));
 
       return;
     }
@@ -139,13 +149,58 @@ const GameCards = (props: ICardsData): JSX.Element => {
     }
   };
 
+  const setCardsSet = (cardsValue: string): void => {
+    if (!cardsValue) {
+      const notification: INotification = {
+        status: 'warning',
+        text: `Field can't be empty!`,
+        needToShow: true,
+      };
+
+      dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
+
+    const cards: CardData[] = [];
+
+    cardsValue.split(' ').forEach(value => {
+      if (value) return cards.push({ value });
+    });
+
+    if (cards.length < 2) {
+      const notification: INotification = {
+        status: 'warning',
+        text: `Should be at least two non-empty card's values`,
+        needToShow: true,
+      };
+
+      dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
+
+    cards.sort((s, t) => s.value.localeCompare(t.value));
+
+    setLocalSettings('cards', cards);
+
+    onSetModalClose();
+  };
+
   const modalData: ICardModal = {
-    onClose: onClose,
-    isOpen: isOpen,
-    openModal: openModal,
-    activeCard: activeCard,
-    changeCardValue: changeCardValue,
-    setCard: setCard,
+    onClose,
+    isOpen,
+    openModal,
+    activeCard,
+    changeCardValue,
+    setCard,
+  };
+
+  const modalSetData: ICardsSetModal = {
+    isSetModalOpen,
+    onSetModalOpen,
+    onSetModalClose,
+    setCardsSet,
   };
 
   const data: IGameCardsViewProps = {
@@ -155,6 +210,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
     deleteCard,
     isGameStage,
     onDeckSelect: handleDeckSelect,
+    modalSetData,
   };
 
   return <GameCardsView {...data} />;

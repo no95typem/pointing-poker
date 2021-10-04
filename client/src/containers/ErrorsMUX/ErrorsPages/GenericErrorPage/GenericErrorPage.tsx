@@ -16,6 +16,7 @@ export const GenericErrorPage = (props: GenericErrorPageProps) => {
         {props.error.description}
       </Alert>
       <Button
+        border="1px solid black"
         onClick={() => {
           dang_APP_SOFT_RESET();
         }}

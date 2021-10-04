@@ -8,6 +8,7 @@ import {
   CardData,
   ICardData,
   ICardModal,
+  ICardsSetModal,
   ISharedCardData,
 } from '../../../../shared/types/session/card';
 import { gameCardsSettings } from '../../helpers/swiperSettings';
@@ -15,17 +16,26 @@ import { gameCardsSettings } from '../../helpers/swiperSettings';
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
 import { CARDS_DECKS } from '../../presets';
+import GameCardsSetModal from '../../components/GameCardsSetModal/GameCardsSetModal';
 
 export interface IGameCardsViewProps extends ISharedCardData {
   cards: CardData[];
   modal: ICardModal;
+  modalSetData: ICardsSetModal;
   deleteCard: (value: string) => void;
   isGameStage?: boolean;
   onDeckSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
-  const { cards, modal, units, deleteCard, isGameStage, onDeckSelect } = props;
+  const {
+    cards,
+    modal,
+    units,
+    deleteCard,
+    onDeckSelect,
+    modalSetData,
+  } = props;
 
   return (
     <>
@@ -52,6 +62,15 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
             ))}
           </Select>
           <Button
+            border="1px solid black"
+            w="130px"
+            variant="solid"
+            style={{ marginInlineStart: '0' }}
+            onClick={() => modalSetData.onSetModalOpen()}
+          >
+            Add Cards Set
+          </Button>
+          <Button
             w="130px"
             variant="solid"
             style={{ marginInlineStart: '0' }}
@@ -60,7 +79,6 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
             Add card
           </Button>
         </Flex>
-
         <Box w="90%" m="0 auto">
           <Slider {...gameCardsSettings}>
             {cards.map(card => {

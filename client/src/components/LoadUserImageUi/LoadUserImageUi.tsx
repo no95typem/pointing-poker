@@ -26,6 +26,7 @@ const LoadUserImageUi = (props: IUploadData): JSX.Element => {
         <Button
           w="130px"
           variant="solid"
+          border="1px solid black"
           style={{ marginInlineStart: '0' }}
           onClick={uploadImage}
         >
