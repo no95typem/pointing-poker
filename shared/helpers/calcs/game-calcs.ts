@@ -4,6 +4,7 @@ import { Member } from '../../types/session/member';
 import { Percentage } from '../../types/session/round/round-stat';
 import { ISessionGameState } from '../../types/session/state/session-state';
 import { USER_ROLES } from '../../types/user/user-role';
+import { USER_STATES } from '../../types/user/user-state';
 import { OBJ_PROCESSOR } from '../processors/obj-processor';
 
 export const calcPercentage = (
@@ -40,6 +41,8 @@ export const fullfillVotes = (
     if (m.userRole === USER_ROLES.SPECTATOR) return;
 
     if (m.userRole === USER_ROLES.DEALER && !isDealerPlayer) return;
+
+    if (m.userState === USER_STATES.DISCONNECTED || m.userState === USER_STATES.KICKED) return;
 
     const key = +id;
 

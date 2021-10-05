@@ -65,9 +65,9 @@ export const sessionSlice = createSlice({
     },
     markChatMsgsReaded(state) {
       const chat = OBJ_PROCESSOR.deepClone(state.chat);
-      Object.values(chat.msgs).forEach(msg => msg.isViewed = true);
+      Object.values(chat.msgs).forEach(msg => (msg.isViewed = true));
       Object.assign(state, { chat });
-    }
+    },
   },
 });
 
