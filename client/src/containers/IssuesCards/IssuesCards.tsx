@@ -26,6 +26,7 @@ const IssuesCards = (
     isPlayerDealer,
     gameState,
     settings,
+    userId,
   } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -110,6 +111,7 @@ const IssuesCards = (
     gameState,
     statisticModal,
     issuesDndChange,
+    userId,
   };
 
   return (

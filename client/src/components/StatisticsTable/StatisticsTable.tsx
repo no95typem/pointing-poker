@@ -3,7 +3,6 @@ import { Table, Tbody, Thead, Tr, Th, Td } from '@chakra-ui/table';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import Slider, { Settings } from 'react-slick';
 
-import { Issue } from '../../../../shared/types/session/issue/issue';
 import { CardData } from '../../../../shared/types/session/card';
 import { RoundStat } from '../../../../shared/types/session/round/round-stat';
 
@@ -11,6 +10,7 @@ import GameCard from '../GameCard/GameCard';
 import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
 import { UNKNOWN_CARD_DATA } from '../../presets';
 import { ReactComponent as UndrawNoData } from '../../assets/images/undraw/no-data.svg';
+import { IssueForRender } from '../../types/IssueForRender';
 
 const statCardsSettings = {
   infinite: false,
@@ -147,7 +147,7 @@ const renderStat = (props: {
 };
 
 export interface IStatisticsTableProps {
-  issues: Issue[];
+  issues: IssueForRender[];
   cards: CardData[];
   units: string;
   statCardsSettings?: Settings;

@@ -5,14 +5,7 @@ import { ISessionGameState, ISessionIssues } from '../state/session-state';
 import { ISettings } from '../../settings';
 
 export interface Issue extends Synchronized {
-  [key: string]:
-    | number
-    | string
-    | IssuePriority
-    | RoundStat
-    | boolean
-    | undefined
-    | React.ReactNode;
+  [key: string]: unknown;
   id: number;
   title: string;
   link: string;
@@ -20,7 +13,6 @@ export interface Issue extends Synchronized {
   priority: IssuePriority;
   closed: boolean;
   stat?: RoundStat;
-  replaceElem?: React.ReactNode;
 }
 
 export interface IIssueData {
@@ -41,6 +33,7 @@ export interface IIssuesData {
   settings: ISettings;
   newIssueId: number;
   isPlayerDealer: boolean;
+  userId: number;
 }
 
 export interface IIssueModal {
@@ -55,6 +48,7 @@ export interface IIssueModal {
   isOpen: boolean;
   isPlayerDealer: boolean;
   statisticModal: IStatisticModal;
+  userId: number;
 }
 
 export interface IIssues {

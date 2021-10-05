@@ -23,8 +23,8 @@ import GameCardsRound from '../GameCardsRound/GameCardsRound';
 import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
 import { ISettings } from '../../../../shared/types/settings';
-import { Issue } from '../../../../shared/types/session/issue/issue';
 import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
+import { IssueForRender } from '../../types/IssueForRender';
 
 export interface IGameInfo {
   gameData: ICardsGame;
@@ -88,7 +88,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
       issues.find(issue => issue.id === gameState.currIssueId),
     );
 
-    const issue: Issue = realIssue || {
+    const issue: IssueForRender = realIssue || {
       id: 0,
       title: '',
       link: '',

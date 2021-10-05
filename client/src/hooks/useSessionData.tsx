@@ -178,6 +178,7 @@ const useSessionData = (
     gameState: sessionData.game,
     issuesDndChange,
     settings: sessionData.gSettings,
+    userId: sessionData.clientId,
   };
 
   const gameData: ICardsGame = {

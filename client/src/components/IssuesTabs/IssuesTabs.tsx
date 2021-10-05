@@ -16,8 +16,6 @@ import { ISessionGameState } from '../../../../shared/types/session/state/sessio
 import { getBorderStyles } from '../../constants';
 import { ReactComponent as UndrawDrag } from '../../assets/images/undraw/drag.svg';
 
-import styles from './styles.module.scss';
-
 export interface IIssuesTabs {
   list: Issue[];
   gameState?: ISessionGameState;
@@ -88,9 +86,7 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
         opacity={isSynced ? '1' : '0.5'}
         ref={ref}
         position="relative"
-        overflowX="hidden"
-        overflowY="hidden"
-        className={styles.tabs}
+        overflow="hidden"
       >
         <TabPanel overflowY="auto" h={h}>
           <Droppable droppableId="issues">

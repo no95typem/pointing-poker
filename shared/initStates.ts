@@ -72,7 +72,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
     isResultsVisible: true,
     votes: {
       1: '1',
-    }
+    },
   },
   members: {
     0: sampleMember,
