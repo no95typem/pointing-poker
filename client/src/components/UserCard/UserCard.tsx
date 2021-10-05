@@ -137,8 +137,6 @@ const UserCard = (props: IUserCard): JSX.Element => {
           {isKickAvailable && (
             <IconButton
               aria-label="Kick player"
-              // background="transparent"
-              // size="lg"
               icon={<ImBlocked />}
               onClick={() => showKickDialog(id)}
               minW="fit-content"
