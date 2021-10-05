@@ -307,6 +307,7 @@ class ServerAdapter {
   private handleSCMsgChatMsg(msg: SCMsgChatMsgsChanged) {
     const state = store.getState();
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+    const { isVisible: isChatVisible } = state.chat;
     const { command, update } = msg.body;
 
     switch (command) {
@@ -319,6 +320,9 @@ class ServerAdapter {
             delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
           }
         });
+
+        Object.values(update).forEach(chatMsg => chatMsg.isViewed = isChatVisible);
+
         Object.assign(chat.msgs, update);
         break;
       case 'D':
@@ -515,10 +519,17 @@ class ServerAdapter {
     const time = Date.now();
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
 
-    const chatMsg: ChatMsg = { memberId, text, time, isSynced: false };
+    const chatMsg: ChatMsg = {
+      memberId,
+      text,
+      time,
+      isSynced: false,
+    };
 
     const msg = new CSMsgChatMsg(chatMsg);
     this.send(msg);
+
+    chatMsg.isViewed = true;
 
     chat.msgs[`${time}-${memberId}`] = chatMsg;
 

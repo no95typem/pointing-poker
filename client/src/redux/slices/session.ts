@@ -63,6 +63,11 @@ export const sessionSlice = createSlice({
       });
       Object.assign(state, initialState);
     },
+    markChatMsgsReaded(state) {
+      const chat = OBJ_PROCESSOR.deepClone(state.chat);
+      Object.values(chat.msgs).forEach(msg => msg.isViewed = true);
+      Object.assign(state, { chat });
+    }
   },
 });
 
@@ -75,14 +80,10 @@ export const tryLoadSessionFromFile = createAsyncThunk(
         thunkAPI.dispatch(sessionSlice.actions.dang_reset());
         deepObj.stage = SESSION_STAGES.STATS;
 
-        console.log(deepObj);
-
         OBJ_PROCESSOR.deepMerge(
           deepObj as unknown as Record<string, unknown>,
           initialState as unknown as Record<string, unknown>,
         );
-
-        console.log(deepObj);
 
         if (!('sessionId' in deepObj)) throw new Error('sessionId is missing');
 

@@ -10,9 +10,11 @@ import {
   HStack,
   Image,
   useColorMode,
+  Box,
+  Badge,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
-import { useAppDispatch } from '../../redux/store';
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
 import { AppMenu } from '../../containers/AppMenu/AppMenu';
 
@@ -23,6 +25,9 @@ export const Header = (): JSX.Element => {
   const toggleChat = (): void => {
     dispatch(tryToToggleChatState());
   };
+
+  const { msgs } = useTypedSelector(state => state.session.chat);
+  const unreadMsgs = Object.values(msgs).filter(msg => !msg.isViewed);
 
   return (
     <Flex
@@ -44,12 +49,24 @@ export const Header = (): JSX.Element => {
         <Spacer />
         <ColorModeSwitcher justifySelf="flex-end" />
         <Spacer />
-        <IconButton
-          style={{ marginInlineStart: '0px' }}
-          aria-label="chat"
-          icon={<ChatIcon />}
-          onClick={toggleChat}
-        />
+        <Box position="relative">
+          <IconButton
+            style={{ marginInlineStart: '0px' }}
+            aria-label="chat"
+            icon={<ChatIcon />}
+            onClick={toggleChat}
+          />
+          <Badge
+            pos="absolute"
+            right="0px"
+            top="0px"
+            borderRadius="base"
+            colorScheme={unreadMsgs.length > 0 ? 'orange' : undefined}
+            fontSize="x-small"
+          >
+            {unreadMsgs.length}
+          </Badge>
+        </Box>
         <Spacer />
         <AppMenu />
       </HStack>
