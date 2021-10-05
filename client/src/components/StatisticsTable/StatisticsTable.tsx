@@ -1,7 +1,6 @@
 import React from 'react';
 import { Table, Tbody, Thead, Tr, Th, Td } from '@chakra-ui/table';
 import { Box, Flex, Text } from '@chakra-ui/layout';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import Slider, { Settings } from 'react-slick';
 
 import { Issue } from '../../../../shared/types/session/issue/issue';

@@ -4,9 +4,14 @@ import { Socket } from 'net';
 import internal from 'stream';
 import { ClientManager } from './ClientManager';
 import { WebSocketSendFunc } from '../types';
+import { API_URL } from '../../../shared/const';
+
+console.log('API_URL:', API_URL);
 
 export class PointingPokerServer {
   static readonly DEFAULT_PORT = 9000;
+
+  static readonly SELF_STIMULATING_INTERVAL = 900_000; // 15min
 
   private httpRequestsListener: http.RequestListener = (
     req: http.IncomingMessage,
@@ -46,10 +51,16 @@ export class PointingPokerServer {
     this.send as unknown as WebSocketSendFunc,
   );
 
+  private lastStimulationTime = Date.now();
+
   constructor() {
     this.wss.on('connection', this.handleNewConnection);
 
     this.server.on('upgrade', this.handleHttpUpgrade);
+
+    this.server.on('connection', () => {
+      this.lastStimulationTime = Date.now();
+    });
 
     this.server.listen(
       process.env.PORT || PointingPokerServer.DEFAULT_PORT,
@@ -118,7 +129,29 @@ export class PointingPokerServer {
 
       return;
     }
+
+    this.watchdogSelf();
     Promise.all(checks).finally(() => this.watchdog());
+  }
+
+  private watchdogSelf() {
+    try {
+      const time = Date.now();
+
+      if (
+        time - this.lastStimulationTime >
+        PointingPokerServer.SELF_STIMULATING_INTERVAL
+      ) {
+        console.log('stimulating myself...');
+        const ws = new WebSocket(API_URL);
+        ws.onopen = () => {
+          try {
+            ws.close();
+            console.log('stimulating myself done succesfully');
+          } catch {}
+        };
+      }
+    } catch {}
   }
 
   private async checkConnection(ws: WebSocket) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { FormLabel, Stack, Text } from '@chakra-ui/react';
+import { FormLabel, Stack, Text, useColorMode } from '@chakra-ui/react';
 
 import { ISettings } from '../../../../shared/types/settings';
 import { CardData } from '../../../../shared/types/session/card';
@@ -29,6 +29,8 @@ const InputTimer = (props: ITimer): JSX.Element => {
   const { setLocalSettings, settings, time } = props;
 
   const { roundTime } = settings;
+
+  const cMode = useColorMode();
 
   const timeInS = time ? time / 1000 : roundTime / 1000;
 
@@ -87,7 +89,16 @@ const InputTimer = (props: ITimer): JSX.Element => {
   };
 
   return (
-    <Stack display="flex" align="center" justify="space-between">
+    <Stack
+      direction="column"
+      align="center"
+      justify="space-between"
+      bg={cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.50'}
+      borderRadius="6px"
+      p="10px 10px 0"
+      style={{ gap: '10px' }}
+      shadow="lg"
+    >
       {setLocalSettings && (
         <FormLabel htmlFor="timer" mb="0">
           Round time:
@@ -96,7 +107,6 @@ const InputTimer = (props: ITimer): JSX.Element => {
 
       <Stack
         id="timer"
-        shadow="lg"
         direction="row"
         spacing={3}
         align="center"

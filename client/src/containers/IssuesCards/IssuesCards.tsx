@@ -94,6 +94,8 @@ const IssuesCards = (
     settings,
     changeIssue,
     addNewIssue: setNewIssue,
+    gameState,
+    isPlayerDealer,
   };
 
   const modalData: IIssueModal = {

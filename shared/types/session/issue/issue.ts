@@ -72,4 +72,6 @@ export interface IStatisticModal {
   changeIssue: (issue: Issue) => void;
   addNewIssue: (issue: Issue) => void;
   isOpen: boolean;
+  gameState?: ISessionGameState;
+  isPlayerDealer: boolean;
 }

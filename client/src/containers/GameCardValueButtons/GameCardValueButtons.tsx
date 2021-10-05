@@ -1,22 +1,23 @@
 import { useState } from 'react';
 import { useRadioGroup, UseRadioGroupReturn } from '@chakra-ui/react';
 
-import { ICardsRound } from '../../../../shared/types/session/card';
+import { ICardsStatistic } from '../../../../shared/types/session/card';
 
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import ChoosingCards from '../../components/SettingsTabs/ChoosingCards/ChoosingCards';
 
-const GameCardsRound = (props: ICardsRound): JSX.Element => {
-  const [selectedRadioValue, setSelectedRadioValue] = useState('');
+const GameCardValueButtons = (props: ICardsStatistic): JSX.Element => {
+  const { setIssueValue, value = '' } = props;
+
+  const [selectedRadioValue, setSelectedRadioValue] = useState(value);
 
   const selectCard = (value: string) => {
     setSelectedRadioValue(value);
 
-    SERVER_ADAPTER.pickCard(value);
+    setIssueValue(value);
   };
 
   const radioprops: UseRadioGroupReturn = useRadioGroup({
-    name: 'gameCardsRound',
+    name: 'gameCardValueButtons',
     value: selectedRadioValue,
     onChange: selectCard,
   });
@@ -24,4 +25,4 @@ const GameCardsRound = (props: ICardsRound): JSX.Element => {
   return <ChoosingCards cardsData={props} radioProps={radioprops} />;
 };
 
-export default GameCardsRound;
+export default GameCardValueButtons;

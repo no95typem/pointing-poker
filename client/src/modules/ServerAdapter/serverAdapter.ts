@@ -35,7 +35,7 @@ import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-ms
 import { ISettings } from '../../../../shared/types/settings';
 import { CSMsgForceKick } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-force-kick';
 import { CSMsgVotekick } from '../../../../shared/types/cs-msgs/msgs/player/cs-msg-votekick';
-import { DEALER_ID } from '../../../../shared/const';
+import { API_URL, DEALER_ID } from '../../../../shared/const';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
 import { CSMsgChatMsg } from '../../../../shared/types/cs-msgs/msgs/spectator/cs-msg-chat-msg';
 import { ChatMsg } from '../../../../shared/types/session/chat/chat-msg';
@@ -53,10 +53,6 @@ export interface IKickArgs {
 }
 
 class ServerAdapter {
-  private apiUrl = IS_PROD
-    ? 'wss://rss-react-2021q3-pp.herokuapp.com/'
-    : 'ws://localhost:9000';
-
   private ws: WebSocket | undefined;
 
   private lastToken: string | undefined;
@@ -123,7 +119,7 @@ class ServerAdapter {
       };
 
       try {
-        this.ws = new WebSocket(this.apiUrl);
+        this.ws = new WebSocket(API_URL);
         this.ws.onopen = () => {
           this.handleWSOpen();
           res(true);

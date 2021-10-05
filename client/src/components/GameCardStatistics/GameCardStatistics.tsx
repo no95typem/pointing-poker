@@ -4,9 +4,9 @@ import { Stack, Heading } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 import { ICardData } from '../../../../shared/types/session/card';
+import { IPercentageRec } from '../../../../shared/types/session/round/round-stat';
 
 import GameCard from '../GameCard/GameCard';
-import { IPercentageRec } from '../../../../shared/types/session/round/round-stat';
 
 interface IGameCardStatistics {
   cardValue: string;

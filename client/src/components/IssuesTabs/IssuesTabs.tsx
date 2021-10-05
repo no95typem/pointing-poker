@@ -39,7 +39,6 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
     if (style.height !== h) setH(style.height);
   }, [h, setH, ref]);
 
-  // eslint-disable react-hooks/exhaustive-deps
   useEffect(() => {
     updateH();
     const listner = () => {
@@ -52,8 +51,8 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
     window.addEventListener('resize', listner);
 
     return () => window.removeEventListener('resize', listner);
+    // eslint-disable-next-line
   }, []);
-  // eslint-enable react-hooks/exhaustive-deps
 
   return (
     <Tabs
