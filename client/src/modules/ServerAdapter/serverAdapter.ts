@@ -494,10 +494,9 @@ class ServerAdapter {
 
     const initiation = !initId && isUserDealer;
 
-    const msg =
-        initiation
-        ? new CSMsgForceKick(targetId)
-        : new CSMsgVotekick(targetId, decision);
+    const msg = initiation
+      ? new CSMsgForceKick(targetId)
+      : new CSMsgVotekick(targetId, decision);
 
     const members = OBJ_PROCESSOR.deepClone(state.session.members);
 
