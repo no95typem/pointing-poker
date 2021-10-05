@@ -60,10 +60,11 @@ export const ChatView = () => {
         ref.current.scroll(0, scrollH);
       });
     }
-    
+
     const unreadMsgs = msgEntries.filter(entry => !entry[1].isViewed);
-    
+
     if (unreadMsgs.length) dispatch(sessionSlice.actions.markChatMsgsReaded());
+    // eslint-disable-next-line
   }, [msgs]);
 
   return (

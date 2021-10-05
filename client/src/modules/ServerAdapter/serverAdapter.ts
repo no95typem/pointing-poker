@@ -321,7 +321,9 @@ class ServerAdapter {
           }
         });
 
-        Object.values(update).forEach(chatMsg => chatMsg.isViewed = isChatVisible);
+        Object.values(update).forEach(
+          chatMsg => (chatMsg.isViewed = isChatVisible),
+        );
 
         Object.assign(chat.msgs, update);
         break;
