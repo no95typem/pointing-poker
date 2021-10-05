@@ -66,9 +66,9 @@ const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
               align="center"
               mb="20px"
             >
-              <Link textAlign="center" href={link} mb="10px" isExternal>
+              <a href={link} target="_blank" rel="noreferrer">
                 Issue description: <ExternalLinkIcon mx="2px" />
-              </Link>
+              </a>
             </Stack>
           )}
           {!!votes.length && (

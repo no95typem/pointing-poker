@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Stack } from '@chakra-ui/react';
 
 import { QuestionIcon } from '@chakra-ui/icons';
@@ -49,11 +47,11 @@ const UserVote = (props: IVote): JSX.Element => {
 
   return (
     <Stack
-      w="100px"
+      w="70px"
       h="70px"
       justify="center"
       align="center"
-      p="10px 10px"
+      p="5px"
       boxShadow="lg"
       style={{ marginInlineStart: '0' }}
     >

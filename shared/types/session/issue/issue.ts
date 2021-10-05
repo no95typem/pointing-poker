@@ -11,7 +11,8 @@ export interface Issue extends Synchronized {
     | IssuePriority
     | RoundStat
     | boolean
-    | undefined;
+    | undefined
+    | React.ReactNode;
   id: number;
   title: string;
   link: string;
@@ -19,6 +20,7 @@ export interface Issue extends Synchronized {
   priority: IssuePriority;
   closed: boolean;
   stat?: RoundStat;
+  replaceElem?: React.ReactNode;
 }
 
 export interface IIssueData {

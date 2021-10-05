@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, useMediaQuery } from '@chakra-ui/react';
+import { Box, Divider, Flex, Text, useMediaQuery } from '@chakra-ui/react';
 
 import { useTypedSelector } from '../../redux/store';
 
@@ -16,6 +16,10 @@ import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
 import SettingsTabs from '../../components/SettingsTabs/SettingsTabs';
 import { MAX_CONTENT_WIDTH } from '../../constants';
+
+import { ReactComponent as UndrawDevelopment } from '../../assets/images/undraw/development.svg';
+import { ReactComponent as UndrawGroupChat } from '../../assets/images/undraw/group-chat.svg';
+import { ReactComponent as UndrawToDoList } from '../../assets/images/undraw/to-do-list.svg';
 
 const Lobby = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -84,19 +88,30 @@ const Lobby = (): JSX.Element => {
         justify="space-between"
         direction={isLargerThen900 ? 'row' : 'column'}
       >
-        <Box
-          alignSelf={isLargerThen900 ? 'start' : 'center'}
-          w="320px"
+        <Flex
+          alignSelf={isLargerThen900 ? 'start' : 'flex-end'}
+          justify="space-between"
+          align="center"
+          w={isLargerThen900 ? '320px' : '100%'}
           h={isLargerThen900 ? '100%' : '500px'}
           flexShrink={0}
           paddingTop={2}
           overflowY="hidden"
+          wrap="wrap"
+          justifyContent="center"
         >
-          <IssueCards
-            {...issuesData}
-            justifyTabs={isLargerThen900 ? 'start' : 'center'}
-          />
-        </Box>
+          {!isLargerThen900 && (
+            <UndrawToDoList
+              style={{ width: 'calc(100% - 360px)', minWidth: '300px' }}
+            />
+          )}
+          <Box h="100%" w="320px">
+            <IssueCards
+              {...issuesData}
+              justifyTabs={isLargerThen900 ? 'start' : 'center'}
+            />
+          </Box>
+        </Flex>
         <Divider orientation="vertical" w="1px" position="relative" />
         <Box
           w={
@@ -107,7 +122,33 @@ const Lobby = (): JSX.Element => {
           h="100%"
           paddingBottom={isLargerThen900 ? undefined : '10px'}
         >
-          {isPlayerDealer && <SettingsTabs {...settingsData} />}
+          {isPlayerDealer ? (
+            <SettingsTabs {...settingsData} />
+          ) : (
+            <Flex
+              direction="column"
+              justify="center"
+              w="100%"
+              h="100%"
+              gridGap={4}
+            >
+              <Flex gridGap={4} align="center">
+                <UndrawDevelopment style={{ maxHeight: '140px' }} />
+                <Text fontFamily="handwrite">
+                  Waiting for start of the game...
+                </Text>
+              </Flex>
+              <Flex align="center" gridGap={4} alignSelf="flex-end">
+                <Text fontFamily="handwrite" textAlign="right">
+                  It's good time to discuss the meeting...
+                </Text>
+                <UndrawGroupChat
+                  width="fit-content"
+                  style={{ maxHeight: '200px' }}
+                />
+              </Flex>
+            </Flex>
+          )}
         </Box>
       </Flex>
       <Box />

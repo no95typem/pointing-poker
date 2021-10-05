@@ -75,14 +75,16 @@ const sampleMember: Member = {
 
 export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
-  clientId: 0,
+  clientId: 1,
   name: { value: 'Session 12345', isSynced: true },
   stage: SESSION_STAGES.LOBBY,
   game: {
     currIssueId: 0,
     roundState: ROUND_STATES.IN_PROCESS,
-    isResultsVisible: false,
-    votes: {}
+    isResultsVisible: true,
+    votes: {
+      1: '1',
+    }
   },
   members: {
     0: sampleMember,
@@ -162,7 +164,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         id: 1,
         title: 'title 2',
         link: 'link 2',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
       },
@@ -170,7 +172,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         id: 2,
         title: 'title 3',
         link: 'link 3',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
       },
@@ -187,9 +189,10 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         title: `title 5fffffffffffffffffffffffffffffffffffffffffff
           ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
         link: 'link 5',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
+        value: '2',
         stat: {
           pct: {
             '1': { count: 2, ids: [0, 1] },
@@ -266,4 +269,5 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
     // list: [],
     isSynced: true,
   },
+  // issues: { list: [], isSynced: true }
 };

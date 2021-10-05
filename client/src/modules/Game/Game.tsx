@@ -49,14 +49,15 @@ const Game = (): JSX.Element => {
   const gameInfo: IGameInfo = {
     gameData,
     gameState,
+    settings: session.gSettings,
     issuesData: issuesData.issues,
     members: membersData.members,
     isPlayerSpectator,
     isDealerPlaying: issuesData.settings.isDealerPlayer,
-    children: (
-      <Flex p={4} w="100%" justify="center" align="center">
+    userId: session.clientId,
+    children: !isLargerThen900 ? (
+      <Flex p={2} w="100%" justify="center" align="center">
         <Button
-          visibility={isLargerThen900 ? 'hidden' : 'visible'}
           rightIcon={<ArrowDownIcon />}
           onClick={() => {
             ref.current.parentElement?.parentElement?.scroll({
@@ -68,7 +69,7 @@ const Game = (): JSX.Element => {
           To issues
         </Button>
       </Flex>
-    ),
+    ) : undefined,
   };
 
   return (

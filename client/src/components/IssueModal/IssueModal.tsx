@@ -86,7 +86,6 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
                   onChange={setIssueData}
                   name="priority"
                   variant="filled"
-                  bg="gray.100"
                 >
                   <option value="LOW">Low</option>
                   <option value="MEDIUM">Medium</option>

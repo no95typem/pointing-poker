@@ -78,6 +78,7 @@ const IssueCard = (props: IIssueData): JSX.Element => {
       opacity={issue.closed ? '0.7' : '1'}
       _hover={{ opacity: '1' }}
       className={`enlight ${styles.enlight}`}
+      backgroundColor={cMode.colorMode === 'dark' ? 'gray.800' : 'gray.100'}
     >
       <Stat w="calc(100% - 90px)" textAlign="start" p="5px 5px 5px 10px">
         <StatNumber fontSize="lg" w="100%" isTruncated={true}>
@@ -87,11 +88,17 @@ const IssueCard = (props: IIssueData): JSX.Element => {
           {priority}
         </StatHelpText>
       </Stat>
-      <Flex w="40px">
+      <Flex w="50px" justify="center" align="center">
         {value ? (
           renderVotingCard()
         ) : (
-          <Text w="50px" isTruncated fontSize="xl" fontFamily="fantasy">
+          <Text
+            w="100%"
+            textAlign="center"
+            isTruncated
+            fontSize="xl"
+            fontFamily="fantasy"
+          >
             -
           </Text>
         )}

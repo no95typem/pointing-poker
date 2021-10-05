@@ -122,6 +122,7 @@ const Statistics = (): JSX.Element => {
                 issues={issuesList}
                 cards={session.gSettings.cards}
                 units={session.gSettings.scoreTypeShort}
+                userId={session.clientId}
               />
             </Box>
           </>

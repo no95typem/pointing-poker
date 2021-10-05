@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import { Box, Heading, Stack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Stack, useRadioGroup } from '@chakra-ui/react';
 import Slider from 'react-slick';
 
-import { LOCALE_US } from '../../locales/locale-us';
-
-import {
-  CardData,
-  ICardData,
-  ICardsGame,
-} from '../../../../shared/types/session/card';
+import { ICardData, ICardsGame } from '../../../../shared/types/session/card';
 import { gameCardsSettings } from '../../helpers/swiperSettings';
 
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
@@ -16,11 +10,11 @@ import GameCard from '../../components/GameCard/GameCard';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
 
 const GameCardsRound = (props: ICardsGame): JSX.Element => {
-  const { cards, isGameStage, units } = props;
+  const { cards, units } = props;
 
   const [selectedRadioValue, setSelectedRadioValue] = useState('');
 
-  const changeIssue = (value: string) => {
+  const pick = (value: string) => {
     setSelectedRadioValue(value);
 
     SERVER_ADAPTER.pickCard(value);
@@ -29,7 +23,7 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
   const { getRadioProps } = useRadioGroup({
     name: 'issues',
     value: selectedRadioValue,
-    onChange: changeIssue,
+    onChange: pick,
   });
 
   return (

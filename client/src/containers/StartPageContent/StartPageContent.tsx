@@ -1,4 +1,12 @@
-import { Heading, Button, Input, Flex, useMediaQuery } from '@chakra-ui/react';
+import {
+  Heading,
+  Button,
+  Input,
+  Flex,
+  useMediaQuery,
+  Link,
+  Text,
+} from '@chakra-ui/react';
 // import pokerPlaning from '../../assets/images/shared'
 import { UserRole } from '../../../../shared/types/user/user-role';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
@@ -14,6 +22,7 @@ import { ReactComponent as UndrawScrumBoard } from '../../assets/images/undraw/s
 import { ReactComponent as UndrawNewIdeas } from '../../assets/images/undraw/new-ideas.svg';
 import { ReactComponent as UndrawLogin } from '../../assets/images/undraw/login.svg';
 import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { FaYoutube } from 'react-icons/fa';
 
 interface IStartPageContentProps {
   onPopupCalled: (forRole: UserRole) => void;
@@ -39,7 +48,14 @@ const StartPageContent = ({
   };
 
   return (
-    <Flex align="center" justify="center" padding="2" h="100%" w="100%">
+    <Flex
+      align="center"
+      justify="center"
+      padding="2"
+      h="100%"
+      w="100%"
+      position="relative"
+    >
       <Flex
         maxW={MAX_CONTENT_WIDTH}
         w="100%"
@@ -134,6 +150,22 @@ const StartPageContent = ({
         </Flex>
         {isLargerThan860 && <UndrawScrumBoard style={{ maxWidth: '50%' }} />}
       </Flex>
+      <Link
+        href=""
+        display="flex"
+        alignItems="center"
+        gridGap="1"
+        flexDirection="row"
+        isExternal
+        position="absolute"
+        bottom="5px"
+        right="10px"
+      >
+        <FaYoutube />
+        <Text fontFamily="handwrite" textDecor="underline">
+          A short video presentation
+        </Text>
+      </Link>
     </Flex>
   );
 };

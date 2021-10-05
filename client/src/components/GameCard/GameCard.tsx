@@ -1,10 +1,19 @@
-import React from 'react';
-import { Stack, IconButton, Text, Image, Tooltip } from '@chakra-ui/react';
+import {
+  Stack,
+  IconButton,
+  Text,
+  Image,
+  Tooltip,
+  useColorMode,
+} from '@chakra-ui/react';
 
 import { ImPencil } from 'react-icons/im';
 import { CloseIcon } from '@chakra-ui/icons';
 
 import { ICardData } from '../../../../shared/types/session/card';
+
+import styles from './styles.module.scss';
+import { getBorderStyles } from '../../constants';
 
 const GameCard = (props: ICardData): JSX.Element => {
   const { card, edit, units, deleteCard, isUnitsHidden, isControlShown } =
@@ -20,13 +29,15 @@ const GameCard = (props: ICardData): JSX.Element => {
           p: '2px 2px',
           boxShadow: 'sm',
           borderRadius: 'md',
+          className: `enlight ${styles['enlight-sm']}`,
         }
       : {
           w: '150px',
           height: '210px',
           p: '10px 10px',
           boxShadow: 'lg',
-          borderRadius: 'md',
+          borderRadius: 'lg',
+          className: 'enlight',
         };
 
   const isNumber = !Number.isNaN(Number.parseFloat(value));
@@ -82,6 +93,10 @@ const GameCard = (props: ICardData): JSX.Element => {
     );
   }
 
+  const cMode = useColorMode();
+
+  const borderStyles = getBorderStyles(cMode.colorMode);
+
   return (
     <Tooltip label={value} aria-label="Card value" openDelay={500}>
       <Stack
@@ -89,8 +104,12 @@ const GameCard = (props: ICardData): JSX.Element => {
         direction="column"
         justify="center"
         align="center"
+        overflow="hidden"
         {...stackStyles}
-        className="enlight"
+        backgroundColor={
+          cMode.colorMode === 'dark' ? 'whiteAlpha.200' : 'gray.0'
+        }
+        {...{ ...borderStyles, borderTopRadius: undefined }}
       >
         {isControlShown && (
           <>

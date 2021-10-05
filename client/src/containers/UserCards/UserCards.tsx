@@ -140,9 +140,8 @@ const UserCards = (props: IUserCards): JSX.Element => {
                 <UserCard
                   {...setMemberData(member)}
                   w={isUserVoteVisible ? '300px' : '100%'}
-                  key={id}
                 />
-                {isUserVoteVisible && <UserVote id={+id} key={`${id}-vote`} />}
+                {isUserVoteVisible && <UserVote id={+id} />}
               </Stack>
             </Box>
           );

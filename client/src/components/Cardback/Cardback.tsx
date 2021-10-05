@@ -15,10 +15,12 @@ const Cardback = (props: ICardback): JSX.Element => {
       ? {
           w: '40px',
           height: '56px',
+          borderRadius: 'md',
         }
       : {
           w: '150px',
           height: '210px',
+          borderRadius: 'xl',
         };
 
   const ref = useRef<HTMLImageElement>(null!);
@@ -57,7 +59,6 @@ const Cardback = (props: ICardback): JSX.Element => {
       align="center"
       overflow="hidden"
       {...boxSizeStyles}
-      borderRadius="xl"
       {...boxBorderStyles}
       className={isBorder ? 'enlight' : undefined}
     >
