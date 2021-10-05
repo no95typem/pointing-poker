@@ -1,4 +1,4 @@
-import { Button, Flex, useColorMode } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, useColorMode } from '@chakra-ui/react';
 
 import { ICardsGame } from '../../../../shared/types/session/card';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
@@ -10,78 +10,21 @@ import { Member } from '../../../../shared/types/session/member';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
 
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
-import GameCardsRound from '../GameCardsRound/GameCardsRound';
-import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 import { getBorderStyles } from '../../constants';
-import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 import {
   calcPercentage,
   fullfillVotes,
 } from '../../../../shared/helpers/calcs/game-calcs';
-import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
+import { StatisticsSliderSettings } from '../../helpers/swiperSettings';
 
-const sliderSettings = {
-  infinite: false,
-  speed: 500,
-  slidesToShow: 5,
-  slidesToScroll: 5,
-  nextArrow: <SliderCustomArrow />,
-  prevArrow: <SliderCustomArrow />,
-
-  responsive: [
-    {
-      breakpoint: 1350,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: 1200,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-      },
-    },
-    {
-      breakpoint: 1000,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-      },
-    },
-    {
-      breakpoint: 899,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: 800,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-      },
-    },
-    {
-      breakpoint: 675,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-      },
-    },
-    {
-      breakpoint: 500,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
+import GameCardsRound from '../GameCardsRound/GameCardsRound';
+import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
+import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
+import { ISettings } from '../../../../shared/types/settings';
+import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
+import { IssueForRender } from '../../types/IssueForRender';
 
 export interface IGameInfo {
   gameData: ICardsGame;
@@ -90,7 +33,9 @@ export interface IGameInfo {
   members: Record<number, Member>;
   isPlayerSpectator: boolean;
   isDealerPlaying: boolean;
-  children: JSX.Element;
+  children?: JSX.Element;
+  settings: ISettings;
+  userId?: number;
 }
 
 const GameInfo = (props: IGameInfo): JSX.Element => {
@@ -102,6 +47,8 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
     members,
     isDealerPlaying,
     children,
+    settings,
+    userId,
   } = props;
 
   const { isSynced, list: issues } = issuesData;
@@ -136,29 +83,54 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
     isPlayerSpectator || (isPlayerDealer && !isDealerPlaying);
 
   const renderStats = (): JSX.Element => {
-    const issue = issues.find(issue => issue.id === gameState.currIssueId);
+    // clone real issue or create fake
+    const realIssue = OBJ_PROCESSOR.deepClone(
+      issues.find(issue => issue.id === gameState.currIssueId),
+    );
 
-    if (!issue) return <div></div>;
+    const issue: IssueForRender = realIssue || {
+      id: 0,
+      title: '',
+      link: '',
+      priority: ISSUE_PRIORITIES.MEDIUM,
+      closed: false,
+      isSynced: true,
+    };
 
-    const fakeIssue = OBJ_PROCESSOR.deepClone(issue);
-
-    const votes = fullfillVotes(members, gameState, isDealerPlaying);
-    // votes[0] = {}
-    const pct = calcPercentage(votes);
-
-    fakeIssue.stat = { votes, pct };
+    if (!isRoundAwaitStart) {
+      if (gameState.isResultsVisible) {
+        const votes = fullfillVotes(members, gameState, isDealerPlaying);
+        const pct = calcPercentage(votes);
+        issue.stat = { votes, pct };
+      } else {
+        issue.replaceElem = <Text>Dealer doesn't unravel results yet</Text>;
+      }
+    } else {
+      if (realIssue) {
+        issue.replaceElem = <Text>Waiting for round start.</Text>;
+      } else {
+        issue.replaceElem = (
+          <Text>It's time to end the game or create a new issue.</Text>
+        );
+      }
+    }
 
     return (
       <StatisticsTable
-        issues={[fakeIssue]}
+        issues={[issue]}
         cards={gameData.cards}
         units={gameData.units}
-        statCardsSettings={sliderSettings}
+        statCardsSettings={StatisticsSliderSettings}
+        userId={userId}
       />
     );
   };
 
   const borderStyles = getBorderStyles(cMode.colorMode);
+
+  const renderCards =
+    (isRoundStarted || (isRoundFinished && settings.isPlayerCanReselectCard)) &&
+    !isCardsShouldBeHidden;
 
   return (
     <Flex
@@ -168,7 +140,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
       gridGap={4}
       justify="space-between"
       align="center"
-      paddingTop={2}
+      py={4}
     >
       <Flex
         gridGap={2}
@@ -194,11 +166,8 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
           <Button visibility="hidden" />
         )}
       </Flex>
-
-      {isRoundStarted && !isCardsShouldBeHidden && (
-        <GameCardsRound {...gameData} />
-      )}
-      {isRoundFinished && renderStats()}
+      {renderStats()}
+      {renderCards ? <GameCardsRound {...gameData} /> : <Box h="220px" />}
       {children}
     </Flex>
   );

@@ -2,7 +2,10 @@
 
 import WebSocket from 'ws';
 import { UNDEFINED_CARD_VALUE } from '../../../shared/const';
-import { calcPercentage, fullfillVotes } from '../../../shared/helpers/calcs/game-calcs';
+import {
+  calcPercentage,
+  fullfillVotes,
+} from '../../../shared/helpers/calcs/game-calcs';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { purify } from '../../../shared/helpers/processors/purify';
 import { CSMsg } from '../../../shared/types/cs-msgs/cs-msg';
@@ -11,11 +14,9 @@ import { CSMsgForceKick } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg
 import { CSMSGNewConnectionResponse } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-new-connection-response';
 import { CSMSgToggleResultsVisibility } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
 import { CSMsgUpdateState } from '../../../shared/types/cs-msgs/msgs/dealer/cs-msg-update-state';
-import { Member } from '../../../shared/types/session/member';
 import { ROUND_STATES } from '../../../shared/types/session/round/round-state';
 import { ISessionGameState } from '../../../shared/types/session/state/session-state';
 import { SESSION_STAGES } from '../../../shared/types/session/state/stages';
-import { USER_ROLES } from '../../../shared/types/user/user-role';
 import { RoleManager } from './RoleManager';
 
 export class DealerManager extends RoleManager {
@@ -170,9 +171,9 @@ export class DealerManager extends RoleManager {
 
         const pct = calcPercentage(fullfilledVotes);
 
-        const mostPopularEntry = Object.entries(pct).sort(
-          (a, b) => b[1].count - a[1].count,
-        )[0];
+        const mostPopularEntry =
+          oldIssue.value ??
+          Object.entries(pct).sort((a, b) => b[1].count - a[1].count)[0];
 
         oldIssue.closed = true;
         oldIssue.value = mostPopularEntry

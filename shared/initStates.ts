@@ -46,18 +46,6 @@ const SESSION_INIT_STATE: SessionState = {
   },
 };
 
-export const CREATE_INIT_STATE = () =>
-  OBJ_PROCESSOR.deepClone(SESSION_INIT_STATE);
-
-export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
-  ...SESSION_INIT_STATE,
-  clientId: undefined,
-  stage: 'EMPTY',
-  gSettings: {
-    ...SESSION_INIT_STATE.gSettings,
-  },
-};
-
 //Временные переменые, исключительно для отладки.
 
 const sampleMember: Member = {
@@ -75,14 +63,16 @@ const sampleMember: Member = {
 
 export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
-  clientId: 0,
+  clientId: 1,
   name: { value: 'Session 12345', isSynced: true },
-  stage: SESSION_STAGES.LOBBY,
+  stage: SESSION_STAGES.GAME,
   game: {
     currIssueId: 0,
     roundState: ROUND_STATES.IN_PROCESS,
-    isResultsVisible: false,
-    votes: {}
+    isResultsVisible: true,
+    votes: {
+      1: '1',
+    },
   },
   members: {
     0: sampleMember,
@@ -162,7 +152,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         id: 1,
         title: 'title 2',
         link: 'link 2',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
       },
@@ -170,7 +160,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         id: 2,
         title: 'title 3',
         link: 'link 3',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
       },
@@ -187,9 +177,10 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
         title: `title 5fffffffffffffffffffffffffffffffffffffffffff
           ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
         link: 'link 5',
-        closed: true,
+        closed: false,
         isSynced: true,
         priority: 'MEDIUM',
+        value: '2',
         stat: {
           pct: {
             '1': { count: 2, ids: [0, 1] },
@@ -265,5 +256,18 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
     ],
     // list: [],
     isSynced: true,
+  },
+  // issues: { list: [], isSynced: true }
+};
+
+export const CREATE_INIT_STATE = () =>
+  OBJ_PROCESSOR.deepClone(SESSION_INIT_STATE);
+
+export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
+  ...SESSION_INIT_STATE,
+  clientId: undefined,
+  stage: 'EMPTY',
+  gSettings: {
+    ...SESSION_INIT_STATE.gSettings,
   },
 };

@@ -1,16 +1,16 @@
 import React from 'react';
 import { Table, Tbody, Thead, Tr, Th, Td } from '@chakra-ui/table';
 import { Box, Flex, Text } from '@chakra-ui/layout';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import Slider, { Settings } from 'react-slick';
 
-import { Issue } from '../../../../shared/types/session/issue/issue';
 import { CardData } from '../../../../shared/types/session/card';
 import { RoundStat } from '../../../../shared/types/session/round/round-stat';
 
 import GameCard from '../GameCard/GameCard';
 import SliderCustomArrow from '../SliderCustomArrow/SliderCustomArrow';
 import { UNKNOWN_CARD_DATA } from '../../presets';
+import { ReactComponent as UndrawNoData } from '../../assets/images/undraw/no-data.svg';
+import { IssueForRender } from '../../types/IssueForRender';
 
 const statCardsSettings = {
   infinite: false,
@@ -60,18 +60,26 @@ const statCardsSettings = {
 };
 
 const renderStat = (props: {
+  value?: string;
   stat: RoundStat;
   cards: CardData[];
   units: string;
   statCardsSettings?: Settings;
+  userId?: number;
 }) => {
-  const { stat, cards, units } = props;
+  const { stat, cards, units, value, userId } = props;
 
   const votesCount = Object.keys(stat.votes).length;
 
   const pctEntries = Object.entries(stat.pct);
 
   const sliderProps = props.statCardsSettings || statCardsSettings;
+
+  const sortedEntries = pctEntries.sort((a, b) => b[1].count - a[1].count);
+
+  const overrideCard = value && cards.find(card => card.value === value);
+
+  const userChoiceValue = userId !== undefined && stat.votes[userId];
 
   return (
     <Box w="90%" p="5px">
@@ -80,44 +88,70 @@ const renderStat = (props: {
           .fill(null)
           .map(() => {
             return  */}
-        {pctEntries
-          .sort((a, b) => b[1].count - a[1].count)
-          .map(([cardVal, rec]) => {
-            const cardData = cards.find(card => card.value === cardVal);
 
-            const percent = ((rec.count / votesCount) * 100).toFixed(0);
+        {overrideCard && (
+          <Box key={overrideCard.value} px={5}>
+            <Flex
+              h="min-content"
+              direction="column"
+              justify="center"
+              align="center"
+              gridGap="1"
+              w="fit-content"
+              position="relative"
+              data-checked
+            >
+              <GameCard
+                card={overrideCard}
+                units={units}
+                size="xs"
+                isUnitsHidden
+              />
+              <Text fontWeight="bold">Final</Text>
+            </Flex>
+          </Box>
+        )}
 
-            return (
-              <Box key={cardVal} px={5}>
-                <Flex
-                  h="min-content"
-                  direction="column"
-                  justify="center"
-                  align="center"
-                  gridGap="1"
-                  w="fit-content"
-                >
-                  <GameCard
-                    card={cardData || UNKNOWN_CARD_DATA}
-                    units={units}
-                    size="xs"
-                    isUnitsHidden
-                  />
-                  <Text fontWeight="bold">{`${percent}%`}</Text>
-                </Flex>
-              </Box>
-            );
-          })}
+        {sortedEntries.map(([cardVal, rec]) => {
+          const cardData = cards.find(card => card.value === cardVal);
+
+          const percent = ((rec.count / votesCount) * 100).toFixed(0);
+
+          const isUserVote = userChoiceValue === cardVal;
+
+          return (
+            <Box key={cardVal} px={5}>
+              <Flex
+                h="min-content"
+                direction="column"
+                justify="center"
+                align="center"
+                gridGap="1"
+                w="fit-content"
+                data-checked-by-me={!!isUserVote}
+              >
+                <GameCard
+                  card={cardData || UNKNOWN_CARD_DATA}
+                  units={units}
+                  size="xs"
+                  isUnitsHidden
+                />
+                <Text fontWeight="bold">{`${percent}%`}</Text>
+              </Flex>
+            </Box>
+          );
+        })}
       </Slider>
     </Box>
   );
 };
 
 export interface IStatisticsTableProps {
-  issues: Issue[];
+  issues: IssueForRender[];
   cards: CardData[];
   units: string;
   statCardsSettings?: Settings;
+  userId?: number;
 }
 
 export const StatisticsTable = React.memo(
@@ -145,7 +179,7 @@ export const StatisticsTable = React.memo(
           <Tbody w="100%">
             {props.issues.map(issue => {
               return (
-                <Tr key={issue.id} display="flex" overflow="hidden">
+                <Tr key={issue.id} display="flex" overflow="hidden" h="86px">
                   <Td display="flex" w="40%" alignItems="flex-start">
                     <Text
                       maxW="90%"
@@ -161,12 +195,29 @@ export const StatisticsTable = React.memo(
                   </Td>
                   <Td w="2px"></Td>
                   <Td display="flex" alignItems="center" w="50%" p="0px 16px">
-                    {issue.stat
-                      ? renderStat({
-                          stat: issue.stat,
-                          ...props,
-                        })
-                      : 'no stat'}
+                    {issue.replaceElem ? (
+                      issue.replaceElem
+                    ) : issue.stat ? (
+                      renderStat({
+                        value: issue.value,
+                        stat: issue.stat,
+                        ...props,
+                      })
+                    ) : (
+                      <Flex
+                        w="90%"
+                        justify="center"
+                        align="center"
+                        gridGap={2}
+                        // paddingRight="%"
+                        h="40px"
+                      >
+                        <Text fontFamily="handwrite" textAlign="center">
+                          No statistic
+                        </Text>
+                        <UndrawNoData height="30px" />
+                      </Flex>
+                    )}
                   </Td>
                 </Tr>
               );

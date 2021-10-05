@@ -87,8 +87,12 @@ const UserCards = (props: IUserCards): JSX.Element => {
     };
   };
 
-  const isCorrectMember = (id: string, role: string): boolean => {
+  const isCorrectMember = (id: string, member: Member): boolean => {
     const isDealer = +id === DEALER_ID;
+
+    const { userRole: role, userState: state } = member;
+
+    if (state !== 'CONNECTED') return false;
 
     return isVotersView
       ? (isDealer && isDealerPlaying) || role === USER_ROLES.PLAYER
@@ -108,16 +112,17 @@ const UserCards = (props: IUserCards): JSX.Element => {
   const cMode = useColorMode();
 
   const selectedMemebers = Object.entries(members).filter(([id, member]) =>
-    isCorrectMember(id, member.userRole),
+    isCorrectMember(id, member),
   );
 
-  if (selectedMemebers.length === 0)
+  if (!selectedMemebers.length) {
     return (
       <Flex w="100%" h="100%" justify="center" align="center" gridGap={4}>
         <UndrawTreeSwing style={{ height: '100%' }} />
         <Text>There are no members with this role yet :(</Text>
       </Flex>
     );
+  }
 
   return (
     <Box w={w}>
@@ -135,14 +140,12 @@ const UserCards = (props: IUserCards): JSX.Element => {
                 borderColor={
                   cMode.colorMode === 'dark' ? 'whiteAlpha.300' : 'gray.200'
                 }
-                key={`${id}-wrap`}
               >
                 <UserCard
                   {...setMemberData(member)}
                   w={isUserVoteVisible ? '300px' : '100%'}
-                  key={id}
                 />
-                {isUserVoteVisible && <UserVote id={+id} key={`${id}-vote`} />}
+                {isUserVoteVisible && <UserVote id={+id} />}
               </Stack>
             </Box>
           );

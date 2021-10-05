@@ -76,14 +76,13 @@ const AvatarForm = () => {
         <Box>
           <IconButton
             aria-label="open pallete"
-            icon={<FaPaintRoller fill={avatarBgColor} />}
+            icon={<FaPaintRoller />}
             // bg={avatarBgColor}
             onClick={() =>
               ref.current?.dispatchEvent(
                 new MouseEvent('click', { cancelable: false }),
               )
             }
-            style={{ opacity: '0.7' }}
           ></IconButton>
           <input
             style={{ display: 'block', width: '0px', height: '0px' }}

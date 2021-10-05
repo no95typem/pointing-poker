@@ -1,3 +1,4 @@
+/* eslint max-params: ["warn", 3] */
 import { UNDEFINED_CARD_VALUE } from '../../const';
 import { Member } from '../../types/session/member';
 import { Percentage } from '../../types/session/round/round-stat';
@@ -27,7 +28,6 @@ export const calcPercentage = (
 
   return percentage;
 };
-
 
 export const fullfillVotes = (
   members: Record<number, Member>,

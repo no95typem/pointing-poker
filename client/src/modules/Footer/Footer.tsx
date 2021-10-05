@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { ImGithub } from 'react-icons/im';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaYoutube } from 'react-icons/fa';
 import { ChakraLogo } from '../../components/ChakraLogo/ChakraLogo';
 import { ReactComponent as UndrawImageFocus } from '../../assets/images/undraw/image-focus.svg';
 import { ReactComponent as RSSLogo } from '../../assets/images/shared/rss-logo.svg';
@@ -35,6 +35,7 @@ export const Footer = (): JSX.Element => {
       <HStack>
         <Link
           href="https://rs.school/js/"
+          isExternal
           display="flex"
           alignItems="center"
           gridGap="1"
@@ -71,9 +72,23 @@ export const Footer = (): JSX.Element => {
                       alignItems="center"
                       gridGap="1"
                       flexDirection="row"
+                      isExternal
                     >
                       <FaGithub />
                       <Text>The project repository</Text>
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link
+                      href=""
+                      display="flex"
+                      alignItems="center"
+                      gridGap="1"
+                      flexDirection="row"
+                      isExternal
+                    >
+                      <FaYoutube />
+                      <Text>A short video presentation</Text>
                     </Link>
                   </ListItem>
                   <ListItem>
@@ -83,6 +98,7 @@ export const Footer = (): JSX.Element => {
                       alignItems="center"
                       gridGap="1"
                       flexDirection="row"
+                      isExternal
                     >
                       <ChakraLogo h="1rem" pointerEvents="none" />
                       <Text>powered by Chakra UI</Text>
@@ -95,6 +111,7 @@ export const Footer = (): JSX.Element => {
                       alignItems="center"
                       gridGap="1"
                       flexDirection="row"
+                      isExternal
                     >
                       <UndrawImageFocus height="1rem" />
                       <Text>illustrations from unDraw</Text>
@@ -129,6 +146,7 @@ export const Footer = (): JSX.Element => {
                       display="flex"
                       alignItems="center"
                       gridGap="1"
+                      isExternal
                     >
                       <Text>The project repository</Text>
                       <FaGithub />
@@ -140,6 +158,7 @@ export const Footer = (): JSX.Element => {
                       display="flex"
                       alignItems="center"
                       gridGap="1"
+                      isExternal
                     >
                       <Text>no95typem</Text>
                       <FaGithub />
@@ -151,6 +170,7 @@ export const Footer = (): JSX.Element => {
                       display="flex"
                       alignItems="center"
                       gridGap="1"
+                      isExternal
                     >
                       <Text>kaesid</Text>
                       <FaGithub />
@@ -162,6 +182,7 @@ export const Footer = (): JSX.Element => {
                       display="flex"
                       alignItems="center"
                       gridGap="1"
+                      isExternal
                     >
                       <Text>vimbi</Text>
                       <FaGithub />

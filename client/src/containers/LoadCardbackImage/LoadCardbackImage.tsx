@@ -36,7 +36,6 @@ const LoadCardbackImage = (props: ILoadCardbackParams) => {
       .then(src => {
         const image = new Image();
         image.src = src.slice();
-        document.body.append(image);
         image.onerror = notifyError;
         image.onload = () => {
           const realW = image.width;

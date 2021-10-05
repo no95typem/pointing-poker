@@ -26,6 +26,7 @@ const IssuesCards = (
     isPlayerDealer,
     gameState,
     settings,
+    userId,
   } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -94,6 +95,8 @@ const IssuesCards = (
     settings,
     changeIssue,
     addNewIssue: setNewIssue,
+    gameState,
+    isPlayerDealer,
   };
 
   const modalData: IIssueModal = {
@@ -108,6 +111,7 @@ const IssuesCards = (
     gameState,
     statisticModal,
     issuesDndChange,
+    userId,
   };
 
   return (

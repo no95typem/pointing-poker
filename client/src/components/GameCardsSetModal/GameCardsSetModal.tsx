@@ -16,10 +16,25 @@ import {
 
 import { ICardsSetModal } from '../../../../shared/types/session/card';
 
-const GameCardsSetModal = (props: ICardsSetModal): JSX.Element => {
-  const { isSetModalOpen, onSetModalClose, setCardsSet } = props;
+interface ICardsSetData {
+  modal: ICardsSetModal;
+  showPlaceholder: () => void;
+}
+
+const GameCardsSetModal = (props: ICardsSetData): JSX.Element => {
+  const { modal, showPlaceholder } = props;
+
+  const { isSetModalOpen, onSetModalClose, setCardsSet } = modal;
 
   const [value, setValue] = useState('');
+
+  const addSet = (): void => {
+    setCardsSet(value);
+
+    showPlaceholder();
+
+    setValue('');
+  };
 
   return (
     <Modal
@@ -51,11 +66,7 @@ const GameCardsSetModal = (props: ICardsSetModal): JSX.Element => {
             >
               Cancel
             </Button>
-            <Button
-              border="1px solid black"
-              padding="0 50px"
-              onClick={() => setCardsSet(value)}
-            >
+            <Button border="1px solid black" padding="0 50px" onClick={addSet}>
               Create
             </Button>
           </ButtonGroup>

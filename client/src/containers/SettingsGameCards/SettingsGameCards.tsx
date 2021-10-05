@@ -164,7 +164,25 @@ const GameCards = (props: ICardsData): JSX.Element => {
 
     const cards: CardData[] = [];
 
-    cardsValue.split(' ').forEach(value => {
+    const values = cardsValue.split(' ');
+
+    const isRepeats = values.some(
+      value => values.indexOf(value) !== values.lastIndexOf(value),
+    );
+
+    if (isRepeats) {
+      const notification: INotification = {
+        status: 'warning',
+        text: `Card's values must be unique!`,
+        needToShow: true,
+      };
+
+      dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
+
+    values.forEach(value => {
       if (value) return cards.push({ value });
     });
 

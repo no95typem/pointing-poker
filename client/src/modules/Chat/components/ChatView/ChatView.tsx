@@ -1,15 +1,21 @@
 import { useEffect, useRef } from 'react';
 import { Box, Container, Flex, Spinner, Text } from '@chakra-ui/react';
 import UserCard from '../../../../components/UserCard/UserCard';
-import { store, useTypedSelector } from '../../../../redux/store';
+import {
+  store,
+  useAppDispatch,
+  useTypedSelector,
+} from '../../../../redux/store';
 import {
   IMemberData,
   Member,
 } from '../../../../../../shared/types/session/member';
 import { MAX_CHAT_ENTRIES } from '../../../../../../shared/const';
+import { sessionSlice } from '../../../../redux/slices/session';
 
 export const ChatView = () => {
   const sessionData = useTypedSelector(state => state.session);
+  const dispatch = useAppDispatch();
   const { msgs } = store.getState().session.chat;
 
   const isItYou = (member: Member) => {
@@ -54,7 +60,11 @@ export const ChatView = () => {
         ref.current.scroll(0, scrollH);
       });
     }
-  });
+    
+    const unreadMsgs = msgEntries.filter(entry => !entry[1].isViewed);
+    
+    if (unreadMsgs.length) dispatch(sessionSlice.actions.markChatMsgsReaded());
+  }, [msgs]);
 
   return (
     <Flex

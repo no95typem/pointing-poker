@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { Box, Flex, Stack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Flex, Stack, Text, useRadioGroup } from '@chakra-ui/react';
 
 import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 
@@ -112,7 +110,7 @@ const IssueCardsView = (
     const id = issue.id;
 
     return (
-      <Stack bg="teal.600" color="white" key={`${id}-checked`}>
+      <Stack data-checked key={`${id}-checked`}>
         {renderBasicIssueCard(issue)}
       </Stack>
     );
@@ -144,6 +142,7 @@ const IssueCardsView = (
     renderBasicIssueCard,
     renderIssueCard,
     gameState,
+    isPlayerDealer,
   };
 
   return (
@@ -155,7 +154,14 @@ const IssueCardsView = (
         h="100%"
         w="100%"
       >
-        {isPlayerDealer && isSynced && <NewIssuesButtons modal={openModal} />}
+        {isPlayerDealer &&
+          (isSynced ? (
+            <NewIssuesButtons modal={openModal} />
+          ) : (
+            <Flex h="40px" justify="center" align="center" w="100%">
+              <Text fontFamily="handwrite">Syncthing...</Text>
+            </Flex>
+          ))}
         {<IssuesTabs {...issueTabsData} />}
         <IssueModal issue={modal} />
         {statisticModal && <IssueStatisticModal {...statisticModal} />}

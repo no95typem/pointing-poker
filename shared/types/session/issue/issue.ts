@@ -5,13 +5,7 @@ import { ISessionGameState, ISessionIssues } from '../state/session-state';
 import { ISettings } from '../../settings';
 
 export interface Issue extends Synchronized {
-  [key: string]:
-    | number
-    | string
-    | IssuePriority
-    | RoundStat
-    | boolean
-    | undefined;
+  [key: string]: unknown;
   id: number;
   title: string;
   link: string;
@@ -39,6 +33,7 @@ export interface IIssuesData {
   settings: ISettings;
   newIssueId: number;
   isPlayerDealer: boolean;
+  userId: number;
 }
 
 export interface IIssueModal {
@@ -53,6 +48,7 @@ export interface IIssueModal {
   isOpen: boolean;
   isPlayerDealer: boolean;
   statisticModal: IStatisticModal;
+  userId: number;
 }
 
 export interface IIssues {
@@ -72,4 +68,6 @@ export interface IStatisticModal {
   changeIssue: (issue: Issue) => void;
   addNewIssue: (issue: Issue) => void;
   isOpen: boolean;
+  gameState?: ISessionGameState;
+  isPlayerDealer: boolean;
 }

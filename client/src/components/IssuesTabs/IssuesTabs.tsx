@@ -5,6 +5,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useColorMode,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -13,6 +14,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import { Issue } from '../../../../shared/types/session/issue/issue';
 import { ISessionGameState } from '../../../../shared/types/session/state/session-state';
 import { getBorderStyles } from '../../constants';
+import { ReactComponent as UndrawDrag } from '../../assets/images/undraw/drag.svg';
 
 export interface IIssuesTabs {
   list: Issue[];
@@ -21,11 +23,18 @@ export interface IIssuesTabs {
   renderBasicIssueCard: (issue: Issue) => JSX.Element;
   justifyTabs?: 'start' | 'center';
   isSynced: boolean;
+  isPlayerDealer?: boolean;
 }
 
 const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
-  const { isSynced, list, renderIssueCard, renderBasicIssueCard, gameState } =
-    props;
+  const {
+    isPlayerDealer,
+    isSynced,
+    list,
+    renderIssueCard,
+    renderBasicIssueCard,
+    gameState,
+  } = props;
 
   const cMode = useColorMode();
 
@@ -39,7 +48,6 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
     if (style.height !== h) setH(style.height);
   }, [h, setH, ref]);
 
-  // eslint-disable react-hooks/exhaustive-deps
   useEffect(() => {
     updateH();
     const listner = () => {
@@ -52,8 +60,8 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
     window.addEventListener('resize', listner);
 
     return () => window.removeEventListener('resize', listner);
+    // eslint-disable-next-line
   }, []);
-  // eslint-enable react-hooks/exhaustive-deps
 
   return (
     <Tabs
@@ -77,6 +85,8 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
         flexGrow={1}
         opacity={isSynced ? '1' : '0.5'}
         ref={ref}
+        position="relative"
+        overflow="hidden"
       >
         <TabPanel overflowY="auto" h={h}>
           <Droppable droppableId="issues">
@@ -91,11 +101,34 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
                 {list
                   .filter(issue => !issue.closed)
                   .map(issue => renderIssueCard(issue))}
-
                 {placeholder}
               </Flex>
             )}
           </Droppable>
+          {isPlayerDealer && (
+            <Flex
+              zIndex="-1"
+              position="absolute"
+              bottom="3.5px"
+              right="10px"
+              align="center"
+              justify="center"
+              w="100%"
+              gridGap={2}
+            >
+              <Text
+                fontSize="sm"
+                whiteSpace="pre-line"
+                fontFamily="handwrite"
+                textAlign="center"
+                w="fit-content"
+              >
+                {`Use drag and drop
+                to change the order`}
+              </Text>
+              <UndrawDrag width="100px" opacity="0.7" />
+            </Flex>
+          )}
         </TabPanel>
         <TabPanel overflowY="auto" h={h}>
           <Flex w="100%" direction="column" gridGap={2}>

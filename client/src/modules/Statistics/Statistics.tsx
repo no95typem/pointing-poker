@@ -50,7 +50,6 @@ const Statistics = (): JSX.Element => {
           right="10px"
           height="auto"
           w="100px"
-          // width="calc(30% - 10px)"
           zIndex="1"
           opacity="0.9"
         >
@@ -122,6 +121,7 @@ const Statistics = (): JSX.Element => {
                 issues={issuesList}
                 cards={session.gSettings.cards}
                 units={session.gSettings.scoreTypeShort}
+                userId={session.clientId}
               />
             </Box>
           </>

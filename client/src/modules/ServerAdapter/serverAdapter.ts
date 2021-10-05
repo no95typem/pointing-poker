@@ -307,6 +307,7 @@ class ServerAdapter {
   private handleSCMsgChatMsg(msg: SCMsgChatMsgsChanged) {
     const state = store.getState();
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+    const { isVisible: isChatVisible } = state.chat;
     const { command, update } = msg.body;
 
     switch (command) {
@@ -319,6 +320,9 @@ class ServerAdapter {
             delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
           }
         });
+
+        Object.values(update).forEach(chatMsg => chatMsg.isViewed = isChatVisible);
+
         Object.assign(chat.msgs, update);
         break;
       case 'D':
@@ -390,9 +394,23 @@ class ServerAdapter {
   };
 
   startGame = () => {
-    const settings = OBJ_PROCESSOR.deepClone(store.getState().settings);
+    const settings = store.getState().settings;
 
-    this.updSessState({ gSettings: settings });
+    if (settings.cards.length < 2) {
+      const notification: INotification = {
+        status: 'error',
+        text: 'Create at least two cards to start the game!',
+        needToShow: true,
+      };
+
+      store.dispatch(notifSlice.actions.addNotifRec(notification));
+
+      return;
+    }
+
+    const clonedSettings = OBJ_PROCESSOR.deepClone(settings);
+
+    this.updSessState({ gSettings: clonedSettings });
     store.dispatch(
       setGLoadByKey({
         loadKey: KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE,
@@ -406,6 +424,21 @@ class ServerAdapter {
 
   exitGame = (skipDispatch?: true) => {
     if (skipDispatch !== true) {
+      const state = store.getState();
+
+      if (
+        state.session.clientId === DEALER_ID &&
+        state.session.stage === SESSION_STAGES.LOBBY
+      ) {
+        const notification: INotification = {
+          status: 'success',
+          text: 'Game was cancelled successfully.',
+          needToShow: true,
+        };
+
+        store.dispatch(notifSlice.actions.addNotifRec(notification));
+      }
+
       store.dispatch(
         sessionSlice.actions.dang_updSessStateFromServer({
           stage: SESSION_STAGES.STATS,
@@ -486,10 +519,17 @@ class ServerAdapter {
     const time = Date.now();
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
 
-    const chatMsg: ChatMsg = { memberId, text, time, isSynced: false };
+    const chatMsg: ChatMsg = {
+      memberId,
+      text,
+      time,
+      isSynced: false,
+    };
 
     const msg = new CSMsgChatMsg(chatMsg);
     this.send(msg);
+
+    chatMsg.isViewed = true;
 
     chat.msgs[`${time}-${memberId}`] = chatMsg;
 
