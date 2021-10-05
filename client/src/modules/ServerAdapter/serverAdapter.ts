@@ -492,14 +492,16 @@ class ServerAdapter {
 
     const isUserDealer = state.session.clientId === DEALER_ID;
 
+    const initiation = !initId && isUserDealer;
+
     const msg =
-      !initId && isUserDealer
+        initiation
         ? new CSMsgForceKick(targetId)
         : new CSMsgVotekick(targetId, decision);
 
     const members = OBJ_PROCESSOR.deepClone(state.session.members);
 
-    if (decision === true) {
+    if (decision === true && initiation) {
       if (isUserDealer) members[targetId].userState = USER_STATES.KICKED;
 
       members[targetId].isSynced = false;
