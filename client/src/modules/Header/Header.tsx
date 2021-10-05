@@ -17,7 +17,6 @@ import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeS
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
 import { AppMenu } from '../../containers/AppMenu/AppMenu';
-import { readMsgs } from '../../helpers/readMsgs';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -25,13 +24,10 @@ export const Header = (): JSX.Element => {
 
   const toggleChat = (): void => {
     dispatch(tryToToggleChatState());
-    readMsgs();
   };
 
-  const sessionState = useTypedSelector(state => state.session);
-  const { msgs } = sessionState.chat;
-  console.log(msgs);
-  const unreadMsgs = Object.entries(msgs).filter(([key, msg]) => !msg.isViewed);
+  const { msgs } = useTypedSelector(state => state.session.chat);
+  const unreadMsgs = Object.values(msgs).filter(msg => !msg.isViewed);
 
   return (
     <Flex

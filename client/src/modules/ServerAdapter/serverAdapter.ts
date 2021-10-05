@@ -44,7 +44,6 @@ import { CSMsgStartRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs
 import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-stop-round';
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
 import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
-import { addMsgVisibility } from '../../helpers/addMsgVisibility';
 import { CSMSgToggleResultsVisibility } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
 
 export interface IKickArgs {
@@ -308,7 +307,7 @@ class ServerAdapter {
   private handleSCMsgChatMsg(msg: SCMsgChatMsgsChanged) {
     const state = store.getState();
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
-    const { isVisible } = state.chat;
+    const { isVisible: isChatVisible } = state.chat;
     const { command, update } = msg.body;
 
     switch (command) {
@@ -322,7 +321,7 @@ class ServerAdapter {
           }
         });
 
-        addMsgVisibility(update, isVisible);
+        Object.values(update).forEach(chatMsg => chatMsg.isViewed = isChatVisible);
 
         Object.assign(chat.msgs, update);
         break;
