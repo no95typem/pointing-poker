@@ -40,6 +40,7 @@ const InputNumber = (props: INumberInput): JSX.Element => {
         min={0}
         max={59}
         id={units}
+        borderRadius="6px"
       >
         <NumberInputField
           textAlign="center"

@@ -46,18 +46,6 @@ const SESSION_INIT_STATE: SessionState = {
   },
 };
 
-export const CREATE_INIT_STATE = () =>
-  OBJ_PROCESSOR.deepClone(SESSION_INIT_STATE);
-
-export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
-  ...SESSION_INIT_STATE,
-  clientId: undefined,
-  stage: 'EMPTY',
-  gSettings: {
-    ...SESSION_INIT_STATE.gSettings,
-  },
-};
-
 //Временные переменые, исключительно для отладки.
 
 const sampleMember: Member = {
@@ -77,7 +65,7 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
   sessionId: '12345',
   clientId: 1,
   name: { value: 'Session 12345', isSynced: true },
-  stage: SESSION_STAGES.LOBBY,
+  stage: SESSION_STAGES.GAME,
   game: {
     currIssueId: 0,
     roundState: ROUND_STATES.IN_PROCESS,
@@ -270,4 +258,16 @@ export const SESSION_TESTING_STATE: ISessionStateClient = {
     isSynced: true,
   },
   // issues: { list: [], isSynced: true }
+};
+
+export const CREATE_INIT_STATE = () =>
+  OBJ_PROCESSOR.deepClone(SESSION_INIT_STATE);
+
+export const SESSION_CLIENT_INIT_STATE: ISessionStateClient = {
+  ...SESSION_INIT_STATE,
+  clientId: undefined,
+  stage: 'EMPTY',
+  gSettings: {
+    ...SESSION_INIT_STATE.gSettings,
+  },
 };

@@ -9,28 +9,43 @@ import {
   ModalCloseButton,
   Link,
   Text,
-  Select,
   Stack,
 } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 import { IStatisticModal } from '../../../../shared/types/session/issue/issue';
-
-import RoundStatistics from '../RoundStatistics/RoundStatistics';
+import { ICardsStatistic } from '../../../../shared/types/session/card';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
+import { StatisticsSliderSettings } from '../../helpers/swiperSettings';
+
+import {
+  IStatisticsTableProps,
+  StatisticsTable,
+} from '../StatisticsTable/StatisticsTable';
+import GameCardValueButtons from '../../containers/GameCardValueButtons/GameCardValueButtons';
 
 const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
-  const { isOpen, onClose, activeIssue, settings, changeIssue, addNewIssue } =
-    props;
+  const {
+    isOpen,
+    onClose,
+    activeIssue,
+    settings,
+    changeIssue,
+    addNewIssue,
+    gameState,
+    isPlayerDealer,
+  } = props;
 
-  const { link, stat, title, value } = activeIssue;
+  if (!gameState) return <></>;
 
-  const setIssueValue = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    const select = e.target;
+  const { link, stat, value } = activeIssue;
 
+  const { cards, scoreTypeShort: units } = settings;
+
+  const setIssueValue = (value: string): void => {
     const issue = OBJ_PROCESSOR.deepClone({
       ...activeIssue,
-      [select.name]: select.value,
+      value: value,
     });
 
     changeIssue(issue);
@@ -38,28 +53,45 @@ const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
     addNewIssue(issue);
   };
 
-  const votes = activeIssue.stat ? Object.values(activeIssue.stat.votes) : [];
+  const renderStats = (): JSX.Element => {
+    if (!stat) {
+      return <Text textAlign="center">Voting has not concluded. </Text>;
+    }
 
-  const renderStatistic = (): JSX.Element => {
-    console.log(settings);
+    const statisticData: IStatisticsTableProps = {
+      issues: [activeIssue],
+      cards,
+      units,
+      statCardsSettings: StatisticsSliderSettings,
+    };
 
-    return stat ? (
-      <RoundStatistics issueTitle={title} votes={stat.votes} /> //TODO Kaesid: прокинуть  settings в GameCardStatistics
-    ) : (
-      <Text textAlign="center">Voting has not concluded. </Text>
-    );
+    return <StatisticsTable {...statisticData} />;
+  };
+
+  const chooseValueData: ICardsStatistic = {
+    setIssueValue,
+    cards,
+    units,
+    value,
   };
 
   return (
-    <Modal closeOnOverlayClick isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnOverlayClick
+      motionPreset="slideInBottom"
+      size="3xl"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textAlign="center">Issue's Data:</ModalHeader>
         <ModalCloseButton />
 
-        <ModalBody p="3vw">
+        <ModalBody w="100%" p="10px">
           {link && (
             <Stack
+              w="100%"
               direction="row"
               justify="center"
               spacing={5}
@@ -71,31 +103,20 @@ const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
               </a>
             </Stack>
           )}
-          {!!votes.length && (
+          {isPlayerDealer && (
             <Stack
-              direction="row"
+              w="100%"
+              direction="column"
               justify="center"
               spacing={5}
               align="center"
-              wrap="wrap"
               mb="20px"
             >
-              <Text>Select issue`s value:</Text>
-              <Select
-                maxW="200px"
-                value={value}
-                name="value"
-                onChange={setIssueValue}
-              >
-                {votes.map(vote => (
-                  <option key={vote} value={vote}>
-                    {vote}
-                  </option>
-                ))}
-              </Select>
+              <Text mb="10px">Select issue`s value:</Text>
+              <GameCardValueButtons {...chooseValueData} />
             </Stack>
           )}
-          {renderStatistic()}
+          {renderStats()}
         </ModalBody>
       </ModalContent>
     </Modal>

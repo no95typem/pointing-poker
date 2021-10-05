@@ -1,4 +1,11 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs, useColorMode } from '@chakra-ui/react';
+import {
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useColorMode,
+} from '@chakra-ui/react';
 
 import { ISettingsData } from '../../../../shared/types/settings';
 import { ICardsData } from '../../../../shared/types/session/card';

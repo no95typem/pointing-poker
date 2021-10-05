@@ -1,17 +1,10 @@
 import { useState } from 'react';
-import { Box, Stack, useRadioGroup } from '@chakra-ui/react';
-import Slider from 'react-slick';
-
-import { ICardData, ICardsGame } from '../../../../shared/types/session/card';
-import { gameCardsSettings } from '../../helpers/swiperSettings';
-
+import { useRadioGroup, UseRadioGroupReturn } from '@chakra-ui/react';
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
-import GameCard from '../../components/GameCard/GameCard';
-import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
+import { ICardsRound } from '../../../../shared/types/session/card';
+import ChoosingCards from '../../components/SettingsTabs/ChoosingCards/ChoosingCards';
 
-const GameCardsRound = (props: ICardsGame): JSX.Element => {
-  const { cards, units } = props;
-
+const GameCardsRound = (props: ICardsRound): JSX.Element => {
   const [selectedRadioValue, setSelectedRadioValue] = useState('');
 
   const pick = (value: string) => {
@@ -20,39 +13,13 @@ const GameCardsRound = (props: ICardsGame): JSX.Element => {
     SERVER_ADAPTER.pickCard(value);
   };
 
-  const { getRadioProps } = useRadioGroup({
-    name: 'issues',
+  const radioprops: UseRadioGroupReturn = useRadioGroup({
+    name: 'gameCardsRound',
     value: selectedRadioValue,
     onChange: pick,
   });
 
-  return (
-    <Box w="90%" m="0 auto">
-      <Slider {...gameCardsSettings}>
-        {cards.map(card => {
-          const id = card.value;
-
-          const data: ICardData = {
-            card,
-            units,
-            isControlShown: false,
-          };
-
-          const radio = (getRadioProps as (obj: { value: string }) => any)({
-            value: String(card.value),
-          });
-
-          return (
-            <SessionItemRadioCard key={`${id}-radio`} {...radio}>
-              <Stack m="5px" justify="center" align="center">
-                <GameCard {...data} />;
-              </Stack>
-            </SessionItemRadioCard>
-          );
-        })}
-      </Slider>
-    </Box>
-  );
+  return <ChoosingCards cardsData={props} radioProps={radioprops} />;
 };
 
 export default GameCardsRound;

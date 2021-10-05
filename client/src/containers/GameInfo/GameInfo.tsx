@@ -10,81 +10,21 @@ import { Member } from '../../../../shared/types/session/member';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
 
-import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
-import GameCardsRound from '../GameCardsRound/GameCardsRound';
-import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 import { getBorderStyles } from '../../constants';
-import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 import {
   calcPercentage,
   fullfillVotes,
 } from '../../../../shared/helpers/calcs/game-calcs';
-import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
+import { StatisticsSliderSettings } from '../../helpers/swiperSettings';
+
+import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
+import GameCardsRound from '../GameCardsRound/GameCardsRound';
+import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
+import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
 import { ISettings } from '../../../../shared/types/settings';
-import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
 import { Issue } from '../../../../shared/types/session/issue/issue';
-
-const sliderSettings = {
-  infinite: false,
-  speed: 500,
-  slidesToShow: 5,
-  slidesToScroll: 5,
-  nextArrow: <SliderCustomArrow />,
-  prevArrow: <SliderCustomArrow />,
-
-  responsive: [
-    {
-      breakpoint: 1350,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: 1200,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-      },
-    },
-    {
-      breakpoint: 1000,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-      },
-    },
-    {
-      breakpoint: 899,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: 800,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-      },
-    },
-    {
-      breakpoint: 675,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-      },
-    },
-    {
-      breakpoint: 500,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
+import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
 
 export interface IGameInfo {
   gameData: ICardsGame;
@@ -180,7 +120,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
         issues={[issue]}
         cards={gameData.cards}
         units={gameData.units}
-        statCardsSettings={sliderSettings}
+        statCardsSettings={StatisticsSliderSettings}
         userId={userId}
       />
     );

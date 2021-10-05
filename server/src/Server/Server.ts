@@ -137,6 +137,7 @@ export class PointingPokerServer {
   private watchdogSelf() {
     try {
       const time = Date.now();
+
       if (
         time - this.lastStimulationTime >
         PointingPokerServer.SELF_STIMULATING_INTERVAL

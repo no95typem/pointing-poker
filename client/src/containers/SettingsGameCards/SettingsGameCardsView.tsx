@@ -4,6 +4,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.scss';
 import 'slick-carousel/slick/slick-theme.scss';
 
+import { CARDS_DECKS } from '../../presets';
 import {
   CardData,
   ICardData,
@@ -15,8 +16,8 @@ import { gameCardsSettings } from '../../helpers/swiperSettings';
 
 import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
-import { CARDS_DECKS } from '../../presets';
 import GameCardsSetModal from '../../components/GameCardsSetModal/GameCardsSetModal';
+import { useState } from 'react';
 
 export interface IGameCardsViewProps extends ISharedCardData {
   cards: CardData[];
@@ -27,15 +28,30 @@ export interface IGameCardsViewProps extends ISharedCardData {
   onDeckSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
+const getText = (key: string): string => {
+  const text = key.toLowerCase().split('');
+
+  text[0] = text[0].toUpperCase();
+
+  return text.join('').split('_').join(' ');
+};
+
 export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
-  const {
-    cards,
-    modal,
-    units,
-    deleteCard,
-    onDeckSelect,
-    modalSetData,
-  } = props;
+  const { cards, modal, units, deleteCard, onDeckSelect, modalSetData } = props;
+
+  const [value, setValue] = useState('');
+
+  const changeValue = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const select = e.target;
+
+    setValue(select.value);
+
+    onDeckSelect(e);
+  };
+
+  const showPlaceholder = (): void => {
+    setValue('');
+  };
 
   return (
     <>
@@ -54,10 +70,15 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
           justify="center"
           gridGap={2}
         >
-          <Select placeholder="Choose a deck" w="200px" onChange={onDeckSelect}>
+          <Select
+            value={value}
+            placeholder="Choose a deck"
+            w="200px"
+            onChange={changeValue}
+          >
             {Object.keys(CARDS_DECKS).map(key => (
               <option key={key} value={key}>
-                {key}
+                {getText(key)}
               </option>
             ))}
           </Select>
@@ -71,6 +92,7 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
             Add Cards Set
           </Button>
           <Button
+            border="1px solid black"
             w="130px"
             variant="solid"
             style={{ marginInlineStart: '0' }}
@@ -111,7 +133,7 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
       </Flex>
 
       <GameCardModal modal={modal} />
-      <GameCardsSetModal {...modalSetData} />
+      <GameCardsSetModal {...{ modal: modalSetData, showPlaceholder }} />
     </>
   );
 };
