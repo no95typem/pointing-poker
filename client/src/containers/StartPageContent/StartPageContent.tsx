@@ -151,7 +151,7 @@ const StartPageContent = ({
         {isLargerThan860 && <UndrawScrumBoard style={{ maxWidth: '50%' }} />}
       </Flex>
       <Link
-        href=""
+        href="https://youtu.be/l6XiCAIEGiE"
         display="flex"
         alignItems="center"
         gridGap="1"

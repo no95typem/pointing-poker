@@ -81,7 +81,7 @@ export const Footer = (): JSX.Element => {
                   </ListItem>
                   <ListItem>
                     <Link
-                      href=""
+                      href="https://youtu.be/l6XiCAIEGiE"
                       display="flex"
                       alignItems="center"
                       gridGap="1"

@@ -3,19 +3,6 @@
    viewBox="0 0 780 780"
    version="1.1"
    xmlns="http://www.w3.org/2000/svg">
-    <marker
-       style="overflow:visible"
-       id="Arrow1Mstart"
-       refX="0.0"
-       refY="0.0"
-       orient="auto">
-      <path
-         transform="scale(0.4) translate(10,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         id="path71090" />
-    </marker>
-  </defs>
   <title
      id="title2">playing cards</title>
   <path
@@ -260,13 +247,4 @@
        x="-796.0152"
        y="-406.14258"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:73.3333px;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif Bold'">P</tspan></text>
-  <metadata
-     id="metadata70239">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:title>playing cards</dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
 </svg>

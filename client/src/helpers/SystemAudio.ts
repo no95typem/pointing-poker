@@ -29,7 +29,7 @@ class SystemAudio {
     if (!isMute) {
       const audio = this.audios[key];
       audio.currentTime = 0; 
-      audio.play(); 
+      audio.play().catch(); 
     }
   }
 }
