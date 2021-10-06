@@ -182,6 +182,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
           <Text
             fontFamily="handwrite"
             textAlign="center"
+            w="100%"
           >{`${quoteData.content}, ${quoteData.author}`}</Text>
         ) : (
           <Button visibility="hidden" />
