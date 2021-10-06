@@ -204,9 +204,6 @@ class ServerAdapter {
   };
 
   private handleVotekick = (msg: SCMsgVotekick) => {
-    console.log('votekick');
-    console.log(msg.body);
-
     const { targetId, initId } = msg.body;
 
     showKickDialog(targetId, initId);
