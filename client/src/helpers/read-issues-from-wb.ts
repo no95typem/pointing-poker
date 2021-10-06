@@ -52,8 +52,8 @@ export const importIssuesFromWorkbook = (wb: XLSX.WorkBook) => {
         if (isIssue(obj)) {
           const issue: Issue = {
             id: issues.length,
-            title: obj['title'],
-            link: obj['link'] || '',
+            title: `${obj['title']}`,
+            link: `${obj['link']}` || '',
             priority: calcPriority(obj['priority']),
             closed: false,
             isSynced: false,
