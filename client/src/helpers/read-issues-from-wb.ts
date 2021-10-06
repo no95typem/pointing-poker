@@ -10,7 +10,8 @@ export const isIssue = (obj: unknown) => {
     typeof obj === 'object' &&
     obj !== null &&
     'title' in obj &&
-    typeof (obj as Record<string, unknown>)['title'] === 'string' &&
+    (typeof (obj as Record<string, unknown>)['title'] === 'string' ||
+      typeof (obj as Record<string, unknown>)['title'] === 'number') &&
     'link' in obj &&
     // typeof (obj as Record<string, unknown>).link === 'string' &&
     'priority' in obj
