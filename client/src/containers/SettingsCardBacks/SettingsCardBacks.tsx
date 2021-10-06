@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import Slider from 'react-slick';
 
-import { CardData } from '../../../../shared/types/session/card';
+import { SettingsValue } from '../../../../shared/types/settings';
 import { gameCardsSettings } from '../../helpers/swiperSettings';
 
 import CardbackModal, {
@@ -21,10 +21,7 @@ import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionI
 export interface ICardbacksData {
   cardbacksBase64?: string[];
   activeCardbackBase64: string;
-  setLocalSettings: (
-    name: string,
-    value: string | boolean | CardData[] | string[] | number,
-  ) => void;
+  setLocalSettings: (name: string, value: SettingsValue) => void;
 }
 
 const SettingsCardBacks = (props: ICardbacksData): JSX.Element => {

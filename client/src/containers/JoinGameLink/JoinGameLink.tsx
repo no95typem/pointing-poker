@@ -22,7 +22,7 @@ const JoinGameLink = (props: ILink) => {
     onCopy();
 
     toast({
-      title: 'Successfully saved!',
+      title: 'Successfully copied!',
       status: 'success',
       duration: 1200,
       isClosable: true,

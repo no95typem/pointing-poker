@@ -2,7 +2,7 @@ import { AlertStatus } from '@chakra-ui/alert';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Member } from '../../../../shared/types/session/member';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { notifSound } from '../../helpers/notifSound';
+import { SYSTEM_AUDIO } from '../../helpers/SystemAudio';
 
 export interface INotification {
   specialType?: 'new-connection';
@@ -36,6 +36,6 @@ export const addNotifRec = createAsyncThunk(
   'notif/addNotifRec',
   async (args: INotification, thunkAPI) => {
     thunkAPI.dispatch(notifSlice.actions.addNotifRec(args));
-    notifSound(args.status);
+    SYSTEM_AUDIO.play(args.status);
   },
 );

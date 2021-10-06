@@ -1,3 +1,5 @@
+import { SettingsValue } from '../settings';
+
 export interface CardData {
   readonly value: string;
   readonly base64?: string;
@@ -43,10 +45,7 @@ export interface ICardData {
 
 export interface ICardsData extends ISharedCardData {
   cards: CardData[];
-  setLocalSettings: (
-    name: string,
-    value: string | boolean | CardData[] | string[] | number,
-  ) => void;
+  setLocalSettings: (name: string, value: SettingsValue) => void;
 }
 
 export interface ICardsGame extends ISharedCardData {

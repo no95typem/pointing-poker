@@ -11,23 +11,18 @@ import {
   ModalBody,
 } from '@chakra-ui/react';
 
-import { CardData } from '../../../../shared/types/session/card';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
-
-import LoadCardbackImage, {
-  ILoadCardbackParams,
-} from '../../containers/LoadCardbackImage/LoadCardbackImage';
+import { SettingsValue } from '../../../../shared/types/settings';
 import { INotification, addNotifRec } from '../../redux/slices/notifications';
 import { store } from '../../redux/store';
+
+import LoadCardbackImage from '../../containers/LoadCardbackImage/LoadCardbackImage';
 
 export interface ICardBackModal {
   isOpen: boolean;
   onClose: () => void;
   back: ICardBackData;
-  setLocalSettings: (
-    name: string,
-    value: string | boolean | CardData[] | string[] | number,
-  ) => void;
+  setLocalSettings: (name: string, value: SettingsValue) => void;
   cardbacksBase64: string[];
 }
 
@@ -44,7 +39,7 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
   const setCardbackData = () => {
     if (!activeCardback) {
       const notification: INotification = {
-        status: 'warning',
+        status: 'error',
         text: 'Please, upload an image!',
         needToShow: true,
       };
@@ -64,7 +59,7 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
       closeModal();
     } else {
       const notification: INotification = {
-        status: 'warning',
+        status: 'error',
         text: 'You already have added this image!',
         needToShow: true,
       };
@@ -79,15 +74,6 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
     onClose();
   };
 
-  const loadImgData: ILoadCardbackParams = {
-    imgParams: {
-      // TODO remove, not needed anymore
-      width: 200,
-      height: 300,
-    },
-    cardback: { activeCardback, setActiveCardback },
-  };
-
   return (
     <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -98,7 +84,7 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
         </ModalHeader>
 
         <ModalBody mb="20px">
-          <LoadCardbackImage {...loadImgData} />
+          <LoadCardbackImage {...back} />
         </ModalBody>
         <ModalFooter>
           <ButtonGroup

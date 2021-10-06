@@ -204,7 +204,11 @@ class ServerAdapter {
   };
 
   private handleVotekick = (msg: SCMsgVotekick) => {
+    console.log('votekick');
+    console.log(msg.body);
+
     const { targetId, initId } = msg.body;
+
     showKickDialog(targetId, initId);
   };
 
@@ -226,6 +230,7 @@ class ServerAdapter {
 
   private handleSCMsgNewConnection(msg: SCMsgNewConnection) {
     const state = store.getState();
+
     const isExist = Object.values(state.alerts).some(
       val =>
         val.specialType === 'new-connection' &&
@@ -307,8 +312,11 @@ class ServerAdapter {
 
   private handleSCMsgChatMsg(msg: SCMsgChatMsgsChanged) {
     const state = store.getState();
+
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+
     const { isVisible: isChatVisible } = state.chat;
+
     const { command, update } = msg.body;
 
     switch (command) {
@@ -342,6 +350,7 @@ class ServerAdapter {
   /* ACTIONS */
   connToLobby = () => {
     const state = store.getState();
+
     const url = state.homePage.lobbyURL;
 
     if (!url) {
@@ -357,14 +366,18 @@ class ServerAdapter {
     }
 
     this.controlKey = url;
+
     const token = this.lastToken; //|| getCookieValByName('lastToken');
+
     const msg = new CSMsgConnToSess({
       info: state.userInfo,
       role: state.homePage.lastUserRole,
       sessId: state.homePage.lobbyURL,
       token,
     });
+
     this.send(msg);
+
     store.dispatch(
       setGLoadByKey({
         loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_LOBBY,
@@ -375,12 +388,15 @@ class ServerAdapter {
 
   createSess = () => {
     const state = store.getState();
+
     this.controlKey = genUniqId();
+
     const msg = new CSMsgCreateSession({
       controlKey: this.controlKey,
       userInfo: state.userInfo,
       settings: state.session.gSettings,
     });
+
     this.send(msg);
     store.dispatch(
       setGLoadByKey({
@@ -450,6 +466,7 @@ class ServerAdapter {
     }
 
     this.controlKey = undefined;
+
     const msg = new CSMsgDisconFromSess();
 
     this.send(msg);
@@ -487,6 +504,7 @@ class ServerAdapter {
 
   tryKick = (args: IKickArgs) => {
     const { targetId, decision, initId } = args;
+
     const state = store.getState();
 
     if (targetId === state.session.clientId || targetId === DEALER_ID) return;
@@ -516,11 +534,13 @@ class ServerAdapter {
 
   sendChatMsg = (text: string) => {
     const state = store.getState();
+
     const memberId = state.session.clientId;
 
     if (memberId === undefined) return false;
 
     const time = Date.now();
+
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
 
     const chatMsg: ChatMsg = {
@@ -544,6 +564,7 @@ class ServerAdapter {
     const synced = setSynced(update, false);
 
     const msg = new CSMsgUpdateState(update);
+
     this.send(msg);
 
     store.dispatch(sessionSlice.actions.dang_updSessStateFromClient(synced));
@@ -551,21 +572,25 @@ class ServerAdapter {
 
   pickCard = (val: string | undefined) => {
     const msg = new CSMsgPick(val);
+
     this.send(msg);
   };
 
   startRound = () => {
     const msg = new CSMsgStartRound();
+
     this.send(msg);
   };
 
   stopRound = () => {
     const msg = new CSMsgStopRound();
+
     this.send(msg);
   };
 
   nextIssue = () => {
     const msg = new CSMsgNextIssue();
+
     this.send(msg);
   };
 
@@ -576,6 +601,7 @@ class ServerAdapter {
       const msg = new CSMSgToggleResultsVisibility(
         !state.session.game.isResultsVisible,
       );
+
       this.send(msg);
     }
   };

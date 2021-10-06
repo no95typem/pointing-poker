@@ -1,10 +1,15 @@
 import { Box, Divider, Flex, Text, useMediaQuery } from '@chakra-ui/react';
 
+import { ReactComponent as UndrawDevelopment } from '../../assets/images/undraw/development.svg';
+import { ReactComponent as UndrawGroupChat } from '../../assets/images/undraw/group-chat.svg';
+import { ReactComponent as UndrawToDoList } from '../../assets/images/undraw/to-do-list.svg';
+
 import { useTypedSelector } from '../../redux/store';
 
 import useSessionData from '../../hooks/useSessionData';
 import useLocalSettings from '../../hooks/useLocalSettings';
 
+import { MAX_CONTENT_WIDTH } from '../../constants';
 import { IGameStateData } from '../../../../shared/types/session/state/session-state';
 import { ISettingsData } from '../../../../shared/types/settings';
 
@@ -15,11 +20,6 @@ import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
 import SettingsTabs from '../../components/SettingsTabs/SettingsTabs';
-import { MAX_CONTENT_WIDTH } from '../../constants';
-
-import { ReactComponent as UndrawDevelopment } from '../../assets/images/undraw/development.svg';
-import { ReactComponent as UndrawGroupChat } from '../../assets/images/undraw/group-chat.svg';
-import { ReactComponent as UndrawToDoList } from '../../assets/images/undraw/to-do-list.svg';
 
 const Lobby = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);

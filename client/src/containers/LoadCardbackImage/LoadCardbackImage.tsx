@@ -24,10 +24,8 @@ const notifyError = () => {
   store.dispatch(addNotifRec(notification));
 };
 
-const LoadCardbackImage = (props: ILoadCardbackParams) => {
-  const { cardback } = props;
-
-  const { activeCardback, setActiveCardback } = cardback;
+const LoadCardbackImage = (props: ICardBackData) => {
+  const { activeCardback, setActiveCardback } = props;
 
   const convert = useImgConvertor();
 

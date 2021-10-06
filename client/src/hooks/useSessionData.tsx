@@ -167,6 +167,7 @@ const useSessionData = (
     isItYou,
     isGameStage,
     isDealerPlaying: sessionData.gSettings.isDealerPlayer,
+    isPlayerSpectator,
   };
 
   const issuesData: IIssuesData = {

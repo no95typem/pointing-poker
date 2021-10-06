@@ -1,5 +1,4 @@
 import { OBJ_PROCESSOR } from './helpers/processors/obj-processor';
-import { CardData } from './types/session/card';
 import { Member } from './types/session/member';
 import { ROUND_STATES } from './types/session/round/round-state';
 import {
@@ -10,24 +9,16 @@ import { SESSION_STAGES } from './types/session/state/stages';
 import { ISettings } from './types/settings';
 import { USER_ROLES } from './types/user/user-role';
 
-const testCardsData: CardData[] = [
-  { value: '1' },
-  { value: '2' },
-  { value: '3' },
-  { value: 'Unknown', base64: '<img>' },
-  { value: 'Unknown longgggggggggggggggggggggg', base64: '<img>' },
-];
-
 export const DEFAULT_SETTINGS_SHARED: ISettings = {
   isAutoAdmit: false,
   isDealerPlayer: true,
-  isCardShownOnRoundEnd: false,
+  isCardShownOnRoundEnd: true,
   isPlayerCanReselectCard: true,
   isTimerNeeded: true,
   scoreType: 'story points',
-  scoreTypeShort: 'SPxxxxxxxxxxxxxxxxxxxxxxx',
-  roundTime: 15000,
-  cards: testCardsData, //placeholder
+  scoreTypeShort: 'SP',
+  roundTime: 25000,
+  cards: [],
   activeCardbackBase64: '',
 };
 

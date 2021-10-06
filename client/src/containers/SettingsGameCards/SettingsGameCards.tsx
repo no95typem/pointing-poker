@@ -116,18 +116,6 @@ const GameCards = (props: ICardsData): JSX.Element => {
   };
 
   const deleteCard = (value: string): void => {
-    if (cards.length <= 2) {
-      const notification: INotification = {
-        status: 'warning',
-        text: `Can't be less than a two cards!`,
-        needToShow: true,
-      };
-
-      dispatch(notifSlice.actions.addNotifRec(notification));
-
-      return;
-    }
-
     const card = findEditedCard(value);
 
     if (card) {
@@ -152,7 +140,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
   const setCardsSet = (cardsValue: string): void => {
     if (!cardsValue) {
       const notification: INotification = {
-        status: 'warning',
+        status: 'error',
         text: `Field can't be empty!`,
         needToShow: true,
       };
@@ -167,12 +155,12 @@ const GameCards = (props: ICardsData): JSX.Element => {
     const values = cardsValue.split(' ');
 
     const isRepeats = values.some(
-      value => values.indexOf(value) !== values.lastIndexOf(value),
+      value => value && values.indexOf(value) !== values.lastIndexOf(value),
     );
 
     if (isRepeats) {
       const notification: INotification = {
-        status: 'warning',
+        status: 'error',
         text: `Card's values must be unique!`,
         needToShow: true,
       };

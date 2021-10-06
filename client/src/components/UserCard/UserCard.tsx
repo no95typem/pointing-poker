@@ -31,7 +31,13 @@ export interface IUserCard extends IMemberData {
 }
 
 const UserCard = (props: IUserCard): JSX.Element => {
-  const { member, isItYou, isRoundStarted, w: width } = props;
+  const {
+    member,
+    isItYou,
+    isRoundStarted,
+    w: width,
+    isPlayerSpectator,
+  } = props;
 
   const { userInfo, userState, userRole, userSessionPublicId: id } = member;
 
@@ -43,7 +49,8 @@ const UserCard = (props: IUserCard): JSX.Element => {
     !isRoundStarted &&
     !isItYou &&
     userRole !== USER_ROLES.DEALER &&
-    userState === USER_STATES.CONNECTED;
+    userState === USER_STATES.CONNECTED &&
+    !isPlayerSpectator;
 
   const bageColor =
     userState === USER_STATES.CONNECTED ? 'green.400' : 'red.400';
