@@ -182,6 +182,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
           <Text
             fontFamily="handwrite"
             textAlign="center"
+            w="100%"
           >{`${quoteData.content}, ${quoteData.author}`}</Text>
         ) : (
           <Button visibility="hidden" />
@@ -191,14 +192,14 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
       {renderCards ? (
         <GameCardsRound {...gameData} />
       ) : (
-        <Box h="220px" w="100%">
+        <Flex h="220px" w="100%" justify="center">
           {gameState.roundState === ROUND_STATES.AWAIT_START &&
             (Math.random() > 0.5 ? (
               <UndrawCoWorking style={{ maxHeight: '100%' }} />
             ) : (
               <UndrawChilling style={{ maxHeight: '100%' }} />
             ))}
-        </Box>
+        </Flex>
       )}
       {children}
     </Flex>
