@@ -4,13 +4,12 @@ import { loadImg } from '../../helpers/loadImg';
 import LoadUserImageUi, {
   IUploadData,
 } from '../../components/LoadUserImageUi/LoadUserImageUi';
-import { ILoadImgForm } from '../LoadCardCustomImage/LoadCardCustomImage';
 import { ICardBackData } from '../../components/CardbackModal/CardbackModal';
 import { INotification, addNotifRec } from '../../redux/slices/notifications';
 import { store } from '../../redux/store';
+import { useEffect, useState } from 'react';
 
 export interface ILoadCardbackParams {
-  imgParams: ILoadImgForm;
   cardback: ICardBackData;
 }
 
@@ -29,26 +28,35 @@ const LoadCardbackImage = (props: ICardBackData) => {
 
   const convert = useImgConvertor();
 
+  const [cover, setCover] = useState(true);
+
+  const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
+
+  useEffect(() => {
+    if (image) {
+      // 148px - max width of the gamecard! 208 - height
+      const scale = cover ? undefined : 148 / image.width;
+
+      convert({ src: image.src, w: 148, h: 208, scale })
+        .then(base64 => {
+          setActiveCardback(base64);
+        })
+        .catch(notifyError);
+    }
+  }, [image, cover, convert, setActiveCardback]);
+
   const uploadImage = (): void => {
     loadImg()
       .then(src => {
         const image = new Image();
         image.src = src.slice();
         image.onerror = notifyError;
-        image.onload = () => {
-          const realW = image.width;
-
-          // 150px - max width of the gamecard!
-          convert({ src, w: 0, h: 0, scale: 150 / realW })
-            .then(base64 => {
-              setActiveCardback(base64);
-            })
-            .catch(notifyError);
-        };
+        image.onload = () => setImage(image);
       })
       .catch(notifyError);
   };
   const resetImage = (): void => {
+    setImage(undefined);
     setActiveCardback('');
   };
 
@@ -56,6 +64,8 @@ const LoadCardbackImage = (props: ICardBackData) => {
     uploadImage,
     resetImage,
     src: activeCardback,
+    onToggleCover: () => setCover(!cover),
+    cover,
   };
 
   return <LoadUserImageUi {...imageUploadData} />;

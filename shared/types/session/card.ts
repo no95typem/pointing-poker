@@ -31,6 +31,7 @@ export interface ISharedCardData {
 
 export interface ICardModalData {
   modal: ICardModal;
+  units?: string;
 }
 
 export interface ICardData {

@@ -42,7 +42,11 @@ export const fullfillVotes = (
 
     if (m.userRole === USER_ROLES.DEALER && !isDealerPlayer) return;
 
-    if (m.userState === USER_STATES.DISCONNECTED || m.userState === USER_STATES.KICKED) return;
+    if (
+      m.userState === USER_STATES.DISCONNECTED ||
+      m.userState === USER_STATES.KICKED
+    )
+      return;
 
     const key = +id;
 

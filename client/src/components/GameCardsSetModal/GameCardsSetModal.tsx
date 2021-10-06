@@ -40,6 +40,7 @@ const GameCardsSetModal = (props: ICardsSetData): JSX.Element => {
     <Modal
       closeOnOverlayClick={false}
       isOpen={isSetModalOpen}
+      isCentered
       onClose={onSetModalClose}
     >
       <ModalOverlay />

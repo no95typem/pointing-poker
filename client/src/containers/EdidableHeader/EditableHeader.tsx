@@ -88,7 +88,7 @@ const EditableHeader = (props: ISessionNameHandling) => {
 
       {!isSynced && <ChakraLoader />}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign="center">Topic:</ModalHeader>

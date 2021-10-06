@@ -8,6 +8,7 @@ import {
 
 import Switcher from '../../components/Switcher/Switcher';
 import InputText from '../../components/InputText/InputText';
+import { ReactComponent as UndrawPersoalSettings } from '../../assets/images/undraw/personal-settings.svg';
 
 const Settings = (props: ISettingsData): JSX.Element => {
   const { localSettings, setLocalSettings } = props;
@@ -71,7 +72,14 @@ const Settings = (props: ISettingsData): JSX.Element => {
   ];
 
   return (
-    <Flex direction="column" gridGap={4} w="100%" h="100%" justify="center">
+    <Flex
+      direction="column"
+      gridGap={4}
+      w="100%"
+      h="100%"
+      justify="center"
+      position="relative"
+    >
       {switchersData.map(switcherData => {
         const { name } = switcherData;
 
@@ -83,6 +91,18 @@ const Settings = (props: ISettingsData): JSX.Element => {
 
         return <InputText data={inputData} key={name} />;
       })}
+      <UndrawPersoalSettings
+        style={{
+          position: 'absolute',
+          left: '50%',
+          bottom: '0%',
+          transform: 'translate(-30%, 0%)',
+          maxHeight: '230px',
+          maxWidth: '90%',
+          zIndex: -1,
+          opacity: '0.7',
+        }}
+      />
     </Flex>
   );
 };

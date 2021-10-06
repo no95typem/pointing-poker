@@ -1,10 +1,12 @@
 import {
   Tab,
   TabList,
+  TabListProps,
   TabPanel,
   TabPanels,
   Tabs,
   useColorMode,
+  useMediaQuery,
 } from '@chakra-ui/react';
 
 import { ISettingsData } from '../../../../shared/types/settings';
@@ -17,6 +19,7 @@ import GameCardBacks, {
   ICardbacksData,
 } from '../../containers/SettingsCardBacks/SettingsCardBacks';
 import { getBorderStyles } from '../../constants';
+import { ReactComponent as UndrawTimeManagment } from '../../assets/images/undraw/time-managment.svg';
 
 const tabStyles = {
   display: 'flex',
@@ -24,12 +27,11 @@ const tabStyles = {
   alignItems: 'center',
   w: '100%',
   h: '100%',
-};
+  position: 'relative',
+} as TabListProps;
 
 const SettingsTabs = (props: ISettingsData): JSX.Element => {
   const { localSettings, setLocalSettings } = props;
-
-  console.log(localSettings);
 
   const {
     scoreTypeShort,
@@ -54,6 +56,8 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
   const timerData: ITimer = { settings: localSettings, setLocalSettings };
 
   const cMode = useColorMode();
+
+  const [isLargerThen500] = useMediaQuery('(min-width: 500px)');
 
   return (
     <Tabs
@@ -88,8 +92,11 @@ const SettingsTabs = (props: ISettingsData): JSX.Element => {
           <Settings {...props} />
         </TabPanel>
         {isTimerNeeded && (
-          <TabPanel {...tabStyles}>
+          <TabPanel {...tabStyles} justifyContent="space-around" gridGap={4}>
             <InputTimer {...timerData} />
+            {isLargerThen500 && (
+              <UndrawTimeManagment style={{ maxHeight: '350px' }} />
+            )}
           </TabPanel>
         )}
         <TabPanel {...tabStyles}>

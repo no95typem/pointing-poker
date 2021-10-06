@@ -15,6 +15,7 @@ import { Issue } from '../../../../shared/types/session/issue/issue';
 import { ISessionGameState } from '../../../../shared/types/session/state/session-state';
 import { getBorderStyles } from '../../constants';
 import { ReactComponent as UndrawDrag } from '../../assets/images/undraw/drag.svg';
+import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 
 export interface IIssuesTabs {
   list: Issue[];
@@ -105,33 +106,35 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
               </Flex>
             )}
           </Droppable>
-          {isPlayerDealer && (
-            <Flex
-              zIndex="-1"
-              position="absolute"
-              bottom="3.5px"
-              right="10px"
-              align="center"
-              justify="center"
-              w="100%"
-              gridGap={2}
-            >
-              <Text
-                fontSize="sm"
-                whiteSpace="pre-line"
-                fontFamily="handwrite"
-                textAlign="center"
-                w="fit-content"
+          {isPlayerDealer &&
+            (!gameState ||
+              gameState?.roundState === ROUND_STATES.AWAIT_START) && (
+              <Flex
+                zIndex="-1"
+                position="absolute"
+                bottom="3.5px"
+                right="10px"
+                align="center"
+                justify="center"
+                w="100%"
+                gridGap={2}
               >
-                {`Use drag and drop
+                <Text
+                  fontSize="sm"
+                  whiteSpace="pre-line"
+                  fontFamily="handwrite"
+                  textAlign="center"
+                  w="fit-content"
+                >
+                  {`Use drag and drop
                 to change the order`}
-              </Text>
-              <UndrawDrag width="100px" opacity="0.7" />
-            </Flex>
-          )}
+                </Text>
+                <UndrawDrag width="100px" opacity="0.7" />
+              </Flex>
+            )}
         </TabPanel>
         <TabPanel overflowY="auto" h={h}>
-          <Flex w="100%" direction="column" gridGap={2}>
+          <Flex w="100%" direction="column" gridGap={4}>
             {list
               .filter(issue => issue.closed)
               .map(issue => renderBasicIssueCard(issue))}

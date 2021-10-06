@@ -75,7 +75,12 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
   };
 
   return (
-    <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isCentered
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <ModalOverlay />
 
       <ModalContent>

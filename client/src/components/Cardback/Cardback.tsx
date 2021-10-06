@@ -1,9 +1,10 @@
 import { Box, Flex, Image, useColorMode } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { useState } from 'react';
+import { CARDS_BACKS } from '../../presets';
 
 interface ICardback {
-  src: string;
+  src?: string;
   size?: 'xs' | 'xl';
 }
 
@@ -32,13 +33,13 @@ const Cardback = (props: ICardback): JSX.Element => {
       const boxRatio =
         Number.parseFloat(boxSizeStyles.w) /
         Number.parseFloat(boxSizeStyles.height);
-      const imgRatio = ref.current.width / ref.current.height;
+      const imgRatio = ref.current.naturalWidth / ref.current.naturalHeight;
 
-      if (!isBorder && Math.abs(boxRatio - imgRatio) > 0.2) {
-        setIsBorder(true);
-      }
+      const needBorder = Math.abs(boxRatio - imgRatio) > 0.2;
+
+      if (needBorder !== isBorder) setIsBorder(needBorder);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -70,12 +71,13 @@ const Cardback = (props: ICardback): JSX.Element => {
       >
         <Image
           onLoad={recalcStyles}
-          src={src}
+          src={src || CARDS_BACKS[3]}
           ref={ref}
           maxH="100%"
           maxW="100%"
           objectFit="contain"
           z-index="0"
+          borderRadius={isBorder ? 'enlight' : undefined}
         />
       </Box>
     </Flex>

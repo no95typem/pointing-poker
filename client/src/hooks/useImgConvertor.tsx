@@ -38,6 +38,7 @@ const getBase64 = (canvas: HTMLCanvasElement): Promise<string | null> => {
 
 const calcSquareDrawParams = (
   img: HTMLImageElement,
+  { w, h }: { w?: number; h?: number },
 ): [number, number, number, number] => {
   let sx: number;
   let sy: number;
@@ -45,15 +46,16 @@ const calcSquareDrawParams = (
   let sHeight: number;
 
   const ratio = img.width / img.height;
+  const reqRatio = w && h ? w / h : 1;
 
-  if (ratio >= 1) {
-    sWidth = img.height;
+  if (ratio >= reqRatio) {
     sHeight = img.height;
+    sWidth = (img.width * reqRatio) / ratio;
     sx = (img.width - sWidth) / 2;
     sy = 0;
   } else {
     sWidth = img.width;
-    sHeight = img.width;
+    sHeight = (img.height * ratio) / reqRatio;
     sx = 0;
     sy = (img.height - sHeight) / 2;
   }
@@ -61,11 +63,15 @@ const calcSquareDrawParams = (
   return [sx, sy, sWidth, sHeight];
 };
 
-const drawSquaredImgToCanvas = (
+const drawImgToCanvasWithCutting = (
   img: HTMLImageElement,
   canvas: HTMLCanvasElement,
 ) => {
-  const [sx, sy, sWidth, sHeight] = calcSquareDrawParams(img);
+  const [sx, sy, sWidth, sHeight] = calcSquareDrawParams(img, {
+    w: canvas.width,
+    h: canvas.height,
+  });
+  // console.log(sx, sy, sWidth, sHeight, canvas.height, canvas.width);
   canvas
     .getContext('2d')
     ?.drawImage(
@@ -108,7 +114,7 @@ const convert = (
           } else {
             canvas.width = opts.w;
             canvas.height = opts.h;
-            drawSquaredImgToCanvas(img, canvas);
+            drawImgToCanvasWithCutting(img, canvas);
           }
 
           getBase64(canvas).then(base64 => {

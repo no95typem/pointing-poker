@@ -47,17 +47,14 @@ export const ChatView = () => {
 
   const msgEntries = Object.entries(msgs);
 
-  const ref = useRef<HTMLDivElement>(null!);
-
-  // const [scrollTop, setScrollTop] = useState<number>();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const scrollH = ref.current.scrollHeight;
+    const scrollH = ref.current?.scrollHeight;
 
     if (scrollH) {
       setTimeout(() => {
-        // setScrollTop(scrollH);
-        ref.current.scroll(0, scrollH);
+        ref.current?.scroll(0, scrollH);
       });
     }
 

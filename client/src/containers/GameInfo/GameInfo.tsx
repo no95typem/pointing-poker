@@ -25,6 +25,9 @@ import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTabl
 import { ISettings } from '../../../../shared/types/settings';
 import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
 import { IssueForRender } from '../../types/IssueForRender';
+import { ReactComponent as UndrawCoWorking } from '../../assets/images/undraw/co-working.svg';
+import { ReactComponent as UndrawChilling } from '../../assets/images/undraw/chilling.svg';
+import { ReactComponent as UndrawMeditation } from '../../assets/images/undraw/meditation.svg';
 
 export interface IGameInfo {
   gameData: ICardsGame;
@@ -36,6 +39,7 @@ export interface IGameInfo {
   children?: JSX.Element;
   settings: ISettings;
   userId?: number;
+  quoteData?: { content: string; author: string };
 }
 
 const GameInfo = (props: IGameInfo): JSX.Element => {
@@ -49,6 +53,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
     children,
     settings,
     userId,
+    quoteData,
   } = props;
 
   const { isSynced, list: issues } = issuesData;
@@ -98,16 +103,27 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
     };
 
     if (!isRoundAwaitStart) {
-      if (gameState.isResultsVisible) {
+      if (gameState.isResultsVisible || isPlayerDealer) {
         const votes = fullfillVotes(members, gameState, isDealerPlaying);
         const pct = calcPercentage(votes);
         issue.stat = { votes, pct };
       } else {
-        issue.replaceElem = <Text>Dealer doesn't unravel results yet</Text>;
+        issue.replaceElem = (
+          <Flex align="center">
+            <Text>Results are not available yet</Text>
+            <UndrawMeditation style={{ height: '100%' }} />
+          </Flex>
+        );
       }
     } else {
       if (realIssue) {
-        issue.replaceElem = <Text>Waiting for round start.</Text>;
+        issue.replaceElem = isPlayerDealer ? (
+          <Text fontSize="sm" textAlign="center">
+            Press "run round" to start. Or you can rearrange your issues first.
+          </Text>
+        ) : (
+          <Text>Waiting for round start.</Text>
+        );
       } else {
         issue.replaceElem = (
           <Text>It's time to end the game or create a new issue.</Text>
@@ -162,12 +178,28 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
               </Button>
             )}
           </>
+        ) : quoteData ? (
+          <Text
+            fontFamily="handwrite"
+            textAlign="center"
+          >{`${quoteData.content}, ${quoteData.author}`}</Text>
         ) : (
           <Button visibility="hidden" />
         )}
       </Flex>
       {renderStats()}
-      {renderCards ? <GameCardsRound {...gameData} /> : <Box h="220px" />}
+      {renderCards ? (
+        <GameCardsRound {...gameData} />
+      ) : (
+        <Box h="220px" w="100%">
+          {gameState.roundState === ROUND_STATES.AWAIT_START &&
+            (Math.random() > 0.5 ? (
+              <UndrawCoWorking style={{ maxHeight: '100%' }} />
+            ) : (
+              <UndrawChilling style={{ maxHeight: '100%' }} />
+            ))}
+        </Box>
+      )}
       {children}
     </Flex>
   );

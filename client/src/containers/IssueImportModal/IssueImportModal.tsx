@@ -16,6 +16,7 @@ import {
   Box,
   Button,
   Divider,
+  CloseButton,
 } from '@chakra-ui/react';
 import { ReactComponent as UndrawAddDocument } from '../../assets/images/undraw/add-document.svg';
 
@@ -40,6 +41,11 @@ export const IssueImportModal = (props: IIssueImportModalProps) => {
         <ModalHeader fontSize="2xl" textAlign="center" fontFamily="handwrite">
           Import issues
         </ModalHeader>
+
+        <CloseButton
+          onClick={props.removeSelf}
+          style={{ position: 'absolute', top: '5px', right: '5px' }}
+        />
 
         <ModalBody mb="20px">
           <Flex direction="column" align="center" gridGap={4}>

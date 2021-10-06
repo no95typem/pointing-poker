@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Select, Stack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Select,
+  Stack,
+  useMediaQuery,
+} from '@chakra-ui/react';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.scss';
@@ -18,6 +26,8 @@ import GameCard from '../../components/GameCard/GameCard';
 import GameCardModal from '../../components/GameCardModal/GameCardModal';
 import GameCardsSetModal from '../../components/GameCardsSetModal/GameCardsSetModal';
 import { useState } from 'react';
+
+import logo from '../../assets/images/shared/logo.svg';
 
 export interface IGameCardsViewProps extends ISharedCardData {
   cards: CardData[];
@@ -53,6 +63,8 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
     setValue('');
   };
 
+  const [isLargerThen645] = useMediaQuery('(min-width: 645px)');
+
   return (
     <>
       <Flex
@@ -64,42 +76,46 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
         align="flex-end"
       >
         <Flex
-          maxW="100%"
+          w="100%"
           wrap="wrap"
           align="center"
-          justify="center"
+          justify={isLargerThen645 ? 'space-between' : 'center'}
           gridGap={2}
         >
-          <Select
-            value={value}
-            placeholder="Choose a deck"
-            w="200px"
-            onChange={changeValue}
-          >
-            {Object.keys(CARDS_DECKS).map(key => (
-              <option key={key} value={key}>
-                {getText(key)}
-              </option>
-            ))}
-          </Select>
-          <Button
-            border="1px solid black"
-            w="130px"
-            variant="solid"
-            style={{ marginInlineStart: '0' }}
-            onClick={() => modalSetData.onSetModalOpen()}
-          >
-            Add Cards Set
-          </Button>
-          <Button
-            border="1px solid black"
-            w="130px"
-            variant="solid"
-            style={{ marginInlineStart: '0' }}
-            onClick={() => modal.openModal()}
-          >
-            Add card
-          </Button>
+          {/* <UndrawLogo height="60px" /> */}
+          <Image src={logo} height="60px" />
+          <Flex wrap="wrap" align="center" gridGap={2} justify="center">
+            <Select
+              value={value}
+              placeholder="Choose a deck"
+              w="200px"
+              onChange={changeValue}
+            >
+              {Object.keys(CARDS_DECKS).map(key => (
+                <option key={key} value={key}>
+                  {getText(key)}
+                </option>
+              ))}
+            </Select>
+            <Flex gridGap={2} align="center">
+              <Button
+                border="1px solid black"
+                w="130px"
+                variant="solid"
+                onClick={() => modalSetData.onSetModalOpen()}
+              >
+                Add Cards Set
+              </Button>
+              <Button
+                border="1px solid black"
+                w="130px"
+                variant="solid"
+                onClick={() => modal.openModal()}
+              >
+                Add card
+              </Button>
+            </Flex>
+          </Flex>
         </Flex>
         <Box w="90%" m="0 auto">
           <Slider {...gameCardsSettings}>
@@ -132,7 +148,7 @@ export const GameCardsView = (props: IGameCardsViewProps): JSX.Element => {
         <Box></Box>
       </Flex>
 
-      <GameCardModal modal={modal} />
+      <GameCardModal modal={modal} units={units} />
       <GameCardsSetModal {...{ modal: modalSetData, showPlaceholder }} />
     </>
   );
