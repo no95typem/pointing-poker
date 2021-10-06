@@ -48,6 +48,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
   const fullName = surname ? `${name} ${surname}` : name;
 
   const isKickAvailable: boolean =
+    isEnoughUsersForKick &&
     !isRoundStarted &&
     !isItYou &&
     userRole !== USER_ROLES.DEALER &&
@@ -143,7 +144,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
             opacity: '1',
           }}
         >
-          {isKickAvailable && isEnoughUsersForKick && (
+          {isKickAvailable && (
             <IconButton
               aria-label="Kick player"
               icon={<ImBlocked />}
