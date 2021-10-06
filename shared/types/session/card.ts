@@ -55,12 +55,17 @@ export interface ICardsGame extends ISharedCardData {
   isResultsVisible: boolean;
 }
 
-export interface ICardsRound {
+export interface ICardsGameData {
   cards: CardData[];
   units: string;
 }
 
-export interface ICardsStatistic extends ICardsRound {
+export interface ICardsStatistic extends ICardsGameData {
   setIssueValue: (value: string) => void;
   value?: string;
+}
+
+export interface ICardsRound extends ICardsGameData {
+  selectedCardValue: string;
+  pickCard: (value: string) => void;
 }

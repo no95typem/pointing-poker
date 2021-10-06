@@ -48,6 +48,8 @@ const Game = (): JSX.Element => {
     isPlayerSpectator,
   } = sessionData;
 
+  console.log(session);
+
   const { gameState, gameData } = gameStateData;
 
   const isRoundStarted = !!(

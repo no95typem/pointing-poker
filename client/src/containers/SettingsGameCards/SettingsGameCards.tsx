@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 
 import { useDisclosure } from '@chakra-ui/react';
 
-import { INotification, notifSlice } from '../../redux/slices/notifications';
+import {
+  addNotifRec,
+  INotification,
+  notifSlice,
+} from '../../redux/slices/notifications';
 import { useAppDispatch } from '../../redux/store';
 import { CARDS_DECKS } from '../../presets';
 
@@ -70,7 +74,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         needToShow: true,
       };
 
-      dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(addNotifRec(notification));
 
       return;
     }
@@ -145,7 +149,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         needToShow: true,
       };
 
-      dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(addNotifRec(notification));
 
       return;
     }
@@ -181,7 +185,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         needToShow: true,
       };
 
-      dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(addNotifRec(notification));
 
       return;
     }

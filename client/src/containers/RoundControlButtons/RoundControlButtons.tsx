@@ -20,6 +20,7 @@ const RoundControlButtons = (props: ISessionGameState): JSX.Element => {
 
   const startRound = (): void => {
     setIsLoading(true);
+
     SERVER_ADAPTER.startRound();
   };
 
