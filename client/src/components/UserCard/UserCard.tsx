@@ -28,6 +28,7 @@ export interface IUserCard extends IMemberData {
   w?: string;
   flexDirection?: 'row' | 'row-reverse';
   isInfoStatic?: true;
+  isEnoughUsersForKick?: boolean;
 }
 
 const UserCard = (props: IUserCard): JSX.Element => {
@@ -37,6 +38,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
     isRoundStarted,
     w: width,
     isPlayerSpectator,
+    isEnoughUsersForKick,
   } = props;
 
   const { userInfo, userState, userRole, userSessionPublicId: id } = member;
@@ -141,7 +143,7 @@ const UserCard = (props: IUserCard): JSX.Element => {
             opacity: '1',
           }}
         >
-          {isKickAvailable && (
+          {isKickAvailable && isEnoughUsersForKick !== false && (
             <IconButton
               aria-label="Kick player"
               icon={<ImBlocked />}

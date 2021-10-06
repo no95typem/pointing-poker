@@ -12,6 +12,8 @@ import {
 } from '../../../../../../shared/types/session/member';
 import { MAX_CHAT_ENTRIES } from '../../../../../../shared/const';
 import { sessionSlice } from '../../../../redux/slices/session';
+import { USER_STATES } from '../../../../../../shared/types/user/user-state';
+import { USER_ROLES } from '../../../../../../shared/types/user/user-role';
 
 export const ChatView = () => {
   const sessionData = useTypedSelector(state => state.session);
@@ -29,6 +31,12 @@ export const ChatView = () => {
       isRoundStarted: false,
     };
   };
+
+  const isEnoughUsersForKick = Object.values(sessionData.members).filter(
+    m =>
+      m.userState === USER_STATES.CONNECTED &&
+      m.userRole === USER_ROLES.PLAYER,
+  ).length > 2;
 
   const convertTime = (dateNow: number) => {
     const date = new Date(dateNow);
@@ -116,6 +124,7 @@ export const ChatView = () => {
                 size="sm"
                 flexDirection={memberData.isItYou ? 'row' : 'row-reverse'}
                 isInfoStatic
+                isEnoughUsersForKick={isEnoughUsersForKick}
               />
             </Box>
           </Flex>

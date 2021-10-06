@@ -29,6 +29,7 @@ import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import GameCardsRound from '../GameCardsRound/GameCardsRound';
 import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
+import { useMemo } from 'react';
 
 export interface IGameInfo {
   gameData: ICardsGame;
@@ -64,6 +65,8 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
   const cMode = useColorMode();
 
   const [selectedCardValue, setSelectedCardValue] = useState('');
+
+  const rand = useMemo(() => Math.random() > 0.5, []);
 
   useEffect(() => {
     if (
@@ -216,7 +219,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
       ) : (
         <Flex h="220px" w="100%" justify="center">
           {gameState.roundState === ROUND_STATES.AWAIT_START &&
-            (Math.random() > 0.5 ? (
+            (rand ? (
               <UndrawCoWorking style={{ maxHeight: '100%' }} />
             ) : (
               <UndrawChilling style={{ maxHeight: '100%' }} />

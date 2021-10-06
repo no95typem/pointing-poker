@@ -23,6 +23,7 @@ import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import UserVote from '../UserVote/UserVote';
 import UserCard from '../../components/UserCard/UserCard';
 import SliderCustomArrow from '../../components/SliderCustomArrow/SliderCustomArrow';
+import { USER_STATES } from '../../../../shared/types/user/user-state';
 
 const settings = {
   infinite: false,
@@ -113,6 +114,12 @@ const UserCards = (props: IUserCards): JSX.Element => {
 
   const cMode = useColorMode();
 
+  const isEnoughUsersForKick = Object.values(members).filter(
+    m =>
+      m.userState === USER_STATES.CONNECTED &&
+      m.userRole === USER_ROLES.PLAYER,
+  ).length > 2;
+
   const selectedMemebers = Object.entries(members).filter(([id, member]) =>
     isCorrectMember(id, member),
   );
@@ -146,6 +153,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
                 <UserCard
                   {...setMemberData(member)}
                   w={isUserVoteVisible ? '300px' : '100%'}
+                  isEnoughUsersForKick={isEnoughUsersForKick}
                 />
                 {isUserVoteVisible && <UserVote id={+id} />}
               </Stack>
