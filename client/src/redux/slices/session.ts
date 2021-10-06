@@ -13,7 +13,7 @@ import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-process
 import { readWbFromFile } from '../../helpers/readWorksheet';
 import { workbookToDeepObj } from '../../helpers/deep-obj-wb-converters';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
-import { notifSlice } from './notifications';
+import { addNotifRec } from './notifications';
 import { loadFiles } from '../../helpers/loadFiles';
 import { importIssuesFromWorkbook } from '../../helpers/read-issues-from-wb';
 import { calcNextIssueId } from '../../helpers/calcNextIssueId';
@@ -100,7 +100,7 @@ export const tryLoadSessionFromFile = createAsyncThunk(
         console.log(err);
         setTimeout(() => {
           thunkAPI.dispatch(
-            notifSlice.actions.addNotifRec({
+            addNotifRec({
               status: 'error',
               text: `Uploaded file is corrupted: ${err.message}`,
               needToShow: true,
@@ -126,7 +126,7 @@ export const tryImportIssues = createAsyncThunk(
 
             if (issues.length === 0) {
               thunkAPI.dispatch(
-                notifSlice.actions.addNotifRec({
+                addNotifRec({
                   status: 'warning',
                   text: `Can't find issues in the imported file`,
                   needToShow: true,
@@ -158,7 +158,7 @@ export const tryImportIssues = createAsyncThunk(
               SERVER_ADAPTER.updSessState({ issues: newIssues });
 
               thunkAPI.dispatch(
-                notifSlice.actions.addNotifRec({
+                addNotifRec({
                   status: 'success',
                   text: `Issues import complete!`,
                   needToShow: false,
@@ -168,7 +168,7 @@ export const tryImportIssues = createAsyncThunk(
           })
           .catch(err => {
             thunkAPI.dispatch(
-              notifSlice.actions.addNotifRec({
+              addNotifRec({
                 status: 'error',
                 text: `Can't import issues: ${err.message}`,
                 needToShow: true,

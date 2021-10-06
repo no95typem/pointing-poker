@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Chat } from '../../../../shared/types/session/chat/chat';
 import { RootState } from '../store';
-import { notifSlice } from './notifications';
+import { addNotifRec } from './notifications';
 
 const initialState = {
   isVisible: false,
@@ -28,7 +28,7 @@ export const tryToToggleChatState = createAsyncThunk(
 
     if (!state.chat.isVisible && state.session.clientId === undefined) {
       thunkAPI.dispatch(
-        notifSlice.actions.addNotifRec({
+        addNotifRec({
           status: 'info',
           text: 'Chat will be available in a session',
           needToShow: true,

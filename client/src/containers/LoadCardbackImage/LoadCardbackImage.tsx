@@ -6,7 +6,7 @@ import LoadUserImageUi, {
 } from '../../components/LoadUserImageUi/LoadUserImageUi';
 import { ILoadImgForm } from '../LoadCardCustomImage/LoadCardCustomImage';
 import { ICardBackData } from '../../components/CardbackModal/CardbackModal';
-import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { INotification, addNotifRec } from '../../redux/slices/notifications';
 import { store } from '../../redux/store';
 
 export interface ILoadCardbackParams {
@@ -21,7 +21,7 @@ const notifyError = () => {
     needToShow: true,
   };
 
-  store.dispatch(notifSlice.actions.addNotifRec(notification));
+  store.dispatch(addNotifRec(notification));
 };
 
 const LoadCardbackImage = (props: ILoadCardbackParams) => {

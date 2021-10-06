@@ -29,7 +29,7 @@ import { showKickDialog } from '../../helpers/showKickDialog';
 import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { SCMsgNewConnection } from '../../../../shared/types/sc-msgs/msgs/sc-msg-new-connection';
-import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { INotification, addNotifRec } from '../../redux/slices/notifications';
 import { CSMSGNewConnectionResponse } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-new-connection-response';
 import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
 import { ISettings } from '../../../../shared/types/settings';
@@ -45,6 +45,7 @@ import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
 import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
 import { CSMSgToggleResultsVisibility } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
+import { chatSound } from '../../helpers/chatSound';
 
 export interface IKickArgs {
   targetId: number;
@@ -220,7 +221,7 @@ class ServerAdapter {
       needToShow: true,
     };
 
-    store.dispatch(notifSlice.actions.addNotifRec(notification));
+    store.dispatch(addNotifRec(notification));
   }
 
   private handleSCMsgNewConnection(msg: SCMsgNewConnection) {
@@ -240,7 +241,7 @@ class ServerAdapter {
       needToShow: true,
       addData: msg.m,
     };
-    store.dispatch(notifSlice.actions.addNotifRec(notification));
+    store.dispatch(addNotifRec(notification));
   }
 
   private handleSCMsgUpdateState(msg: CSMsgUpdateState) {
@@ -326,6 +327,7 @@ class ServerAdapter {
         );
 
         Object.assign(chat.msgs, update);
+        chatSound(update);
         break;
       case 'D':
         Object.keys(update).forEach(key => delete chat.msgs[key]);
@@ -333,7 +335,6 @@ class ServerAdapter {
       default:
         break;
     }
-
     store.dispatch(sessionSlice.actions.dang_updSessStateFromServer({ chat }));
   }
   /* / OBEY THE SERVER */
@@ -350,7 +351,7 @@ class ServerAdapter {
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      store.dispatch(addNotifRec(notification));
 
       return;
     }
@@ -405,7 +406,7 @@ class ServerAdapter {
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      store.dispatch(addNotifRec(notification));
 
       return;
     }
@@ -438,7 +439,7 @@ class ServerAdapter {
           needToShow: true,
         };
 
-        store.dispatch(notifSlice.actions.addNotifRec(notification));
+        store.dispatch(addNotifRec(notification));
       }
 
       store.dispatch(

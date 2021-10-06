@@ -17,7 +17,7 @@ import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-process
 import LoadCardbackImage, {
   ILoadCardbackParams,
 } from '../../containers/LoadCardbackImage/LoadCardbackImage';
-import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { INotification, addNotifRec } from '../../redux/slices/notifications';
 import { store } from '../../redux/store';
 
 export interface ICardBackModal {
@@ -45,11 +45,11 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
     if (!activeCardback) {
       const notification: INotification = {
         status: 'warning',
-        text: 'Pleae, upload an image!',
+        text: 'Please, upload an image!',
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      store.dispatch(addNotifRec(notification));
 
       return;
     }
@@ -69,7 +69,7 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      store.dispatch(addNotifRec(notification));
     }
   };
 

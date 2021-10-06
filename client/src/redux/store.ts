@@ -9,6 +9,7 @@ import { settingsSlice } from './slices/settings';
 import { userInfoSlice } from './slices/userInfo';
 import { chatSlice } from './slices/chat';
 import { notifSlice } from './slices/notifications';
+import { soundSlice } from './slices/sound';
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 
 export const COMBINED_REDUCER = combineReducers({
@@ -21,6 +22,7 @@ export const COMBINED_REDUCER = combineReducers({
   chat: chatSlice.reducer,
   settings: settingsSlice.reducer,
   alerts: notifSlice.reducer,
+  sound: soundSlice.reducer,
 });
 
 export type RootState = ReturnType<typeof COMBINED_REDUCER>;
