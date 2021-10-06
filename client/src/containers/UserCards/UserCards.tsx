@@ -71,7 +71,8 @@ const settings = {
 };
 
 const UserCards = (props: IUserCards): JSX.Element => {
-  const { members, isItYou, isVotersView, isDealerPlaying } = props;
+  const { members, isItYou, isDealerPlaying, isVotersView, isPlayerSpectator } =
+    props;
 
   const [isLargerThen780] = useMediaQuery('(min-width: 780px)');
 
@@ -84,6 +85,7 @@ const UserCards = (props: IUserCards): JSX.Element => {
       member: member,
       isItYou: isItYou(member),
       isRoundStarted: false,
+      isPlayerSpectator,
     };
   };
 

@@ -1,6 +1,10 @@
 import { OBJ_PROCESSOR } from '../../../shared/helpers/processors/obj-processor';
 import { ITimerTabs } from '../containers/InputTimer/InputTimer';
-import { INotification, notifSlice } from '../redux/slices/notifications';
+import {
+  addNotifRec,
+  INotification,
+  notifSlice,
+} from '../redux/slices/notifications';
 import { store } from '../redux/store';
 
 const timerValidation = (
@@ -20,7 +24,7 @@ const timerValidation = (
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      store.dispatch(addNotifRec(notification));
 
       break;
 
@@ -33,7 +37,7 @@ const timerValidation = (
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(maxTime));
+      store.dispatch(addNotifRec(maxTime));
 
       break;
 

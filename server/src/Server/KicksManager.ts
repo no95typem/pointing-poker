@@ -51,12 +51,12 @@ export class KicksManager {
   }
 
   handleVotekick(ws: WebSocket, id: number, msg: CSMsgVotekick): void {
-    if (!this.kicksInProcess[msg.target]) {
+    if (!this.kicksInProcess[msg.body.target] && !msg.body.isAnswer) {
       this.handleNewVotekick(ws, id, msg);
     } else {
-      const rec = this.kicksInProcess[msg.target];
+      const rec = this.kicksInProcess[msg.body.target];
 
-      rec.votes[id] = msg.decision;
+      rec.votes[id] = msg.body.decision;
 
       const votesCalc = this.calcVotes(rec);
 
@@ -64,7 +64,7 @@ export class KicksManager {
         votesCalc.accepts > rec.votersThreshold ||
         votesCalc.declines > rec.votersThreshold
       ) {
-        this.makeDecision(msg.target, votesCalc);
+        this.makeDecision(msg.body.target, votesCalc);
       }
     }
   }
@@ -74,8 +74,8 @@ export class KicksManager {
 
     if (
       kickersCount < 3 ||
-      msg.target === DEALER_ID ||
-      this.api.checkMemberState(msg.target) !== USER_STATES.CONNECTED
+      msg.body.target === DEALER_ID ||
+      this.api.checkMemberState(msg.body.target) !== USER_STATES.CONNECTED
     ) {
       const rMsg = new SCMsgVotekickResponse(
         this.api.getSessionState().state.sessionId,
@@ -85,7 +85,7 @@ export class KicksManager {
       this.handlePlayerVotekick({
         ws,
         initId: id,
-        targetId: msg.target,
+        targetId: msg.body.target,
         kickersCount,
       });
     }

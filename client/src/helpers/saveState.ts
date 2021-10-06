@@ -13,5 +13,19 @@ export const saveObjToWb = (
     name: '',
     copy: true,
   });
-  XLSX.writeFile(wb, opts.fileName, { bookType: opts.bookType }); // ! TODO (no95typem)
+  XLSX.writeFile(wb, opts.fileName, { bookType: opts.bookType });
+};
+
+export const saveArrayToWb = (
+  arr: Record<string, unknown>[],
+  opts: {
+    sheetName: string;
+    fileName: string;
+    bookType: XLSX.BookType;
+  },
+) => {
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(arr);
+  XLSX.utils.book_append_sheet(wb, ws, opts.sheetName);
+  XLSX.writeFile(wb, opts.fileName, { bookType: opts.bookType });
 };

@@ -16,7 +16,7 @@ export class ErrorBoundary extends React.Component {
 
   componentDidCatch() {
     setTimeout(() => {
-      window.location.href = window.location.origin;
+      window.location.href = `${window.location.origin}${BASENAME}`;
     }, 1_000);
   }
 

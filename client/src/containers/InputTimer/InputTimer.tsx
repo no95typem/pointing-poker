@@ -2,21 +2,17 @@ import React, { useEffect, useState } from 'react';
 
 import { FormLabel, Stack, Text, useColorMode } from '@chakra-ui/react';
 
-import { ISettings } from '../../../../shared/types/settings';
-import { CardData } from '../../../../shared/types/session/card';
+import { ISettings, SettingsValue } from '../../../../shared/types/settings';
+import timerValidation from '../../helpers/timerValidation';
 
 import InputNumber, {
   INumberInput,
 } from '../../components/InputNumber/InputNumber';
-import timerValidation from '../../helpers/timerValidation';
 
 export interface ITimer {
   settings: ISettings;
   time?: number;
-  setLocalSettings?: (
-    name: string,
-    value: string | boolean | CardData[] | string[] | number,
-  ) => void;
+  setLocalSettings?: (name: string, value: SettingsValue) => void;
 }
 
 export interface ITimerTabs {

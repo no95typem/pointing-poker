@@ -1,9 +1,15 @@
 import { Box, Divider, Flex, Text, useMediaQuery } from '@chakra-ui/react';
 
+import { ReactComponent as UndrawDevelopment } from '../../assets/images/undraw/development.svg';
+import { ReactComponent as UndrawGroupChat } from '../../assets/images/undraw/group-chat.svg';
+import { ReactComponent as UndrawToDoList } from '../../assets/images/undraw/to-do-list.svg';
+import { ReactComponent as UndrawWelcoming } from '../../assets/images/undraw/welcoming.svg';
+
 import { useTypedSelector } from '../../redux/store';
 
 import useSessionData from '../../hooks/useSessionData';
 import useLocalSettings from '../../hooks/useLocalSettings';
+import { MAX_CONTENT_WIDTH } from '../../constants';
 
 import { IGameStateData } from '../../../../shared/types/session/state/session-state';
 import { ISettingsData } from '../../../../shared/types/settings';
@@ -15,11 +21,6 @@ import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 import DealerPlate from '../../components/DealerPlate/DealerPlate';
 import UserCardsTabs from '../../components/UserCardsTabs/UserCardsTabs';
 import SettingsTabs from '../../components/SettingsTabs/SettingsTabs';
-import { MAX_CONTENT_WIDTH } from '../../constants';
-
-import { ReactComponent as UndrawDevelopment } from '../../assets/images/undraw/development.svg';
-import { ReactComponent as UndrawGroupChat } from '../../assets/images/undraw/group-chat.svg';
-import { ReactComponent as UndrawToDoList } from '../../assets/images/undraw/to-do-list.svg';
 
 const Lobby = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -29,6 +30,8 @@ const Lobby = (): JSX.Element => {
   const { localSettings, setLocalSettings } = useLocalSettings();
 
   const [isLargerThen900] = useMediaQuery('(min-width: 900px)');
+
+  const [isLargerThen591] = useMediaQuery('(min-width: 591px)');
 
   if (!sessionData) return <></>;
 
@@ -71,10 +74,23 @@ const Lobby = (): JSX.Element => {
         justify="space-between"
         alignItems={isLargerThen900 ? 'flex-end' : 'flex-start'}
         gridGap={4}
+        position="relative"
       >
         <DealerPlate dealerMemberData={dealerData} />
         <JoinGameLink link={`${window.location}`} />
         <GameControlButtons {...gameStateLobby} />
+        {!isLargerThen900 && isLargerThen591 && (
+          <UndrawWelcoming
+            style={{
+              position: 'absolute',
+              left: 'calc(50% + 140px)',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '380px',
+              maxHeight: '100%',
+            }}
+          />
+        )}
       </Flex>
       <Box w="100%">
         <UserCardsTabs {...membersData} />
@@ -90,19 +106,26 @@ const Lobby = (): JSX.Element => {
       >
         <Flex
           alignSelf={isLargerThen900 ? 'start' : 'flex-end'}
-          justify="space-between"
           align="center"
           w={isLargerThen900 ? '320px' : '100%'}
           h={isLargerThen900 ? '100%' : '500px'}
           flexShrink={0}
           paddingTop={2}
-          overflowY="hidden"
-          wrap="wrap"
-          justifyContent="center"
+          // overflowY="hidden"
+          justifyContent={isLargerThen591 ? 'space-around' : 'center'}
+          position="relative"
+          gridGap={4}
         >
-          {!isLargerThen900 && (
+          {!isLargerThen900 && isLargerThen591 && (
             <UndrawToDoList
-              style={{ width: 'calc(100% - 360px)', minWidth: '300px' }}
+              style={{
+                width: 'calc(100% - 420px)',
+                minWidth: '200px',
+                // position: 'absolute',
+                // left: '25px',
+                // top: '50%',
+                // transform: 'translateY(-50%)',
+              }}
             />
           )}
           <Box h="100%" w="320px">
@@ -143,8 +166,7 @@ const Lobby = (): JSX.Element => {
                   It's good time to discuss the meeting...
                 </Text>
                 <UndrawGroupChat
-                  width="fit-content"
-                  style={{ maxHeight: '200px' }}
+                  style={{ maxHeight: '200px', width: 'fit-content' }}
                 />
               </Flex>
             </Flex>

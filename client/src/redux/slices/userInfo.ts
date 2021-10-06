@@ -6,7 +6,7 @@ const initialState = {
   surname: '',
   jobPosition: '',
   avatarBase64: '',
-  avatarBgColor: 'rgb(237, 242, 247)',
+  avatarBgColor: '#edf2f7',
 } as UserInfo;
 
 export const userInfoSlice = createSlice({

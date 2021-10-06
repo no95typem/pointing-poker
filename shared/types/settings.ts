@@ -27,9 +27,8 @@ export interface ISettingsComponentData {
 
 export interface ISettingsData {
   localSettings: ISettings;
-  setLocalSettings: (
-    name: string,
-    value: string | boolean | CardData[] | string[] | number,
-  ) => void;
+  setLocalSettings: (name: string, value: SettingsValue) => void;
   isGameStage?: boolean;
 }
+
+export type SettingsValue = string | boolean | CardData[] | string[] | number;

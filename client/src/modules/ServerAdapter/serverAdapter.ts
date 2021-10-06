@@ -29,7 +29,7 @@ import { showKickDialog } from '../../helpers/showKickDialog';
 import { CSMsgConnToSess } from '../../../../shared/types/cs-msgs/msgs/cs-conn-to-sess';
 import { CSMsgCreateSession } from '../../../../shared/types/cs-msgs/msgs/cs-create-sess';
 import { SCMsgNewConnection } from '../../../../shared/types/sc-msgs/msgs/sc-msg-new-connection';
-import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { INotification, addNotifRec } from '../../redux/slices/notifications';
 import { CSMSGNewConnectionResponse } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-new-connection-response';
 import { CSMsgEndGame } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-end-game';
 import { ISettings } from '../../../../shared/types/settings';
@@ -45,6 +45,8 @@ import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
 import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
 import { CSMSgToggleResultsVisibility } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
+import { chatSound } from '../../helpers/chatSound';
+import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 
 export interface IKickArgs {
   targetId: number;
@@ -66,7 +68,7 @@ class ServerAdapter {
   }
 
   private handleWSErrorOrClose() {
-    console.log('err');
+    console.error('ws err');
     store.dispatch(setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
 
     if (this.ws) {
@@ -90,7 +92,7 @@ class ServerAdapter {
     try {
       (this.ws as WebSocket).send(JSON.stringify(msg));
     } catch (err) {
-      console.log(err);
+      if (!IS_PROD) console.error(err);
       this.handleSendError();
     }
   };
@@ -139,11 +141,10 @@ class ServerAdapter {
   /* OBEY THE SERVER */
   private obeyTheServer = (e: MessageEvent) => {
     try {
-      // console.log(e.data);
       const parsed = JSON.parse(e.data);
       const purified = purify(parsed);
 
-      console.log(`received msg, cipher:`, purified);
+      if (!IS_PROD) console.log(`received msg, cipher:`, purified);
 
       if ('cipher' in purified) {
         if (
@@ -197,13 +198,14 @@ class ServerAdapter {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       // TODO (no95typem)
     }
   };
 
   private handleVotekick = (msg: SCMsgVotekick) => {
     const { targetId, initId } = msg.body;
+
     showKickDialog(targetId, initId);
   };
 
@@ -220,11 +222,12 @@ class ServerAdapter {
       needToShow: true,
     };
 
-    store.dispatch(notifSlice.actions.addNotifRec(notification));
+    store.dispatch(addNotifRec(notification));
   }
 
   private handleSCMsgNewConnection(msg: SCMsgNewConnection) {
     const state = store.getState();
+
     const isExist = Object.values(state.alerts).some(
       val =>
         val.specialType === 'new-connection' &&
@@ -240,13 +243,27 @@ class ServerAdapter {
       needToShow: true,
       addData: msg.m,
     };
-    store.dispatch(notifSlice.actions.addNotifRec(notification));
+    store.dispatch(addNotifRec(notification));
   }
 
   private handleSCMsgUpdateState(msg: CSMsgUpdateState) {
     if (msg.update.stage) {
       store.dispatch(removeLoad(KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE));
     }
+
+    if (msg.update.game) {
+      const { game } = store.getState().session;
+
+      if (
+        game?.roundState !== ROUND_STATES.IN_PROCESS &&
+        msg.update.game.roundState === ROUND_STATES.IN_PROCESS
+      ) {
+        msg.update.game.roundStartTime = Date.now();
+      } else if (game && msg.update.game.roundStartTime) {
+        msg.update.game.roundStartTime = game.roundStartTime;
+      }
+    }
+
     store.dispatch(
       sessionSlice.actions.dang_updSessStateFromServer(msg.update),
     );
@@ -306,26 +323,33 @@ class ServerAdapter {
 
   private handleSCMsgChatMsg(msg: SCMsgChatMsgsChanged) {
     const state = store.getState();
+
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
+
     const { isVisible: isChatVisible } = state.chat;
+
     const { command, update } = msg.body;
 
     switch (command) {
       case 'A':
-        Object.values(update).forEach(chatMsg => {
+        const chatMsgs = Object.values(update);
+
+        chatMsgs.forEach(chatMsg => {
+          chatMsg.isViewed = isChatVisible;
+        });
+
+        chatMsgs.forEach(chatMsg => {
           if (
             chatMsg.clientTime &&
             state.session.clientId === chatMsg.memberId
           ) {
+            chatMsg.isViewed = true;
             delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
           }
         });
 
-        Object.values(update).forEach(
-          chatMsg => (chatMsg.isViewed = isChatVisible),
-        );
-
         Object.assign(chat.msgs, update);
+        chatSound(update);
         break;
       case 'D':
         Object.keys(update).forEach(key => delete chat.msgs[key]);
@@ -333,7 +357,6 @@ class ServerAdapter {
       default:
         break;
     }
-
     store.dispatch(sessionSlice.actions.dang_updSessStateFromServer({ chat }));
   }
   /* / OBEY THE SERVER */
@@ -341,6 +364,7 @@ class ServerAdapter {
   /* ACTIONS */
   connToLobby = () => {
     const state = store.getState();
+
     const url = state.homePage.lobbyURL;
 
     if (!url) {
@@ -350,20 +374,24 @@ class ServerAdapter {
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      store.dispatch(addNotifRec(notification));
 
       return;
     }
 
     this.controlKey = url;
+
     const token = this.lastToken; //|| getCookieValByName('lastToken');
+
     const msg = new CSMsgConnToSess({
       info: state.userInfo,
       role: state.homePage.lastUserRole,
       sessId: state.homePage.lobbyURL,
       token,
     });
+
     this.send(msg);
+
     store.dispatch(
       setGLoadByKey({
         loadKey: KNOWN_LOADS_KEYS.CONNECTING_TO_LOBBY,
@@ -374,12 +402,15 @@ class ServerAdapter {
 
   createSess = () => {
     const state = store.getState();
+
     this.controlKey = genUniqId();
+
     const msg = new CSMsgCreateSession({
       controlKey: this.controlKey,
       userInfo: state.userInfo,
       settings: state.session.gSettings,
     });
+
     this.send(msg);
     store.dispatch(
       setGLoadByKey({
@@ -405,7 +436,7 @@ class ServerAdapter {
         needToShow: true,
       };
 
-      store.dispatch(notifSlice.actions.addNotifRec(notification));
+      store.dispatch(addNotifRec(notification));
 
       return;
     }
@@ -438,7 +469,7 @@ class ServerAdapter {
           needToShow: true,
         };
 
-        store.dispatch(notifSlice.actions.addNotifRec(notification));
+        store.dispatch(addNotifRec(notification));
       }
 
       store.dispatch(
@@ -449,6 +480,7 @@ class ServerAdapter {
     }
 
     this.controlKey = undefined;
+
     const msg = new CSMsgDisconFromSess();
 
     this.send(msg);
@@ -486,22 +518,26 @@ class ServerAdapter {
 
   tryKick = (args: IKickArgs) => {
     const { targetId, decision, initId } = args;
+
     const state = store.getState();
 
     if (targetId === state.session.clientId || targetId === DEALER_ID) return;
 
     const isUserDealer = state.session.clientId === DEALER_ID;
 
-    const initiation = !initId && isUserDealer;
+    const force = !initId && isUserDealer;
 
-    const msg =
-        initiation
-        ? new CSMsgForceKick(targetId)
-        : new CSMsgVotekick(targetId, decision);
+    const msg = force
+      ? new CSMsgForceKick(targetId)
+      : new CSMsgVotekick({
+          target: targetId,
+          decision,
+          isAnswer: !!(initId !== undefined),
+        });
 
     const members = OBJ_PROCESSOR.deepClone(state.session.members);
 
-    if (decision === true && initiation) {
+    if (decision === true && force) {
       if (isUserDealer) members[targetId].userState = USER_STATES.KICKED;
 
       members[targetId].isSynced = false;
@@ -516,11 +552,13 @@ class ServerAdapter {
 
   sendChatMsg = (text: string) => {
     const state = store.getState();
+
     const memberId = state.session.clientId;
 
     if (memberId === undefined) return false;
 
     const time = Date.now();
+
     const chat = OBJ_PROCESSOR.deepClone(state.session.chat);
 
     const chatMsg: ChatMsg = {
@@ -544,6 +582,7 @@ class ServerAdapter {
     const synced = setSynced(update, false);
 
     const msg = new CSMsgUpdateState(update);
+
     this.send(msg);
 
     store.dispatch(sessionSlice.actions.dang_updSessStateFromClient(synced));
@@ -551,21 +590,25 @@ class ServerAdapter {
 
   pickCard = (val: string | undefined) => {
     const msg = new CSMsgPick(val);
+
     this.send(msg);
   };
 
   startRound = () => {
     const msg = new CSMsgStartRound();
+
     this.send(msg);
   };
 
   stopRound = () => {
     const msg = new CSMsgStopRound();
+
     this.send(msg);
   };
 
   nextIssue = () => {
     const msg = new CSMsgNextIssue();
+
     this.send(msg);
   };
 
@@ -576,6 +619,7 @@ class ServerAdapter {
       const msg = new CSMSgToggleResultsVisibility(
         !state.session.game.isResultsVisible,
       );
+
       this.send(msg);
     }
   };

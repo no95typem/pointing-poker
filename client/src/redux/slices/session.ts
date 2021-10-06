@@ -13,11 +13,11 @@ import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-process
 import { readWbFromFile } from '../../helpers/readWorksheet';
 import { workbookToDeepObj } from '../../helpers/deep-obj-wb-converters';
 import { SESSION_STAGES } from '../../../../shared/types/session/state/stages';
-import { notifSlice } from './notifications';
+import { addNotifRec } from './notifications';
 import { loadFiles } from '../../helpers/loadFiles';
 import { importIssuesFromWorkbook } from '../../helpers/read-issues-from-wb';
 import { calcNextIssueId } from '../../helpers/calcNextIssueId';
-import { saveObjToWb } from '../../helpers/saveState';
+import { saveArrayToWb, saveObjToWb } from '../../helpers/saveState';
 
 const initialState = SESSION_CLIENT_INIT_STATE;
 
@@ -97,10 +97,10 @@ export const tryLoadSessionFromFile = createAsyncThunk(
         );
       })
       .catch((err: Error) => {
-        console.log(err);
+        console.error(err);
         setTimeout(() => {
           thunkAPI.dispatch(
-            notifSlice.actions.addNotifRec({
+            addNotifRec({
               status: 'error',
               text: `Uploaded file is corrupted: ${err.message}`,
               needToShow: true,
@@ -126,7 +126,7 @@ export const tryImportIssues = createAsyncThunk(
 
             if (issues.length === 0) {
               thunkAPI.dispatch(
-                notifSlice.actions.addNotifRec({
+                addNotifRec({
                   status: 'warning',
                   text: `Can't find issues in the imported file`,
                   needToShow: true,
@@ -158,7 +158,7 @@ export const tryImportIssues = createAsyncThunk(
               SERVER_ADAPTER.updSessState({ issues: newIssues });
 
               thunkAPI.dispatch(
-                notifSlice.actions.addNotifRec({
+                addNotifRec({
                   status: 'success',
                   text: `Issues import complete!`,
                   needToShow: false,
@@ -168,7 +168,7 @@ export const tryImportIssues = createAsyncThunk(
           })
           .catch(err => {
             thunkAPI.dispatch(
-              notifSlice.actions.addNotifRec({
+              addNotifRec({
                 status: 'error',
                 text: `Can't import issues: ${err.message}`,
                 needToShow: true,
@@ -190,16 +190,53 @@ export const trySaveSessionToFile = createAsyncThunk(
   async ({ filename, ext }: ISaveArgs, thunkAPI) => {
     try {
       const session = (thunkAPI.getState() as RootState).session;
-      const name = filename
-        ? `${filename}.${ext}`
-        : `pp-${session.name.value}.${ext}`;
+      const name = filename ? filename : `pp-${session.name.value}`;
+
+      const issues = OBJ_PROCESSOR.deepClone(session.issues.list);
+
+      const hrIssues = issues.map(iss => {
+        const hrIss: Record<string, unknown> = {
+          title: iss.title,
+          link: iss.link,
+          priority: iss.priority,
+          closed: iss.closed,
+          value: iss.value,
+        };
+
+        hrIss['VOTES, PCT: '] = undefined;
+
+        if (iss.stat) {
+          const votesCount = Object.keys(iss.stat.votes).length;
+
+          Object.entries(iss.stat.pct).forEach(([cardVal, rec]) => {
+            try {
+              const percent = ((rec.count / votesCount) * 100).toFixed(0);
+
+              hrIss[`${cardVal}-votes`] = rec.count;
+              hrIss[`${cardVal}-pct`] = percent;
+            } catch {
+              console.error('Error in percent calc for issue:', iss);
+            }
+          });
+        }
+
+        return hrIss;
+      });
 
       saveObjToWb(session as unknown as Record<string, unknown>, {
-        fileName: name,
+        fileName: `${name}.${ext}`,
         bookType: ext || 'xlsx',
       });
-    } catch {
-      // TODO
+
+      const issuesName = `${name}-issues-table`;
+
+      saveArrayToWb(hrIssues, {
+        sheetName: `${issuesName}`.slice(-31),
+        fileName: `${issuesName}.${ext}`,
+        bookType: ext || 'xlsx',
+      });
+    } catch (err) {
+      console.error(err);
     }
   },
 );

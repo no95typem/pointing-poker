@@ -1,7 +1,4 @@
-import { ChatIcon } from '@chakra-ui/icons';
-
-import logo from '../../assets/images/shared/logo.svg';
-
+import React from 'react';
 import {
   VisuallyHidden,
   Flex,
@@ -13,13 +10,18 @@ import {
   Box,
   Badge,
 } from '@chakra-ui/react';
-import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
+import { ChatIcon } from '@chakra-ui/icons';
+import logo from '../../assets/images/shared/logo.svg';
+
 import { useAppDispatch, useTypedSelector } from '../../redux/store';
 import { tryToToggleChatState } from '../../redux/slices/chat';
+
+import { ColorModeSwitcher } from '../../containers/ColorModeSwitcher/ColorModeSwitcher';
 import { AppMenu } from '../../containers/AppMenu/AppMenu';
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
+
   const cMode = useColorMode();
 
   const toggleChat = (): void => {
@@ -27,6 +29,7 @@ export const Header = (): JSX.Element => {
   };
 
   const { msgs } = useTypedSelector(state => state.session.chat);
+
   const unreadMsgs = Object.values(msgs).filter(msg => !msg.isViewed);
 
   return (
@@ -37,12 +40,12 @@ export const Header = (): JSX.Element => {
       justifyContent="space-between"
       px="2"
     >
-      <HStack h="100%" fontFamily="handwrite">
-        <Image src={logo} maxH="95%" />
-        <h1>
-          Pointing Poker
-          <VisuallyHidden>by no95typem, kaesid, vimbi</VisuallyHidden>
-        </h1>
+      <HStack h="100%" w="100%" fontFamily="handwrite">
+        <Image src={logo} maxH="100%" />
+          <h1>
+            Pointing Poker
+            <VisuallyHidden>by no95typem, kaesid, vimbi</VisuallyHidden>
+          </h1>
       </HStack>
 
       <HStack justifySelf="end">
@@ -69,6 +72,7 @@ export const Header = (): JSX.Element => {
         </Box>
         <Spacer />
         <AppMenu />
+        <Spacer />
       </HStack>
     </Flex>
   );

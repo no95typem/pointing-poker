@@ -14,9 +14,11 @@ import {
   Input,
   Text,
   ChakraProps,
+  CloseButton,
 } from '@chakra-ui/react';
 
 import { IIssueModalData } from '../../../../shared/types/session/issue/issue';
+import { ReactComponent as UndrawAddTasks } from '../../assets/images/undraw/add-tasks.svg';
 
 const IssueModal = (props: IIssueModalData): JSX.Element => {
   const { issue: issueData } = props;
@@ -51,13 +53,27 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
 
   return (
     <>
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+      <Modal
+        closeOnOverlayClick={false}
+        isCentered
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent>
+          <CloseButton
+            onClick={onClose}
+            style={{ position: 'absolute', top: '5px', right: '5px' }}
+          />
           <ModalHeader textAlign="center">Create Issue</ModalHeader>
-
           <ModalBody mb="20px">
             <Stack justify="space-around" align="stretch">
+              <Stack {...inputStackStyles}>
+                <UndrawAddTasks
+                  width="80%"
+                  style={{ margin: '0 auto', paddingLeft: '5%' }}
+                />
+              </Stack>
               <Stack {...inputStackStyles}>
                 <Text {...inputLabelStyles}>Title:</Text>
                 <Input
@@ -102,14 +118,14 @@ const IssueModal = (props: IIssueModalData): JSX.Element => {
               justifyContent="space-between"
             >
               <Button padding="0 50px" variant="outline" onClick={onClose}>
-                No
+                Cancel
               </Button>
               <Button
                 border="1px solid black"
                 onClick={() => addNewIssue(activeIssue)}
                 padding="0 50px"
               >
-                Yes
+                Create
               </Button>
             </ButtonGroup>
           </ModalFooter>

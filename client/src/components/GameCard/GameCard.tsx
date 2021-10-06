@@ -61,6 +61,7 @@ const GameCard = (props: ICardData): JSX.Element => {
         maxH="50%"
         objectFit="contain"
         alt={value}
+        borderRadius={props.size === 'xs' ? 'sm' : 'md'}
       />
     );
   } else {
@@ -117,9 +118,9 @@ const GameCard = (props: ICardData): JSX.Element => {
               position="absolute"
               aria-label="edit"
               background="transparent"
-              top="0"
-              left="0"
-              size="lg"
+              top="2px"
+              left="2px"
+              size="md"
               icon={<ImPencil />}
               onClick={edit && (() => edit(value))}
             />
@@ -127,9 +128,9 @@ const GameCard = (props: ICardData): JSX.Element => {
               position="absolute"
               aria-label="delete"
               background="transparent"
-              top="0"
-              right="0"
-              size="lg"
+              top="2px"
+              right="2px"
+              size="md"
               style={{ marginTop: '0' }}
               icon={<CloseIcon />}
               onClick={deleteCard && (() => deleteCard(value))}

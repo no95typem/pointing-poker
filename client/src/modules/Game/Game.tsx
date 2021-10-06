@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Flex, useMediaQuery } from '@chakra-ui/react';
 
-import { useTypedSelector } from '../../redux/store';
+import { useAppDispatch, useTypedSelector } from '../../redux/store';
 
 import useSessionData from '../../hooks/useSessionData';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
@@ -17,6 +17,8 @@ import GameInfo, { IGameInfo } from '../../containers/GameInfo/GameInfo';
 import JoinGameLink from '../../containers/JoinGameLink/JoinGameLink';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 import { useRef } from 'react';
+import { useEffect } from 'react';
+import { fetchQuote } from '../../redux/slices/quotes';
 
 const Game = (): JSX.Element => {
   const session = useTypedSelector(state => state.session);
@@ -26,6 +28,14 @@ const Game = (): JSX.Element => {
   const [isLargerThen900] = useMediaQuery('(min-width: 900px)');
 
   const ref = useRef<HTMLDivElement>(null!);
+
+  const quote = useTypedSelector(state => state.quote.data);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchQuote());
+  });
 
   if (!sessionData) return <></>;
 
@@ -39,8 +49,6 @@ const Game = (): JSX.Element => {
   } = sessionData;
 
   const { gameState, gameData } = gameStateData;
-
-  console.log(session);
 
   const isRoundStarted = !!(
     gameState && gameState.roundState === ROUND_STATES.IN_PROCESS
@@ -144,7 +152,7 @@ const Game = (): JSX.Element => {
           h="100%"
           // minH="400px"
         >
-          <GameInfo {...gameInfo} />
+          <GameInfo {...gameInfo} quoteData={quote} />
         </Box>
       </Flex>
       {isLargerThen900 && <Box />}

@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 
 import {
   ICardData,
-  ICardsRound,
+  ICardsGameData,
 } from '../../../../../shared/types/session/card';
 import { gameCardsSettings } from '../../../helpers/swiperSettings';
 
@@ -11,7 +11,7 @@ import GameCard from '../../GameCard/GameCard';
 import SessionItemRadioCard from '../../SessionItemRadioCard/SessionItemRadioCard';
 
 interface IChoosingCards {
-  cardsData: ICardsRound;
+  cardsData: ICardsGameData;
   radioProps: UseRadioGroupReturn;
 }
 

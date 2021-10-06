@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 
 import { useDisclosure } from '@chakra-ui/react';
 
-import { INotification, notifSlice } from '../../redux/slices/notifications';
+import {
+  addNotifRec,
+  INotification,
+  notifSlice,
+} from '../../redux/slices/notifications';
 import { useAppDispatch } from '../../redux/store';
 import { CARDS_DECKS } from '../../presets';
 
@@ -70,7 +74,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         needToShow: true,
       };
 
-      dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(addNotifRec(notification));
 
       return;
     }
@@ -107,7 +111,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         cardsCopy.push(activeCard);
       }
 
-      cardsCopy.sort((s, t) => s.value.localeCompare(t.value));
+      // cardsCopy.sort((s, t) => s.value.localeCompare(t.value));
 
       setLocalSettings('cards', cardsCopy);
 
@@ -116,18 +120,6 @@ const GameCards = (props: ICardsData): JSX.Element => {
   };
 
   const deleteCard = (value: string): void => {
-    if (cards.length <= 2) {
-      const notification: INotification = {
-        status: 'warning',
-        text: `Can't be less than a two cards!`,
-        needToShow: true,
-      };
-
-      dispatch(notifSlice.actions.addNotifRec(notification));
-
-      return;
-    }
-
     const card = findEditedCard(value);
 
     if (card) {
@@ -152,12 +144,12 @@ const GameCards = (props: ICardsData): JSX.Element => {
   const setCardsSet = (cardsValue: string): void => {
     if (!cardsValue) {
       const notification: INotification = {
-        status: 'warning',
+        status: 'error',
         text: `Field can't be empty!`,
         needToShow: true,
       };
 
-      dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(addNotifRec(notification));
 
       return;
     }
@@ -167,12 +159,12 @@ const GameCards = (props: ICardsData): JSX.Element => {
     const values = cardsValue.split(' ');
 
     const isRepeats = values.some(
-      value => values.indexOf(value) !== values.lastIndexOf(value),
+      value => value && values.indexOf(value) !== values.lastIndexOf(value),
     );
 
     if (isRepeats) {
       const notification: INotification = {
-        status: 'warning',
+        status: 'error',
         text: `Card's values must be unique!`,
         needToShow: true,
       };
@@ -193,12 +185,12 @@ const GameCards = (props: ICardsData): JSX.Element => {
         needToShow: true,
       };
 
-      dispatch(notifSlice.actions.addNotifRec(notification));
+      dispatch(addNotifRec(notification));
 
       return;
     }
 
-    cards.sort((s, t) => s.value.localeCompare(t.value));
+    // cards.sort((s, t) => s.value.localeCompare(t.value));
 
     setLocalSettings('cards', cards);
 

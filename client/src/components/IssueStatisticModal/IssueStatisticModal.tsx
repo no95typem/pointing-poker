@@ -79,6 +79,7 @@ const IssueStatisticModal = (props: IStatisticModal): JSX.Element => {
       closeOnOverlayClick
       motionPreset="slideInBottom"
       size="3xl"
+      isCentered
     >
       <ModalOverlay />
       <ModalContent>

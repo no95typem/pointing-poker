@@ -11,6 +11,7 @@ import { ServerBoundary } from '../ServerBoundary/ServerBoundary';
 
 import './styles.scss';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { initDB } from './dbinit';
 
 export const App = () => {
   useEffect(() => {
@@ -21,6 +22,10 @@ export const App = () => {
     html.style.overflowX = 'hidden';
     html.style.width = '100%';
   });
+
+  useEffect(() => {
+    initDB();
+  }, []);
 
   return (
     <ErrorBoundary>

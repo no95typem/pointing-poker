@@ -1,6 +1,12 @@
-import { Box, Button, Flex, Text, useColorMode } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Button, Flex, Text, useColorMode } from '@chakra-ui/react';
 
-import { ICardsGame } from '../../../../shared/types/session/card';
+import { ReactComponent as UndrawCoWorking } from '../../assets/images/undraw/co-working.svg';
+import { ReactComponent as UndrawChilling } from '../../assets/images/undraw/chilling.svg';
+import { ReactComponent as UndrawMeditation } from '../../assets/images/undraw/meditation.svg';
+
+import { getBorderStyles } from '../../constants';
+import { ICardsGame, ICardsRound } from '../../../../shared/types/session/card';
 import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 import {
   ISessionGameState,
@@ -9,22 +15,20 @@ import {
 import { Member } from '../../../../shared/types/session/member';
 import { USER_ROLES } from '../../../../shared/types/user/user-role';
 import { USER_STATES } from '../../../../shared/types/user/user-state';
-
-import { getBorderStyles } from '../../constants';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 import {
   calcPercentage,
   fullfillVotes,
 } from '../../../../shared/helpers/calcs/game-calcs';
+import { ISettings } from '../../../../shared/types/settings';
+import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
+import { IssueForRender } from '../../types/IssueForRender';
 import { StatisticsSliderSettings } from '../../helpers/swiperSettings';
 
 import { SERVER_ADAPTER } from '../../modules/ServerAdapter/serverAdapter';
 import GameCardsRound from '../GameCardsRound/GameCardsRound';
 import RoundControlButtons from '../RoundControlButtons/RoundControlButtons';
 import { StatisticsTable } from '../../components/StatisticsTable/StatisticsTable';
-import { ISettings } from '../../../../shared/types/settings';
-import { ISSUE_PRIORITIES } from '../../../../shared/types/session/issue/issue-priority';
-import { IssueForRender } from '../../types/IssueForRender';
 
 export interface IGameInfo {
   gameData: ICardsGame;
@@ -36,6 +40,7 @@ export interface IGameInfo {
   children?: JSX.Element;
   settings: ISettings;
   userId?: number;
+  quoteData?: { content: string; author: string };
 }
 
 const GameInfo = (props: IGameInfo): JSX.Element => {
@@ -49,13 +54,27 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
     children,
     settings,
     userId,
+    quoteData,
   } = props;
 
   const { isSynced, list: issues } = issuesData;
 
-  const { isPlayerDealer, isResultsVisible } = gameData;
+  const { isPlayerDealer, isResultsVisible, units, cards } = gameData;
 
   const cMode = useColorMode();
+
+  const [selectedCardValue, setSelectedCardValue] = useState('');
+
+  useEffect(() => {
+    if (
+      !gameState ||
+      !setSelectedCardValue ||
+      gameState.roundState === ROUND_STATES.ENDED
+    )
+      return;
+    setSelectedCardValue('');
+    // eslint-disable-next-line
+  }, [gameState?.roundState]);
 
   if (!gameState) return <></>;
 
@@ -82,6 +101,14 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
   const isCardsShouldBeHidden =
     isPlayerSpectator || (isPlayerDealer && !isDealerPlaying);
 
+  const pickCard = (value: string) => {
+    setSelectedCardValue(value);
+
+    SERVER_ADAPTER.pickCard(value);
+  };
+
+  const roundData: ICardsRound = { units, cards, pickCard, selectedCardValue };
+
   const renderStats = (): JSX.Element => {
     // clone real issue or create fake
     const realIssue = OBJ_PROCESSOR.deepClone(
@@ -98,16 +125,27 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
     };
 
     if (!isRoundAwaitStart) {
-      if (gameState.isResultsVisible) {
+      if (gameState.isResultsVisible || isPlayerDealer) {
         const votes = fullfillVotes(members, gameState, isDealerPlaying);
         const pct = calcPercentage(votes);
         issue.stat = { votes, pct };
       } else {
-        issue.replaceElem = <Text>Dealer doesn't unravel results yet</Text>;
+        issue.replaceElem = (
+          <Flex align="center">
+            <Text>Results are not available yet</Text>
+            <UndrawMeditation style={{ height: '100%' }} />
+          </Flex>
+        );
       }
     } else {
       if (realIssue) {
-        issue.replaceElem = <Text>Waiting for round start.</Text>;
+        issue.replaceElem = isPlayerDealer ? (
+          <Text fontSize="sm" textAlign="center">
+            Press "run round" to start. Or you can rearrange your issues first.
+          </Text>
+        ) : (
+          <Text>Waiting for round start.</Text>
+        );
       } else {
         issue.replaceElem = (
           <Text>It's time to end the game or create a new issue.</Text>
@@ -162,12 +200,29 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
               </Button>
             )}
           </>
+        ) : quoteData ? (
+          <Text
+            fontFamily="handwrite"
+            textAlign="center"
+            w="100%"
+          >{`${quoteData.content}, ${quoteData.author}`}</Text>
         ) : (
           <Button visibility="hidden" />
         )}
       </Flex>
       {renderStats()}
-      {renderCards ? <GameCardsRound {...gameData} /> : <Box h="220px" />}
+      {renderCards ? (
+        <GameCardsRound {...roundData} />
+      ) : (
+        <Flex h="220px" w="100%" justify="center">
+          {gameState.roundState === ROUND_STATES.AWAIT_START &&
+            (Math.random() > 0.5 ? (
+              <UndrawCoWorking style={{ maxHeight: '100%' }} />
+            ) : (
+              <UndrawChilling style={{ maxHeight: '100%' }} />
+            ))}
+        </Flex>
+      )}
       {children}
     </Flex>
   );

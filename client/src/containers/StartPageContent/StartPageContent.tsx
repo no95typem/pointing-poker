@@ -21,7 +21,7 @@ import { MAX_BUTTON_WIDTH, MAX_CONTENT_WIDTH } from '../../constants';
 import { ReactComponent as UndrawScrumBoard } from '../../assets/images/undraw/scrum-board.svg';
 import { ReactComponent as UndrawNewIdeas } from '../../assets/images/undraw/new-ideas.svg';
 import { ReactComponent as UndrawLogin } from '../../assets/images/undraw/login.svg';
-import { INotification, notifSlice } from '../../redux/slices/notifications';
+import { addNotifRec, INotification } from '../../redux/slices/notifications';
 import { FaYoutube } from 'react-icons/fa';
 
 interface IStartPageContentProps {
@@ -122,7 +122,7 @@ const StartPageContent = ({
                         needToShow: true,
                       };
 
-                      dispatch(notifSlice.actions.addNotifRec(notification));
+                      dispatch(addNotifRec(notification));
 
                       return;
                     }
@@ -151,7 +151,7 @@ const StartPageContent = ({
         {isLargerThan860 && <UndrawScrumBoard style={{ maxWidth: '50%' }} />}
       </Flex>
       <Link
-        href=""
+        href="https://youtu.be/l6XiCAIEGiE"
         display="flex"
         alignItems="center"
         gridGap="1"

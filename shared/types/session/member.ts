@@ -15,6 +15,7 @@ export interface IMemberData {
   isItYou: boolean;
   isRoundStarted: boolean;
   kickPlayer?: (id: number, name: string) => void;
+  isPlayerSpectator?: boolean;
 }
 
 export interface IUserCards {
@@ -23,4 +24,5 @@ export interface IUserCards {
   isGameStage: boolean;
   isVotersView?: boolean;
   isDealerPlaying: boolean;
+  isPlayerSpectator: boolean;
 }

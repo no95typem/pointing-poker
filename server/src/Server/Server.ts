@@ -123,7 +123,6 @@ export class PointingPokerServer {
   private async watchdog() {
     const checks = [...this.connections].map(ws => this.checkConnection(ws)); // this.connections.add(ws);
 
-    // console.log(`watchdog with ${checks.length}`);
     if (checks.length === 0) {
       setTimeout(() => this.watchdog(), 10_000);
 

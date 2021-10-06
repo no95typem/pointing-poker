@@ -20,6 +20,7 @@ import { ChakraLogo } from '../../components/ChakraLogo/ChakraLogo';
 import { ReactComponent as UndrawImageFocus } from '../../assets/images/undraw/image-focus.svg';
 import { ReactComponent as RSSLogo } from '../../assets/images/shared/rss-logo.svg';
 import { NotificationPopover } from '../NotificationPopover/NotificationPopover';
+import { BsChatQuote } from 'react-icons/bs';
 
 export const Footer = (): JSX.Element => {
   const cMode = useColorMode();
@@ -80,7 +81,7 @@ export const Footer = (): JSX.Element => {
                   </ListItem>
                   <ListItem>
                     <Link
-                      href=""
+                      href="https://youtu.be/l6XiCAIEGiE"
                       display="flex"
                       alignItems="center"
                       gridGap="1"
@@ -106,7 +107,7 @@ export const Footer = (): JSX.Element => {
                   </ListItem>
                   <ListItem>
                     <Link
-                      href=" https://undraw.co"
+                      href="https://undraw.co"
                       display="flex"
                       alignItems="center"
                       gridGap="1"
@@ -115,6 +116,19 @@ export const Footer = (): JSX.Element => {
                     >
                       <UndrawImageFocus height="1rem" />
                       <Text>illustrations from unDraw</Text>
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link
+                      href="https://github.com/lukePeavey/quotable"
+                      display="flex"
+                      alignItems="center"
+                      gridGap="1"
+                      flexDirection="row"
+                      isExternal
+                    >
+                      <BsChatQuote />
+                      <Text>quotes from quotable</Text>
                     </Link>
                   </ListItem>
                 </UnorderedList>

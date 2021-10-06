@@ -22,7 +22,8 @@ export const showKickDialog = (targetId: number, initId?: number) => {
 
   const state = store.getState() as RootState;
 
-  const initMember = initId ? state.session.members[initId] : undefined;
+  const initMember =
+    initId !== undefined ? state.session.members[initId] : undefined;
   const targetMemeber = state.session.members[targetId] || undefined;
 
   const initMemberName = initMember

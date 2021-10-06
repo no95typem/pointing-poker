@@ -23,6 +23,8 @@ import { ImPencil } from 'react-icons/im';
 import { ISessionNameHandling } from '../../../../shared/types/session/name';
 import ChakraLoader from '../../components/Loader/ChakraLoader';
 import { LockIcon } from '@chakra-ui/icons';
+import { addNotifRec, INotification } from '../../redux/slices/notifications';
+import { store } from '../../redux/store';
 
 const EditableHeader = (props: ISessionNameHandling) => {
   const { name, changeValue, isPlayerDealer } = props;
@@ -34,6 +36,18 @@ const EditableHeader = (props: ISessionNameHandling) => {
   const [topicView, setTopicView] = useState(value);
 
   const updateTopic = (): void => {
+    if (!topicView) {
+      const notification: INotification = {
+        status: 'error',
+        text: `Session's name can't be empty!`,
+        needToShow: true,
+      };
+
+      store.dispatch(addNotifRec(notification));
+
+      return;
+    }
+
     changeValue(topicView);
 
     onClose();
@@ -74,7 +88,7 @@ const EditableHeader = (props: ISessionNameHandling) => {
 
       {!isSynced && <ChakraLoader />}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign="center">Topic:</ModalHeader>
