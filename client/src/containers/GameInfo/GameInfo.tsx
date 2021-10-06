@@ -39,6 +39,7 @@ export interface IGameInfo {
   children?: JSX.Element;
   settings: ISettings;
   userId?: number;
+  quoteData?: { content: string; author: string };
 }
 
 const GameInfo = (props: IGameInfo): JSX.Element => {
@@ -52,6 +53,7 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
     children,
     settings,
     userId,
+    quoteData,
   } = props;
 
   const { isSynced, list: issues } = issuesData;
@@ -176,6 +178,11 @@ const GameInfo = (props: IGameInfo): JSX.Element => {
               </Button>
             )}
           </>
+        ) : quoteData ? (
+          <Text
+            fontFamily="handwrite"
+            textAlign="center"
+          >{`${quoteData.content}, ${quoteData.author}`}</Text>
         ) : (
           <Button visibility="hidden" />
         )}

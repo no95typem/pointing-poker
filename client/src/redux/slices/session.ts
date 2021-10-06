@@ -212,7 +212,7 @@ export const trySaveSessionToFile = createAsyncThunk(
             try {
               const percent = ((rec.count / votesCount) * 100).toFixed(0);
 
-              hrIss[cardVal] = rec.count;
+              hrIss[`${cardVal}-votes`] = rec.count;
               hrIss[`${cardVal}-pct`] = percent;
             } catch {
               console.error('Error in percent calc for issue:', iss);
