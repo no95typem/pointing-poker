@@ -64,7 +64,7 @@ export const importIssuesFromWorkbook = (wb: XLSX.WorkBook) => {
     });
   });
 
-  return issues;
+  return issues.filter(iss => iss.title);
 };
 
 export const exportTemplate = () => {

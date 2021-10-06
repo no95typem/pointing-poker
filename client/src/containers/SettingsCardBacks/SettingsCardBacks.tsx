@@ -17,6 +17,7 @@ import CardbackModal, {
 } from '../../components/CardbackModal/CardbackModal';
 import Cardback from '../../components/Cardback/Cardback';
 import SessionItemRadioCard from '../../components/SessionItemRadioCard/SessionItemRadioCard';
+import { ReactComponent as UndrawDesignFeedback } from '../../assets/images/undraw/design-feedback.svg';
 
 export interface ICardbacksData {
   cardbacksBase64?: string[];
@@ -67,12 +68,13 @@ const SettingsCardBacks = (props: ICardbacksData): JSX.Element => {
         align="flex-end"
       >
         <Flex
-          maxW="100%"
+          width="100%"
           wrap="wrap"
           align="center"
-          justify="center"
+          justify="space-between"
           gridGap={2}
         >
+          <UndrawDesignFeedback height="60px" />
           <Button onClick={onOpen} border="1px solid black">
             Add cardback
           </Button>

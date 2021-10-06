@@ -14,6 +14,7 @@ export interface ILoadImgForm {
 export interface ILoadCardImgParams {
   imgParams: ILoadImgForm;
   card: IActiveCard;
+  units?: string;
 }
 
 const LoadCardCustomImage = (props: ILoadCardImgParams) => {
@@ -43,7 +44,12 @@ const LoadCardCustomImage = (props: ILoadCardImgParams) => {
     changeCardValue({ ...activeCard, base64: '' });
   };
 
-  const imageUploadData: IUploadData = { uploadImage, resetImage, src: base64 };
+  const imageUploadData: IUploadData = {
+    uploadImage,
+    resetImage,
+    src: base64,
+    cardData: activeCard,
+  };
 
   return <LoadUserImageUi {...imageUploadData} />;
 };

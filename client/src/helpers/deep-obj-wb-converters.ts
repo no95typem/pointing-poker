@@ -18,7 +18,7 @@ export const deepObjToWorkbook = (
   args: IDeepObjToWorkbookArgs,
 ): XLSX.WorkBook => {
   const { obj, name, inWb, flag, copy } = args;
-  console.log(name);
+
   const target: Record<string, unknown> = {};
   Object.assign(target, copy ? OBJ_PROCESSOR.deepClone(obj) : obj); // assign for [] -> {}
   const wb = inWb ?? XLSX.utils.book_new();

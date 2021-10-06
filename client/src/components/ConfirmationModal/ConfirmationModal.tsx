@@ -10,9 +10,11 @@ import {
   ModalFooter,
   ModalBody,
   Text,
+  Flex,
 } from '@chakra-ui/react';
 
 import { IConfirmation } from '../../../../shared/types/session/state/session-state';
+import { ReactComponent as UndrawConfirmation } from '../../assets/images/undraw/confirmation.svg';
 
 const ConfirmationModal = (props: IConfirmation): JSX.Element => {
   const { confirmData, isOpen, onClose } = props;
@@ -20,13 +22,21 @@ const ConfirmationModal = (props: IConfirmation): JSX.Element => {
   const { description, action } = confirmData;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Confirm Action:</ModalHeader>
+        <ModalHeader textAlign="center" fontFamily="handwrite">
+          Confirm Action
+        </ModalHeader>
 
-        <ModalBody mb="20px">
-          <Text>{`Do you really want to ${description}?`}</Text>
+        <ModalBody>
+          <Flex gridGap={8} direction="column" align="center">
+            <Text
+              fontSize="lg"
+              fontFamily="handwrite"
+            >{`Do you really want to ${description}?`}</Text>
+            <UndrawConfirmation style={{ width: '50%' }} />
+          </Flex>
         </ModalBody>
 
         <ModalFooter>

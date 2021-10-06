@@ -40,8 +40,6 @@ const Game = (): JSX.Element => {
 
   const { gameState, gameData } = gameStateData;
 
-  console.log(session);
-
   const isRoundStarted = !!(
     gameState && gameState.roundState === ROUND_STATES.IN_PROCESS
   );

@@ -45,6 +45,7 @@ import { CSMsgStopRound } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-
 import { CSMsgNextIssue } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-next-issue';
 import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
 import { CSMSgToggleResultsVisibility } from '../../../../shared/types/cs-msgs/msgs/dealer/cs-msg-toggle-results-visibility';
+import { ROUND_STATES } from '../../../../shared/types/session/round/round-state';
 
 export interface IKickArgs {
   targetId: number;
@@ -66,7 +67,7 @@ class ServerAdapter {
   }
 
   private handleWSErrorOrClose() {
-    console.log('err');
+    console.error('ws err');
     store.dispatch(setErrorByKey(KNOWN_ERRORS_KEYS.NO_CONNECTION_TO_SERVER));
 
     if (this.ws) {
@@ -90,7 +91,7 @@ class ServerAdapter {
     try {
       (this.ws as WebSocket).send(JSON.stringify(msg));
     } catch (err) {
-      console.log(err);
+      if (!IS_PROD) console.error(err);
       this.handleSendError();
     }
   };
@@ -139,11 +140,10 @@ class ServerAdapter {
   /* OBEY THE SERVER */
   private obeyTheServer = (e: MessageEvent) => {
     try {
-      // console.log(e.data);
       const parsed = JSON.parse(e.data);
       const purified = purify(parsed);
 
-      console.log(`received msg, cipher:`, purified);
+      if (!IS_PROD) console.log(`received msg, cipher:`, purified);
 
       if ('cipher' in purified) {
         if (
@@ -197,7 +197,7 @@ class ServerAdapter {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       // TODO (no95typem)
     }
   };
@@ -247,6 +247,20 @@ class ServerAdapter {
     if (msg.update.stage) {
       store.dispatch(removeLoad(KNOWN_LOADS_KEYS.SESSION_STAGE_CHANGE));
     }
+
+    if (msg.update.game) {
+      const { game } = store.getState().session;
+
+      if (
+        game?.roundState !== ROUND_STATES.IN_PROCESS &&
+        msg.update.game.roundState === ROUND_STATES.IN_PROCESS
+      ) {
+        msg.update.game.roundStartTime = Date.now();
+      } else if (game && msg.update.game.roundStartTime) {
+        msg.update.game.roundStartTime = game.roundStartTime;
+      }
+    }
+
     store.dispatch(
       sessionSlice.actions.dang_updSessStateFromServer(msg.update),
     );
@@ -312,18 +326,21 @@ class ServerAdapter {
 
     switch (command) {
       case 'A':
-        Object.values(update).forEach(chatMsg => {
+        const chatMsgs = Object.values(update);
+
+        chatMsgs.forEach(chatMsg => {
+          chatMsg.isViewed = isChatVisible;
+        });
+
+        chatMsgs.forEach(chatMsg => {
           if (
             chatMsg.clientTime &&
             state.session.clientId === chatMsg.memberId
           ) {
+            chatMsg.isViewed = true;
             delete chat.msgs[`${chatMsg.clientTime}-${chatMsg.memberId}`];
           }
         });
-
-        Object.values(update).forEach(
-          chatMsg => (chatMsg.isViewed = isChatVisible),
-        );
 
         Object.assign(chat.msgs, update);
         break;
@@ -492,16 +509,19 @@ class ServerAdapter {
 
     const isUserDealer = state.session.clientId === DEALER_ID;
 
-    const initiation = !initId && isUserDealer;
+    const force = !initId && isUserDealer;
 
-    const msg =
-        initiation
-        ? new CSMsgForceKick(targetId)
-        : new CSMsgVotekick(targetId, decision);
+    const msg = force
+      ? new CSMsgForceKick(targetId)
+      : new CSMsgVotekick({
+          target: targetId,
+          decision,
+          isAnswer: !!(initId !== undefined),
+        });
 
     const members = OBJ_PROCESSOR.deepClone(state.session.members);
 
-    if (decision === true && initiation) {
+    if (decision === true && force) {
       if (isUserDealer) members[targetId].userState = USER_STATES.KICKED;
 
       members[targetId].isSynced = false;

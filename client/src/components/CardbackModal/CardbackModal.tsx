@@ -80,16 +80,16 @@ const CardbackModal = (props: ICardBackModal): JSX.Element => {
   };
 
   const loadImgData: ILoadCardbackParams = {
-    imgParams: {
-      // TODO remove, not needed anymore
-      width: 200,
-      height: 300,
-    },
     cardback: { activeCardback, setActiveCardback },
   };
 
   return (
-    <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isCentered
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <ModalOverlay />
 
       <ModalContent>

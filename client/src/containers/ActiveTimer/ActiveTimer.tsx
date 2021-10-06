@@ -30,8 +30,6 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
           const shortedDelay =
             1000 - (showedEstTimeInMS - realEstTimeInS * 1000);
 
-          // console.log(showedEstTimeInMS, realEstTimeInS, shortedDelay);
-
           planTick(shortedDelay);
         }
       }, delay);
@@ -46,8 +44,6 @@ export const ActiveTimer = (props: IGameTimerProps): JSX.Element => {
       }
     };
   });
-
-  // console.log(estTime);
 
   return <PassiveTimer settings={settings} time={estTime} />;
 };

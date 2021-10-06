@@ -107,7 +107,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
         cardsCopy.push(activeCard);
       }
 
-      cardsCopy.sort((s, t) => s.value.localeCompare(t.value));
+      // cardsCopy.sort((s, t) => s.value.localeCompare(t.value));
 
       setLocalSettings('cards', cardsCopy);
 
@@ -198,7 +198,7 @@ const GameCards = (props: ICardsData): JSX.Element => {
       return;
     }
 
-    cards.sort((s, t) => s.value.localeCompare(t.value));
+    // cards.sort((s, t) => s.value.localeCompare(t.value));
 
     setLocalSettings('cards', cards);
 

@@ -1,28 +1,35 @@
-import React from 'react';
-import { Box, Button, Stack, Image } from '@chakra-ui/react';
+import { Button, Checkbox, Flex } from '@chakra-ui/react';
+import GameCard from '../GameCard/GameCard';
+import Cardback from '../Cardback/Cardback';
+import { CardData } from '../../../../shared/types/session/card';
 
 export interface IUploadData {
   resetImage: () => void;
   uploadImage: () => void;
   src?: string;
+  cover?: boolean;
+  onToggleCover?: () => void;
+  cardData?: CardData;
+  units?: string;
 }
 
 const LoadUserImageUi = (props: IUploadData): JSX.Element => {
-  const { resetImage, uploadImage, src } = props;
+  const {
+    cover,
+    resetImage,
+    uploadImage,
+    src,
+    onToggleCover,
+    cardData,
+    units,
+  } = props;
 
   return (
-    <Box>
-      <Stack
-        direction="row"
-        align="center"
-        justify="space-between"
-        wrap="wrap"
-        style={{ gap: '20px', marginBottom: '10px' }}
-      >
+    <Flex direction="column" w="100%" align="center" gridGap={4}>
+      <Flex gridGap={2}>
         <Button w="130px" variant="outline" onClick={resetImage}>
           Remove Image
         </Button>
-
         <Button
           w="130px"
           variant="solid"
@@ -32,13 +39,18 @@ const LoadUserImageUi = (props: IUploadData): JSX.Element => {
         >
           Upload Image
         </Button>
-      </Stack>
-      {src && (
-        <Box mt="10px">
-          <Image m="0 auto" src={src}></Image>
-        </Box>
+      </Flex>
+      {onToggleCover && (
+        <Checkbox isChecked={cover} onChange={onToggleCover} size="lg">
+          Cover
+        </Checkbox>
       )}
-    </Box>
+      {cardData ? (
+        <GameCard card={cardData} units={units || ''} />
+      ) : (
+        <Cardback src={src} />
+      )}
+    </Flex>
   );
 };
 

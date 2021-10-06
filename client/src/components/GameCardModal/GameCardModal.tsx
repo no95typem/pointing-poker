@@ -23,7 +23,7 @@ import LoadCardCustomImage, {
 } from '../../containers/LoadCardCustomImage/LoadCardCustomImage';
 
 const GameCardModal = (props: ICardModalData): JSX.Element => {
-  const { modal } = props;
+  const { modal, units } = props;
 
   const { isOpen, onClose, activeCard, changeCardValue, setCard } = modal;
 
@@ -41,10 +41,16 @@ const GameCardModal = (props: ICardModalData): JSX.Element => {
       height: 100,
     },
     card: { activeCard, changeCardValue },
+    units,
   };
 
   return (
-    <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+    <Modal
+      closeOnOverlayClick={false}
+      isCentered
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Card Data:</ModalHeader>
