@@ -30,12 +30,15 @@ import { db_key, IDBMAN, STORE_NAME } from '../App/dbinit';
 import { IDBManAddEntryParams } from '../../helpers/idbmanager/idbman.def';
 import { GenIDBOnUpgradeFuncCommands } from '../../helpers/idbmanager/idb-onupgradefunc-generator';
 import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
+import { genUniqId } from '../../../../shared/helpers/generators/browser-specific';
 
 interface IConnectPopupProps {
   isOpen: boolean;
   onClose: () => void;
   forDealer: boolean;
 }
+
+let saveId: string | undefined;
 
 const ConnectPopup = ({
   isOpen,
@@ -79,12 +82,17 @@ const ConnectPopup = ({
             autoIncrement: true,
           },
         };
+
+        saveId = genUniqId();
+        const memory = saveId;
+
         IDBMAN.rmEntry({
           objStoreName: STORE_NAME,
           objKey: 'userInfo',
         })
           .catch()
           .finally(() => {
+            if (memory !== saveId) return;
             IDBMAN.addEntry(addQuery).catch();
           });
       } catch {}
