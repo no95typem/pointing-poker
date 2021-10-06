@@ -50,7 +50,6 @@ export const initDB = async () => {
       objStoreName: STORE_NAME,
       objKey: 'userInfo',
     }).then(userInfo => {
-      console.log(userInfo);
       store.dispatch(setFullLocalUserInfo(userInfo as UserInfo));
     }).catch(err => console.error(err));
 
