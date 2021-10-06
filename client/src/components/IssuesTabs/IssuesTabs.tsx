@@ -44,9 +44,11 @@ const IssuesTabs = (props: IIssuesTabs): JSX.Element => {
   const [h, setH] = useState('200px');
 
   const updateH = useCallback(() => {
-    const style = getComputedStyle(ref.current);
+    if (ref?.current) {
+      const style = getComputedStyle(ref.current);
 
-    if (style.height !== h) setH(style.height);
+      if (style.height !== h) setH(style.height);
+    }
   }, [h, setH, ref]);
 
   useEffect(() => {

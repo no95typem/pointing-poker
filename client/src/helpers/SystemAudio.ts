@@ -9,37 +9,28 @@ import { store } from '../redux/store';
 type SoundKey = 'warning' | 'info' | 'error' | 'success' | 'message';
 
 class SystemAudio {
-  private audio: HTMLAudioElement;
-
-  private sounds: Record<SoundKey, string>;
+  private audios: Record<SoundKey, HTMLAudioElement>;
 
   constructor() {
-    this.audio = new Audio();
-
-    this.sounds = {
-      warning,
-      info,
-      error,
-      success,
-      message,
+    this.audios = {
+      warning: new Audio(warning),
+      info: new Audio(info),
+      error: new Audio(error),
+      success: new Audio(success),
+      message: new Audio(message),
     };
   }
 
-  public play(status: SoundKey): void {
+  
+
+  public play(key: SoundKey): void {
     const { isMute } = store.getState().sound;
 
-    const isPlaying =
-      this.audio.src && this.audio.src !== `${window.location.origin}/`;
-
-    if (isMute || isPlaying) return;
-
-    this.audio.src = this.sounds[status];
-
-    this.audio.play();
-
-    this.audio.onended = () => {
-      this.audio.src = '';
-    };
+    if (!isMute) {
+      const audio = this.audios[key];
+      audio.currentTime = 0; 
+      audio.play(); 
+    }
   }
 }
 

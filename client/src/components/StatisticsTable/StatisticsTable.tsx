@@ -81,6 +81,28 @@ const renderStat = (props: {
 
   const userChoiceValue = userId !== undefined && stat.votes[userId];
 
+  let count = 0;
+  let summ = 0;
+
+  Object.values(stat.votes).forEach(val => {
+    try {
+      if (val) {
+        const number = Number.parseFloat(val);
+
+        if (typeof number === 'number' && !Number.isNaN(number)) {
+          summ += number;
+          count++;
+        }
+      }
+    } catch {}
+  });
+
+  const averageCard: CardData | undefined = count
+    ? {
+        value: `${(summ / count).toFixed(1)}`,
+      }
+    : undefined;
+
   return (
     <Box w="90%" p="5px">
       <Slider {...sliderProps}>
@@ -108,6 +130,29 @@ const renderStat = (props: {
                 isUnitsHidden
               />
               <Text fontWeight="bold">Final</Text>
+            </Flex>
+          </Box>
+        )}
+
+        {averageCard && (
+          <Box key={`averageCard`} px={5}>
+            <Flex
+              h="min-content"
+              direction="column"
+              justify="center"
+              align="center"
+              gridGap="1"
+              w="fit-content"
+              position="relative"
+              data-checked
+            >
+              <GameCard
+                card={averageCard}
+                units={units}
+                size="xs"
+                isUnitsHidden
+              />
+              <Text fontWeight="bold">Avg</Text>
             </Flex>
           </Box>
         )}

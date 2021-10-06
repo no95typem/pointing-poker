@@ -25,6 +25,11 @@ import { SERVER_ADAPTER } from '../ServerAdapter/serverAdapter';
 import UserInfoInputStack from '../../containers/UserInfoInputStack/UserInfoInputStack';
 import AvatarForm from '../../containers/AvatarForm/AvatarForm';
 import UserRoleRadioButtons from '../../containers/UserRoleRadioButtons/UserRoleRadioButtons';
+import { useEffect } from 'react';
+import { db_key, IDBMAN, STORE_NAME } from '../App/dbinit';
+import { IDBManAddEntryParams } from '../../helpers/idbmanager/idbman.def';
+import { GenIDBOnUpgradeFuncCommands } from '../../helpers/idbmanager/idb-onupgradefunc-generator';
+import { OBJ_PROCESSOR } from '../../../../shared/helpers/processors/obj-processor';
 
 interface IConnectPopupProps {
   isOpen: boolean;
@@ -59,6 +64,32 @@ const ConnectPopup = ({
         return;
     }
   };
+
+  useEffect(() => {
+    return () => {
+      try {
+        const addQuery: IDBManAddEntryParams = {
+          objStoreName: STORE_NAME,
+          obj: { ...OBJ_PROCESSOR.deepClone(userInfo), db_key: 'userInfo' },
+          objKey: 'userInfo',
+          paramsIfStoreNotExist: {
+            command: GenIDBOnUpgradeFuncCommands.create,
+            objStoreName: STORE_NAME,
+            keyPath: db_key,
+            autoIncrement: true,
+          },
+        };
+        IDBMAN.rmEntry({
+          objStoreName: STORE_NAME,
+          objKey: 'userInfo',
+        })
+          .catch()
+          .finally(() => {
+            IDBMAN.addEntry(addQuery).catch();
+          });
+      } catch {}
+    };
+  });
 
   const underlined = {
     position: 'relative',
