@@ -13,7 +13,7 @@ const DealerPlate = (props: IDealerPlateProps): JSX.Element => {
   return (
     <Flex w="100%" maxW="280px" direction="column" gridGap={2}>
       {props.dealerMemberData ? (
-        <UserCard {...props.dealerMemberData} />
+        <UserCard {...props.dealerMemberData} isEnoughUsersForKick={false} />
       ) : (
         <QuestionIcon />
       )}
