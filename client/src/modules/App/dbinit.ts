@@ -1,11 +1,11 @@
-import { ISettings } from "../../../../shared/types/settings";
-import { UserInfo } from "../../../../shared/types/user/user-info";
-import { GenIDBOnUpgradeFuncCommands } from "../../helpers/idbmanager/idb-onupgradefunc-generator";
-import { IDBMan } from "../../helpers/idbmanager/idbman";
-import { IDBManAddEntryParams } from "../../helpers/idbmanager/idbman.def";
-import { setSettings } from "../../redux/slices/settings";
-import { setFullLocalUserInfo } from "../../redux/slices/userInfo";
-import { store } from "../../redux/store";
+import { ISettings } from '../../../../shared/types/settings';
+import { UserInfo } from '../../../../shared/types/user/user-info';
+import { GenIDBOnUpgradeFuncCommands } from '../../helpers/idbmanager/idb-onupgradefunc-generator';
+import { IDBMan } from '../../helpers/idbmanager/idbman';
+import { IDBManAddEntryParams } from '../../helpers/idbmanager/idbman.def';
+import { setSettings } from '../../redux/slices/settings';
+import { setFullLocalUserInfo } from '../../redux/slices/userInfo';
+import { store } from '../../redux/store';
 
 export const IDBMAN = new IDBMan('no95typem-pointing-poker');
 
@@ -39,7 +39,7 @@ const dirtyCreateObjStore = async (): Promise<void> => {
       //
     }
   }
-}
+};
 
 export const initDB = async () => {
   try {
@@ -49,16 +49,19 @@ export const initDB = async () => {
     IDBMAN.getEntries({
       objStoreName: STORE_NAME,
       objKey: 'userInfo',
-    }).then(userInfo => {
-      store.dispatch(setFullLocalUserInfo(userInfo as UserInfo));
-    }).catch(err => console.error(err));
+    })
+      .then(userInfo => {
+        store.dispatch(setFullLocalUserInfo(userInfo as UserInfo));
+      })
+      .catch(err => console.error(err));
 
     IDBMAN.getEntries({
       objStoreName: STORE_NAME,
       objKey: 'settings',
-    }).then(settings => {
-      
-      store.dispatch(setSettings(settings as ISettings));
-    }).catch(err => console.error(err));
+    })
+      .then(settings => {
+        store.dispatch(setSettings(settings as ISettings));
+      })
+      .catch(err => console.error(err));
   } catch {}
-}
+};

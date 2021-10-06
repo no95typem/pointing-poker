@@ -21,15 +21,13 @@ class SystemAudio {
     };
   }
 
-  
-
   public play(key: SoundKey): void {
     const { isMute } = store.getState().sound;
 
     if (!isMute) {
       const audio = this.audios[key];
-      audio.currentTime = 0; 
-      audio.play().catch(); 
+      audio.currentTime = 0;
+      audio.play().catch();
     }
   }
 }

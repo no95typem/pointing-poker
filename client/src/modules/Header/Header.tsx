@@ -42,10 +42,10 @@ export const Header = (): JSX.Element => {
     >
       <HStack h="100%" w="100%" fontFamily="handwrite">
         <Image src={logo} maxH="100%" />
-          <h1>
-            Pointing Poker
-            <VisuallyHidden>by no95typem, kaesid, vimbi</VisuallyHidden>
-          </h1>
+        <h1>
+          Pointing Poker
+          <VisuallyHidden>by no95typem, kaesid, vimbi</VisuallyHidden>
+        </h1>
       </HStack>
 
       <HStack justifySelf="end">

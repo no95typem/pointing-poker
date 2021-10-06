@@ -157,7 +157,9 @@ const Lobby = (): JSX.Element => {
               p={4}
             >
               <Flex gridGap={4} align="center" h="45%">
-                <UndrawDevelopment style={{ maxHeight: '140px', height: "100%" }} />
+                <UndrawDevelopment
+                  style={{ maxHeight: '140px', height: '100%' }}
+                />
                 <Text fontFamily="handwrite">
                   Waiting for start of the game...
                 </Text>
@@ -167,7 +169,7 @@ const Lobby = (): JSX.Element => {
                   It's good time to discuss the meeting...
                 </Text>
                 <UndrawGroupChat
-                  style={{ maxHeight: '180px', height: "100%" }}
+                  style={{ maxHeight: '180px', height: '100%' }}
                 />
               </Flex>
             </Flex>
