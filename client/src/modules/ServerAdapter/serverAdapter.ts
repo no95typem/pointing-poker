@@ -299,6 +299,10 @@ class ServerAdapter {
           clientId: msg.response.success.yourId,
         }),
       );
+
+      if (msg.response.success.yourId === DEALER_ID) {
+        this.sendSettings(true);
+      }
     }
   }
 

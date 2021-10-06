@@ -154,6 +154,7 @@ export class IDBMan {
 
               if (obj === undefined) {
                 reject(new Error('requested entry is undefined'));
+
                 return;
               }
               Object.assign(obj, params.newPropObj);
@@ -212,7 +213,7 @@ export class IDBMan {
             rej(error);
           }
         }
-      }
+      };
       this.queueAsyncFunc(asyncFunc);
     });
   }

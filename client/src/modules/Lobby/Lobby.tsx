@@ -154,19 +154,22 @@ const Lobby = (): JSX.Element => {
               w="100%"
               h="100%"
               gridGap={4}
+              p={4}
             >
-              <Flex gridGap={4} align="center">
-                <UndrawDevelopment style={{ maxHeight: '140px' }} />
+              <Flex gridGap={4} align="center" h="45%">
+                <UndrawDevelopment
+                  style={{ maxHeight: '140px', height: '100%' }}
+                />
                 <Text fontFamily="handwrite">
                   Waiting for start of the game...
                 </Text>
               </Flex>
-              <Flex align="center" gridGap={4} alignSelf="flex-end">
+              <Flex align="center" gridGap={4} alignSelf="flex-end" h="50%">
                 <Text fontFamily="handwrite" textAlign="right">
                   It's good time to discuss the meeting...
                 </Text>
                 <UndrawGroupChat
-                  style={{ maxHeight: '200px', width: 'fit-content' }}
+                  style={{ maxHeight: '180px', height: '100%' }}
                 />
               </Flex>
             </Flex>

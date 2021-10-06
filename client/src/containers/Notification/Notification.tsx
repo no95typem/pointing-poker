@@ -27,6 +27,7 @@ export const Notification = (props: INotificationProps): JSX.Element => {
               isItYou={false}
               isRoundStarted={true}
               size="sm"
+              isEnoughUsersForKick={false}
             />
             <Flex gridGap={1}>
               <IconButton
