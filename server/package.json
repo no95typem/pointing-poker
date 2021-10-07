@@ -1,0 +1,26 @@
+{
+  "name": "pointing-poker-server",
+  "version": "0.0.1",
+  "description": "Backend for pointing-poker task",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=development webpack watch --config webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.13",
+    "@types/ws": "^7.4.7",
+    "copy-webpack-plugin": "^9.0.1",
+    "cross-env": "^7.0.3",
+    "eslint-webpack-plugin": "^3.0.1",
+    "nodemon-webpack-plugin": "^4.5.2",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3",
+    "webpack-cli": "^4.8.0",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {
+    "webpack": "^5.52.0",
+    "ws": "^8.2.1"
+  }
+}
