@@ -33,7 +33,7 @@ For netlify (not tested):
 | [React-beautiful-dnd][React-beautiful-dnd] | Assists to create beautiful drag and drop for lists with React |[More details](#React-beautiful-dnd)
 | [React-rnd][React-rnd] | Allows you to create a resizable and drag-and-drop React component | [More details](#React-rnd)
 | [React Slick][React-slick] | A carousel component built with React | [More details](#React-slick)
-| [Slick-carousel][Slick-carousel] | `А эта карусель применялась?` | [More details](#Slick-carousel)
+| [Slick-carousel][Slick-carousel] | The CSS packages for React Slick | [More details](#Slick-carousel)
 | [Web Vitals][Web Vitals] | A modular library for measuring all the Web Vitals metrics on real users | [More details](#Web-Vitals)
 | [SheetJS (xlsx)][SheetJS] | Parser and writer for various spreadsheet formats | [More details](#SheetJSxlsx)
 
@@ -51,9 +51,19 @@ For netlify (not tested):
 ### Jest
 ### Framer Motion
 ### React-beautiful-dnd
+-  #### Pros:  
+Easy to use and configurate.  
+Mobile devices support.  
+No creation of additional wrapper dom nodes - flexbox and focus management friendly.  
+-  #### Cons:  
+Narrow specialization - for lists only.
 ### React-rnd
 ### React Slick
-### Slick-carousel
+-  #### Pros:  
+Flexible choices for adaptive layout.  
+Mobile devices support.   
+-  #### Cons:  
+Create additional wrappers, which can be problem when using flexbox. 
 ### Web Vitals
 ### SheetJS(xlsx)
 
