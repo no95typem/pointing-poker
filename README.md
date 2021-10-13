@@ -24,7 +24,6 @@ It's a pointing (or scrum) poker - an game-like instrument to make decisions for
 | [React-beautiful-dnd][React-beautiful-dnd] | Assists to create beautiful drag and drop for lists with React |[More details](#React-beautiful-dnd)
 | [React-rnd][React-rnd] | Allows you to create a resizable and drag-and-drop React component | [More details](#React-rnd)
 | [React Slick][React-slick] | A carousel component built with React | [More details](#React-slick)
-| [Slick-carousel][Slick-carousel] | The CSS packages for React Slick | [More details](#Slick-carousel)
 | [WebSockets][WebSockets] | An advanced technology that makes it possible to open a two-way interactive communication session between the user's browser and a server | [More details](#the-websocket-api-websockets) |
 | [Dompurify][Dompurify] | A DOM-only, super-fast, uber-tolerant XSS sanitizer for HTML, MathML and SVG | [More details](#Dompurify)
 | [SheetJS (xlsx)][SheetJS] | Parser and writer for various spreadsheet formats | [More details](#SheetJSxlsx)
