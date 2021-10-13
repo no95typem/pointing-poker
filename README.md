@@ -1,7 +1,7 @@
 ## Description
 
 This project is a team task for the React 2021q3 course from [Rolling Scopes School](https://rs.school/).
-it
+
 It's a pointing (or scrum) poker - an game-like instrument to make decisions for teams.
 
 ## Technology stack
