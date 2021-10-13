@@ -1,19 +1,8 @@
-For gh-pages build:
-  1. Set homepage in client/package.json = url of gh-pages, when index html will be exist.
-    for example - if repo https://mygithubname.github.io/myawesomerepo then 
-      "homepage": "https://mygithubname.github.io/myawesomerepo"
-      OR (not tested)
-      "homepage": "./myawesomerepo"
-  2. Change the script in client/package.json "build:gh-pages" - change BASENAME according to step 1.
-  3. Build with npm run build:gh-pages
-  4. Move files from the build to another folder
-  5. Do git things in this another folder
+## Description
 
-For netlify (not tested):
-  1. delete homepage from client/package.json
-  2. build with npm run build?
-  3. Do netlify things
-
+This project is a team task for the React 2021q3 course from [Rolling Scopes School](https://rs.school/).
+it
+It's a pointing (or scrum) poker - an game-like instrument to make decisions for teams.
 
 ## Technology stack
 
@@ -23,7 +12,7 @@ For netlify (not tested):
 | [React-Redux][React-Redux] | An open-source JavaScript library for managing and centralizing application state | [More details](#React-Redux) |
 | [TypeScript][TypeScript] | A strongly typed programming language which builds on JavaScript giving you better tooling at any scale. | [More details](#TypeScript) |
 | [Chakra-UI][Chakra-UI] | A simple, modular and accessible component library that gives you the building blocks you need to build your React applications | [More details](#Chakra-UI) |
-| [Webpack][Webpack] | A static module bundler for modern JavaScript applications | [More details](#Webpack) |
+| [Webpack][Webpack] | A static module bundler for modern JavaScript applications | [More details](###Webpack) |
 | [WebSockets][WebSockets] | An advanced technology that makes it possible to open a two-way interactive communication session between the user's browser and a server | [More details](#the-websocket-api-websockets) |
 | [Husky][Husky] | A tool that allows us to easily wrangle Git hooks and run the scripts we want at those stages | [More details](#Husky)
 | [Eslint][Eslint] | A static code analysis tool for identifying problematic patterns found in JavaScript code | [More details](#Eslint)
@@ -120,3 +109,22 @@ It is a set of utilities to help you build complex drag and drop interfaces whil
    [Slick-carousel]: <https://www.npmjs.com/package/slick-carousel>
    [Web Vitals]: <https://www.npmjs.com/package/web-vitals>
    [SheetJS]: <https://www.npmjs.com/package/xlsx>
+
+
+## build instructions (WIP)
+
+For gh-pages build:
+  1. Set homepage in client/package.json = url of gh-pages, when index html will be exist.
+    for example - if repo https://mygithubname.github.io/myawesomerepo then 
+      "homepage": "https://mygithubname.github.io/myawesomerepo"
+      OR (not tested)
+      "homepage": "./myawesomerepo"
+  2. Change the script in client/package.json "build:gh-pages" - change BASENAME according to step 1.
+  3. Build with npm run build:gh-pages
+  4. Move files from the build to another folder
+  5. Do git things in this another folder
+
+For netlify (not tested):
+  1. delete homepage from client/package.json
+  2. build with npm run build?
+  3. Do netlify thingsititit
