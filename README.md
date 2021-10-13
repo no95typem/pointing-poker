@@ -1,3 +1,4 @@
+
 For gh-pages build:
   1. Set homepage in client/package.json = url of gh-pages, when index html will be exist.
     for example - if repo https://mygithubname.github.io/myawesomerepo then 
@@ -40,30 +41,42 @@ For netlify (not tested):
 
 
 ### React
-React makes it painless to create interactive UIs. Design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.
+
+ - **Pros:** React makes it painless to create interactive UIs. Design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.
 Build encapsulated components that manage their own state, then compose them to make complex UIs.
 Since component logic is written in JavaScript instead of templates, you can easily pass rich data through your app and keep state out of the DOM.
 React improves performance due to virtual DOM.
+ - **Cons:** ReactJS is constantly evolving and changing. The pace at which React is developed can be seen as an advantage or a disadvantage depending on who you are. 
+ As a result of rapid development, educational documentation and resources can be sparse in covering the latest updates and changes.
+ Some web developers and designers find the JSX code to be too complex and difficult to grasp.
+
 ### React-Redux
-Centralizing your application's state and logic enables powerful capabilities like undo/redo, state persistence, and much more.
+ - **Pros:** Centralizing your application's state and logic enables powerful capabilities like undo/redo, state persistence, and much more.
 The Redux DevTools make it easy to trace when, where, why, and how your application's state changed. Redux's architecture lets you log changes, use "time-travel debugging", and even send complete error reports to a server.
 Provides APIs that enable your components to interact with the Redux store, so you don't have to write that logic yourself.
+ - **Cons:** 
+
 ### TypeScript
-TypeScript includes the features that are strongly typed or Static Typing. Static typing helps us for checking type correctness at compile time.
+ - **Pros:** TypeScript includes the features that are strongly typed or Static Typing. Static typing helps us for checking type correctness at compile time.
 It always highlights errors at compilation time during the time of development.
 A code that speaks for itself can offset the lack of direct communication between team members.
 An additional feature of using TypeScript is it allows great tooling supports with IntelliSense which provides active hints as the code is added.
+ - **Cons:** In order to get the most out of the TypeScript, developers will need to use the type annotations everywhere in their code, which might at times be cumbersome.
+Browsers can’t interpret the TypeScript code, so you need to transpile it to JavaScript before running.
 ### Chakra-UI
-Chakra UI provides a lot of components, improved styling API, accessibility, and intuitive component APIs.
+ - **Pros:** Chakra UI provides a lot of components, improved styling API, accessibility, and intuitive component APIs.
 Comes with a very intuitive, CSS-like, and prop based model of styling components, making it easy to learn. The components name and prop names are also very easy to understand.
 Chakra is not tied down by any design systems and offers much freedom with customizing the components to implement your own design.
+ - **Cons:** Impossible to style some components. 
+Hard to apply defaults – Chakra already has some default components. So if we want to add one default component, it will be difficult to apply.
 ### Webpack
 
 ### The WebSocket API (WebSockets)
-Full-duplex asynchronous messaging. In other words, both the client and the server can stream messages to each other independently.
+ - **Pros:**  Full-duplex asynchronous messaging. In other words, both the client and the server can stream messages to each other independently.
 WebSockets generally do not use XMLHttpRequest, and as such, headers are not sent every-time we need to get more information from the server. This, in turn, reduces the expensive data loads being sent to the server.
 WebSockets pass through most firewalls without any reconfiguration.
 Good security model.
+ - **Cons:** WebSockets don’t automatically recover when connections are terminated – this is something you need to implement yourself, and is part of the reason why there are many client-side libraries in existence.
 ### Husky
 You can use it to lint your commit messages, run tests, lint code, etc... when you commit or push. Husky supports all Git hooks.
 Zero dependencies and lightweight (6 kB).
