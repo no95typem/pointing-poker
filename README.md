@@ -24,6 +24,7 @@ It's a pointing (or scrum) poker - an game-like instrument to make decisions for
 | [React-beautiful-dnd][React-beautiful-dnd] | Assists to create beautiful drag and drop for lists with React |[More details](#React-beautiful-dnd)
 | [React-rnd][React-rnd] | Allows you to create a resizable and drag-and-drop React component | [More details](#React-rnd)
 | [React Slick][React-slick] | A carousel component built with React | [More details](#React-slick)
+| [Slick-carousel][Slick-carousel] | The CSS packages for React Slick | [More details](#Slick-carousel)
 | [WebSockets][WebSockets] | An advanced technology that makes it possible to open a two-way interactive communication session between the user's browser and a server | [More details](#the-websocket-api-websockets) |
 | [Dompurify][Dompurify] | A DOM-only, super-fast, uber-tolerant XSS sanitizer for HTML, MathML and SVG | [More details](#Dompurify)
 | [SheetJS (xlsx)][SheetJS] | Parser and writer for various spreadsheet formats | [More details](#SheetJSxlsx)
@@ -88,12 +89,25 @@ DOMPurify is written by security people who have vast background in web attacks 
 Jest is a JavaScript testing framework designed to ensure correctness of any JavaScript codebase. It allows you to write tests with an approachable, familiar and feature-rich API that gives you results quickly.
 Jest is well-documented, requires little configuration and can be extended to match your requirements.
 ### React-beautiful-dnd
+-  #### Pros:  
+Easy to use and configurate.  
+Mobile devices support.  
+No creation of additional wrapper dom nodes - flexbox and focus management friendly.  
+-  #### Cons:  
+Narrow specialization - for lists only.
+
 There are a lot of libraries out there that allow for drag and drop interactions within React.
 react-beautiful-dnd is a higher level abstraction specifically built for lists (vertical, horizontal, movement between lists, nested lists and so on). Within that subset of functionality react-beautiful-dnd offers a powerful, natural and beautiful drag and drop experience.
+
 ### React-rnd
 React-rnd does an incredible job at providing a great set of drag and drop primitives which work especially well with the wildly inconsistent html5 drag and drop feature.
 It is a set of utilities to help you build complex drag and drop interfaces while keeping your components decoupled.
 ### React Slick
+-  #### Pros:  
+Flexible choices for adaptive layout.  
+Mobile devices support.   
+-  #### Cons:  
+Create additional wrappers, which can be problem when using flexbox. 
 
 ### SheetJS(xlsx)
 The library supports many formats. It makes it quite easy to import and export JS objects. And all of this functionality on the client side!
